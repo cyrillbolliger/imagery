@@ -228,4 +228,16 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Images Directory
+    |--------------------------------------------------------------------------
+    |
+    | The directory that will be used to store images. For the default disk,
+    | it resides in {{project_root}}/storage/app/{{image_dir}}.
+    |
+    */
+
+    'image_dir' => 'images',
+
 ];
