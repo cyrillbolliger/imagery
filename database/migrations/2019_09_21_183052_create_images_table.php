@@ -23,6 +23,7 @@ class CreateImagesTable extends Migration
             $table->integer('width');
             $table->integer('height');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('user_id')
                   ->references('id')

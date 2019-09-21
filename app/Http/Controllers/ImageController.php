@@ -2,83 +2,68 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ImageResource;
 use App\Image;
 use Illuminate\Http\Request;
 
 class ImageController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Return paginated list of all raw images.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function listRaw()
     {
-        //
+        return ImageResource::collection(
+            Image::whereNull('original_id')->paginate(10)
+        );
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Store a raw image. Update if it contains an id, else insert.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function storeRaw(Request $request)
     {
         //
     }
 
     /**
-     * Display the specified resource.
+     * Return single raw image.
      *
      * @param  \App\Image  $image
+     *
      * @return \Illuminate\Http\Response
      */
-    public function show(Image $image)
+    public function getRaw(Image $image)
     {
         //
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Soft delete raw image.
      *
      * @param  \App\Image  $image
+     *
      * @return \Illuminate\Http\Response
      */
-    public function edit(Image $image)
+    public function deleteRaw(Image $image)
     {
         //
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Image  $image
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Image $image)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
+     * Return paginated list of raw images matching the query.
      *
      * @param  \App\Image  $image
+     *
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Image $image)
+    public function searchRaw(Image $image)
     {
         //
     }
