@@ -11,11 +11,11 @@
 |
 */
 
-Route::get('/raw-images', 'ImageController@listRaw');
-Route::get('/raw-image/{id}', 'ImageController@getRaw')->where('id', '\d+');
-Route::get('/raw-image/search/{query}', 'ImageController@searchRaw')->where('query', '.*');
-Route::post('/raw-image', 'ImageController@storeRaw');
-Route::delete('/raw-image/{id}', 'ImageController@deleteRaw')->where('id', '\d+');
+Route::get('/images/raw', 'ImageController@listRaw');
+Route::get('/images/{image}', 'ImageController@get')->where('image', '\d+');
+Route::get('/images/raw/search/{query}', 'ImageController@searchRaw')->where('query', '.*');
+Route::post('/images/raw', 'ImageController@storeRaw');
+Route::delete('/images/{id}', 'ImageController@deleteRaw')->where('id', '\d+');
 
 
 Route::get('/', function () {

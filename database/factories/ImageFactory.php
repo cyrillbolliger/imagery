@@ -3,22 +3,44 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Image;
+use App\User;
 use Faker\Generator as Faker;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 
 $factory->define(Image::class, function (Faker $faker) {
-    $imageWidth  = 640;
-    $imageHeight = 480;
+    $imageWidth  = 1080;
+    $imageHeight = 1080;
 
-    $imageDirName = config('app.image_dir');
-    Storage::disk('local')->makeDirectory($imageDirName);
-    $imageDirPath = storage_path('app'.DIRECTORY_SEPARATOR.$imageDirName);
-    $imageName    = $faker->image($imageDirPath, $imageWidth, $imageHeight, 'cats', false);
+    $tempDir  = 'tmp';
+    $imageDir = Image::getImageStorageDir();
+    $thumbDir = Image::getThumbnailStorageDir();
+
+    Storage::makeDirectory($tempDir);
+    Storage::makeDirectory($imageDir);
+    Storage::makeDirectory($thumbDir);
+
+    $tempDirPath = Image::getPathFromStorageDir($tempDir);
+
+    $tempImagePath = $faker->image($tempDirPath, $imageWidth, $imageHeight, 'cats', true);
+    $imageRelPath  = Storage::putFile($imageDir, new File($tempImagePath), 'private');
+
+    $imagePath            = Image::getPathFromStorageDir($imageRelPath);
+    $filename             = basename($imagePath);
+    $thumbnailStoragePath = $thumbDir.DIRECTORY_SEPARATOR.$filename;
+    $thumbnailPath        = Image::getPathFromStorageDir($thumbnailStoragePath);
+
+    Image::generateThumbnail($imagePath, $thumbnailPath);
+    Storage::setVisibility($thumbnailStoragePath, 'private');
+
+    Storage::deleteDirectory($tempDir);
 
     return [
-        'user_id'  => 1,
-        'filename' => $imageName,
-        'hash'     => md5_file($imageDirPath.DIRECTORY_SEPARATOR.$imageName),
+        'user_id'  => function () {
+            return factory(User::class)->create()->id;
+        },
+        'filename' => $filename,
+        'hash'     => md5_file($imagePath),
         'width'    => $imageWidth,
         'height'   => $imageHeight
     ];
