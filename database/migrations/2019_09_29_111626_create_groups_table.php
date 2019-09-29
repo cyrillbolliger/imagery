@@ -20,14 +20,6 @@ class CreateGroupsTable extends Migration
             $table->string('name');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('added_by')
-                  ->references('id')
-                  ->on('users');
-            $table->foreign('parent_id')
-                  ->references('id')
-                  ->on('id')
-                  ->onDelete('cascade');
         });
     }
 

@@ -20,10 +20,6 @@ class CreateLogosTable extends Migration
             $table->string('name');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('added_by')
-                  ->references('id')
-                  ->on('users');
         });
     }
 

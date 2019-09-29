@@ -34,16 +34,6 @@ class CreateImagesTable extends Migration
             $table->integer('height');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('user_id')
-                  ->references('id')
-                  ->on('users');
-            $table->foreign('original_id')
-                  ->references('id')
-                  ->on('images');
-            $table->foreign('logo_id')
-                  ->references('id')
-                  ->on('logos');
         });
     }
 

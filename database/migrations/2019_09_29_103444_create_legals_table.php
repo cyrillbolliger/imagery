@@ -41,11 +41,6 @@ class CreateLegalsTable extends Migration
             $table->boolean('shared');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('image_id')
-                  ->references('id')
-                  ->on('images')
-                  ->onDelete('cascade');
         });
     }
 

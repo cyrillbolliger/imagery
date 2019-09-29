@@ -21,18 +21,6 @@ class CreateRolesTable extends Migration
             $table->boolean('admin');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('group_id')
-                  ->references('id')
-                  ->on('groups')
-                  ->onDelete('cascade');
-            $table->foreign('user_id')
-                  ->references('id')
-                  ->on('users')
-                  ->onDelete('cascade');
-            $table->foreign('added_by')
-                  ->references('id')
-                  ->on('users');
         });
     }
 
