@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGroupsLogoTable extends Migration
+class CreateGroupLogoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateGroupsLogoTable extends Migration
      */
     public function up()
     {
-        Schema::create('groups_logo', function (Blueprint $table) {
+        Schema::create('group_logo', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('logo_id');
             $table->unsignedBigInteger('group_id');
@@ -28,6 +28,6 @@ class CreateGroupsLogoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('groups_logo');
+        Schema::dropIfExists('group_logo');
     }
 }
