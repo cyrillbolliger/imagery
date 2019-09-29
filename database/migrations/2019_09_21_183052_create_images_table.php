@@ -14,6 +14,8 @@ class CreateImagesTable extends Migration
      */
     public function up()
     {
+        Schema::disableForeignKeyConstraints();
+
         Schema::create('images', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
@@ -45,6 +47,8 @@ class CreateImagesTable extends Migration
                   ->references('id')
                   ->on('logos');
         });
+
+        Schema::enableForeignKeyConstraints();
     }
 
     /**

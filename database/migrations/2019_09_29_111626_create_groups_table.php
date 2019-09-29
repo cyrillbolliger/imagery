@@ -26,7 +26,7 @@ class CreateGroupsTable extends Migration
                   ->on('users');
             $table->foreign('parent_id')
                   ->references('id')
-                  ->on('id')
+                  ->on('groups')
                   ->onDelete('cascade');
         });
     }
