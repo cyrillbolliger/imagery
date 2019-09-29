@@ -39,13 +39,19 @@ class CreateImagesTable extends Migration
 
             $table->foreign('user_id')
                   ->references('id')
-                  ->on('users');
+                  ->on('users')
+                  ->onUpdate('cascade')
+                  ->onDelete('no action');
             $table->foreign('original_id')
                   ->references('id')
-                  ->on('images');
+                  ->on('images')
+                  ->onUpdate('cascade')
+                  ->onDelete('no action');
             $table->foreign('logo_id')
                   ->references('id')
-                  ->on('logos');
+                  ->on('logos')
+                  ->onUpdate('cascade')
+                  ->onDelete('no action');
         });
 
         Schema::enableForeignKeyConstraints();

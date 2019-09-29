@@ -25,14 +25,18 @@ class CreateRolesTable extends Migration
             $table->foreign('group_id')
                   ->references('id')
                   ->on('groups')
-                  ->onDelete('cascade');
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
             $table->foreign('user_id')
                   ->references('id')
                   ->on('users')
-                  ->onDelete('cascade');
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
             $table->foreign('added_by')
                   ->references('id')
-                  ->on('users');
+                  ->on('users')
+                  ->onUpdate('cascade')
+                  ->onDelete('no action');
         });
     }
 

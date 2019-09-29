@@ -14,6 +14,8 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
+        Schema::disableForeignKeyConstraints();
+
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('first_name');
@@ -38,8 +40,22 @@ class CreateUsersTable extends Migration
 
             $table->foreign('added_by')
                   ->references('id')
-                  ->on('users');
+                  ->on('users')
+                  ->onUpdate('cascade')
+                  ->onDelete('no action');
+            $table->foreign('managed_by')
+                  ->references('id')
+                  ->on('groups')
+                  ->onUpdate('cascade')
+                  ->onDelete('no action');
+            $table->foreign('default_logo')
+                  ->references('id')
+                  ->on('logos')
+                  ->onUpdate('cascade')
+                  ->onDelete('set null');
         });
+
+        Schema::enableForeignKeyConstraints();
     }
 
     /**

@@ -23,7 +23,9 @@ class CreateLogosTable extends Migration
 
             $table->foreign('added_by')
                   ->references('id')
-                  ->on('users');
+                  ->on('users')
+                  ->onUpdate('cascade')
+                  ->onDelete('no action');
         });
     }
 

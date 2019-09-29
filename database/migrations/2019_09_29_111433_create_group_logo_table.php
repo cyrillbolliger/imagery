@@ -24,12 +24,14 @@ class CreateGroupLogoTable extends Migration
             $table->foreign('logo_id')
                   ->references('id')
                   ->on('logos')
-                  ->onDelete('cascade');
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
 
             $table->foreign('group_id')
                   ->references('id')
                   ->on('groups')
-                  ->onDelete('cascade');
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
         });
 
         Schema::enableForeignKeyConstraints();

@@ -23,11 +23,14 @@ class CreateGroupsTable extends Migration
 
             $table->foreign('added_by')
                   ->references('id')
-                  ->on('users');
+                  ->on('users')
+                  ->onUpdate('cascade')
+                  ->onDelete('no action');
             $table->foreign('parent_id')
                   ->references('id')
                   ->on('groups')
-                  ->onDelete('cascade');
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
         });
     }
 
