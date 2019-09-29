@@ -20,11 +20,6 @@ class ImageTest extends TestCase
         $this->seed(RootSeeder::class);
     }
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function testGetRawImages()
     {
         $user = User::first();
