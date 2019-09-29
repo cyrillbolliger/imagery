@@ -27,7 +27,7 @@ $factory->define(User::class, function (Faker $faker) {
         'remember_token'    => Str::random(10),
         'added_by'          => 1,
         'managed_by'        => 1,
-        'default_logo'      => 1,
+        'default_logo'      => null,
         'super_admin'       => false,
         'lang'              => $faker->randomElement([
             User::LANG_EN,
@@ -36,3 +36,10 @@ $factory->define(User::class, function (Faker $faker) {
         ]),
     ];
 });
+
+$factory->state(User::class, 'root', [
+    'first_name'  => 'Root',
+    'last_name'   => 'User',
+    'super_admin' => true,
+    'lang'        => User::LANG_EN
+]);

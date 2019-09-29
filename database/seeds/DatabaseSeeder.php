@@ -18,16 +18,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
-
-        // there are circular dependencies on users and groups
-        Schema::disableForeignKeyConstraints();
-        factory(User::class, 3)->create();
-        Schema::enableForeignKeyConstraints();
-
+        $this->call(RootUserGroupRoleSeeder::class);
         factory(Group::class)->create();
-        factory(Role::class)->create();
         factory(Logo::class)->create();
+        factory(Role::class)->create();
         factory(GroupLogo::class)->create();
         factory(Image::class, 10)->create();
     }

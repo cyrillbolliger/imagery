@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Image;
 use App\User;
+use RootUserGroupRoleSeeder;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,6 +13,13 @@ class ImageTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(RootUserGroupRoleSeeder::class);
+    }
+
     /**
      * A basic feature test example.
      *
@@ -19,8 +27,8 @@ class ImageTest extends TestCase
      */
     public function testGetRawImages()
     {
-        $user = factory(User::class)->create();
-        factory(Image::class, 3)->create();
+        $user = User::find(1);
+        factory(Image::class, 2)->create();
 
         $response = $this->actingAs($user)
                          ->get('/images/raw');
@@ -31,13 +39,17 @@ class ImageTest extends TestCase
                          0 => [
                              'id',
                              'user' => [
-                                 'id', 'name', 'email'
+                                 'id',
+                                 'first_name',
+                                 'last_name',
+                                 'email'
                              ],
                              'filename',
                              'width',
                              'height',
                              'created_at'
-                         ]
+                         ],
+                         1
                      ],
                      'links',
                      'meta'
@@ -46,7 +58,7 @@ class ImageTest extends TestCase
 
     public function testGetRawImage()
     {
-        $user  = factory(User::class)->create();
+        $user  = User::find(1);
         $image = factory(Image::class)->create();
 
         $response = $this->actingAs($user)
@@ -56,12 +68,40 @@ class ImageTest extends TestCase
                  ->assertJsonStructure([
                      'id',
                      'user' => [
-                         'id', 'name', 'email'
+                         'id',
+                         'first_name',
+                         'last_name',
+                         'email'
                      ],
                      'filename',
                      'width',
                      'height',
                      'created_at'
                  ]);
+    }
+
+    public function testGetFinalImage__503()
+    {
+        // not logged in
+    }
+
+    public function testGetRawImage__503()
+    {
+        // not logged in
+    }
+
+    public function testGetRawImage__NotShareable__503()
+    {
+        // logged in but not my image and not shareable
+    }
+
+    public function testGetRawImage__shareable()
+    {
+        // a shareable raw image of someone else
+    }
+
+    public function testGetRawImage__superAdmin()
+    {
+        // all raw images
     }
 }
