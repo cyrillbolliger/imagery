@@ -7,6 +7,7 @@ use App\Logo;
 use App\Role;
 use App\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,7 +19,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
+
+        // there are circular dependencies on users and groups
+        Schema::disableForeignKeyConstraints();
         factory(User::class, 3)->create();
+        Schema::enableForeignKeyConstraints();
+
         factory(Group::class)->create();
         factory(Role::class)->create();
         factory(Logo::class)->create();
