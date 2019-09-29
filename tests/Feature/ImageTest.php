@@ -27,7 +27,7 @@ class ImageTest extends TestCase
      */
     public function testGetRawImages()
     {
-        $user = User::find(1);
+        $user = User::first();
         factory(Image::class, 2)->create();
 
         $response = $this->actingAs($user)
@@ -58,7 +58,7 @@ class ImageTest extends TestCase
 
     public function testGetRawImage()
     {
-        $user  = User::find(1);
+        $user  = User::first();
         $image = factory(Image::class)->create();
 
         $response = $this->actingAs($user)
