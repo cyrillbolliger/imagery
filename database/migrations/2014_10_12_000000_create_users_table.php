@@ -22,6 +22,8 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->unsignedBigInteger('added_by');
+            $table->unsignedBigInteger('managed_by');
+            $table->unsignedBigInteger('default_logo')->nullable();
             $table->boolean('super_admin')->default(false);
             $table->enum('lang', [
                 User::LANG_EN,
