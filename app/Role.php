@@ -23,4 +23,9 @@ class Role extends Model
     {
         return $this->belongsTo(User::class, 'added_by');
     }
+
+    public function scopeAdmin($query)
+    {
+        return $query->where('admin', true);
+    }
 }
