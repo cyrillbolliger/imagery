@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Imagick;
 
 class Image extends Model
 {
@@ -15,9 +16,26 @@ class Image extends Model
     private const PATH_FULL = 'full';
     private const PATH_THUMB = 'thumb';
 
+    public const TYPE_RAW = 'raw';
+    public const TYPE_FINAL = 'final';
+
+    public const BG_GRADIENT = 'gradient';
+    public const BG_TRANSPARENT = 'transparent';
+    public const BG_CUSTOM = 'custom';
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function legal()
+    {
+        return $this->hasOne(Legal::class);
+    }
+
+    public function logo()
+    {
+        return $this->belongsTo(Legal::class);
     }
 
     public static function getImageStorageDir()
@@ -48,7 +66,7 @@ class Image extends Model
      */
     public static function generateThumbnail(string $sourceImagePath, string $thumbnailPath)
     {
-        $image = new \Imagick(realpath($sourceImagePath));
+        $image = new Imagick(realpath($sourceImagePath));
 
         $image->thumbnailImage(self::THUMB_MAX_WIDTH, self::THUMB_MAX_HEIGHT, true);
         $image->writeImage($thumbnailPath);

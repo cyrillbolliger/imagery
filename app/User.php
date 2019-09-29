@@ -3,12 +3,18 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
     use Notifiable;
+    use SoftDeletes;
+
+    public const LANG_EN = 'en';
+    public const LANG_DE = 'de';
+    public const LANG_FR = 'fr';
 
     /**
      * The attributes that are mass assignable.
@@ -35,5 +41,11 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'last_login'        => 'datetime',
     ];
+
+    public function added_by()
+    {
+        return $this->belongsTo(User::class, 'added_by');
+    }
 }
