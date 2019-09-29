@@ -44,8 +44,28 @@ class User extends Authenticatable
         'last_login'        => 'datetime',
     ];
 
-    public function added_by()
+    public function addedBy()
     {
         return $this->belongsTo(User::class, 'added_by');
+    }
+
+    public function defaultLogo()
+    {
+        return $this->belongsTo(Logo::class, 'default_logo');
+    }
+
+    public function managedBy()
+    {
+        return $this->belongsTo(Group::class, 'managed_by');
+    }
+
+    public function roles()
+    {
+        return $this->hasMany(Role::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->roles()->where('admin', true)->exists();
     }
 }

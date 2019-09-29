@@ -24,7 +24,7 @@ class Group extends Model
         return $this->belongsToMany(Logo::class);
     }
 
-    public function added_by()
+    public function addedBy()
     {
         return $this->belongsTo(User::class, 'added_by');
     }

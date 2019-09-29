@@ -19,7 +19,7 @@ class Logo extends Model
         return $this->belongsToMany(Group::class);
     }
 
-    public function added_by()
+    public function addedBy()
     {
         return $this->belongsTo(User::class, 'added_by');
     }
