@@ -5,7 +5,7 @@ use App\Role;
 use App\User;
 use Illuminate\Database\Seeder;
 
-class RootUserGroupRoleSeeder extends Seeder
+class RootSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,9 +17,8 @@ class RootUserGroupRoleSeeder extends Seeder
         // there are circular dependencies on users, groups and logos
         Schema::disableForeignKeyConstraints();
         factory(User::class)->state('root')->create();
-        Schema::enableForeignKeyConstraints();
-
         factory(Group::class)->state('root')->create();
         factory(Role::class)->state('root')->create();
+        Schema::enableForeignKeyConstraints();
     }
 }

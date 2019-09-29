@@ -2,6 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use App\Group;
 use App\User;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
@@ -25,8 +26,8 @@ $factory->define(User::class, function (Faker $faker) {
         'email_verified_at' => now(),
         'password'          => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
         'remember_token'    => Str::random(10),
-        'added_by'          => 1,
-        'managed_by'        => 1,
+        'added_by'          => User::first() ? User::first()->id : 1,
+        'managed_by'        => Group::first() ? Group::first()->id : 1,
         'default_logo'      => null,
         'super_admin'       => false,
         'lang'              => $faker->randomElement([

@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(RootUserGroupRoleSeeder::class);
+        $this->call(RootSeeder::class);
         factory(Group::class)->create();
         factory(Logo::class)->create();
         factory(Role::class)->create();

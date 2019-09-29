@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Image;
 use App\User;
-use RootUserGroupRoleSeeder;
+use RootSeeder;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,7 +17,7 @@ class ImageTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed(RootUserGroupRoleSeeder::class);
+        $this->seed(RootSeeder::class);
     }
 
     /**

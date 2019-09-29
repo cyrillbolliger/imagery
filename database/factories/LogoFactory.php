@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Logo::class, function (Faker $faker) {
     return [
-        'added_by' => 1,
+        'added_by' => User::first() ? User::first()->id : 1,
         'filename' => '', // todo
         'name'     => $faker->word
     ];

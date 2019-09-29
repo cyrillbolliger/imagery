@@ -15,14 +15,14 @@ $factory->define(Role::class, function (Faker $faker) {
         'user_id'  => function () {
             return factory(User::class)->create()->id;
         },
-        'added_by' => 1,
+        'added_by' => User::first() ? User::first()->id : 1,
         'admin'    => false
     ];
 });
 
 $factory->state(Role::class, 'root', [
-    'group_id' => 1,
-    'user_id'  => 1,
-    'added_by' => 1,
+    'group_id' => User::first() ? User::first()->id : 1,
+    'user_id'  => User::first() ? User::first()->id : 1,
+    'added_by' => User::first() ? User::first()->id : 1,
     'admin'    => true
 ]);

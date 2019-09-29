@@ -43,7 +43,7 @@ $factory->define(Legal::class, function (Faker $faker) {
     }
 
     return [
-        'image_id'             => 1,
+        'image_id'             => 1, // todo: make dynamic
         'right_of_personality' => $personality,
         'originator_type'      => $originator_type,
         'licence'              => $originator_type === Legal::ORIGINATOR_STOCK ? $licence : null,
