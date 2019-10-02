@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Group;
 use App\Image;
 use App\Role;
 use App\User;
@@ -27,7 +28,7 @@ class UserTest extends TestCase
         $managed = User::first();
 
         $response = $this->actingAs($manager)
-                         ->get('/users/'.$managed->id);
+            ->get('/users/'.$managed->id);
 
         $response->assertStatus(403);
     }
@@ -38,24 +39,24 @@ class UserTest extends TestCase
         $managed = $manager;
 
         $response = $this->actingAs($manager)
-                         ->get('/users/'.$managed->id);
+            ->get('/users/'.$managed->id);
 
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'id',
-                     'first_name',
-                     'last_name',
-                     'email',
-                     'added_by',
-                     'managed_by',
-                     'default_logo',
-                     'super_admin',
-                     'lang',
-                     'login_count',
-                     'last_login',
-                     'created_at',
-                     'updated_at',
-                 ]);
+            ->assertJsonStructure([
+                'id',
+                'first_name',
+                'last_name',
+                'email',
+                'added_by',
+                'managed_by',
+                'default_logo',
+                'super_admin',
+                'lang',
+                'login_count',
+                'last_login',
+                'created_at',
+                'updated_at',
+            ]);
     }
 
     public function testGetUser__strangerSuperAdmin_200()
@@ -64,7 +65,7 @@ class UserTest extends TestCase
         $managed = factory(User::class)->create();
 
         $response = $this->actingAs($manager)
-                         ->get('/users/'.$managed->id);
+            ->get('/users/'.$managed->id);
 
         $response->assertStatus(200);
     }
@@ -86,6 +87,21 @@ class UserTest extends TestCase
 
     public function testGetUser__managedParentAdmin_200()
     {
+        $parentGroup = factory(Group::class)->create(['name' => 'parent']);
+        $childGroup  = factory(Group::class)->create(['name' => 'child', 'parent_id' => $parentGroup->id]);
 
+        $role = factory(Role::class)->make(['admin' => true, 'group_id' => $parentGroup->id]);
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save($role);
+
+        $managed = factory(User::class)->create([
+            'managed_by' => $childGroup->id
+        ]);
+
+        $response = $this->actingAs($manager)
+                         ->get('/users/'.$managed->id);
+
+        $response->assertStatus(200);
     }
 }

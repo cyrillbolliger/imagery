@@ -45,12 +45,12 @@ class UserPolicy
             return false;
         }
 
-        foreach ($manager->roles()->admin() as $role) {
-            if ($managed->managedBy()->is($role->group)) {
+        foreach ($manager->roles()->admin()->get() as $role) {
+            if ($managed->managedBy->is($role->group)) {
                 return true;
             }
 
-            if ($managed->managedBy()->isDescendantOf($role->group)) {
+            if ($managed->managedBy->isDescendantOf($role->group)) {
                 return true;
             }
         }
