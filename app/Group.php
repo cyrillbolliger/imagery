@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 class Group extends Model
 {
@@ -11,12 +12,12 @@ class Group extends Model
 
     public function parent()
     {
-        return $this->belongsTo(Group::class, 'parent_id');
+        return $this->belongsTo(Group::class, 'parent_id')->where('id', '<>', $this->id);
     }
 
     public function children()
     {
-        return $this->hasMany(Group::class, 'parent_id');
+        return $this->hasMany(Group::class, 'parent_id')->where('id', '<>', $this->id);
     }
 
     public function logos()
@@ -27,6 +28,29 @@ class Group extends Model
     public function addedBy()
     {
         return $this->belongsTo(User::class, 'added_by');
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'managed_by');
+    }
+
+    public function usersBelow()
+    {
+        return $this->usersRecursive($this, collect());
+    }
+
+    private function usersRecursive(Group $group, Collection $users)
+    {
+        foreach ($group->users as $user) {
+            $users->add($user);
+        }
+
+        foreach ($group->children as $child) {
+            $this->usersRecursive($child, $users);
+        }
+
+        return $users;
     }
 
     public function isDescendantOf($possibleParent): bool

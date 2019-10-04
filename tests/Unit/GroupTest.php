@@ -34,4 +34,25 @@ class GroupTest extends TestCase
 
         $this->assertFalse($grandchild->isDescendantOf(0));
     }
+
+    public function testUsersBelow()
+    {
+        $root       = factory(Group::class)->create();
+        $child      = factory(Group::class)->create(['parent_id' => $root->id]);
+        $grandchild = factory(Group::class)->create(['parent_id' => $child->id]);
+
+        $user1 = $root->users()->save(factory(User::class)->make());
+        $user2 = $child->users()->save(factory(User::class)->make());
+        $user3 = $grandchild->users()->save(factory(User::class)->make());
+
+        $detachedUser = factory(User::class)->create();
+
+        $usersBelow = $root->usersBelow();
+        $ids        = $usersBelow->pluck('id');
+
+        $this->assertTrue($ids->contains($user1->id));
+        $this->assertTrue($ids->contains($user2->id));
+        $this->assertTrue($ids->contains($user3->id));
+        $this->assertFalse($ids->contains($detachedUser->id));
+    }
 }

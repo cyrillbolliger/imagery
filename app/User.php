@@ -42,6 +42,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'last_login'        => 'datetime',
+        'super_admin'       => 'boolean'
     ];
 
     public function addedBy()
@@ -67,5 +68,19 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->super_admin ? true : $this->roles()->admin()->exists();
+    }
+
+    public function manageableUsers()
+    {
+        if ($this->super_admin) {
+            return User::all();
+        }
+
+        $users = collect();
+        foreach ($this->roles()->admin()->get() as $role) {
+            $users->push($role->manageableUsers());
+        }
+
+        return $users->flatten();
     }
 }

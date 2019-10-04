@@ -17,27 +17,16 @@ class UserPolicy
     }
 
     /**
-     * Determine whether the user can view the model.
+     * Determine whether the user can manage other users.
      *
-     * @param  \App\User  $user
-     * @param  \App\User  $model
-     *
-     * @return mixed
-     */
-    public function get(User $user, User $model)
-    {
-        return $this->canManage($user, $model);
-    }
-
-    /**
      * @param  User  $manager  the user currently logged in
      * @param  User  $managed  the user to manage
      *
      * @return bool
      */
-    private function canManage(User $manager, User $managed): bool
+    public function manage(User $manager, User $managed): bool
     {
-        if ($manager->is($managed) || $manager->super_admin) {
+        if ($manager->is($managed)) {
             return true;
         }
 
@@ -59,66 +48,26 @@ class UserPolicy
     }
 
     /**
-     * Determine whether the user can create models.
+     * Determine whether the user can create other users.
      *
      * @param  \App\User  $user
      *
-     * @return mixed
+     * @return bool
      */
-    public function create(User $user)
+    public function create(User $user): bool
     {
-        //
+        return $user->isAdmin();
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Determine whether the user can list any users.
      *
      * @param  \App\User  $user
-     * @param  \App\User  $model
      *
-     * @return mixed
+     * @return bool
      */
-    public function update(User $user, User $model)
+    public function list(User $user): bool
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can delete the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\User  $model
-     *
-     * @return mixed
-     */
-    public function delete(User $user, User $model)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\User  $model
-     *
-     * @return mixed
-     */
-    public function restore(User $user, User $model)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\User  $model
-     *
-     * @return mixed
-     */
-    public function forceDelete(User $user, User $model)
-    {
-        //
+        return $user->isAdmin();
     }
 }

@@ -20,10 +20,13 @@ Route::get('/images/raw/search/{query}', 'ImageController@searchRaw')->where('qu
 Route::post('/images/raw', 'ImageController@storeRaw');
 Route::delete('/images/{id}', 'ImageController@deleteRaw')->where('id', '\d+');
 
-Route::get('/users/{user}', function (User $user) {
-    return $user;
-})->where('user', '\d+')->middleware('can:get,user');
 
+Route::get('/users/{user}', 'UserController@show')
+     ->where('user', '\d+')
+     ->middleware('can:manage,user');
+
+Route::get('/users', 'UserController@index')
+     ->middleware('can:list,App\User');
 
 
 Route::get('/', function () {
