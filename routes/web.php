@@ -33,6 +33,10 @@ Route::put('/users/{user}', 'UserController@update')
      ->where('user', '\d+')
      ->middleware('can:manage,user');
 
+Route::delete('/users/{user}', 'UserController@destroy')
+     ->where('user', '\d+')
+     ->middleware('can:manage,user');
+
 
 Route::get('/', function () {
     return view('welcome');

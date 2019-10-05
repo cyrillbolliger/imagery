@@ -105,6 +105,10 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        if ( ! $user->delete()) {
+            return response('Could not delete user.', 500);
+        }
+
+        return response(null, 204);
     }
 }

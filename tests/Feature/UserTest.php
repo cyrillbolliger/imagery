@@ -56,6 +56,8 @@ class UserTest extends TestCase
                      'created_at',
                      'updated_at',
                  ]);
+
+        $this->assertNull($response->json('password'));
     }
 
     public function testGetUser__strangerSuperAdmin_200()
@@ -249,5 +251,16 @@ class UserTest extends TestCase
                          ->putJson('/users/'.$managed->id, $data);
 
         $response->assertStatus(200);
+    }
+
+    public function testDeleteUser__204()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $managed = $manager;
+
+        $response = $this->actingAs($manager)
+                         ->deleteJson('/users/'.$managed->id);
+
+        $response->assertStatus(204);
     }
 }
