@@ -6,10 +6,13 @@ use Illuminate\Contracts\Validation\Rule;
 
 class PasswordRule implements Rule
 {
-    private const MIN_ENTROPY = 2 ** 64;
+    private const MIN_ENTROPY = 2 ** 48; // yeah, passwords are bad
 
     /**
      * Determine if the validation rule passes.
+     *
+     * Just a very simple approach to calculate the entropy. Not suited for
+     * high security applications!
      *
      * @param  string  $attribute
      * @param  mixed  $value

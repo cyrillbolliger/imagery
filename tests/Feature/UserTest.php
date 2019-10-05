@@ -214,4 +214,40 @@ class UserTest extends TestCase
 
         $response->assertStatus(422);
     }
+
+    public function testPutUser__weakPassword_422()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
+
+        $managed = factory(User::class)->create([
+            'managed_by' => $manager->roles()->first()->group->id
+        ]);
+
+        $response = $this->actingAs($manager)
+                         ->putJson('/users/'.$managed->id, [
+                             'id'       => $managed->id,
+                             'password' => 'weak' // we can't set this using the toArray method
+                         ]);
+
+        $response->assertStatus(422);
+    }
+
+    public function testPutUser__strongPassword_200()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
+
+        $managed = factory(User::class)->create([
+            'managed_by' => $manager->roles()->first()->group->id
+        ]);
+
+        $data             = $managed->toArray();
+        $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+
+        $response = $this->actingAs($manager)
+                         ->putJson('/users/'.$managed->id, $data);
+
+        $response->assertStatus(200);
+    }
 }
