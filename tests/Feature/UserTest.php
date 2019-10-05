@@ -3,12 +3,11 @@
 namespace Tests\Feature;
 
 use App\Group;
-use App\Image;
 use App\Role;
 use App\User;
+use Illuminate\Support\Carbon;
 use RootSeeder;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
@@ -28,7 +27,7 @@ class UserTest extends TestCase
         $managed = User::first();
 
         $response = $this->actingAs($manager)
-                         ->get('/users/'.$managed->id);
+                         ->getJson('/users/'.$managed->id);
 
         $response->assertStatus(403);
     }
@@ -39,7 +38,7 @@ class UserTest extends TestCase
         $managed = $manager;
 
         $response = $this->actingAs($manager)
-                         ->get('/users/'.$managed->id);
+                         ->getJson('/users/'.$managed->id);
 
         $response->assertStatus(200)
                  ->assertJsonStructure([
@@ -65,7 +64,7 @@ class UserTest extends TestCase
         $managed = factory(User::class)->create();
 
         $response = $this->actingAs($manager)
-                         ->get('/users/'.$managed->id);
+                         ->getJson('/users/'.$managed->id);
 
         $response->assertStatus(200);
     }
@@ -80,7 +79,7 @@ class UserTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->get('/users/'.$managed->id);
+                         ->getJson('/users/'.$managed->id);
 
         $response->assertStatus(200);
     }
@@ -100,7 +99,7 @@ class UserTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->get('/users/'.$managed->id);
+                         ->getJson('/users/'.$managed->id);
 
         $response->assertStatus(200);
     }
@@ -110,7 +109,7 @@ class UserTest extends TestCase
         $user = factory(User::class)->create(['super_admin' => false]);
 
         $response = $this->actingAs($user)
-                         ->get('/users/');
+                         ->getJson('/users/');
 
         $response->assertStatus(403);
     }
@@ -121,7 +120,7 @@ class UserTest extends TestCase
         $users = User::all();
 
         $response = $this->actingAs($user)
-                         ->get('/users/');
+                         ->getJson('/users/');
 
         $response->assertStatus(200);
         $response->assertJson($users->toArray());
@@ -146,7 +145,7 @@ class UserTest extends TestCase
         $roleAdmin2   = $manager->roles()->save(factory(Role::class)->make(['admin' => true, 'group_id' => $root2]));
 
         $response = $this->actingAs($manager)
-                         ->get('/users/');
+                         ->getJson('/users/');
 
         $response->assertStatus(200);
 
@@ -155,5 +154,64 @@ class UserTest extends TestCase
         $response->assertJsonFragment($user4->toArray());
         $response->assertJsonMissing(['id' => $user1->id]);
         $response->assertJsonMissing(['id' => $detachedUser->id]);
+    }
+
+    public function testPutUser__superAdmin_200()
+    {
+        $manager = factory(User::class)->create(['super_admin' => true]);
+        $managed = factory(User::class)->create(['super_admin' => false]);
+
+        $managed->super_admin = true;
+        sleep(1);
+
+        $response = $this->actingAs($manager)
+                         ->putJson('/users/'.$managed->id, $managed->toArray());
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('users', [
+            'id'          => $managed->id,
+            'super_admin' => true,
+        ]);
+
+        $updated = new Carbon($response->json('updated_at'));
+        $this->assertTrue($managed->created_at->lessThan($updated));
+    }
+
+    public function testPutUser__admin_200()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
+
+        $managed = factory(User::class)->create([
+            'managed_by' => $manager->roles()->first()->group->id
+        ]);
+
+        $managed->first_name = 'Changed';
+
+        $response = $this->actingAs($manager)
+                         ->putJson('/users/'.$managed->id, $managed->toArray());
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('users', [
+            'id'         => $managed->id,
+            'first_name' => $managed->first_name,
+        ]);
+    }
+
+    public function testPutUser__admin_422()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
+
+        $managed = factory(User::class)->create([
+            'managed_by' => $manager->roles()->first()->group->id
+        ]);
+
+        $managed->super_admin = true;
+
+        $response = $this->actingAs($manager)
+                         ->putJson('/users/'.$managed->id, $managed->toArray());
+
+        $response->assertStatus(422);
     }
 }

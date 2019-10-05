@@ -16,13 +16,22 @@ class User extends Authenticatable
     public const LANG_DE = 'de';
     public const LANG_FR = 'fr';
 
+    public const LANGUAGES = [self::LANG_EN, self::LANG_DE, self::LANG_FR];
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'first_name',
+        'last_name',
+        'email',
+        'password',
+        'managed_by',
+        'default_logo',
+        'super_admin',
+        'lang',
     ];
 
     /**
@@ -31,7 +40,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\PasswordRule;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -70,13 +72,28 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
+     * @param  User  $user  the user to update
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function update(Request $request, User $user)
     {
-        //
+        $data = $request->validate([
+            'first_name'   => 'required',
+            'last_name'    => 'required',
+            'email'        => 'required|email|unique:users,email,'.$user->id,
+            'password'     => ['sometimes', new PasswordRule()],
+            'managed_by'   => 'required|exists:users',
+            'default_logo' => 'nullable|exists:logos',
+            'super_admin'  => Auth::user()->super_admin ? 'required|boolean' : ['required', Rule::in([false])],
+            'lang'         => ['required', Rule::in(User::LANGUAGES)],
+        ]);
+
+        if ( ! $user->update($data)) {
+            return response('Could not save user.', 500);
+        }
+
+        return $user;
     }
 
     /**
