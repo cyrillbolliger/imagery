@@ -37,11 +37,17 @@ Route::delete('/users/{user}', 'UserController@destroy')
      ->where('user', '\d+')
      ->middleware('can:manage,user');
 
+Route::post('/users', 'UserController@store')
+     ->middleware('can:create,App\User');
 
+
+/**
+ * Defaults routes
+ *
+ * @todo: clean up
+ */
 Route::get('/', function () {
     return view('welcome');
 });
-
 Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');

@@ -164,7 +164,7 @@ class UserTest extends TestCase
         $managed = factory(User::class)->create(['super_admin' => false]);
 
         $managed->super_admin = true;
-        sleep(1);
+        sleep(1); // so we can test the modified time
 
         $response = $this->actingAs($manager)
                          ->putJson('/users/'.$managed->id, $managed->toArray());
@@ -200,7 +200,7 @@ class UserTest extends TestCase
         ]);
     }
 
-    public function testPutUser__admin_422()
+    public function testPutUser__adminMakeSuperAdmin_422()
     {
         $manager = factory(User::class)->create(['super_admin' => false]);
         $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
@@ -215,6 +215,42 @@ class UserTest extends TestCase
                          ->putJson('/users/'.$managed->id, $managed->toArray());
 
         $response->assertStatus(422);
+    }
+
+    public function testPutUser__adminRemoveSuperAdmin_422()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
+
+        $managed = factory(User::class)->create([
+            'managed_by'  => $manager->roles()->first()->group->id,
+            'super_admin' => true,
+        ]);
+
+        $managed->super_admin = false;
+
+        $response = $this->actingAs($manager)
+                         ->putJson('/users/'.$managed->id, $managed->toArray());
+
+        $response->assertStatus(422);
+    }
+
+    public function testPutUser__adminExistingSuperAdmin_200()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
+
+        $managed = factory(User::class)->create([
+            'managed_by'  => $manager->roles()->first()->group->id,
+            'super_admin' => true,
+        ]);
+
+        $managed->last_name = 'Super Admin';
+
+        $response = $this->actingAs($manager)
+                         ->putJson('/users/'.$managed->id, $managed->toArray());
+
+        $response->assertStatus(200);
     }
 
     public function testPutUser__weakPassword_422()
@@ -262,5 +298,7 @@ class UserTest extends TestCase
                          ->deleteJson('/users/'.$managed->id);
 
         $response->assertStatus(204);
+        $this->assertNull(User::find($managed->id));
+        $this->assertInstanceOf(User::class, User::withTrashed()->find($managed->id));
     }
 }
