@@ -29,13 +29,23 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request  $request
+     * @param  UserRequest  $request
+     * @param  User  $user  the user to update
      *
      * @return Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request, User $user)
     {
-        //
+        $data = $request->validated();
+
+        $user->fill($data);
+        $user->addedBy()->associate(Auth::user());
+
+        if ( ! $user->save()) {
+            return response('Could not save user.', 500);
+        }
+
+        return $user;
     }
 
     /**

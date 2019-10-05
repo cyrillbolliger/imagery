@@ -301,4 +301,67 @@ class UserTest extends TestCase
         $this->assertNull(User::find($managed->id));
         $this->assertInstanceOf(User::class, User::withTrashed()->find($managed->id));
     }
+
+    public function testPostUser__strangerSuperAdmin_201()
+    {
+        $manager = factory(User::class)->create(['super_admin' => true]);
+        $managed = factory(User::class)->make();
+
+        $data             = $managed->toArray();
+        $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+
+        $response = $this->actingAs($manager)
+                         ->postJson('/users', $data);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('users', [
+            'email' => $managed->email,
+        ]);
+    }
+
+    public function testPostUser__strangerAdmin_201()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
+
+        $managed = factory(User::class)->make();
+
+        $data             = $managed->toArray();
+        $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+
+        $response = $this->actingAs($manager)
+                         ->postJson('/users', $data);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('users', [
+            'email' => $managed->email,
+        ]);
+    }
+
+    public function testPostUser__superAdminAdmin_422()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
+
+        $managed = factory(User::class)->make(['super_admin' => true]);
+
+        $data             = $managed->toArray();
+        $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+
+        $response = $this->actingAs($manager)
+                         ->postJson('/users', $data);
+
+        $response->assertStatus(422);
+        $this->assertDatabaseMissing('users', [
+            'email' => $managed->email,
+        ]);
+    }
+
+
+    /**
+     * todo:
+     * - attach some roles to user (and validate it)
+     * - validate managed by
+     * - validate default_logo
+     */
 }

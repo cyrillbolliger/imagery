@@ -27,10 +27,16 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
+        $email = 'required|email|unique:users';
+        if ($this->user) {
+            // on update, exclude the user itself
+            $email .= ',email,'.$this->user->id;
+        }
+
         return [
             'first_name'   => 'required',
             'last_name'    => 'required',
-            'email'        => 'required|email|unique:users,email,'.$this->user->id,
+            'email'        => $email,
             'password'     => ['sometimes', new PasswordRule()],
             'managed_by'   => 'required|exists:users',
             'default_logo' => 'nullable|exists:logos',
