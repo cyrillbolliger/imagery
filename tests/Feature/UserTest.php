@@ -360,7 +360,6 @@ class UserTest extends TestCase
 
     /**
      * todo:
-     * - attach some roles to user (and validate it)
      * - validate managed by
      * - validate default_logo
      */
