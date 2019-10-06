@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
-use App\Rules\PasswordRule;
 use App\User;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -37,9 +34,7 @@ class UserController extends Controller
     public function store(UserRequest $request, User $user)
     {
         $data = $request->validated();
-
         $user->fill($data);
-        $user->addedBy()->associate(Auth::user());
 
         if ( ! $user->save()) {
             return response('Could not save user.', 500);
