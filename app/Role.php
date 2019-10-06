@@ -29,8 +29,30 @@ class Role extends Model
         return $query->where('admin', true);
     }
 
-    public function manageableUsers()
+    public function usersBelow()
     {
         return $this->group->usersBelow();
+    }
+
+    public function groupsBelow()
+    {
+        return $this->group->descendants();
+    }
+
+    public function isGroupBelow($group)
+    {
+        if (is_int($group)) {
+            $group = Group::find($group);
+        }
+
+        if ($this->group->is($group)) {
+            return true;
+        }
+
+        if ($group->isDescendantOf($this->group)) {
+            return true;
+        }
+
+        return false;
     }
 }

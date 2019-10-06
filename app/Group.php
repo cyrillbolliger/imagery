@@ -12,12 +12,25 @@ class Group extends Model
 
     public function parent()
     {
-        return $this->belongsTo(Group::class, 'parent_id')->where('id', '<>', $this->id);
+        return $this->belongsTo(Group::class, 'parent_id');
     }
 
     public function children()
     {
-        return $this->hasMany(Group::class, 'parent_id')->where('id', '<>', $this->id);
+        return $this->hasMany(Group::class, 'parent_id')
+                    ->where('id', '<>', $this->id);
+    }
+
+    public function descendants()
+    {
+        return $this->children()
+                    ->with('descendants');
+    }
+
+    public function ancestors()
+    {
+        return $this->parent()
+                    ->with('ancestors');
     }
 
     public function logos()

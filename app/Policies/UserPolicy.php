@@ -34,7 +34,7 @@ class UserPolicy
             return false;
         }
 
-        foreach ($manager->roles()->admin()->get() as $role) {
+        foreach ($manager->adminRoles()->get() as $role) {
             if ($managed->managedBy->is($role->group)) {
                 return true;
             }

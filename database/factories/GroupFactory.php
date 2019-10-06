@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Group::class, function (Faker $faker) {
     return [
-        'parent_id' => Group::first() ? Group::first()->id : 1,
+        'parent_id' => Group::first(),
         'added_by'  => User::first() ? User::first()->id : 1,
         'name'      => $faker->word
     ];

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UserLogoRule;
+use App\Rules\UserManagedByRule;
 use App\Rules\PasswordRule;
 use App\Rules\SuperAdminRule;
 use App\Rules\UniqueUpdateRule;
@@ -32,8 +34,8 @@ class UserRequest extends FormRequest
             'last_name'    => 'required',
             'email'        => ['required', 'max:170', 'email', new UniqueUpdateRule($this->user, 'users')],
             'password'     => ['sometimes', new PasswordRule()],
-            'managed_by'   => 'required|exists:users',
-            'default_logo' => 'nullable|exists:logos',
+            'managed_by'   => ['required', 'exists:groups,id', new UserManagedByRule($this->user)],
+            'default_logo' => ['nullable', 'exists:logos,id', new UserLogoRule($this->user)],
             'super_admin'  => ['required', 'boolean', new SuperAdminRule($this->user)],
             'lang'         => ['required', Rule::in(\App\User::LANGUAGES)]
         ];

@@ -76,9 +76,14 @@ class User extends Authenticatable
         return $this->hasMany(Role::class);
     }
 
+    public function adminRoles()
+    {
+        return $this->roles()->admin();
+    }
+
     public function isAdmin(): bool
     {
-        return $this->super_admin ? true : $this->roles()->admin()->exists();
+        return $this->super_admin ? true : $this->adminRoles()->exists();
     }
 
     public function manageableUsers()
@@ -88,10 +93,78 @@ class User extends Authenticatable
         }
 
         $users = collect();
-        foreach ($this->roles()->admin()->get() as $role) {
-            $users->push($role->manageableUsers());
+        foreach ($this->adminRoles()->get() as $role) {
+            $users->push($role->usersBelow());
         }
 
         return $users->flatten();
+    }
+
+    public function canManageGroup($group)
+    {
+        if ($this->super_admin) {
+            return true;
+        }
+
+        foreach ($this->adminRoles()->get() as $role) {
+            if ($role->isGroupBelow($group)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function canUseGroup($group)
+    {
+        if ($this->super_admin) {
+            return true;
+        }
+
+        foreach ($this->roles()->get() as $role) {
+            if ($role->isGroupBelow($role)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function canUseLogo($logo)
+    {
+        if ($this->super_admin) {
+            return true;
+        }
+
+        $logo = is_int($logo) ? Logo::find($logo) : $logo;
+
+        $groups = $logo->groups;
+
+        foreach ($groups as $group) {
+            if ($this->canUseGroup($group)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function canManageLogo($logo)
+    {
+        if ($this->super_admin) {
+            return true;
+        }
+
+        $logo = is_int($logo) ? Logo::find($logo) : $logo;
+
+        $groups = $logo->groups;
+
+        foreach ($groups as $group) {
+            if ($this->canManageGroup($group)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

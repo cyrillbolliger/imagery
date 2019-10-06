@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Group;
+use App\Logo;
 use App\Role;
 use App\User;
 use Illuminate\Support\Carbon;
@@ -324,7 +325,9 @@ class UserTest extends TestCase
         $manager = factory(User::class)->create(['super_admin' => false]);
         $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
 
-        $managed = factory(User::class)->make();
+        $managed = factory(User::class)->make([
+            'managed_by' => $manager->roles()->admin()->first()->group_id
+        ]);
 
         $data             = $managed->toArray();
         $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
@@ -357,10 +360,99 @@ class UserTest extends TestCase
         ]);
     }
 
+    public function testPostUser__managedByUnauthorizedGroup_422()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
 
-    /**
-     * todo:
-     * - validate managed by
-     * - validate default_logo
-     */
+        $group = factory(Group::class)->create();
+
+        $managed             = factory(User::class)->make();
+        $managed->managed_by = $group->id;
+
+        $data             = $managed->toArray();
+        $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+
+        $response = $this->actingAs($manager)
+                         ->postJson('/users', $data);
+
+        $response->assertStatus(422);
+    }
+
+    public function testPostUser__managedByAuthorizedGroup_201()
+    {
+        $group = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make([
+            'admin'    => true,
+            'group_id' => $group->id,
+        ]));
+
+        $managed             = factory(User::class)->make();
+        $managed->managed_by = $group->id;
+
+        $data             = $managed->toArray();
+        $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+
+        $response = $this->actingAs($manager)
+                         ->postJson('/users', $data);
+
+        $response->assertStatus(201);
+    }
+
+    public function testPostUser__managedByGroupSuperAdmin_201()
+    {
+        $manager = factory(User::class)->create(['super_admin' => true]);
+
+        $group = factory(Group::class)->create();
+
+        $managed             = factory(User::class)->make();
+        $managed->managed_by = $group->id;
+
+        $data             = $managed->toArray();
+        $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+
+        $response = $this->actingAs($manager)
+                         ->postJson('/users', $data);
+
+        $response->assertStatus(201);
+    }
+
+    public function testPostUser__unauthorizedDefaultLogo_422()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
+
+        $logo = factory(Logo::class)->create();
+
+        $managed               = factory(User::class)->make();
+        $managed->default_logo = $logo->id;
+
+        $data             = $managed->toArray();
+        $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+
+        $response = $this->actingAs($manager)
+                         ->postJson('/users', $data);
+
+        $response->assertStatus(422);
+    }
+
+    public function testPostUser__defaultLogoSuperAdmin_201()
+    {
+        $manager = factory(User::class)->create(['super_admin' => true]);
+
+        $logo = factory(Logo::class)->create();
+
+        $managed               = factory(User::class)->make();
+        $managed->default_logo = $logo->id;
+
+        $data             = $managed->toArray();
+        $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+
+        $response = $this->actingAs($manager)
+                         ->postJson('/users', $data);
+
+        $response->assertStatus(201);
+    }
 }
