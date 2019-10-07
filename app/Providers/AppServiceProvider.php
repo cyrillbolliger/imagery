@@ -24,5 +24,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         \App\User::observe(\App\Observers\UserObserver::class);
+        \App\Role::observe(\App\Observers\RoleObserver::class);
     }
 }
