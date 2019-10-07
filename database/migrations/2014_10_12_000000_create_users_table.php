@@ -33,7 +33,7 @@ class CreateUsersTable extends Migration
                 User::LANG_FR
             ]);
             $table->integer('login_count')->default(0);
-            $table->dateTime('last_login')->nullable();
+            $table->timestamp('last_login')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

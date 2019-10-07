@@ -6,8 +6,33 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 
-
+/**
+ * Class User
+ * @package App
+ *
+ * @property int $id
+ * @property string first_name
+ * @property string last_name
+ * @property string email
+ * @property Carbon $email_verified_at
+ * @property string $password
+ * @property int $added_by
+ * @property User|null $addedBy
+ * @property int $managed_by
+ * @property Group|null $managedBy
+ * @property int|null $default_logo
+ * @property Logo|null $defaultLogo
+ * @property bool $super_admin
+ * @property string $lang possible values in User::LANGUAGES
+ * @property int $login_count
+ * @property Carbon|null $last_login
+ * @property string|null $remember_token
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ */
 class User extends Authenticatable
 {
     use Notifiable;

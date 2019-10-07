@@ -4,8 +4,23 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
+/**
+ * Class Group
+ * @package App
+ *
+ * @property int $id
+ * @property int|null $parent_id
+ * @property Group|null $parent
+ * @property int $added_by
+ * @property User|null $addedBy
+ * @property string $name
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ */
 class Group extends Model
 {
     use SoftDeletes;

@@ -11,14 +11,6 @@
 |
 */
 
-
-Route::get('/images/raw', 'ImageController@listRaw');
-Route::get('/images/{image}', 'ImageController@get')->where('image', '\d+');
-Route::get('/images/raw/search/{query}', 'ImageController@searchRaw')->where('query', '.*');
-Route::post('/images/raw', 'ImageController@storeRaw');
-Route::delete('/images/{id}', 'ImageController@deleteRaw')->where('id', '\d+');
-
-
 /**
  * Users
  */
@@ -41,8 +33,9 @@ Route::post('/users', 'UserController@store')
      ->middleware('can:create,App\User');
 
 
+
 /**
- * Defaults routes
+ * Old routes
  *
  * @todo: clean up
  */
@@ -51,3 +44,9 @@ Route::get('/', function () {
 });
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/images/raw', 'ImageController@listRaw');
+Route::get('/images/{image}', 'ImageController@get')->where('image', '\d+');
+Route::get('/images/raw/search/{query}', 'ImageController@searchRaw')->where('query', '.*');
+Route::post('/images/raw', 'ImageController@storeRaw');
+Route::delete('/images/{id}', 'ImageController@deleteRaw')->where('id', '\d+');
