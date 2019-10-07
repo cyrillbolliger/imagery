@@ -67,6 +67,19 @@ class UserTest extends TestCase
         $this->assertTrue($user->canManageGroup($group));
     }
 
+    public function testCanManageGroup__nonAdmin()
+    {
+        $user  = factory(User::class)->create(['super_admin' => false]);
+        $group = factory(Group::class)->create();
+        $user->roles()
+             ->save(factory(Role::class)->make([
+                 'admin'    => false,
+                 'group_id' => $group->id,
+             ]));
+
+        $this->assertFalse($user->canManageGroup($group));
+    }
+
     public function testCanManageChildGroup__admin()
     {
         $user  = factory(User::class)->create(['super_admin' => false]);
@@ -81,7 +94,7 @@ class UserTest extends TestCase
         $this->assertTrue($user->canManageGroup($childGroup));
     }
 
-    public function testCanManageGroup__nonAdmin()
+    public function testCanUseGroup__nonAdmin()
     {
         $user  = factory(User::class)->create(['super_admin' => false]);
         $group = factory(Group::class)->create();
@@ -91,6 +104,107 @@ class UserTest extends TestCase
                  'group_id' => $group->id,
              ]));
 
-        $this->assertFalse($user->canManageGroup($group));
+        $this->assertTrue($user->canUseGroup($group));
+    }
+
+    public function testCanUseChildGroup__nonAdmin()
+    {
+        $user  = factory(User::class)->create(['super_admin' => false]);
+        $group = factory(Group::class)->create();
+        $user->roles()
+             ->save(factory(Role::class)->make([
+                 'admin'    => false,
+                 'group_id' => $group->id,
+             ]));
+        $childGroup = factory(Group::class)->create(['parent_id' => $group->id]);
+
+        $this->assertFalse($user->canUseGroup($childGroup));
+    }
+
+    public function testCanUseChildGroup__admin()
+    {
+        $user  = factory(User::class)->create(['super_admin' => false]);
+        $group = factory(Group::class)->create();
+        $user->roles()
+             ->save(factory(Role::class)->make([
+                 'admin'    => true,
+                 'group_id' => $group->id,
+             ]));
+        $childGroup = factory(Group::class)->create(['parent_id' => $group->id]);
+
+        $this->assertTrue($user->canUseGroup($childGroup));
+    }
+
+    public function testCanUseLogo__admin()
+    {
+        $user  = factory(User::class)->create(['super_admin' => false]);
+        $group = factory(Group::class)->create();
+        $user->roles()
+             ->save(factory(Role::class)->make([
+                 'admin'    => true,
+                 'group_id' => $group->id,
+             ]));
+        $childGroup = factory(Group::class)->create(['parent_id' => $group->id]);
+        $logo       = factory(Logo::class)->create();
+        $childGroup->logos()->attach($logo->id);
+        $childGroup->save();
+
+        $this->assertTrue($user->canUseLogo($logo));
+    }
+
+    public function testCanUseLogo__nonAdmin()
+    {
+        $user  = factory(User::class)->create(['super_admin' => false]);
+        $group = factory(Group::class)->create();
+        $user->roles()
+             ->save(factory(Role::class)->make([
+                 'admin'    => false,
+                 'group_id' => $group->id,
+             ]));
+        $childGroup = factory(Group::class)->create(['parent_id' => $group->id]);
+
+        $logo1 = factory(Logo::class)->create();
+        $group->logos()->attach($logo1->id);
+        $group->save();
+
+        $logo2 = factory(Logo::class)->create();
+        $childGroup->logos()->attach($logo2->id);
+        $childGroup->save();
+
+        $this->assertTrue($user->canUseLogo($logo1));
+        $this->assertFalse($user->canUseLogo($logo2));
+    }
+
+    public function testCanManageLogo__admin()
+    {
+        $user  = factory(User::class)->create(['super_admin' => false]);
+        $group = factory(Group::class)->create();
+        $user->roles()
+             ->save(factory(Role::class)->make([
+                 'admin'    => true,
+                 'group_id' => $group->id,
+             ]));
+        $childGroup = factory(Group::class)->create(['parent_id' => $group->id]);
+        $logo       = factory(Logo::class)->create();
+        $childGroup->logos()->attach($logo->id);
+        $childGroup->save();
+
+        $this->assertTrue($user->canManageLogo($logo));
+    }
+
+    public function testCanManageLogo__nonAdmin()
+    {
+        $user  = factory(User::class)->create(['super_admin' => false]);
+        $group = factory(Group::class)->create();
+        $user->roles()
+             ->save(factory(Role::class)->make([
+                 'admin'    => false,
+                 'group_id' => $group->id,
+             ]));
+        $logo = factory(Logo::class)->create();
+        $group->logos()->attach($logo->id);
+        $group->save();
+
+        $this->assertFalse($user->canManageLogo($logo));
     }
 }
