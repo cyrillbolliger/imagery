@@ -79,16 +79,6 @@ class Role extends Model
     }
 
     /**
-     * A tree with all the descending groups of this roles group
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function groupsBelow()
-    {
-        return $this->group->descendants();
-    }
-
-    /**
      * Check if the given group is the group of this role or any descendant of
      * the group of this role.
      *
