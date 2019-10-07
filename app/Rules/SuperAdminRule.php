@@ -63,7 +63,7 @@ class SuperAdminRule implements Rule
             return true;
         }
 
-        return \App\User::find($this->user->id)->super_admin !== $value;
+        return User::find($this->user->id)->super_admin !== $value;
     }
 
     /**
