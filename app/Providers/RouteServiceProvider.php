@@ -23,9 +23,12 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-
         parent::boot();
+
+        // Bind user and role explicitly because we use both models at once
+        // in the role routes
+        Route::model('user', \App\User::class);
+        Route::model('role', \App\Role::class);
     }
 
     /**
@@ -35,7 +38,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $this->mapApiRoutes();
+        // $this->mapApiRoutes();
 
         $this->mapWebRoutes();
 

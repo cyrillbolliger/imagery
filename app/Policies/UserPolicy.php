@@ -17,7 +17,7 @@ class UserPolicy
     }
 
     /**
-     * Determine whether the user can manage other users.
+     * Determine whether the user can manage the other user.
      *
      * @param  User  $manager  the user currently logged in
      * @param  User  $managed  the user to manage

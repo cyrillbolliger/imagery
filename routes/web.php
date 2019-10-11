@@ -32,7 +32,28 @@ Route::delete('/users/{user}', 'UserController@destroy')
 Route::post('/users', 'UserController@store')
      ->middleware('can:create,App\User');
 
+/**
+ * Roles
+ */
+Route::get('/users/{user}/roles/{role}', 'RoleController@show')
+     ->where(['user' => '\d+', 'role' => '\d+'])
+     ->middleware('can:view,role');
 
+Route::get('/users/{user}/roles', 'RoleController@index')
+     ->where('user', '\d+')
+     ->middleware('can:view,App\Role');
+
+//Route::put('/users/{user}/roles/{role}', 'RoleController@update')
+//     ->where(['user' => '\d+', 'role' => '\d+'])
+//     ->middleware('can:manage,role');
+//
+//Route::delete('/users/{user}/roles/{role}', 'RoleController@destroy')
+//     ->where(['user' => '\d+', 'role' => '\d+'])
+//     ->middleware('can:manage,role');
+//
+//Route::post('/users/{user}/roles', 'RoleController@store')
+//     ->where('user', '\d+')
+//     ->middleware('can:create,App\Role');
 
 /**
  * Old routes
