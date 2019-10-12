@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Rules\ImmutableRule;
 use App\Rules\PasswordRule;
 use App\Rules\SuperAdminRule;
 use App\Rules\UniqueUpdateRule;
@@ -41,14 +42,21 @@ class UserController extends Controller
     public function store(Request $request, User $user)
     {
         $data = $request->validate([
-            'first_name'   => 'required',
-            'last_name'    => 'required',
-            'email'        => ['required', 'max:170', 'email', 'unique:users'],
-            'password'     => ['required', new PasswordRule()],
-            'managed_by'   => ['required', 'exists:groups,id', new UserManagedByRule(null)],
-            'default_logo' => ['nullable', 'exists:logos,id', new UserLogoRule(null)],
-            'super_admin'  => ['sometimes', 'boolean', new SuperAdminRule(null)],
-            'lang'         => ['required', Rule::in(\App\User::LANGUAGES)]
+            'first_name'     => 'required',
+            'last_name'      => 'required',
+            'email'          => ['required', 'max:170', 'email', 'unique:users'],
+            'password'       => ['required', new PasswordRule()],
+            'added_by'       => ['sometimes', new ImmutableRule($user)],
+            'managed_by'     => ['required', 'exists:groups,id', new UserManagedByRule(null)],
+            'default_logo'   => ['nullable', 'exists:logos,id', new UserLogoRule(null)],
+            'super_admin'    => ['sometimes', 'boolean', new SuperAdminRule(null)],
+            'lang'           => ['required', Rule::in(\App\User::LANGUAGES)],
+            'login_count'    => ['sometimes', new ImmutableRule($user)],
+            'last_login'     => ['sometimes', new ImmutableRule($user)],
+            'remember_token' => ['sometimes', new ImmutableRule($user)],
+            'created_at'     => ['sometimes', new ImmutableRule($user)],
+            'updated_at'     => ['sometimes', new ImmutableRule($user)],
+            'deleted_at'     => ['sometimes', new ImmutableRule($user)],
         ]);
         $user->fill($data);
 
@@ -82,14 +90,21 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $data = $request->validate([
-            'first_name'   => 'sometimes|required',
-            'last_name'    => 'sometimes|required',
-            'email'        => ['sometimes', 'required', 'max:170', 'email', 'unique:users,email,'.$user->id],
-            'password'     => ['sometimes', 'required', new PasswordRule()],
-            'managed_by'   => ['sometimes', 'required', 'exists:groups,id', new UserManagedByRule($user)],
-            'default_logo' => ['sometimes', 'nullable', 'exists:logos,id', new UserLogoRule($user)],
-            'super_admin'  => ['sometimes', 'boolean', new SuperAdminRule($user)],
-            'lang'         => ['sometimes', 'required', Rule::in(\App\User::LANGUAGES)]
+            'first_name'     => 'sometimes|required',
+            'last_name'      => 'sometimes|required',
+            'email'          => ['sometimes', 'required', 'max:170', 'email', 'unique:users,email,'.$user->id],
+            'password'       => ['sometimes', 'required', new PasswordRule()],
+            'added_by'       => ['sometimes', new ImmutableRule($user)],
+            'managed_by'     => ['sometimes', 'required', 'exists:groups,id', new UserManagedByRule($user)],
+            'default_logo'   => ['sometimes', 'nullable', 'exists:logos,id', new UserLogoRule($user)],
+            'super_admin'    => ['sometimes', 'boolean', new SuperAdminRule($user)],
+            'lang'           => ['sometimes', 'required', Rule::in(\App\User::LANGUAGES)],
+            'login_count'    => ['sometimes', new ImmutableRule($user)],
+            'last_login'     => ['sometimes', new ImmutableRule($user)],
+            'remember_token' => ['sometimes', new ImmutableRule($user)],
+            'created_at'     => ['sometimes', new ImmutableRule($user)],
+            'updated_at'     => ['sometimes', new ImmutableRule($user)],
+            'deleted_at'     => ['sometimes', new ImmutableRule($user)],
         ]);
 
         if ( ! $user->update($data)) {

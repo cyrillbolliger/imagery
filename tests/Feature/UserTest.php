@@ -272,7 +272,7 @@ class UserTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function testPutUser__changeAddedBy_422()
+    public function testPutUser__changeImmutable_422()
     {
         $manager = factory(User::class)->create(['super_admin' => false]);
         $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
@@ -283,8 +283,24 @@ class UserTest extends TestCase
 
         $response = $this->actingAs($manager)
                          ->putJson('/users/'.$managed->id, [
-                             'id'       => $managed->id,
                              'added_by' => $manager->id
+                         ]);
+
+        $response->assertStatus(422);
+    }
+
+    public function testPutUser__changeDeleted_422()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
+
+        $managed = factory(User::class)->create([
+            'managed_by' => $manager->roles()->first()->group->id
+        ]);
+
+        $response = $this->actingAs($manager)
+                         ->putJson('/users/'.$managed->id, [
+                             'deleted_at' => date('Y-m-d H:i:s')
                          ]);
 
         $response->assertStatus(422);
@@ -473,4 +489,45 @@ class UserTest extends TestCase
 
         $response->assertStatus(201);
     }
+
+    public function testPutUser__changeSingleField_200()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
+
+        $managed = factory(User::class)->create([
+            'managed_by' => $manager->roles()->first()->group->id
+        ]);
+
+        $response = $this->actingAs($manager)
+                         ->putJson('/users/'.$managed->id, [
+                             'first_name' => 'changed',
+                         ]);
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('users', [
+            'id'         => $managed->id,
+            'first_name' => 'changed',
+        ]);
+    }
+
+    public function testPostUser__addUserMissingField_422()
+    {
+        $manager = factory(User::class)->create(['super_admin' => true]);
+        $managed = factory(User::class)->make();
+
+        $data = $managed->toArray();
+        //$data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+
+        $response = $this->actingAs($manager)
+                         ->postJson('/users', $data);
+
+        $response->assertStatus(422);
+        $this->assertDatabaseMissing('users', [
+            'first_name' => 'first name only',
+        ]);
+    }
+
+
+//allow to send only the changed fields
 }

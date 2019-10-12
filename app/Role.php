@@ -27,6 +27,25 @@ class Role extends Model
     use SoftDeletes;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'group_id',
+        'admin',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'admin' => 'boolean'
+    ];
+
+    /**
      * This roles user
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
