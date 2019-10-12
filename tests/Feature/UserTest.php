@@ -272,6 +272,24 @@ class UserTest extends TestCase
         $response->assertStatus(422);
     }
 
+    public function testPutUser__changeAddedBy_422()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
+
+        $managed = factory(User::class)->create([
+            'managed_by' => $manager->roles()->first()->group->id
+        ]);
+
+        $response = $this->actingAs($manager)
+                         ->putJson('/users/'.$managed->id, [
+                             'id'       => $managed->id,
+                             'added_by' => $manager->id
+                         ]);
+
+        $response->assertStatus(422);
+    }
+
     public function testPutUser__strongPassword_200()
     {
         $manager = factory(User::class)->create(['super_admin' => false]);
