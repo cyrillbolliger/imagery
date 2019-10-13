@@ -43,10 +43,10 @@ Route::get('/users/{user}/roles', 'RoleController@index')
      ->where('user', '\d+')
      ->middleware('can:view,App\Role');
 
-//Route::put('/users/{user}/roles/{role}', 'RoleController@update')
-//     ->where(['user' => '\d+', 'role' => '\d+'])
-//     ->middleware('can:manage,role');
-//
+Route::put('/users/{user}/roles/{role}', 'RoleController@update')
+     ->where(['user' => '\d+', 'role' => '\d+'])
+     ->middleware('can:manage,role');
+
 //Route::delete('/users/{user}/roles/{role}', 'RoleController@destroy')
 //     ->where(['user' => '\d+', 'role' => '\d+'])
 //     ->middleware('can:manage,role');

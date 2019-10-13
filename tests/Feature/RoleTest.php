@@ -120,4 +120,113 @@ class RoleTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    public function testPutRole__userChangeAdmin__422()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $group   = factory(Group::class)->create();
+        factory(Role::class)->create([
+            'group_id' => $group->id,
+            'user_id'  => $manager->id,
+            'admin'    => true,
+        ]);
+
+        $managedOld = factory(User::class)->create(['managed_by' => $group->id]);
+        $managedNew = factory(User::class)->create(['managed_by' => $group->id]);
+
+        $role = factory(Role::class)->create([
+            'user_id'  => $managedOld->id,
+            'group_id' => $group->id
+        ]);
+
+        $role->user_id = $managedNew->id;
+
+        $response = $this->actingAs($manager)
+                         ->putJson("/users/$managedOld->id/roles/$role->id", $role->toArray());
+
+        $response->assertStatus(422);
+    }
+
+    public function testPutRole__notOldGroupAdmin__403()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $group   = factory(Group::class)->create();
+        factory(Role::class)->create([
+            'group_id' => $group->id,
+            'user_id'  => $manager->id,
+            'admin'    => true,
+        ]);
+
+        $managed = factory(User::class)->create();
+
+        $role = factory(Role::class)->create([
+            'user_id' => $managed->id,
+        ]);
+
+        $role->group_id = $group->id;
+
+        $response = $this->actingAs($manager)
+                         ->putJson("/users/$managed->id/roles/$role->id", $role->toArray());
+
+        $response->assertStatus(403);
+    }
+
+    public function testPutRole__notNewGroupAdmin__403()
+    {
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $group   = factory(Group::class)->create();
+        factory(Role::class)->create([
+            'group_id' => $group->id,
+            'user_id'  => $manager->id,
+            'admin'    => true,
+        ]);
+
+        $managed = factory(User::class)->create();
+
+        $role = factory(Role::class)->create([
+            'user_id'  => $managed->id,
+            'group_id' => $group->id,
+        ]);
+
+        $role->group_id = factory(Group::class)->create()->id;
+
+        $response = $this->actingAs($manager)
+                         ->putJson("/users/$managed->id/roles/$role->id", $role->toArray());
+
+        $response->assertStatus(403);
+    }
+
+    public function testPutRole__admin__200()
+    {
+        $manager  = factory(User::class)->create(['super_admin' => false]);
+        $groupOld = factory(Group::class)->create();
+        factory(Role::class)->create([
+            'group_id' => $groupOld->id,
+            'user_id'  => $manager->id,
+            'admin'    => true,
+        ]);
+        $groupNew = factory(Group::class)->create();
+        factory(Role::class)->create([
+            'group_id' => $groupNew->id,
+            'user_id'  => $manager->id,
+            'admin'    => true,
+        ]);
+
+        $managed = factory(User::class)->create([
+            'managed_by' => $groupOld->id
+        ]);
+
+        $role = factory(Role::class)->create([
+            'user_id'  => $managed->id,
+            'group_id' => $groupOld->id,
+        ]);
+
+        $role->group_id = $groupNew->id;
+        $role->admin    = true;
+
+        $response = $this->actingAs($manager)
+                         ->putJson("/users/$managed->id/roles/$role->id", $role->toArray());
+
+        $response->assertStatus(200);
+    }
 }

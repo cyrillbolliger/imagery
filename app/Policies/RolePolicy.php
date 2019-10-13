@@ -21,14 +21,25 @@ class RolePolicy
      * Determine whether the user can manage the role.
      *
      * @param  User  $manager  the user currently logged in
-     * @param  User  $managed  the user to manage
      * @param  Role  $role  the role to manage
      *
      * @return mixed
      */
-    public function manage(User $manager, User $managed, Role $role): bool
+    public function manage(User $manager, Role $role): bool
     {
-        return false; // todo
+        if ( ! $manager->can('manage', $role->user)) {
+            return false;
+        }
+
+        if ( ! $manager->canManageGroup($role->group)) {
+            return false;
+        }
+
+        if ( ! $manager->canManageGroup(request()->group_id)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

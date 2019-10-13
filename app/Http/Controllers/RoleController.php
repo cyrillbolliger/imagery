@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Role;
+use App\Rules\ImmutableRule;
+use App\Rules\UserManagedByRule;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class RoleController extends Controller
 {
@@ -23,9 +26,9 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -36,7 +39,7 @@ class RoleController extends Controller
      * Display the specified resource.
      *
      * @param  User  $user
-     * @param  \App\Role  $role
+     * @param  Role  $role
      *
      * @return Role
      */
@@ -57,22 +60,38 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Role  $role
+     * @param  Request  $request
+     * @param  User  $user
+     * @param  Role  $role
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request, User $user, Role $role)
     {
-        //
+        $data = $request->validate([
+            'id'         => ['sometimes', new ImmutableRule($role)],
+            'group_id'   => ['sometimes', 'required', 'exists:groups,id', new UserManagedByRule($user)],
+            'user_id'    => ['sometimes', new ImmutableRule($role)],
+            'added_by'   => ['sometimes', new ImmutableRule($role)],
+            'admin'      => ['sometimes', 'required', 'boolean'],
+            'created_at' => ['sometimes', new ImmutableRule($role)],
+            'updated_at' => ['sometimes', new ImmutableRule($role)],
+            'deleted_at' => ['sometimes', new ImmutableRule($role)],
+        ]);
+
+        if ( ! $role->update($data)) {
+            return response('Could not save role.', 500);
+        }
+
+        return $role;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Role  $role
+     * @param  Role  $role
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Role $role)
     {
