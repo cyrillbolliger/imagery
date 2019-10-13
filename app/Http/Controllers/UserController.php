@@ -35,98 +35,98 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  Request  $request
-     * @param  User  $user  the user to update
+     * @param  User  $managed  the user to update
      *
      * @return Response
      */
-    public function store(Request $request, User $user)
+    public function store(Request $request, User $managed)
     {
         $data = $request->validate([
-            'id'             => ['sometimes', new ImmutableRule($user)],
+            'id'             => ['sometimes', new ImmutableRule($managed)],
             'first_name'     => 'required',
             'last_name'      => 'required',
             'email'          => ['required', 'max:170', 'email', 'unique:users'],
             'password'       => ['required', new PasswordRule()],
-            'added_by'       => ['sometimes', new ImmutableRule($user)],
+            'added_by'       => ['sometimes', 'in:'.Auth::id()],
             'managed_by'     => ['required', 'exists:groups,id', new UserManagedByRule(null)],
             'default_logo'   => ['nullable', 'exists:logos,id', new UserLogoRule(null)],
             'super_admin'    => ['sometimes', 'required', 'boolean', new SuperAdminRule(null)],
             'lang'           => ['required', Rule::in(\App\User::LANGUAGES)],
-            'login_count'    => ['sometimes', new ImmutableRule($user)],
-            'last_login'     => ['sometimes', new ImmutableRule($user)],
-            'remember_token' => ['sometimes', new ImmutableRule($user)],
-            'created_at'     => ['sometimes', new ImmutableRule($user)],
-            'updated_at'     => ['sometimes', new ImmutableRule($user)],
-            'deleted_at'     => ['sometimes', new ImmutableRule($user)],
+            'login_count'    => ['sometimes', new ImmutableRule($managed)],
+            'last_login'     => ['sometimes', new ImmutableRule($managed)],
+            'remember_token' => ['sometimes', new ImmutableRule($managed)],
+            'created_at'     => ['sometimes', new ImmutableRule($managed)],
+            'updated_at'     => ['sometimes', new ImmutableRule($managed)],
+            'deleted_at'     => ['sometimes', new ImmutableRule($managed)],
         ]);
-        $user->fill($data);
+        $managed->fill($data);
 
-        if ( ! $user->save()) {
+        if ( ! $managed->save()) {
             return response('Could not save user.', 500);
         }
 
-        return $user;
+        return $managed;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  User  $user
+     * @param  User  $managed
      *
      * @return User
      */
-    public function show(User $user)
+    public function show(User $managed)
     {
-        return $user;
+        return $managed;
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  Request  $request
-     * @param  User  $user  the user to update
+     * @param  User  $managed  the user to update
      *
      * @return User
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $managed)
     {
         $data = $request->validate([
-            'id'           => ['sometimes', new ImmutableRule($user)],
-            'first_name'   => 'sometimes|required',
-            'last_name'    => 'sometimes|required',
-            'email'        => ['sometimes', 'required', 'max:170', 'email', 'unique:users,email,'.$user->id],
-            'password'     => ['sometimes', 'required', new PasswordRule()],
-            'added_by'     => ['sometimes', new ImmutableRule($user)],
-            'managed_by'   => ['sometimes', 'required', 'exists:groups,id', new UserManagedByRule($user)],
-            'default_logo' => ['sometimes', 'nullable', 'exists:logos,id', new UserLogoRule($user)],
-            'super_admin'    => ['sometimes', 'boolean', new SuperAdminRule($user)],
+            'id'             => ['sometimes', new ImmutableRule($managed)],
+            'first_name'     => 'sometimes|required',
+            'last_name'      => 'sometimes|required',
+            'email'          => ['sometimes', 'required', 'max:170', 'email', 'unique:users,email,'.$managed->id],
+            'password'       => ['sometimes', 'required', new PasswordRule()],
+            'added_by'       => ['sometimes', new ImmutableRule($managed)],
+            'managed_by'     => ['sometimes', 'required', 'exists:groups,id', new UserManagedByRule($managed)],
+            'default_logo'   => ['sometimes', 'nullable', 'exists:logos,id', new UserLogoRule($managed)],
+            'super_admin'    => ['sometimes', 'boolean', new SuperAdminRule($managed)],
             'lang'           => ['sometimes', 'required', Rule::in(\App\User::LANGUAGES)],
-            'login_count'    => ['sometimes', new ImmutableRule($user)],
-            'last_login'     => ['sometimes', new ImmutableRule($user)],
-            'remember_token' => ['sometimes', new ImmutableRule($user)],
-            'created_at'     => ['sometimes', new ImmutableRule($user)],
-            'updated_at'     => ['sometimes', new ImmutableRule($user)],
-            'deleted_at'     => ['sometimes', new ImmutableRule($user)],
+            'login_count'    => ['sometimes', new ImmutableRule($managed)],
+            'last_login'     => ['sometimes', new ImmutableRule($managed)],
+            'remember_token' => ['sometimes', new ImmutableRule($managed)],
+            'created_at'     => ['sometimes', new ImmutableRule($managed)],
+            'updated_at'     => ['sometimes', new ImmutableRule($managed)],
+            'deleted_at'     => ['sometimes', new ImmutableRule($managed)],
         ]);
 
-        if ( ! $user->update($data)) {
+        if ( ! $managed->update($data)) {
             return response('Could not save user.', 500);
         }
 
-        return $user;
+        return $managed;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  User  $user
+     * @param  User  $managed
      *
      * @return Response
      * @throws Exception
      */
-    public function destroy(User $user)
+    public function destroy(User $managed)
     {
-        if ( ! $user->delete()) {
+        if ( ! $managed->delete()) {
             return response('Could not delete user.', 500);
         }
 
