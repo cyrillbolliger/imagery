@@ -521,8 +521,8 @@ class UserTest extends TestCase
         $manager = factory(User::class)->create(['super_admin' => true]);
         $managed = factory(User::class)->make();
 
-        $data = $managed->toArray();
-        //$data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+        $data             = $managed->toArray();
+        $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
 
         $response = $this->actingAs($manager)
                          ->postJson('/users', $data);
@@ -532,7 +532,4 @@ class UserTest extends TestCase
             'first_name' => 'first name only',
         ]);
     }
-
-
-//allow to send only the changed fields
 }
