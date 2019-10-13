@@ -30,10 +30,17 @@ class ImmutableRule implements Rule
      * @param  string  $attribute
      * @param  mixed  $value
      *
-     * @return bool
+     * @return bool|string  true or false for direct validation string if we
+     *                      pass it further to a built in validation rule
      */
     public function passes($attribute, $value)
     {
+        // if it's a date time object equality check is more complicated
+        // we therefor use the built in method for that
+        if ($this->model->$attribute instanceof \Illuminate\Support\Carbon) {
+            return 'date_equals:'.$this->model->$attribute->toDateTimeString();
+        }
+
         return $this->model->$attribute === $value;
     }
 
@@ -44,6 +51,6 @@ class ImmutableRule implements Rule
      */
     public function message()
     {
-        return 'The :attribute is read only.';
+        return 'The :attribute is not mutable.';
     }
 }

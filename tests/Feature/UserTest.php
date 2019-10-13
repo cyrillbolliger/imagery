@@ -344,6 +344,7 @@ class UserTest extends TestCase
 
         $data             = $managed->toArray();
         $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+        unset($data['added_by']); // immutable
 
         $response = $this->actingAs($manager)
                          ->postJson('/users', $data);
@@ -365,6 +366,7 @@ class UserTest extends TestCase
 
         $data             = $managed->toArray();
         $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+        unset($data['added_by']); // immutable
 
         $response = $this->actingAs($manager)
                          ->postJson('/users', $data);
@@ -428,6 +430,7 @@ class UserTest extends TestCase
 
         $data             = $managed->toArray();
         $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+        unset($data['added_by']); // immutable
 
         $response = $this->actingAs($manager)
                          ->postJson('/users', $data);
@@ -446,6 +449,7 @@ class UserTest extends TestCase
 
         $data             = $managed->toArray();
         $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+        unset($data['added_by']); // immutable
 
         $response = $this->actingAs($manager)
                          ->postJson('/users', $data);
@@ -483,6 +487,7 @@ class UserTest extends TestCase
 
         $data             = $managed->toArray();
         $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+        unset($data['added_by']); // immutable
 
         $response = $this->actingAs($manager)
                          ->postJson('/users', $data);

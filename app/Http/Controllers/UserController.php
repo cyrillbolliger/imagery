@@ -42,6 +42,7 @@ class UserController extends Controller
     public function store(Request $request, User $user)
     {
         $data = $request->validate([
+            'id'             => ['sometimes', new ImmutableRule($user)],
             'first_name'     => 'required',
             'last_name'      => 'required',
             'email'          => ['required', 'max:170', 'email', 'unique:users'],
@@ -49,7 +50,7 @@ class UserController extends Controller
             'added_by'       => ['sometimes', new ImmutableRule($user)],
             'managed_by'     => ['required', 'exists:groups,id', new UserManagedByRule(null)],
             'default_logo'   => ['nullable', 'exists:logos,id', new UserLogoRule(null)],
-            'super_admin'    => ['sometimes', 'boolean', new SuperAdminRule(null)],
+            'super_admin'    => ['sometimes', 'required', 'boolean', new SuperAdminRule(null)],
             'lang'           => ['required', Rule::in(\App\User::LANGUAGES)],
             'login_count'    => ['sometimes', new ImmutableRule($user)],
             'last_login'     => ['sometimes', new ImmutableRule($user)],
@@ -90,13 +91,14 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $data = $request->validate([
-            'first_name'     => 'sometimes|required',
-            'last_name'      => 'sometimes|required',
-            'email'          => ['sometimes', 'required', 'max:170', 'email', 'unique:users,email,'.$user->id],
-            'password'       => ['sometimes', 'required', new PasswordRule()],
-            'added_by'       => ['sometimes', new ImmutableRule($user)],
-            'managed_by'     => ['sometimes', 'required', 'exists:groups,id', new UserManagedByRule($user)],
-            'default_logo'   => ['sometimes', 'nullable', 'exists:logos,id', new UserLogoRule($user)],
+            'id'           => ['sometimes', new ImmutableRule($user)],
+            'first_name'   => 'sometimes|required',
+            'last_name'    => 'sometimes|required',
+            'email'        => ['sometimes', 'required', 'max:170', 'email', 'unique:users,email,'.$user->id],
+            'password'     => ['sometimes', 'required', new PasswordRule()],
+            'added_by'     => ['sometimes', new ImmutableRule($user)],
+            'managed_by'   => ['sometimes', 'required', 'exists:groups,id', new UserManagedByRule($user)],
+            'default_logo' => ['sometimes', 'nullable', 'exists:logos,id', new UserLogoRule($user)],
             'super_admin'    => ['sometimes', 'boolean', new SuperAdminRule($user)],
             'lang'           => ['sometimes', 'required', Rule::in(\App\User::LANGUAGES)],
             'login_count'    => ['sometimes', new ImmutableRule($user)],
