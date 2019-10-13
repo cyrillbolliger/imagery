@@ -84,14 +84,22 @@ class RolePolicy
     /**
      * Determine whether the user can delete the role.
      *
-     * @param  \App\User  $user
+     * @param  \App\User  $manager
      * @param  \App\Role  $role
      *
      * @return mixed
      */
-    public function delete(User $user, Role $role)
+    public function delete(User $manager, Role $role)
     {
-        //
+        if ( ! $manager->can('manage', $role->user)) {
+            return false;
+        }
+
+        if ( ! $manager->canManageGroup($role->group)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

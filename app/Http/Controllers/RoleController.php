@@ -68,6 +68,11 @@ class RoleController extends Controller
      */
     public function update(Request $request, User $user, Role $role)
     {
+        if ( ! $role->user->is($user)) {
+            // the role doesn't belong to the user
+            return response("User hasn't matching role", 404);
+        }
+
         $data = $request->validate([
             'id'         => ['sometimes', new ImmutableRule($role)],
             'group_id'   => ['sometimes', 'required', 'exists:groups,id', new UserManagedByRule($user)],
@@ -90,11 +95,22 @@ class RoleController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  Role  $role
+     * @param  User  $user
      *
      * @return Response
+     * @throws \Exception
      */
-    public function destroy(Role $role)
+    public function destroy(User $user, Role $role)
     {
-        //
+        if ( ! $role->user->is($user)) {
+            // the role doesn't belong to the user
+            return response("User hasn't matching role", 404);
+        }
+
+        if ( ! $role->delete()) {
+            return response('Could not delete role.', 500);
+        }
+
+        return response(null, 204);
     }
 }

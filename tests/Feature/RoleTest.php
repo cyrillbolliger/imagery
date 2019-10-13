@@ -229,4 +229,89 @@ class RoleTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function testDeleteRole__admin__200()
+    {
+        $group = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make([
+            'admin'    => true,
+            'group_id' => $group->id
+        ]));
+
+        $role    = factory(Role::class)->make([
+            'group_id' => $group->id
+        ]);
+        $managed = factory(User::class)->create([
+            'super_admin' => false,
+            'managed_by'  => $group->id
+        ]);
+        $managed->roles()->save($role);
+
+        $response = $this->actingAs($manager)
+                         ->deleteJson("/users/$managed->id/roles/$role->id");
+
+        $response->assertStatus(204);
+        $this->assertDatabaseMissing('roles', [
+            'id'         => $role->id,
+            'deleted_at' => null
+        ]);
+    }
+
+    public function testDeleteRole__adminCantManageUser__403()
+    {
+        $group = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make([
+            'admin'    => true,
+            'group_id' => $group->id
+        ]));
+
+        $role    = factory(Role::class)->make([
+            'group_id' => $group->id
+        ]);
+        $managed = factory(User::class)->create([
+            'super_admin' => false,
+        ]);
+        $managed->roles()->save($role);
+
+        $response = $this->actingAs($manager)
+                         ->deleteJson("/users/$managed->id/roles/$role->id");
+
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('roles', [
+            'id'         => $role->id,
+            'deleted_at' => null
+        ]);
+    }
+
+    public function testDeleteRole__adminCantManageGroup__403()
+    {
+        $group = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(factory(Role::class)->make([
+            'admin' => true,
+        ]));
+
+        $role    = factory(Role::class)->make([
+            'group_id' => $group->id
+        ]);
+        $managed = factory(User::class)->create([
+            'super_admin' => false,
+            'managed_by'  => $group->id
+        ]);
+        $managed->roles()->save($role);
+
+        $response = $this->actingAs($manager)
+                         ->deleteJson("/users/$managed->id/roles/$role->id");
+
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('roles', [
+            'id'         => $role->id,
+            'deleted_at' => null
+        ]);
+    }
 }
