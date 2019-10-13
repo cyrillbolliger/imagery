@@ -18,14 +18,14 @@ class RolePolicy
     }
 
     /**
-     * Determine whether the user can manage the role.
+     * Determine whether the user can update the role.
      *
      * @param  User  $manager  the user currently logged in
      * @param  Role  $role  the role to manage
      *
-     * @return mixed
+     * @return boolean
      */
-    public function manage(User $manager, Role $role): bool
+    public function update(User $manager, Role $role): bool
     {
         if ( ! $manager->can('manage', $role->user)) {
             return false;
@@ -47,7 +47,7 @@ class RolePolicy
      *
      * @param  User  $manager  the user currently logged in
      *
-     * @return mixed
+     * @return boolean
      */
     public function view(User $manager)
     {
@@ -59,26 +59,23 @@ class RolePolicy
     /**
      * Determine whether the user can create roles.
      *
-     * @param  \App\User  $user
+     * @param  \App\User  $manager
      *
-     * @return mixed
+     * @return boolean
      */
-    public function create(User $user)
+    public function create(User $manager)
     {
-        //
-    }
+        $managed = request()->user;
 
-    /**
-     * Determine whether the user can update the role.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Role  $role
-     *
-     * @return mixed
-     */
-    public function update(User $user, Role $role)
-    {
-        //
+        if ( ! $manager->can('manage', $managed)) {
+            return false;
+        }
+
+        if ( ! $manager->canManageGroup(request()->group_id)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -87,7 +84,7 @@ class RolePolicy
      * @param  \App\User  $manager
      * @param  \App\Role  $role
      *
-     * @return mixed
+     * @return boolean
      */
     public function delete(User $manager, Role $role)
     {

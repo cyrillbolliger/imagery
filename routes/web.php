@@ -45,15 +45,15 @@ Route::get('/users/{user}/roles', 'RoleController@index')
 
 Route::put('/users/{user}/roles/{role}', 'RoleController@update')
      ->where(['user' => '\d+', 'role' => '\d+'])
-     ->middleware('can:manage,role');
+     ->middleware('can:update,role');
 
 Route::delete('/users/{user}/roles/{role}', 'RoleController@destroy')
      ->where(['user' => '\d+', 'role' => '\d+'])
      ->middleware('can:delete,role');
 
-//Route::post('/users/{user}/roles', 'RoleController@store')
-//     ->where('user', '\d+')
-//     ->middleware('can:create,App\Role');
+Route::post('/users/{user}/roles', 'RoleController@store')
+     ->where('user', '\d+')
+     ->middleware('can:create,App\Role');
 
 /**
  * Old routes
