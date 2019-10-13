@@ -56,6 +56,27 @@ Route::post('/users/{user}/roles', 'RoleController@store')
      ->middleware('can:create,App\Role');
 
 /**
+ * Groups
+ */
+Route::get('/groups/{group}', 'GroupController@show')
+     ->where('group', '\d+')
+     ->middleware('can:view,group');
+
+//Route::get('/groups', 'GroupController@index')
+//     ->middleware('can:list,App\Group');
+//
+//Route::put('/groups/{group}', 'GroupController@update')
+//     ->where('group', '\d+')
+//     ->middleware('can:manage,group');
+//
+//Route::delete('/groups/{group}', 'GroupController@destroy')
+//     ->where('group', '\d+')
+//     ->middleware('can:manage,group');
+//
+//Route::post('/groups', 'GroupController@store')
+//     ->middleware('can:create,App\Group');
+
+/**
  * Old routes
  *
  * @todo: clean up
