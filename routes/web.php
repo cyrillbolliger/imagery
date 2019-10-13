@@ -62,9 +62,9 @@ Route::get('/groups/{group}', 'GroupController@show')
      ->where('group', '\d+')
      ->middleware('can:view,group');
 
-//Route::get('/groups', 'GroupController@index')
-//     ->middleware('can:list,App\Group');
-//
+Route::get('/groups', 'GroupController@index')
+     ->middleware('can:viewAny,App\Group');
+
 //Route::put('/groups/{group}', 'GroupController@update')
 //     ->where('group', '\d+')
 //     ->middleware('can:manage,group');

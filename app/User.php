@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 /**
  * Class User
@@ -260,5 +261,22 @@ class User extends Authenticatable
         }
 
         return false;
+    }
+
+    /**
+     * The groups this user can manage
+     *
+     * @return Collection
+     */
+    public function manageableGroups()
+    {
+        $groups = [];
+        foreach ($this->adminRoles as $role) {
+            $groups[] = Group::with('descendants')
+                             ->where('id', $role->group_id)
+                             ->get();
+        }
+
+        return collect($groups);
     }
 }

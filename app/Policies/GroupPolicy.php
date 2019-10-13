@@ -19,7 +19,7 @@ class GroupPolicy
      */
     public function viewAny(User $manager)
     {
-        //
+        return $manager->isAdmin();
     }
 
     /**

@@ -78,4 +78,51 @@ class GroupTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson($child->toArray());
     }
+
+    public function testGetGroups__admin__200()
+    {
+        $detached   = factory(Group::class)->create(['name' => 'detached']);
+        $useOnly    = factory(Group::class)->create(['name' => 'useOnly']);
+        $root1      = factory(Group::class)->create(['name' => 'root1']);
+        $root2      = factory(Group::class)->create(['name' => 'root2']);
+        $child1     = factory(Group::class)->create([
+            'parent_id' => $root1->id,
+            'name'      => 'child1'
+        ]);
+        $child2     = factory(Group::class)->create([
+            'parent_id' => $root1->id,
+            'name'      => 'child2'
+        ]);
+        $grandchild = factory(Group::class)->create([
+            'parent_id' => $child1->id,
+            'name'      => 'grandchild'
+        ]);
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $root1->id
+            ])
+        );
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $root2->id
+            ])
+        );
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => false,
+                'group_id' => $useOnly->id
+            ])
+        );
+
+        $response = $this->actingAs($manager)
+                         ->getJson("/groups");
+
+        $response->assertStatus(200);
+
+        dd($response->json());
+    }
 }
