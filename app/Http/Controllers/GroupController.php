@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Group;
+use App\Rules\CanManageGroupRule;
+use App\Rules\ConnectedGroupRule;
+use App\Rules\ImmutableRule;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,16 +23,6 @@ class GroupController extends Controller
         $user = Auth::user();
 
         return $user->manageableGroups();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -57,18 +50,6 @@ class GroupController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Group  $group
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Group $group)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -78,7 +59,40 @@ class GroupController extends Controller
      */
     public function update(Request $request, Group $group)
     {
-        //
+        $data = $request->validate([
+            'id'         => ['sometimes', new ImmutableRule($group)],
+            'parent_id'  => [
+                'sometimes',
+                'required',
+                'exists:groups,id',
+                new CanManageGroupRule(), // check if user can manage the new parent group
+                function ($attribute, $value, $fail) use ($group) {
+                    // check if user can manage the current parent group.
+                    // this prevents the user from loosing access to a part of
+                    // his groups
+                    if ( ! Auth::user()->canManageGroup($group->parent_id)) {
+                        $fail('You can only modify the :attribute if your admin of the parent group.');
+                    }
+                },
+                function ($attribute, $value, $fail) use ($group) {
+                    // assert the branch doesn't get deconnected or circular
+                    if (Group::find($value)->isDescendantOf($group)) {
+                        $fail('No, no, no, your child must never be your parent. Rethink about the :attribute.');
+                    }
+                }
+            ],
+            'added_by'   => ['sometimes', new ImmutableRule($group)],
+            'name'       => ['sometimes', 'required', 'max:80'],
+            'created_at' => ['sometimes', new ImmutableRule($group)],
+            'updated_at' => ['sometimes', new ImmutableRule($group)],
+            'deleted_at' => ['sometimes', new ImmutableRule($group)],
+        ]);
+
+        if ( ! $group->update($data)) {
+            return response('Could not save group.', 500);
+        }
+
+        return $group;
     }
 
     /**

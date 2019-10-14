@@ -65,10 +65,10 @@ Route::get('/groups/{group}', 'GroupController@show')
 Route::get('/groups', 'GroupController@index')
      ->middleware('can:viewAny,App\Group');
 
-//Route::put('/groups/{group}', 'GroupController@update')
-//     ->where('group', '\d+')
-//     ->middleware('can:manage,group');
-//
+Route::put('/groups/{group}', 'GroupController@update')
+     ->where('group', '\d+')
+     ->middleware('can:update,group');
+
 //Route::delete('/groups/{group}', 'GroupController@destroy')
 //     ->where('group', '\d+')
 //     ->middleware('can:manage,group');

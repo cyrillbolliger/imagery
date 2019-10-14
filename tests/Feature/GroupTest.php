@@ -132,4 +132,147 @@ class GroupTest extends TestCase
         $response->assertJsonMissing(['id' => $detached->id]);
         $response->assertJsonMissing(['id' => $useOnly->id]);
     }
+
+    public function testPutGroup__admin__200()
+    {
+        $root1 = factory(Group::class)->create();
+        $root2 = factory(Group::class)->create();
+        $child = factory(Group::class)->create([
+            'parent_id' => $root1->id
+        ]);
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $root1->id
+            ])
+        );
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $root2->id
+            ])
+        );
+
+        $child->name      = 'changed';
+        $child->parent_id = $root2->id;
+
+        $response = $this->actingAs($manager)
+                         ->putJson("/groups/$child->id", $child->toArray());
+
+        $response->assertStatus(200);
+        $response->assertJson($child->toArray());
+    }
+
+    public function testPutGroup__notParentAdmin__422()
+    {
+        $root1 = factory(Group::class)->create();
+        $root2 = factory(Group::class)->create();
+        $child = factory(Group::class)->create([
+            'parent_id' => $root1->id
+        ]);
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $child->id
+            ])
+        );
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $root2->id
+            ])
+        );
+
+        $child->name      = 'changed';
+        $child->parent_id = $root2->id;
+
+        $response = $this->actingAs($manager)
+                         ->putJson("/groups/$child->id", $child->toArray());
+
+        $response->assertStatus(422);
+    }
+
+    public function testPutGroup__notParentAdminAdmin__422()
+    {
+        $root1 = factory(Group::class)->create();
+        $root2 = factory(Group::class)->create();
+        $child = factory(Group::class)->create([
+            'parent_id' => $root1->id
+        ]);
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $root1->id
+            ])
+        );
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => false,
+                'group_id' => $root2->id
+            ])
+        );
+
+        $child->name      = 'changed';
+        $child->parent_id = $root2->id;
+
+        $response = $this->actingAs($manager)
+                         ->putJson("/groups/$child->id", $child->toArray());
+
+        $response->assertStatus(422);
+    }
+
+    public function testPutGroup__noAdmin__403()
+    {
+        $group = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => false,
+                'group_id' => $group->id
+            ])
+        );
+
+        $group->name = 'changed';
+
+        $response = $this->actingAs($manager)
+                         ->putJson("/groups/$group->id", $group->toArray());
+
+        $response->assertStatus(403);
+    }
+
+    public function testPutGroup__deconnectSuperAdmin__422()
+    {
+        $root = factory(Group::class)->create([
+            'name' => 'root',
+        ]);
+        $gen1 = factory(Group::class)->create([
+            'parent_id' => $root->id,
+            'name'      => 'gen 1'
+        ]);
+        $gen2 = factory(Group::class)->create([
+            'parent_id' => $gen1->id,
+            'name'      => 'gen 2'
+        ]);
+        $gen3 = factory(Group::class)->create([
+            'parent_id' => $gen2->id,
+            'name'      => 'gen 3'
+        ]);
+
+        $manager = factory(User::class)->create(['super_admin' => true]);
+
+        $gen1->name      = 'changed';
+        $gen1->parent_id = $gen3->id;
+
+        $response = $this->actingAs($manager)
+                         ->putJson("/groups/$gen1->id", $gen1->toArray());
+
+        $response->assertStatus(422);
+    }
 }

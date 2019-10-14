@@ -57,7 +57,7 @@ class GroupPolicy
      */
     public function update(User $manager, Group $group)
     {
-        //
+        return $manager->canManageGroup($group);
     }
 
     /**
