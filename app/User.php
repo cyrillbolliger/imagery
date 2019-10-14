@@ -274,7 +274,7 @@ class User extends Authenticatable
         foreach ($this->adminRoles as $role) {
             $groups[] = Group::with('descendants')
                              ->where('id', $role->group_id)
-                             ->get();
+                             ->first();
         }
 
         return collect($groups);

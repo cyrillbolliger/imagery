@@ -123,6 +123,13 @@ class GroupTest extends TestCase
 
         $response->assertStatus(200);
 
-        dd($response->json());
+        $response->assertJsonPath('0.id', $root1->id);
+        $response->assertJsonPath('0.descendants.0.id', $child1->id);
+        $response->assertJsonPath('0.descendants.0.descendants.0.id', $grandchild->id);
+        $response->assertJsonPath('0.descendants.1.id', $child2->id);
+        $response->assertJsonPath('1.id', $root2->id);
+
+        $response->assertJsonMissing(['id' => $detached->id]);
+        $response->assertJsonMissing(['id' => $useOnly->id]);
     }
 }
