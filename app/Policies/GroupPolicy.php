@@ -72,30 +72,4 @@ class GroupPolicy
     {
         return $manager->canManageGroup($group);
     }
-
-    /**
-     * Determine whether the user can restore the group.
-     *
-     * @param  \App\User  $manager
-     * @param  \App\Group  $group
-     *
-     * @return mixed
-     */
-    public function restore(User $manager, Group $group)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the group.
-     *
-     * @param  \App\User  $manager
-     * @param  \App\Group  $group
-     *
-     * @return mixed
-     */
-    public function forceDelete(User $manager, Group $group)
-    {
-        //
-    }
 }
