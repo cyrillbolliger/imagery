@@ -44,7 +44,7 @@ class GroupPolicy
      */
     public function create(User $manager)
     {
-        //
+        return $manager->canManageGroup(request()->parent_id);
     }
 
     /**

@@ -344,4 +344,77 @@ class GroupTest extends TestCase
             'deleted_at' => null
         ]);
     }
+
+    public function testPostGroup__admin__201()
+    {
+        $parent = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $parent->id
+            ])
+        );
+
+        $child = factory(Group::class)->make([
+            'parent_id' => $parent->id,
+            'name'      => 'inserted child',
+            'added_by'  => $manager->id,
+        ]);
+
+        $response = $this->actingAs($manager)
+                         ->postJson("/groups", $child->toArray());
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('groups', [
+            'name' => $child->name
+        ]);
+    }
+
+    public function testPostGroup__noAdmin__403()
+    {
+        $parent = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => false,
+                'group_id' => $parent->id,
+                'added_by' => $manager->id,
+            ])
+        );
+
+        $child = factory(Group::class)->make([
+            'parent_id' => $parent->id,
+            'name'      => 'inserted child'
+        ]);
+
+        $response = $this->actingAs($manager)
+                         ->postJson("/groups", $child->toArray());
+
+        $response->assertStatus(403);
+        $this->assertDatabaseMissing('groups', [
+            'name' => $child->name
+        ]);
+    }
+
+    public function testPostGroup__noParentSuperAdmin__422()
+    {
+        $manager = factory(User::class)->create(['super_admin' => true]);
+
+        $group = factory(Group::class)->make([
+            'parent_id' => null,
+            'name'      => 'no parent',
+            'added_by'  => $manager->id,
+        ]);
+
+        $response = $this->actingAs($manager)
+                         ->postJson("/groups", $group->toArray());
+
+        $response->assertStatus(422);
+        $this->assertDatabaseMissing('groups', [
+            'name' => $group->name
+        ]);
+    }
 }

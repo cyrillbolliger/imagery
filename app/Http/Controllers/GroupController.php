@@ -28,13 +28,30 @@ class GroupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
+     * @param  Group  $group
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Group $group)
     {
-        //
+        $data = $request->validate([
+            'id'         => ['sometimes', new ImmutableRule($group)],
+            'parent_id'  => ['required', 'exists:groups,id', new CanManageGroupRule()],
+            'added_by'   => ['sometimes', 'in:'.Auth::id()],
+            'name'       => ['required', 'max:80'],
+            'created_at' => ['sometimes', new ImmutableRule($group)],
+            'updated_at' => ['sometimes', new ImmutableRule($group)],
+            'deleted_at' => ['sometimes', new ImmutableRule($group)],
+        ]);
+
+        $group->fill($data);
+
+        if ( ! $group->save()) {
+            return response('Could not save group.', 500);
+        }
+
+        return $group;
     }
 
     /**
@@ -52,7 +69,7 @@ class GroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  \App\Group  $group
      *
      * @return \Illuminate\Http\Response

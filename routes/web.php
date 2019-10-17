@@ -73,8 +73,8 @@ Route::delete('/groups/{group}', 'GroupController@destroy')
      ->where('group', '\d+')
      ->middleware('can:delete,group');
 
-//Route::post('/groups', 'GroupController@store')
-//     ->middleware('can:create,App\Group');
+Route::post('/groups', 'GroupController@store')
+     ->middleware('can:create,App\Group');
 
 /**
  * Old routes
