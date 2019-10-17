@@ -162,7 +162,7 @@ class GroupTest extends TestCase
                          ->putJson("/groups/$child->id", $child->toArray());
 
         $response->assertStatus(200);
-        $response->assertJson($child->toArray());
+        $response->assertJsonFragment(['id' => $child->id]);
     }
 
     public function testPutGroup__notParentAdmin__422()
