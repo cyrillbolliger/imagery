@@ -194,6 +194,7 @@ class GroupTest extends TestCase
                          ->putJson("/groups/$child->id", $child->toArray());
 
         $response->assertStatus(422);
+        $this->assertNotEmpty($response->json('errors.parent_id'));
     }
 
     public function testPutGroup__notParentAdminAdmin__422()
@@ -225,6 +226,7 @@ class GroupTest extends TestCase
                          ->putJson("/groups/$child->id", $child->toArray());
 
         $response->assertStatus(422);
+        $this->assertNotEmpty($response->json('errors.parent_id'));
     }
 
     public function testPutGroup__noAdmin__403()
@@ -274,6 +276,7 @@ class GroupTest extends TestCase
                          ->putJson("/groups/$gen1->id", $gen1->toArray());
 
         $response->assertStatus(422);
+        $this->assertNotEmpty($response->json('errors.parent_id'));
     }
 
     public function testDeleteGroup__admin__204()
@@ -317,6 +320,7 @@ class GroupTest extends TestCase
                          ->deleteJson("/groups/$root->id");
 
         $response->assertStatus(422);
+        $this->assertNotEmpty($response->json('errors.children'));
         $this->assertDatabaseHas('groups', [
             'id'         => $root->id,
             'deleted_at' => null
@@ -413,6 +417,7 @@ class GroupTest extends TestCase
                          ->postJson("/groups", $group->toArray());
 
         $response->assertStatus(422);
+        $this->assertNotEmpty($response->json('errors.parent_id'));
         $this->assertDatabaseMissing('groups', [
             'name' => $group->name
         ]);

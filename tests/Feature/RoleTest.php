@@ -143,6 +143,7 @@ class RoleTest extends TestCase
                          ->putJson("/users/$managedOld->id/roles/$role->id", $role->toArray());
 
         $response->assertStatus(422);
+        $this->assertNotEmpty($response->json('errors.user_id'));
     }
 
     public function testPutRole__notOldGroupAdmin__403()

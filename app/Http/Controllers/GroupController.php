@@ -123,7 +123,14 @@ class GroupController extends Controller
     public function destroy(Group $group)
     {
         if ($group->children()->exists()) {
-            return response('Unable to delete group. Delete child groups first.', 422);
+            $resp = [
+                'message' => 'Unable to delete group.',
+                'errors'  => [
+                    'children' => 'Delete child groups first.'
+                ],
+            ];
+
+            return response($resp, 422);
         }
 
         if ( ! $group->delete()) {

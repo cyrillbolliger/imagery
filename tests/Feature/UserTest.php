@@ -216,6 +216,7 @@ class UserTest extends TestCase
                          ->putJson('/users/'.$managed->id, $managed->toArray());
 
         $response->assertStatus(422);
+        $this->assertNotEmpty($response->json('errors.super_admin'));
     }
 
     public function testPutUser__adminRemoveSuperAdmin_422()
@@ -234,6 +235,7 @@ class UserTest extends TestCase
                          ->putJson('/users/'.$managed->id, $managed->toArray());
 
         $response->assertStatus(422);
+        $this->assertNotEmpty($response->json('errors.super_admin'));
     }
 
     public function testPutUser__adminExistingSuperAdmin_200()
@@ -270,6 +272,7 @@ class UserTest extends TestCase
                          ]);
 
         $response->assertStatus(422);
+        $this->assertNotEmpty($response->json('errors.password'));
     }
 
     public function testPutUser__changeImmutable_422()
@@ -287,6 +290,7 @@ class UserTest extends TestCase
                          ]);
 
         $response->assertStatus(422);
+        $this->assertNotEmpty($response->json('errors.added_by'));
     }
 
     public function testPutUser__changeDeleted_422()
@@ -304,6 +308,7 @@ class UserTest extends TestCase
                          ]);
 
         $response->assertStatus(422);
+        $this->assertNotEmpty($response->json('errors.deleted_at'));
     }
 
     public function testPutUser__strongPassword_200()
@@ -391,6 +396,7 @@ class UserTest extends TestCase
                          ->postJson('/users', $data);
 
         $response->assertStatus(422);
+        $this->assertNotEmpty($response->json('errors.super_admin'));
         $this->assertDatabaseMissing('users', [
             'email' => $managed->email,
         ]);
@@ -413,6 +419,7 @@ class UserTest extends TestCase
                          ->postJson('/users', $data);
 
         $response->assertStatus(422);
+        $this->assertNotEmpty($response->json('errors.managed_by'));
     }
 
     public function testPostUser__managedByAuthorizedGroup_201()
@@ -474,6 +481,7 @@ class UserTest extends TestCase
                          ->postJson('/users', $data);
 
         $response->assertStatus(422);
+        $this->assertNotEmpty($response->json('errors.default_logo'));
     }
 
     public function testPostUser__defaultLogoSuperAdmin_201()
@@ -523,11 +531,14 @@ class UserTest extends TestCase
 
         $data             = $managed->toArray();
         $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+        unset($data['added_by']);
+        unset($data['first_name']);
 
         $response = $this->actingAs($manager)
                          ->postJson('/users', $data);
 
         $response->assertStatus(422);
+        $this->assertNotEmpty($response->json('errors.first_name'));
         $this->assertDatabaseMissing('users', [
             'first_name' => 'first name only',
         ]);
