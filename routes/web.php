@@ -69,10 +69,10 @@ Route::put('/groups/{group}', 'GroupController@update')
      ->where('group', '\d+')
      ->middleware('can:update,group');
 
-//Route::delete('/groups/{group}', 'GroupController@destroy')
-//     ->where('group', '\d+')
-//     ->middleware('can:manage,group');
-//
+Route::delete('/groups/{group}', 'GroupController@destroy')
+     ->where('group', '\d+')
+     ->middleware('can:delete,group');
+
 //Route::post('/groups', 'GroupController@store')
 //     ->middleware('can:create,App\Group');
 

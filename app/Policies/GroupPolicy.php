@@ -70,7 +70,7 @@ class GroupPolicy
      */
     public function delete(User $manager, Group $group)
     {
-        //
+        return $manager->canManageGroup($group);
     }
 
     /**

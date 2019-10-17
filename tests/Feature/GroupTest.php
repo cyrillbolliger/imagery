@@ -275,4 +275,73 @@ class GroupTest extends TestCase
 
         $response->assertStatus(422);
     }
+
+    public function testDeleteGroup__admin__204()
+    {
+        $group = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $group->id
+            ])
+        );
+
+        $response = $this->actingAs($manager)
+                         ->deleteJson("/groups/$group->id");
+
+        $response->assertStatus(204);
+        $this->assertDatabaseMissing('groups', [
+            'id'         => $group->id,
+            'deleted_at' => null
+        ]);
+    }
+
+    public function testDeleteGroup__childrenAdmin__422()
+    {
+        $root  = factory(Group::class)->create();
+        $child = factory(Group::class)->create([
+            'parent_id' => $root->id
+        ]);
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $root->id
+            ])
+        );
+
+        $response = $this->actingAs($manager)
+                         ->deleteJson("/groups/$root->id");
+
+        $response->assertStatus(422);
+        $this->assertDatabaseHas('groups', [
+            'id'         => $root->id,
+            'deleted_at' => null
+        ]);
+    }
+
+    public function testDeleteGroup__noAdmin__403()
+    {
+        $group = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => false,
+                'group_id' => $group->id
+            ])
+        );
+
+        $response = $this->actingAs($manager)
+                         ->deleteJson("/groups/$group->id");
+
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('groups', [
+            'id'         => $group->id,
+            'deleted_at' => null
+        ]);
+    }
 }

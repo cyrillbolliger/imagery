@@ -101,9 +101,18 @@ class GroupController extends Controller
      * @param  \App\Group  $group
      *
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Group $group)
     {
-        //
+        if ($group->children()->exists()) {
+            return response('Unable to delete group. Delete child groups first.', 422);
+        }
+
+        if ( ! $group->delete()) {
+            return response('Could not delete user.', 500);
+        }
+
+        return response(null, 204);
     }
 }
