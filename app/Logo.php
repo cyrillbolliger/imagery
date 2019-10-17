@@ -13,7 +13,8 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $added_by
  * @property User|null $addedBy
- * @property string $filename
+ * @property-write string $filename
+ * @property-read string $src
  * @property string $name
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -22,6 +23,31 @@ use Illuminate\Support\Carbon;
 class Logo extends Model
 {
     use SoftDeletes;
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'filename',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'src',
+    ];
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 
     public function images()
     {
@@ -36,5 +62,20 @@ class Logo extends Model
     public function addedBy()
     {
         return $this->belongsTo(User::class, 'added_by');
+    }
+
+    public function getSrcAttribute()
+    {
+        return route('logo', ['logo' => $this->id]);
+    }
+
+    public function getPath()
+    {
+        return disk_path(self::getStorageDir()).DIRECTORY_SEPARATOR.$this->filename;
+    }
+
+    public static function getStorageDir()
+    {
+        return config('app.logo_dir');
     }
 }

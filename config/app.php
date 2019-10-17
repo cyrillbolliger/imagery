@@ -240,4 +240,15 @@ return [
 
     'image_dir' => 'images',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Logos Directory
+    |--------------------------------------------------------------------------
+    |
+    | The directory that will be used to store logos. For the default disk,
+    | it resides in {{project_root}}/storage/app/{{image_dir}}.
+    |
+    */
+
+    'logo_dir' => 'logos',
 ];

@@ -83,13 +83,18 @@ Route::get('/logos/{logo}', 'LogoController@show')
      ->where('logo', '\d+')
      ->middleware('can:view,logo');
 
+Route::get('/logos/{logo}/file', 'LogoController@file')
+     ->where('logo', '\d+')
+     ->middleware('can:view,logo')
+     ->name('logo');
+
 Route::get('/logos', 'LogoController@index')
      ->middleware('can:viewAny,App\Logo');
 
-//Route::put('/logos/{logo}', 'LogoController@update')
-//     ->where('logo', '\d+')
-//     ->middleware('can:update,logo');
-//
+Route::put('/logos/{logo}', 'LogoController@update')
+     ->where('logo', '\d+')
+     ->middleware('can:update,logo');
+
 //Route::delete('/logos/{logo}', 'LogoController@destroy')
 //     ->where('logo', '\d+')
 //     ->middleware('can:delete,logo');

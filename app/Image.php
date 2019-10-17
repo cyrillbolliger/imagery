@@ -53,11 +53,6 @@ class Image extends Model
         return config('app.image_dir');
     }
 
-    public static function getPathFromStorageDir(string $storageDir)
-    {
-        return storage_path('app'.DIRECTORY_SEPARATOR.$storageDir);
-    }
-
     /**
      * @param  string  $sourceImagePath
      * @param  string  $thumbnailPath

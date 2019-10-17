@@ -57,7 +57,7 @@ class LogoPolicy
      */
     public function update(User $user, Logo $logo)
     {
-        //
+        return $user->canManageLogo($logo);
     }
 
     /**

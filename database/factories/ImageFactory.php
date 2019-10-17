@@ -20,15 +20,15 @@ $factory->define(Image::class, function (Faker $faker) {
     Storage::makeDirectory($imageDir);
     Storage::makeDirectory($thumbDir);
 
-    $tempDirPath = Image::getPathFromStorageDir($tempDir);
+    $tempDirPath = disk_path($tempDir);
 
     $tempImagePath = $faker->image($tempDirPath, $imageWidth, $imageHeight, 'cats', true);
     $imageRelPath  = Storage::putFile($imageDir, new File($tempImagePath), 'private');
 
-    $imagePath            = Image::getPathFromStorageDir($imageRelPath);
+    $imagePath            = disk_path($imageRelPath);
     $filename             = basename($imagePath);
     $thumbnailStoragePath = $thumbDir.DIRECTORY_SEPARATOR.$filename;
-    $thumbnailPath        = Image::getPathFromStorageDir($thumbnailStoragePath);
+    $thumbnailPath        = disk_path($thumbnailStoragePath);
 
     Image::generateThumbnail($imagePath, $thumbnailPath);
     Storage::setVisibility($thumbnailStoragePath, 'private');
