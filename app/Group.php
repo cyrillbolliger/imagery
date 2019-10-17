@@ -116,28 +116,43 @@ class Group extends Model
      */
     public function usersBelow()
     {
-        return $this->usersRecursive($this, collect());
+        return $this->recursiveProperty($this, collect(), 'users');
     }
 
     /**
-     * The users that are managed by this group or any descendant group
-     *
-     * @param  Group  $group
-     * @param  Collection  $users
+     * The logos that are associated with this group or any descendant group
      *
      * @return Collection
      */
-    private function usersRecursive(Group $group, Collection $users)
+    public function logosBelow()
     {
-        foreach ($group->users as $user) {
-            $users->add($user);
+        return $this->recursiveProperty($this, collect(), 'logos');
+    }
+
+    /**
+     * The property of this group and any descendant groups
+     *
+     * @param  Group  $group
+     * @param  Collection  $properties
+     * @param  string  $propertyName
+     *
+     * @return Collection
+     */
+    private function recursiveProperty(Group $group, Collection $properties, string $propertyName)
+    {
+        if (is_array($group->$propertyName)) {
+            foreach ($group->$propertyName as $property) {
+                $properties->add($property);
+            }
+        } else {
+            $properties->add($group->$propertyName);
         }
 
         foreach ($group->children as $child) {
-            $this->usersRecursive($child, $users);
+            $this->recursiveProperty($child, $properties, $propertyName);
         }
 
-        return $users;
+        return $properties;
     }
 
     /**

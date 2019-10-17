@@ -279,4 +279,31 @@ class User extends Authenticatable
 
         return collect($groups);
     }
+
+    /**
+     * The logos this user can manage
+     *
+     * @return Collection
+     */
+    public function manageableLogos()
+    {
+        if ($this->super_admin) {
+            return Logo::all();
+        }
+
+        $groups = $this->manageableGroups();
+
+        $logos = collect();
+        foreach ($groups as $group) {
+            foreach ($group->logosBelow() as $groupLogos) {
+                foreach ($groupLogos as $logo) {
+                    if ($logos->where('id', $logo->id)->isEmpty()) {
+                        $logos->add($logo);
+                    }
+                }
+            }
+        }
+
+        return $logos;
+    }
 }

@@ -207,4 +207,68 @@ class UserTest extends TestCase
 
         $this->assertFalse($user->canManageLogo($logo));
     }
+
+    public function testManageableLogos()
+    {
+        $root_logo1       = factory(Logo::class)->create([
+            'name' => 'root logo1'
+        ]);
+        $child1_logo1     = factory(Logo::class)->create([
+            'name' => 'child1 logo1'
+        ]);
+        $child1_logo2     = factory(Logo::class)->create([
+            'name' => 'child1 logo2'
+        ]);
+        $child2_logo1     = factory(Logo::class)->create([
+            'name' => 'child2 logo1'
+        ]);
+        $grandchild_logo1 = factory(Logo::class)->create([
+            'name' => 'grandchild logo1'
+        ]);
+        $grandchild_logo2 = factory(Logo::class)->create([
+            'name' => 'grandchild logo2'
+        ]);
+
+        $root       = factory(Group::class)->create([
+            'name' => 'root'
+        ]);
+        $child1     = factory(Group::class)->create([
+            'name'      => 'child1',
+            'parent_id' => $root->id
+        ]);
+        $child2     = factory(Group::class)->create([
+            'name'      => 'child2',
+            'parent_id' => $root->id
+        ]);
+        $grandchild = factory(Group::class)->create([
+            'name'      => 'grandchild',
+            'parent_id' => $child1->id
+        ]);
+
+        $root->logos()->attach($root_logo1);
+        $child1->logos()->attach([$child1_logo1->id, $child1_logo2->id]);
+        $child2->logos()->attach($child2_logo1);
+        $grandchild->logos()->attach([
+            $grandchild_logo1->id,
+            $grandchild_logo2->id,
+            $child1_logo1->id,
+        ]);
+
+        $user = factory(User::class)->create(['super_admin' => false]);
+        $user->roles()
+             ->save(factory(Role::class)->make([
+                 'admin'    => true,
+                 'group_id' => $child1->id,
+             ]));
+
+        $logos = $user->manageableLogos();
+
+        $this->assertEquals(1, $logos->where('id', $child1_logo1->id)->count());
+        $this->assertNotEmpty($logos->where('id', $child1_logo1->id));
+        $this->assertNotEmpty($logos->where('id', $child1_logo2->id));
+        $this->assertNotEmpty($logos->where('id', $grandchild_logo1->id));
+        $this->assertNotEmpty($logos->where('id', $grandchild_logo2->id));
+        $this->assertEmpty($logos->where('id', $root_logo1->id));
+        $this->assertEmpty($logos->where('id', $child2_logo1->id));
+    }
 }
