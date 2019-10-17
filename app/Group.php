@@ -140,7 +140,7 @@ class Group extends Model
      */
     private function recursiveProperty(Group $group, Collection $properties, string $propertyName)
     {
-        if (is_array($group->$propertyName)) {
+        if (is_iterable($group->$propertyName)) {
             foreach ($group->$propertyName as $property) {
                 $properties->add($property);
             }

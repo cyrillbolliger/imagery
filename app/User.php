@@ -72,14 +72,22 @@ class User extends Authenticatable
     ];
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'email_verified_at',
+        'last_login',
+    ];
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'last_login'        => 'datetime',
-        'super_admin'       => 'boolean'
+        'super_admin' => 'boolean'
     ];
 
     /**
@@ -295,11 +303,9 @@ class User extends Authenticatable
 
         $logos = collect();
         foreach ($groups as $group) {
-            foreach ($group->logosBelow() as $groupLogos) {
-                foreach ($groupLogos as $logo) {
-                    if ($logos->where('id', $logo->id)->isEmpty()) {
-                        $logos->add($logo);
-                    }
+            foreach ($group->logosBelow() as $logo) {
+                if ($logos->where('id', $logo->id)->isEmpty()) {
+                    $logos->add($logo);
                 }
             }
         }
