@@ -83,11 +83,6 @@ Route::get('/logos/{logo}', 'LogoController@show')
      ->where('logo', '\d+')
      ->middleware('can:view,logo');
 
-Route::get('/logos/{logo}/file', 'LogoController@file')
-     ->where('logo', '\d+')
-     ->middleware('can:view,logo')
-     ->name('logo');
-
 Route::get('/logos', 'LogoController@index')
      ->middleware('can:viewAny,App\Logo');
 
@@ -101,6 +96,17 @@ Route::put('/logos/{logo}', 'LogoController@update')
 //
 //Route::post('/logos', 'LogoController@store')
 //     ->middleware('can:create,App\Logo');
+
+/**
+ * Logo Files
+ */
+Route::get('/files/logos/{logo}', 'FileController@show')
+     ->where('logo', '\d+')
+     ->middleware('can:view,logo')
+     ->name('logo');
+
+Route::post('/files/logos', 'FileController@store')
+     ->middleware('can:create,App\Logo');
 
 /**
  * Old routes
