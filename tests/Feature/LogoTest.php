@@ -140,12 +140,12 @@ class LogoTest extends TestCase
         $data             = $logo->toArray();
         $data['filename'] = $filename; // excluded from toArray method
 
-        $response = $this->actingAs($manager)
-                         ->putJson("/logos/$logo->id", $data);
-
         $tempFilename   = UploadHandler::computeTmpFilename($filename);
         $relTmpFilePath = UploadHandler::getRelDirPath().DIRECTORY_SEPARATOR.$tempFilename;
         $finalFilename  = UploadHandler::computeFinalFilename($relTmpFilePath).'.png';
+
+        $response = $this->actingAs($manager)
+                         ->putJson("/logos/$logo->id", $data);
 
         $response->assertStatus(200);
         $response->assertJsonFragment(['name' => $logo->name]);
