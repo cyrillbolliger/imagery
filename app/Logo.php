@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
  * @property-write string $filename
  * @property-read string $src
  * @property string $name
+ * @property Group[] $groups
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at

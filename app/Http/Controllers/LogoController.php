@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Domain\UploadHandler;
 use App\Logo;
+use App\Rules\CanManageGroupRule;
 use App\Rules\FileExtensionRule;
 use App\Rules\ImmutableRule;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class LogoController extends Controller
 {
@@ -47,15 +49,13 @@ class LogoController extends Controller
             'created_at' => ['sometimes', new ImmutableRule($logo)],
             'updated_at' => ['sometimes', new ImmutableRule($logo)],
             'deleted_at' => ['sometimes', new ImmutableRule($logo)],
+            'groups'     => ['required', 'array', 'max:100'],
         ]);
 
-        $path  = $this->getRelTmpPath($data['filename']);
-        $valid = $this->validateFile($path);
+        unset($data['groups']);
 
-        if (true !== $valid) {
-            return $valid;
-        }
-
+        $path = $this->getRelTmpPath($data['filename']);
+        $this->validateFile($path);
         $data['filename'] = $this->storeFile($path);
 
         $logo->fill($data);
@@ -63,6 +63,11 @@ class LogoController extends Controller
         if ( ! $logo->save()) {
             return response('Could not save logo.', 500);
         }
+
+        $groups = $request->input('groups');
+        $this->syncGroups($groups, $logo);
+
+        unset($logo->groups); // do not return associations
 
         return $logo;
     }
@@ -92,27 +97,89 @@ class LogoController extends Controller
         $data = $request->validate([
             'id'         => ['sometimes', new ImmutableRule($logo)],
             'added_by'   => ['sometimes', new ImmutableRule($logo)],
-            'filename'   => ['required', 'string', new FileExtensionRule(self::ALLOWED_EXT)],
+            'filename'   => [
+                'sometimes',
+                'required',
+                'string',
+                new FileExtensionRule(self::ALLOWED_EXT)
+            ],
             'name'       => ['sometimes', 'required', 'max:80'],
             'created_at' => ['sometimes', new ImmutableRule($logo)],
             'updated_at' => ['sometimes', new ImmutableRule($logo)],
             'deleted_at' => ['sometimes', new ImmutableRule($logo)],
+            'groups'     => ['sometimes', 'array', 'max:100'],
         ]);
 
-        $path  = $this->getRelTmpPath($data['filename']);
-        $valid = $this->validateFile($path);
-
-        if (true !== $valid) {
-            return $valid;
+        if ($request->has('groups')) {
+            $groups = $request->input('groups');
+            $this->syncGroups($groups, $logo);
+            unset($data['groups']);
         }
 
-        $data['filename'] = $this->storeFile($path);
+        if ($request->has('filename')) {
+            $path = $this->getRelTmpPath($data['filename']);
+            $this->validateFile($path);
+            $data['filename'] = $this->storeFile($path);
+        }
 
         if ( ! $logo->update($data)) {
             return response('Could not save logo.', 500);
         }
 
+        unset($logo->groups); // do not return associations
+
         return $logo;
+    }
+
+    /**
+     * Associate the logo only with the given groups.
+     *
+     * If the group was already associated with groups this user can't manage,
+     * silently keep those associations.
+     *
+     * @param  int[]  $groups  the ids of the groups to associate
+     * @param  Logo  $logo
+     */
+    private function syncGroups(array $groups, Logo $logo)
+    {
+        // check if user can manage all specified groups
+        foreach ($groups as $group) {
+            Validator::make(
+                ['groups' => $group],
+                [
+                    'groups' => [
+                        'required',
+                        'exists:groups,id',
+                        new CanManageGroupRule()
+                    ]
+                ]
+            )->validate();
+        }
+
+        // if logo is associated with groups, the user can't manage,
+        // then keep this association.
+        /** @var User $user */
+        $user = Auth::user();
+        foreach ($logo->groups as $group) {
+            if ( ! $user->canManageGroup($group)) {
+                $groups[] = $group->id;
+            }
+        }
+
+        // ensure, the logo is at least associated with one group
+        // otherwise it would become an orphan
+        if (empty($groups)) {
+            $resp = [
+                'message' => 'Unable to update logo.',
+                'errors'  => [
+                    'groups' => ['The logo must be associated with at least one group.']
+                ],
+            ];
+            abort(response($resp, 422));
+        }
+
+        // set associations
+        $logo->groups()->sync($groups);
     }
 
     /**
@@ -140,18 +207,25 @@ class LogoController extends Controller
     private function validateFile(string $relFilePath)
     {
         if ( ! Storage::exists($relFilePath)) {
-            return response('Uploaded file not found.', 400);
+            $resp = [
+                'message' => 'Unable to update logo.',
+                'errors'  => [
+                    'file' => ['Uploaded file not found.']
+                ],
+            ];
+
+            abort(response($resp, 422));
         }
 
         if ( ! UploadHandler::validateMimeType($relFilePath, self::ALLOWED_MIME)) {
             $resp = [
                 'message' => 'Unable to update logo.',
                 'errors'  => [
-                    'file' => 'The uploaded file has an invalid mime type'
+                    'file' => ['The uploaded file has an invalid mime type.']
                 ],
             ];
 
-            return response($resp, 422);
+            abort(response($resp, 422));
         }
 
         return true;
@@ -191,6 +265,23 @@ class LogoController extends Controller
      */
     public function destroy(Logo $logo)
     {
+        /** @var User $user */
+        $user = Auth::user();
+        foreach ($logo->groups as $group) {
+            if ( ! $user->canManageGroup($group)) {
+                $resp = [
+                    'message' => 'Unable to delete logo.',
+                    'errors'  => [
+                        'groups' => ["There is at least one group you can't manage that depends on this logo."]
+                    ],
+                ];
+
+                return response($resp, 422);
+            }
+        }
+
+        $logo->groups()->sync([]); // detach all groups
+
         if ( ! $logo->delete()) {
             return response('Could not delete logo.', 500);
         }

@@ -7,7 +7,6 @@ use App\Group;
 use App\Logo;
 use App\Role;
 use App\User;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use RootSeeder;
 use Tests\TestCase;
@@ -196,7 +195,7 @@ class LogoTest extends TestCase
                          ->putJson("/logos/$logo->id", $data);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('errors.file', 'The uploaded file has an invalid mime type');
+        $response->assertJsonPath('errors.file.0', 'The uploaded file has an invalid mime type.');
     }
 
     public function testDeleteLogo__admin__200()
@@ -218,9 +217,35 @@ class LogoTest extends TestCase
                          ->deleteJson("/logos/$logo->id");
 
         $response->assertStatus(204);
+        $this->assertDatabaseMissing('group_logo', ['logo_id' => $logo->id]);
 
         // we're soft deleting, so the file must stay
         $this->assertFileExists(disk_path(config('app.logo_dir').'/'.$logo->filename));
+    }
+
+    public function testDeleteLogo__adminNonAdminGroup__422()
+    {
+        $group         = factory(Group::class)->create();
+        $nonAdminGroup = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $group->id
+            ])
+        );
+
+        $logo = factory(Logo::class)->create();
+        $group->logos()->attach($logo);
+        $nonAdminGroup->logos()->attach($logo);
+
+        $response = $this->actingAs($manager)
+                         ->deleteJson("/logos/$logo->id");
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('errors.groups.0',
+            'There is at least one group you can\'t manage that depends on this logo.');
     }
 
     public function testPostLogo__admin__201()
@@ -255,6 +280,7 @@ class LogoTest extends TestCase
         ]);
         $data             = $logo->toArray();
         $data['filename'] = $filename; // excluded from toArray method
+        $data['groups']   = [$group->id];
         unset($data['added_by']); // not mutable
 
         $tempFilename   = UploadHandler::computeTmpFilename($filename);
@@ -272,5 +298,132 @@ class LogoTest extends TestCase
         ]);
 
         $this->assertFileExists(disk_path(config('app.logo_dir').'/'.$finalFilename));
+    }
+
+    public function testPutLogo__adminUpdateGroups__200()
+    {
+        $group  = factory(Group::class)->create();
+        $child1 = factory(Group::class)->create(['parent_id' => $group->id]);
+        $child2 = factory(Group::class)->create(['parent_id' => $group->id]);
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $group->id
+            ])
+        );
+
+        $logo = factory(Logo::class)->create();
+        $group->logos()->attach($logo);
+
+        $data = [
+            'groups' => [$child1->id, $child2->id]
+        ];
+
+        $response = $this->actingAs($manager)
+                         ->putJson("/logos/$logo->id", $data);
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('group_logo', [
+            'group_id' => $child1->id,
+            'logo_id'  => $logo->id
+        ]);
+        $this->assertDatabaseHas('group_logo', [
+            'group_id' => $child2->id,
+            'logo_id'  => $logo->id
+        ]);
+        $this->assertDatabaseMissing('group_logo', [
+            'group_id' => $group->id,
+            'logo_id'  => $logo->id
+        ]);
+    }
+
+    public function testPutLogo__adminUpdateGroupsNonAdmin__422()
+    {
+        $group      = factory(Group::class)->create();
+        $otherGroup = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $group->id
+            ])
+        );
+
+        $logo = factory(Logo::class)->create();
+        $group->logos()->attach($logo);
+
+        $data = [
+            'groups' => [$group->id, $otherGroup->id]
+        ];
+
+        $response = $this->actingAs($manager)
+                         ->putJson("/logos/$logo->id", $data);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('errors.groups.0', 'You can only set groups to groups you\'re admin of.');
+    }
+
+    public function testPutLogo__adminUpdateGroupsNoGroups__422()
+    {
+        $group = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $group->id
+            ])
+        );
+
+        $logo = factory(Logo::class)->create();
+        $group->logos()->attach($logo);
+
+        $data = [
+            'groups' => []
+        ];
+
+        $response = $this->actingAs($manager)
+                         ->putJson("/logos/$logo->id", $data);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('errors.groups.0', 'The logo must be associated with at least one group.');
+    }
+
+    public function testPutLogo__adminUpdateGroupsNonAdminGroups__200()
+    {
+        $group         = factory(Group::class)->create();
+        $nonAdminGroup = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $group->id
+            ])
+        );
+
+        $logo = factory(Logo::class)->create();
+        $group->logos()->attach($logo);
+        $nonAdminGroup->logos()->attach($logo);
+
+        $data = [
+            'groups' => []
+        ];
+
+        $response = $this->actingAs($manager)
+                         ->putJson("/logos/$logo->id", $data);
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('group_logo', [
+            'group_id' => $nonAdminGroup->id,
+            'logo_id'  => $logo->id
+        ]);
+        $this->assertDatabaseMissing('group_logo', [
+            'group_id' => $group->id,
+            'logo_id'  => $logo->id
+        ]);
     }
 }
