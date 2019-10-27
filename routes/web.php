@@ -94,8 +94,8 @@ Route::delete('/logos/{logo}', 'LogoController@destroy')
      ->where('logo', '\d+')
      ->middleware('can:delete,logo');
 
-//Route::post('/logos', 'LogoController@store')
-//     ->middleware('can:create,App\Logo');
+Route::post('/logos', 'LogoController@store')
+     ->middleware('can:create,App\Logo');
 
 /**
  * Logo Files

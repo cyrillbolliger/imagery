@@ -26,5 +26,6 @@ class AppServiceProvider extends ServiceProvider
         \App\User::observe(\App\Observers\UserObserver::class);
         \App\Role::observe(\App\Observers\RoleObserver::class);
         \App\Group::observe(\App\Observers\GroupObserver::class);
+        \App\Logo::observe(\App\Observers\LogoObserver::class);
     }
 }

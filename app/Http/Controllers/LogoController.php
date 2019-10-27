@@ -32,13 +32,39 @@ class LogoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
+     * @param  Logo  $logo
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Logo $logo)
     {
-        //
+        $data = $request->validate([
+            'id'         => ['sometimes', new ImmutableRule($logo)],
+            'added_by'   => ['sometimes', new ImmutableRule($logo)],
+            'filename'   => ['required', 'string', new FileExtensionRule(self::ALLOWED_EXT)],
+            'name'       => ['required', 'max:80'],
+            'created_at' => ['sometimes', new ImmutableRule($logo)],
+            'updated_at' => ['sometimes', new ImmutableRule($logo)],
+            'deleted_at' => ['sometimes', new ImmutableRule($logo)],
+        ]);
+
+        $path  = $this->getRelTmpPath($data['filename']);
+        $valid = $this->validateFile($path);
+
+        if (true !== $valid) {
+            return $valid;
+        }
+
+        $data['filename'] = $this->storeFile($path);
+
+        $logo->fill($data);
+
+        if ( ! $logo->save()) {
+            return response('Could not save logo.', 500);
+        }
+
+        return $logo;
     }
 
     /**
@@ -56,7 +82,7 @@ class LogoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  \App\Logo  $logo
      *
      * @return \Illuminate\Http\Response
@@ -73,14 +99,51 @@ class LogoController extends Controller
             'deleted_at' => ['sometimes', new ImmutableRule($logo)],
         ]);
 
-        $tempFilename   = UploadHandler::computeTmpFilename($data['filename']);
-        $relTmpFilePath = UploadHandler::getRelDirPath().DIRECTORY_SEPARATOR.$tempFilename;
+        $path  = $this->getRelTmpPath($data['filename']);
+        $valid = $this->validateFile($path);
 
-        if ( ! Storage::exists($relTmpFilePath)) {
+        if (true !== $valid) {
+            return $valid;
+        }
+
+        $data['filename'] = $this->storeFile($path);
+
+        if ( ! $logo->update($data)) {
+            return response('Could not save logo.', 500);
+        }
+
+        return $logo;
+    }
+
+    /**
+     * Get path to the uploaded temporary file relative to the storage folder
+     *
+     * @param  string  $filename
+     *
+     * @return string
+     */
+    private function getRelTmpPath(string $filename)
+    {
+        $tempFilename = UploadHandler::computeTmpFilename($filename);
+
+        return UploadHandler::getRelDirPath().DIRECTORY_SEPARATOR.$tempFilename;
+    }
+
+    /**
+     * Check if the file exists and if the mime type is allowed.
+     *
+     * @param  string  $relFilePath  path to temporary file relative to storage dir
+     *
+     * @return bool|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     *         true if the file is valid, else a response with the error message.
+     */
+    private function validateFile(string $relFilePath)
+    {
+        if ( ! Storage::exists($relFilePath)) {
             return response('Uploaded file not found.', 400);
         }
 
-        if ( ! UploadHandler::validateMimeType($relTmpFilePath, self::ALLOWED_MIME)) {
+        if ( ! UploadHandler::validateMimeType($relFilePath, self::ALLOWED_MIME)) {
             $resp = [
                 'message' => 'Unable to update logo.',
                 'errors'  => [
@@ -91,25 +154,30 @@ class LogoController extends Controller
             return response($resp, 422);
         }
 
-        $extension      = pathinfo($data['filename'], PATHINFO_EXTENSION);
-        $finalFilename  = UploadHandler::computeFinalFilename($relTmpFilePath);
-        $relDestDirPath = config('app.logo_dir').DIRECTORY_SEPARATOR;
+        return true;
+    }
+
+    /**
+     * Store the final file.
+     *
+     * @param  string  $relFilePath  path to temporary file relative to storage dir
+     *
+     * @return string  the final file name
+     */
+    private function storeFile(string $relFilePath)
+    {
+        $extension      = pathinfo($relFilePath, PATHINFO_EXTENSION);
+        $finalFilename  = UploadHandler::computeFinalFilename($relFilePath);
+        $relDestDirPath = Logo::getStorageDir().DIRECTORY_SEPARATOR;
 
         $relFinalPath = $relDestDirPath.$finalFilename.'.'.$extension;
 
         if ( ! Storage::exists($relFinalPath)) {
-            Storage::move($relTmpFilePath, $relFinalPath);
+            Storage::move($relFilePath, $relFinalPath);
         }
 
-        $data['filename'] = $finalFilename.'.'.$extension;
-
-        if ( ! $logo->update($data)) {
-            return response('Could not save logo.', 500);
-        }
-
-        return $logo;
+        return $finalFilename.'.'.$extension;
     }
-
 
     /**
      * Remove the specified resource from storage.
