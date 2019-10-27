@@ -81,7 +81,14 @@ class LogoController extends Controller
         }
 
         if ( ! UploadHandler::validateMimeType($relTmpFilePath, self::ALLOWED_MIME)) {
-            return response('Invalid mime type.', 422);
+            $resp = [
+                'message' => 'Unable to update logo.',
+                'errors'  => [
+                    'file' => 'The uploaded file has an invalid mime type'
+                ],
+            ];
+
+            return response($resp, 422);
         }
 
         $extension      = pathinfo($data['filename'], PATHINFO_EXTENSION);

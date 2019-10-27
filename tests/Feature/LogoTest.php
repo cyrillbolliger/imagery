@@ -157,4 +157,45 @@ class LogoTest extends TestCase
 
         $this->assertFileExists(disk_path(config('app.logo_dir').'/'.$finalFilename));
     }
+
+    public function testPutLogo__adminInvalidMimeType__422()
+    {
+        $group = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $group->id
+            ])
+        );
+
+        $logo = factory(Logo::class)->create();
+        $group->logos()->attach($logo);
+
+        $filename = 'Image007.png';
+        $payload  = [
+            'base64data' => 'data:application/octet-stream;base64,PD9waHAKCmRpZSgnaGFyZCcpOwo=', // a simple php file
+            'part'       => 0,
+            'filename'   => $filename,
+        ];
+
+        $response = $this->actingAs($manager)
+                         ->postJson("/files/logos", $payload);
+
+        $response->assertStatus(200);
+
+        /**
+         * Above was precondition, the real test starts here
+         */
+        $logo->name       = 'gruene-zh.ch';
+        $data             = $logo->toArray();
+        $data['filename'] = $filename; // excluded from toArray method
+
+        $response = $this->actingAs($manager)
+                         ->putJson("/logos/$logo->id", $data);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('errors.file', 'The uploaded file has an invalid mime type');
+    }
 }
