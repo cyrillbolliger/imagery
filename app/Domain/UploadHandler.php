@@ -65,17 +65,17 @@ class UploadHandler
      * Save the file chunk
      *
      * @param  string  $chunk  base64 encoded
-     * @param  string  $fileName
+     * @param  string  $filename
      * @param  int  $part
      *
      * @throws UploadException
      */
-    public function saveChunk(string $chunk, string $fileName, int $part): void
+    public function saveChunk(string $chunk, string $filename, int $part): void
     {
         $base64  = $this->extractData($chunk);
         $newData = $this->base64decode($base64);
 
-        $relFilePath = $this->relDirPath.DIRECTORY_SEPARATOR.$fileName;
+        $relFilePath = $this->relDirPath.DIRECTORY_SEPARATOR.$filename;
 
         // don't use laravel's Storage::append() function because it adds a
         // newline character in between.
