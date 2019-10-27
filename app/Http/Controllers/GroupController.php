@@ -134,7 +134,7 @@ class GroupController extends Controller
         }
 
         if ( ! $group->delete()) {
-            return response('Could not delete user.', 500);
+            return response('Could not delete group.', 500);
         }
 
         return response(null, 204);
