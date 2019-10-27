@@ -54,9 +54,7 @@ class LogoController extends Controller
 
         unset($data['groups']);
 
-        $path = $this->getRelTmpPath($data['filename']);
-        $this->validateFile($path);
-        $data['filename'] = $this->storeFile($path);
+        $data['filename'] = $this->validateAndStoreFile($data['filename']);
 
         $logo->fill($data);
 
@@ -70,6 +68,23 @@ class LogoController extends Controller
         unset($logo->groups); // do not return associations
 
         return $logo;
+    }
+
+    /**
+     * Validate and store the previously uploaded file with the given filename.
+     *
+     * @param  string  $filename
+     *
+     * @return string
+     */
+    private function validateAndStoreFile(string $filename)
+    {
+        $extension = pathinfo($filename, PATHINFO_EXTENSION);
+        $path      = $this->getRelTmpPath($filename);
+
+        $this->validateFile($path);
+
+        return $this->storeFile($path, $extension);
     }
 
     /**
@@ -111,15 +126,12 @@ class LogoController extends Controller
         ]);
 
         if ($request->has('groups')) {
-            $groups = $request->input('groups');
-            $this->syncGroups($groups, $logo);
+            $this->syncGroups($data['groups'], $logo);
             unset($data['groups']);
         }
 
         if ($request->has('filename')) {
-            $path = $this->getRelTmpPath($data['filename']);
-            $this->validateFile($path);
-            $data['filename'] = $this->storeFile($path);
+            $data['filename'] = $this->validateAndStoreFile($data['filename']);
         }
 
         if ( ! $logo->update($data)) {
@@ -235,12 +247,12 @@ class LogoController extends Controller
      * Store the final file.
      *
      * @param  string  $relFilePath  path to temporary file relative to storage dir
+     * @param  string  $extension  the file extension of the final file
      *
      * @return string  the final file name
      */
-    private function storeFile(string $relFilePath)
+    private function storeFile(string $relFilePath, string $extension)
     {
-        $extension      = pathinfo($relFilePath, PATHINFO_EXTENSION);
         $finalFilename  = UploadHandler::computeFinalFilename($relFilePath);
         $relDestDirPath = Logo::getStorageDir().DIRECTORY_SEPARATOR;
 

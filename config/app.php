@@ -288,13 +288,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Salt
+    | Hash secret
     |--------------------------------------------------------------------------
     |
-    | The security salt
+    | Secret value to make hashes hard to guess, even if the original input is
+    | known. Treat this as a sensitive value.
     |
     */
 
-    'salt' => env('APP_SALT'),
+    'hash_secret' => env('APP_HASH_SECRET'),
 
 ];

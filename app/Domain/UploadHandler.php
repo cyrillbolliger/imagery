@@ -165,9 +165,7 @@ class UploadHandler
     {
         // Bind filename to user id so we don't interfere with other users
         // uploading a file with the same name.
-        $hash = md5($originalFilename.Auth::id().config('salt'));
-
-        return $hash;
+        return self::shortHash($originalFilename.Auth::id().config('app.hash_secret'));
     }
 
     /**
@@ -198,6 +196,18 @@ class UploadHandler
     {
         $path = disk_path($relTmpFilePath);
 
-        return md5(File::hash($path).config('salt'));
+        return self::shortHash(File::hash($path).config('app.hash_secret'));
+    }
+
+    /**
+     * Return a sha256 hash of the given string
+     *
+     * @param  string  $string
+     *
+     * @return string
+     */
+    private static function shortHash(string $string)
+    {
+        return substr(hash('sha256', $string), 0, 32);
     }
 }
