@@ -114,6 +114,8 @@ class LogoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * Since it is a soft delete, we do not delete the file.
+     *
      * @param  \App\Logo  $logo
      *
      * @return \Illuminate\Http\Response
@@ -121,14 +123,8 @@ class LogoController extends Controller
      */
     public function destroy(Logo $logo)
     {
-        $path = $logo->getRelPath();
-
         if ( ! $logo->delete()) {
             return response('Could not delete logo.', 500);
-        }
-
-        if (Storage::exists($path)) {
-            Storage::delete($path);
         }
 
         return response(null, 204);

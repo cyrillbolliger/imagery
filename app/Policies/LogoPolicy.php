@@ -72,30 +72,4 @@ class LogoPolicy
     {
         return $user->canManageLogo($logo);
     }
-
-    /**
-     * Determine whether the user can restore the logo.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Logo  $logo
-     *
-     * @return mixed
-     */
-    public function restore(User $user, Logo $logo)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the logo.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Logo  $logo
-     *
-     * @return mixed
-     */
-    public function forceDelete(User $user, Logo $logo)
-    {
-        //
-    }
 }
