@@ -70,7 +70,7 @@ class LogoPolicy
      */
     public function delete(User $user, Logo $logo)
     {
-        //
+        return $user->canManageLogo($logo);
     }
 
     /**

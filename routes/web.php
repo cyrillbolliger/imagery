@@ -90,10 +90,10 @@ Route::put('/logos/{logo}', 'LogoController@update')
      ->where('logo', '\d+')
      ->middleware('can:update,logo');
 
-//Route::delete('/logos/{logo}', 'LogoController@destroy')
-//     ->where('logo', '\d+')
-//     ->middleware('can:delete,logo');
-//
+Route::delete('/logos/{logo}', 'LogoController@destroy')
+     ->where('logo', '\d+')
+     ->middleware('can:delete,logo');
+
 //Route::post('/logos', 'LogoController@store')
 //     ->middleware('can:create,App\Logo');
 

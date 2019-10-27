@@ -8,6 +8,7 @@ use App\FileModel;
 use App\Rules\FileExtensionRule;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
@@ -48,12 +49,12 @@ class FileController extends Controller
      */
     public function show(FileModel $model)
     {
-        $path = $model->getPath();
+        $path = $model->getRelPath();
 
-        if ( ! file_exists($path) || ! is_readable($path)) {
+        if ( ! Storage::exists($path)) {
             return response('File not found', 404);
         }
 
-        return response()->file($model->getPath());
+        return response()->file(disk_path($path));
     }
 }

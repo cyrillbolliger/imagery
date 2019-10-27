@@ -6,5 +6,5 @@ namespace App;
 
 interface FileModel
 {
-    public function getPath();
+    public function getRelPath();
 }

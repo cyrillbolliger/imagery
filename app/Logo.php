@@ -69,9 +69,9 @@ class Logo extends Model implements FileModel
         return route('logo', ['logo' => $this->id]);
     }
 
-    public function getPath()
+    public function getRelPath()
     {
-        return disk_path(self::getStorageDir()).DIRECTORY_SEPARATOR.$this->filename;
+        return self::getStorageDir().DIRECTORY_SEPARATOR.$this->filename;
     }
 
     public static function getStorageDir()

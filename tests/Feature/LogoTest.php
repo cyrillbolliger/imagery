@@ -40,7 +40,7 @@ class LogoTest extends TestCase
         $group->logos()->attach($logo);
 
         $response = $this->actingAs($manager)
-            ->getJson("/logos/$logo->id");
+                         ->getJson("/logos/$logo->id");
 
         $response->assertStatus(200);
         $response->assertJsonFragment(['id' => $logo->id]);
@@ -53,7 +53,7 @@ class LogoTest extends TestCase
         $logo    = factory(Logo::class)->create();
 
         $response = $this->actingAs($manager)
-            ->getJson("/logos/$logo->id");
+                         ->getJson("/logos/$logo->id");
 
         $response->assertStatus(403);
     }
@@ -74,7 +74,7 @@ class LogoTest extends TestCase
         $group->logos()->attach($logo);
 
         $response = $this->actingAs($manager)
-            ->getJson("/logos");
+                         ->getJson("/logos");
 
         $response->assertStatus(403);
     }
@@ -98,7 +98,7 @@ class LogoTest extends TestCase
         $group->logos()->attach($logo2);
 
         $response = $this->actingAs($manager)
-            ->getJson("/logos");
+                         ->getJson("/logos");
 
         $response->assertStatus(200);
         $response->assertJsonFragment(['id' => $logo1->id]);
@@ -197,5 +197,28 @@ class LogoTest extends TestCase
 
         $response->assertStatus(422);
         $response->assertJsonPath('errors.file', 'The uploaded file has an invalid mime type');
+    }
+
+    public function testDeleteLogo__admin__200()
+    {
+        $group = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $group->id
+            ])
+        );
+
+        $logo = factory(Logo::class)->create();
+        $group->logos()->attach($logo);
+
+        $response = $this->actingAs($manager)
+                         ->deleteJson("/logos/$logo->id");
+
+        $response->assertStatus(204);
+
+        $this->assertFileNotExists(disk_path(config('app.logo_dir').'/'.$logo->filename));
     }
 }

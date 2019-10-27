@@ -117,9 +117,20 @@ class LogoController extends Controller
      * @param  \App\Logo  $logo
      *
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Logo $logo)
     {
-        //
+        $path = $logo->getRelPath();
+
+        if ( ! $logo->delete()) {
+            return response('Could not delete logo.', 500);
+        }
+
+        if (Storage::exists($path)) {
+            Storage::delete($path);
+        }
+
+        return response(null, 204);
     }
 }
