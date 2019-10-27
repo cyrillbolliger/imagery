@@ -5,6 +5,8 @@ namespace App\Domain;
 
 
 use App\Exceptions\UploadException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class UploadHandler
@@ -40,6 +42,7 @@ class UploadHandler
     {
         if ( ! Storage::exists($this->relDirPath)) {
             Storage::makeDirectory($this->relDirPath);
+            Storage::setVisibility($this->relDirPath, 'private');
         }
     }
 
@@ -77,12 +80,21 @@ class UploadHandler
         // don't use laravel's Storage::append() function because it adds a
         // newline character in between.
         if (0 === $part) {
-            $existingData = '';
+            $data = $newData;
         } else {
+            if ( ! Storage::exists($relFilePath)) {
+                throw new UploadException('Invalid part number.', UploadException::PART);
+            }
+
             $existingData = Storage::get($relFilePath);
+            $data         = $existingData.$newData;
         }
 
-        $written = Storage::put($relFilePath, $existingData.$newData, 'private');
+        if ($this->isSizeLimitExceeded($data)) {
+            throw new UploadException('Size limit exceeded.', UploadException::SIZE);
+        }
+
+        $written = Storage::put($relFilePath, $data, 'private');
 
         if (false === $written) {
             throw new UploadException('Unable to store file.', UploadException::STORE);
@@ -126,5 +138,66 @@ class UploadHandler
         }
 
         return $data;
+    }
+
+    /**
+     * Check if the given file exceeds the configured max file size
+     *
+     * @param  string  $data
+     *
+     * @return bool
+     */
+    private function isSizeLimitExceeded(string $data)
+    {
+        $sizeLimit = config('app.uploads_max_file_size') * 1024 * 1024; // config in MB but we need bytes
+
+        return strlen($data) > $sizeLimit;
+    }
+
+    /**
+     * Generate temporary filename that is deterministic but hard to guess.
+     *
+     * @param  string  $originalFilename
+     *
+     * @return string
+     */
+    public static function computeTmpFilename(string $originalFilename)
+    {
+        // Bind filename to user id so we don't interfere with other users
+        // uploading a file with the same name.
+        $hash = md5($originalFilename.Auth::id().config('salt'));
+
+        return $hash;
+    }
+
+    /**
+     * Check if the mime type of the given file is in the whitelist
+     *
+     * @param  string  $relFilePath
+     * @param  array  $allowedMimeTypes
+     *
+     * @return bool
+     */
+    public static function validateMimeType(string $relFilePath, array $allowedMimeTypes): bool
+    {
+        $mime = Storage::mimeType($relFilePath);
+
+        return in_array($mime, $allowedMimeTypes);
+    }
+
+    /**
+     * Generate filename that depends on the file content but is hard to guess.
+     *
+     * Use the file hash as file name base, so we can prevent storing duplicates.
+     *
+     * @param  string  $relTmpFilePath
+     *
+     * @return string
+     */
+    public static function computeFinalFilename(string $relTmpFilePath)
+    {
+        $path = disk_path($relTmpFilePath);
+
+        return md5(File::hash($path).config('salt'));
     }
 }

@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Domain\UploadHandler;
 use App\Exceptions\UploadException;
 use App\FileModel;
+use App\Rules\FileExtensionRule;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 
 class FileController extends Controller
 {
+    private const ALLOWED_EXT = ['jpg', 'jpeg', 'png', 'svg'];
+
     /**
      * Store a newly created resource in storage.
      *
@@ -20,20 +22,18 @@ class FileController extends Controller
      *
      * @return void
      */
-    public function store(Request $request, UploadHandler $handler)
+    public function storeChunk(Request $request, UploadHandler $handler)
     {
-        $data     = $request->json('data');
-        $part     = $request->json('part');
-        $filename = $request->json('filename');
+        $data = $request->validate([
+            'base64data' => 'required|string',
+            'part'       => 'required|integer|min:0',
+            'filename'   => ['required', 'string', new FileExtensionRule(self::ALLOWED_EXT)],
+        ]);
 
-        // keep the filename deterministic but hard to guess (validation is only
-        // only made after the file is linked to the database). Bind file name
-        // to user id so we don't interfere with other users uploading a file
-        // with the same name.
-        $tempFileName = hash('sha256', $filename.Auth::id().config('salt'));
+        $tempFileName = UploadHandler::computeTmpFilename($data['filename']);
 
         try {
-            $handler->saveChunk($data, $tempFileName, $part);
+            $handler->saveChunk($data['base64data'], $tempFileName, $data['part']);
         } catch (UploadException $e) {
             return response($e->getMessage(), 400);
         }

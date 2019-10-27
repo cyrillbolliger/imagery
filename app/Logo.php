@@ -20,7 +20,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  */
-class Logo extends Model
+class Logo extends Model implements FileModel
 {
     use SoftDeletes;
 

@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\UploadHandler;
 use App\Logo;
+use App\Rules\FileExtensionRule;
 use App\Rules\ImmutableRule;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class LogoController extends Controller
 {
+    private const ALLOWED_MIME = ['image/png', 'image/svg+xml'];
+    private const ALLOWED_EXT = ['png', 'svg'];
+
     /**
      * Display a listing of the resource.
      *
@@ -60,12 +66,35 @@ class LogoController extends Controller
         $data = $request->validate([
             'id'         => ['sometimes', new ImmutableRule($logo)],
             'added_by'   => ['sometimes', new ImmutableRule($logo)],
-            'filename'   => ['sometimes', 'required', 'max:192'],
+            'filename'   => ['required', 'string', new FileExtensionRule(self::ALLOWED_EXT)],
             'name'       => ['sometimes', 'required', 'max:80'],
             'created_at' => ['sometimes', new ImmutableRule($logo)],
             'updated_at' => ['sometimes', new ImmutableRule($logo)],
             'deleted_at' => ['sometimes', new ImmutableRule($logo)],
         ]);
+
+        $tempFilename   = UploadHandler::computeTmpFilename($data['filename']);
+        $relTmpFilePath = UploadHandler::getRelDirPath().DIRECTORY_SEPARATOR.$tempFilename;
+
+        if ( ! Storage::exists($relTmpFilePath)) {
+            return response('Uploaded file not found.', 400);
+        }
+
+        if ( ! UploadHandler::validateMimeType($relTmpFilePath, self::ALLOWED_MIME)) {
+            return response('Invalid mime type.', 422);
+        }
+
+        $extension      = pathinfo($data['filename'], PATHINFO_EXTENSION);
+        $finalFilename  = UploadHandler::computeFinalFilename($relTmpFilePath);
+        $relDestDirPath = config('app.logo_dir').DIRECTORY_SEPARATOR;
+
+        $relFinalPath = $relDestDirPath.$finalFilename.'.'.$extension;
+
+        if ( ! Storage::exists($relFinalPath)) {
+            Storage::move($relTmpFilePath, $relFinalPath);
+        }
+
+        $data['filename'] = $finalFilename.'.'.$extension;
 
         if ( ! $logo->update($data)) {
             return response('Could not save logo.', 500);
@@ -73,6 +102,7 @@ class LogoController extends Controller
 
         return $logo;
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -84,17 +114,5 @@ class LogoController extends Controller
     public function destroy(Logo $logo)
     {
         //
-    }
-
-    /**
-     * Display the specified resource file.
-     *
-     * @param  \App\Logo  $logo
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function file(Logo $logo)
-    {
-        return response($logo->getPath());
     }
 }

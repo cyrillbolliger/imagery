@@ -105,7 +105,7 @@ Route::get('/files/logos/{logo}', 'FileController@show')
      ->middleware('can:view,logo')
      ->name('logo');
 
-Route::post('/files/logos', 'FileController@store')
+Route::post('/files/logos', 'FileController@storeChunk')
      ->middleware('can:create,App\Logo');
 
 /**
