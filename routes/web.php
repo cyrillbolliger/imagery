@@ -108,6 +108,43 @@ Route::get('/files/logos/{logo}', 'FileController@show')
 Route::post('/files/logos', 'FileController@storeChunk')
      ->middleware('can:create,App\Logo');
 
+///**
+// * Images
+// */
+//Route::get('/images/{image}', 'ImageController@show')
+//     ->where('image', '\d+')
+//     ->middleware('can:view,image');
+//
+//Route::get('/images', 'ImageController@index')
+//     ->middleware('can:viewAny,App\Image');
+//
+//Route::put('/images/{image}', 'ImageController@update')
+//     ->where('image', '\d+')
+//     ->middleware('can:update,image');
+//
+//Route::delete('/images/{image}', 'ImageController@destroy')
+//     ->where('image', '\d+')
+//     ->middleware('can:delete,image');
+//
+//Route::post('/images', 'ImageController@store')
+//     ->middleware('can:create,App\Image');
+//
+///**
+// * Image Files
+// */
+//Route::get('/files/images/{image}', 'FileController@show')
+//     ->where('image', '\d+')
+//     ->middleware('can:view,image')
+//     ->name('image');
+//
+//Route::get('/files/images/{image}/thumbnail', 'FileController@showThumbnail')
+//     ->where('image', '\d+')
+//     ->middleware('can:view,image')
+//     ->name('thumbnail');
+//
+//Route::post('/files/images', 'FileController@storeChunk')
+//     ->middleware('can:create,App\Image');
+
 /**
  * Old routes
  *
