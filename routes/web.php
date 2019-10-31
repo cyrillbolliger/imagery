@@ -115,9 +115,12 @@ Route::get('/images/{image}', 'ImageController@show')
      ->where('image', '\d+')
      ->middleware('can:view,image');
 
-//Route::get('/images', 'ImageController@index')
-//     ->middleware('can:viewAny,App\Image');
-//
+Route::get('/images/raw', 'ImageController@indexRaw')
+     ->middleware('can:viewAny,App\Image');
+
+Route::get('/images/final', 'ImageController@indexFinal')
+     ->middleware('can:viewAny,App\Image');
+
 //Route::put('/images/{image}', 'ImageController@update')
 //     ->where('image', '\d+')
 //     ->middleware('can:update,image');

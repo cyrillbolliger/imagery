@@ -9,15 +9,28 @@ use Illuminate\Http\Request;
 class ImageController extends Controller
 {
     /**
-     * Return paginated list of all raw images.
+     * Return paginated list of all shareable raw images.
      *
      * @return \Illuminate\Http\Response
      */
-    public function listRaw()
+    public function indexRaw()
     {
-        return ImageResource::collection(
-            Image::whereNull('original_id')->paginate(10)
-        );
+        return Image::raw()
+                    ->shareable()
+                    ->orderBy('created_at')
+                    ->paginate(50);
+    }
+
+    /**
+     * Return paginated list of all final images.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexFinal()
+    {
+        return Image::final()
+                    ->orderBy('created_at')
+                    ->paginate(50);
     }
 
     /**

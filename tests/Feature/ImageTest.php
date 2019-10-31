@@ -98,4 +98,62 @@ class ImageTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    public function testGetRawImages__200()
+    {
+        $user = factory(User::class)->create();
+
+        $shared1   = factory(Image::class)->create([
+            'type' => Image::TYPE_RAW
+        ]);
+        $shared2   = factory(Image::class)->create([
+            'type' => Image::TYPE_RAW
+        ]);
+        $nonShared = factory(Image::class)->create([
+            'type' => Image::TYPE_RAW
+        ]);
+        factory(Legal::class)->create([
+            'shared'   => true,
+            'image_id' => $shared1->id
+        ]);
+        factory(Legal::class)->create([
+            'shared'   => true,
+            'image_id' => $shared2->id
+        ]);
+        factory(Legal::class)->create([
+            'shared'   => false,
+            'image_id' => $nonShared->id
+        ]);
+
+        $response = $this->actingAs($user)
+                         ->get("/images/raw");
+
+        $response->assertStatus(200)
+                 ->assertJsonFragment(['id' => $shared1->id])
+                 ->assertJsonFragment(['id' => $shared2->id])
+                 ->assertJsonMissing(['id' => $nonShared->id]);
+    }
+
+    public function testGetFinalImages__200()
+    {
+        $user = factory(User::class)->create();
+
+        $final1 = factory(Image::class)->create([
+            'type' => Image::TYPE_FINAL
+        ]);
+        $final2 = factory(Image::class)->create([
+            'type' => Image::TYPE_FINAL
+        ]);
+        $raw    = factory(Image::class)->create([
+            'type' => Image::TYPE_RAW
+        ]);
+
+        $response = $this->actingAs($user)
+                         ->get("/images/final");
+
+        $response->assertStatus(200)
+                 ->assertJsonFragment(['id' => $final1->id])
+                 ->assertJsonFragment(['id' => $final2->id])
+                 ->assertJsonMissing(['id' => $raw->id]);
+    }
 }

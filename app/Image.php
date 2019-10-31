@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -98,5 +99,43 @@ class Image extends Model
         $image->thumbnailImage(self::THUMB_MAX_WIDTH, self::THUMB_MAX_HEIGHT, true);
         $image->writeImage($thumbnailPath);
         $image->destroy();
+    }
+
+    /**
+     * Scope a query to only include raw images.
+     *
+     * @param  Builder  $query
+     *
+     * @return Builder
+     */
+    public function scopeRaw($query)
+    {
+        return $query->where('type', self::TYPE_RAW);
+    }
+
+    /**
+     * Scope a query to only include final images.
+     *
+     * @param  Builder  $query
+     *
+     * @return Builder
+     */
+    public function scopeFinal($query)
+    {
+        return $query->where('type', self::TYPE_FINAL);
+    }
+
+    /**
+     * Scope a query to only include shareable images.
+     *
+     * @param  Builder  $query
+     *
+     * @return Builder
+     */
+    public function scopeShareable($query)
+    {
+        return $query->join('legals', 'images.id', '=', 'legals.id')
+                     ->select('images.*')
+                     ->where('legals.shared', true);
     }
 }
