@@ -156,4 +156,72 @@ class ImageTest extends TestCase
                  ->assertJsonFragment(['id' => $final2->id])
                  ->assertJsonMissing(['id' => $raw->id]);
     }
+
+    public function testDeleteImage__own__204()
+    {
+        $user  = factory(User::class)->create();
+        $image = factory(Image::class)->create([
+            'user_id' => $user->id,
+        ]);
+        factory(Legal::class)->create([
+            'image_id' => $image->id
+        ]);
+
+        $response = $this->actingAs($user)
+                         ->delete("/images/{$image->id}");
+
+        $response->assertStatus(204);
+        $this->assertDatabaseMissing('legals', [
+            'image_id'   => $image->id,
+            'deleted_at' => null
+        ]);
+        $this->assertDatabaseMissing('images', [
+            'id'         => $image->id,
+            'deleted_at' => null
+        ]);
+    }
+
+    public function testDeleteImage__others__403()
+    {
+        $user  = factory(User::class)->create();
+        $image = factory(Image::class)->create();
+        factory(Legal::class)->create([
+            'image_id' => $image->id
+        ]);
+
+        $response = $this->actingAs($user)
+                         ->delete("/images/{$image->id}");
+
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('legals', [
+            'image_id'   => $image->id,
+            'deleted_at' => null
+        ]);
+        $this->assertDatabaseHas('images', [
+            'id'         => $image->id,
+            'deleted_at' => null
+        ]);
+    }
+
+    public function testDeleteImage__othersSuperAdmin__204()
+    {
+        $user  = factory(User::class)->create(['super_admin' => true]);
+        $image = factory(Image::class)->create();
+        factory(Legal::class)->create([
+            'image_id' => $image->id
+        ]);
+
+        $response = $this->actingAs($user)
+                         ->delete("/images/{$image->id}");
+
+        $response->assertStatus(204);
+        $this->assertDatabaseMissing('legals', [
+            'image_id'   => $image->id,
+            'deleted_at' => null
+        ]);
+        $this->assertDatabaseMissing('images', [
+            'id'         => $image->id,
+            'deleted_at' => null
+        ]);
+    }
 }

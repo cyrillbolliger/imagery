@@ -19,7 +19,7 @@ use Imagick;
  * @property Logo|null $logo
  * @property int|null $original_id
  * @property Image|null $original
- * @property Legal|null $shared
+ * @property Legal|null $legal
  * @property string $type
  * @property string $background
  * @property string $filename

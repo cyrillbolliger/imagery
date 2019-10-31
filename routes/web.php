@@ -125,10 +125,10 @@ Route::get('/images/final', 'ImageController@indexFinal')
 //     ->where('image', '\d+')
 //     ->middleware('can:update,image');
 //
-//Route::delete('/images/{image}', 'ImageController@destroy')
-//     ->where('image', '\d+')
-//     ->middleware('can:delete,image');
-//
+Route::delete('/images/{image}', 'ImageController@destroy')
+     ->where('image', '\d+')
+     ->middleware('can:delete,image');
+
 //Route::post('/images', 'ImageController@store')
 //     ->middleware('can:create,App\Image');
 

@@ -96,7 +96,7 @@ class ImagePolicy
      */
     public function delete(User $user, Image $image)
     {
-        //
+        return $image->user->is($user);
     }
 
     /**

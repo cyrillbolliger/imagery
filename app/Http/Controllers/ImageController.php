@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ImageResource;
 use App\Image;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class ImageController extends Controller
 {
@@ -60,15 +61,26 @@ class ImageController extends Controller
     }
 
     /**
-     * Soft delete raw image.
+     * Remove the specified resource from storage.
      *
-     * @param  \App\Image  $image
+     * @param  Image  $image
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
+     * @throws \Exception
      */
-    public function deleteRaw(Image $image)
+    public function destroy(Image $image)
     {
-        //
+        if ($image->legal) {
+            if ( ! $image->legal->delete()) {
+                return response('Could not delete images legal information. Image not deleted.', 500);
+            }
+        }
+
+        if ( ! $image->delete()) {
+            return response('Could not delete image.', 500);
+        }
+
+        return response(null, 204);
     }
 
     /**
