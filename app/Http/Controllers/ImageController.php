@@ -4,11 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ImageResource;
 use App\Image;
+use App\Logo;
+use App\Rules\FileExtensionRule;
+use App\Rules\ImageOriginalRule;
+use App\Rules\ImmutableRule;
+use App\Rules\UserLogoRule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 
 class ImageController extends Controller
 {
+    private const ALLOWED_EXT = ['png', 'svg', 'jpg', 'jpeg'];
+
     /**
      * Return paginated list of all shareable raw images.
      *
@@ -32,18 +40,6 @@ class ImageController extends Controller
         return Image::final()
                     ->orderBy('created_at')
                     ->paginate(50);
-    }
-
-    /**
-     * Store a raw image. Update if it contains an id, else insert.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function storeRaw(Request $request)
-    {
-        //
     }
 
     /**
@@ -93,5 +89,129 @@ class ImageController extends Controller
     public function searchRaw(Image $image)
     {
         //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  Request  $request
+     * @param  \App\Image  $image
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Image $image)
+    {
+        $user = Auth::user();
+
+        $data = $request->validate([
+            'id'          => ['sometimes', new ImmutableRule($image)],
+            'user_id'     => ['sometimes', new ImmutableRule($image)],
+            'logo_id'     => [
+                'sometimes',
+                'nullable',
+                'exists:logos,id',
+                new UserLogoRule($user)
+            ],
+            'background'  => [
+                'sometimes',
+                'required',
+                'in:'.Image::BG_CUSTOM.','.Image::BG_TRANSPARENT.','.Image::BG_GRADIENT
+            ],
+            // if mutable we would have to check the legal etc
+            'type'        => ['sometimes', new ImmutableRule($image)],
+            'original_id' => [
+                'bail',
+                'sometimes',
+                'nullable',
+                'exists:images,id',
+                new ImageOriginalRule(
+                    $user,
+                    $request->get('background', $image->background),
+                    $request->get('type', $image->type)
+                )
+            ],
+            'filename'    => [
+                'sometimes',
+                'required',
+                'string',
+                'max:255',
+                new FileExtensionRule(self::ALLOWED_EXT)
+            ],
+            'width'       => ['sometimes', new ImmutableRule($image)],
+            'height'      => ['sometimes', new ImmutableRule($image)],
+            'created_at'  => ['sometimes', new ImmutableRule($image)],
+            'updated_at'  => ['sometimes', new ImmutableRule($image)],
+            'deleted_at'  => ['sometimes', new ImmutableRule($image)],
+        ]);
+
+        if ($request->has('filename')) {
+            $data['filename'] = $this->validateAndStoreFile($data['filename']);
+        }
+
+        if ( ! $image->update($data)) {
+            return response('Could not save image.', 500);
+        }
+
+        return $image;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  Request  $request
+     * @param  Image  $image
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request, Image $image)
+    {
+        $user = Auth::user();
+
+        $data = $request->validate([
+            'id'          => ['sometimes', new ImmutableRule($image)],
+            'user_id'     => ['sometimes', new ImmutableRule($image)],
+            'logo_id'     => [
+                'sometimes',
+                'nullable',
+                'exists:logos,id',
+                new UserLogoRule($user)
+            ],
+            'background'  => [
+                'required',
+                'in:'.Image::BG_CUSTOM.','.Image::BG_TRANSPARENT.','.Image::BG_GRADIENT
+            ],
+            'type'        => ['required', 'in:'.Image::TYPE_RAW.','.Image::TYPE_FINAL],
+            'original_id' => [
+                'bail',
+                'nullable',
+                'exists:images,id',
+                new ImageOriginalRule(
+                    $user,
+                    $request->get('background', $image->background),
+                    $request->get('type', $image->type)
+                )
+            ],
+            'filename'    => [
+                'required',
+                'string',
+                'max:255',
+                new FileExtensionRule(self::ALLOWED_EXT)
+            ],
+            'width'       => ['sometimes', new ImmutableRule($image)],
+            'height'      => ['sometimes', new ImmutableRule($image)],
+            'created_at'  => ['sometimes', new ImmutableRule($image)],
+            'updated_at'  => ['sometimes', new ImmutableRule($image)],
+            'deleted_at'  => ['sometimes', new ImmutableRule($image)],
+        ]);
+
+        $data['filename'] = $this->validateAndStoreFile($data['filename']);
+
+        $image->fill($data);
+
+        if ( ! $image->save()) {
+            return response('Could not save image.', 500);
+        }
+
+        return $image;
     }
 }

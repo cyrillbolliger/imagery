@@ -224,4 +224,19 @@ class ImageTest extends TestCase
             'deleted_at' => null
         ]);
     }
+
+    public function testPutImage__raw__200()
+    {
+
+    }
+
+    // raw with original id 422
+    // raw with logo 422
+    // raw with background != custom 422
+
+    // final with background != custom && original_id 422
+    // final with original id of shared image 200
+    // final with original id of non shared image 422
+    // final with original id of own image 200
+    // final with no original id && background == custom 422
 }

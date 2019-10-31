@@ -3,6 +3,7 @@
 namespace App\Rules;
 
 use App\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,16 +12,16 @@ class UserLogoRule implements Rule
     /**
      * The user to validate (request data)
      *
-     * @var User|null  null on user creation
+     * @var Authenticatable|null  null on user creation
      */
     private $user;
 
     /**
      * Create a new rule instance.
      *
-     * @param  User|null  $user
+     * @param  Authenticatable|null  $user
      */
-    public function __construct(?User $user)
+    public function __construct(?Authenticatable $user)
     {
         $this->user = $user;
     }
@@ -79,6 +80,6 @@ class UserLogoRule implements Rule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return "The :attribute contains a logo you haven't permission to use.";
     }
 }

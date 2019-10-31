@@ -44,7 +44,7 @@ class LogoController extends Controller
         $data = $request->validate([
             'id'         => ['sometimes', new ImmutableRule($logo)],
             'added_by'   => ['sometimes', new ImmutableRule($logo)],
-            'filename'   => ['required', 'string', new FileExtensionRule(self::ALLOWED_EXT)],
+            'filename'   => ['required', 'string', 'max:255', new FileExtensionRule(self::ALLOWED_EXT)],
             'name'       => ['required', 'max:80'],
             'created_at' => ['sometimes', new ImmutableRule($logo)],
             'updated_at' => ['sometimes', new ImmutableRule($logo)],
@@ -116,6 +116,7 @@ class LogoController extends Controller
                 'sometimes',
                 'required',
                 'string',
+                'max:255',
                 new FileExtensionRule(self::ALLOWED_EXT)
             ],
             'name'       => ['sometimes', 'required', 'max:80'],

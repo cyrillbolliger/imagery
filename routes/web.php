@@ -121,16 +121,16 @@ Route::get('/images/raw', 'ImageController@indexRaw')
 Route::get('/images/final', 'ImageController@indexFinal')
      ->middleware('can:viewAny,App\Image');
 
-//Route::put('/images/{image}', 'ImageController@update')
-//     ->where('image', '\d+')
-//     ->middleware('can:update,image');
-//
+Route::put('/images/{image}', 'ImageController@update')
+     ->where('image', '\d+')
+     ->middleware('can:update,image');
+
 Route::delete('/images/{image}', 'ImageController@destroy')
      ->where('image', '\d+')
      ->middleware('can:delete,image');
 
-//Route::post('/images', 'ImageController@store')
-//     ->middleware('can:create,App\Image');
+Route::post('/images', 'ImageController@store')
+     ->middleware('can:create,App\Image');
 
 /**
  * Image Files

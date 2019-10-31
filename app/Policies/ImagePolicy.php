@@ -83,7 +83,7 @@ class ImagePolicy
      */
     public function update(User $user, Image $image)
     {
-        //
+        return $image->user->is($user);
     }
 
     /**
@@ -97,31 +97,5 @@ class ImagePolicy
     public function delete(User $user, Image $image)
     {
         return $image->user->is($user);
-    }
-
-    /**
-     * Determine whether the user can restore the image.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Image  $image
-     *
-     * @return mixed
-     */
-    public function restore(User $user, Image $image)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the image.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Image  $image
-     *
-     * @return mixed
-     */
-    public function forceDelete(User $user, Image $image)
-    {
-        //
     }
 }
