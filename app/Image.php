@@ -4,8 +4,30 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Imagick;
 
+/**
+ * Class Image
+ * @package App
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property User|null $user
+ * @property int|null $logo_id
+ * @property Logo|null $logo
+ * @property int|null $original_id
+ * @property Image|null $original
+ * @property Legal|null $shared
+ * @property string $type
+ * @property string $background
+ * @property string $filename
+ * @property int $width
+ * @property int $height
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ */
 class Image extends Model
 {
     use SoftDeletes;
@@ -36,6 +58,16 @@ class Image extends Model
     public function logo()
     {
         return $this->belongsTo(Legal::class);
+    }
+
+    public function isFinal()
+    {
+        return $this->type === self::TYPE_FINAL;
+    }
+
+    public function isShareable()
+    {
+        return $this->legal && $this->legal->shared;
     }
 
     public static function getImageStorageDir()

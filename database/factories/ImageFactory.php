@@ -40,7 +40,6 @@ $factory->define(Image::class, function (Faker $faker) {
             return factory(User::class)->create()->id;
         },
         'filename' => $filename,
-        'hash'     => md5_file($imagePath),
         'width'    => $imageWidth,
         'height'   => $imageHeight
     ];

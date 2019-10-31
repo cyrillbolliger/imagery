@@ -39,7 +39,7 @@ class ImageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function get(Image $image)
+    public function show(Image $image)
     {
         $image->user; // load relation
 

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Image;
+use App\Legal;
 use App\User;
 use RootSeeder;
 use Tests\TestCase;
@@ -20,41 +21,17 @@ class ImageTest extends TestCase
         $this->seed(RootSeeder::class);
     }
 
-    public function testGetRawImages()
+    public function testGetImage__own__200()
     {
-        $user = User::first();
-        factory(Image::class, 2)->create();
-
-        $response = $this->actingAs($user)
-                         ->get('/images/raw');
-
-        $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         0 => [
-                             'id',
-                             'user' => [
-                                 'id',
-                                 'first_name',
-                                 'last_name',
-                                 'email'
-                             ],
-                             'filename',
-                             'width',
-                             'height',
-                             'created_at'
-                         ],
-                         1
-                     ],
-                     'links',
-                     'meta'
-                 ]);
-    }
-
-    public function testGetRawImage()
-    {
-        $user  = User::first();
-        $image = factory(Image::class)->create();
+        $user  = factory(User::class)->create();
+        $image = factory(Image::class)->create([
+            'user_id' => $user->id,
+            'type'    => Image::TYPE_RAW
+        ]);
+        factory(Legal::class)->create([
+            'shared'   => false,
+            'image_id' => $image->id
+        ]);
 
         $response = $this->actingAs($user)
                          ->get("/images/{$image->id}");
@@ -75,28 +52,50 @@ class ImageTest extends TestCase
                  ]);
     }
 
-    public function testGetFinalImage__503()
+    public function testGetImage__final__200()
     {
-        // not logged in
+        $user  = factory(User::class)->create();
+        $image = factory(Image::class)->create([
+            'type' => Image::TYPE_FINAL
+        ]);
+
+        $response = $this->actingAs($user)
+                         ->get("/images/{$image->id}");
+
+        $response->assertStatus(200);
     }
 
-    public function testGetRawImage__503()
+    public function testGetImage__shared__200()
     {
-        // not logged in
+        $user  = factory(User::class)->create();
+        $image = factory(Image::class)->create([
+            'type' => Image::TYPE_RAW
+        ]);
+        factory(Legal::class)->create([
+            'shared'   => true,
+            'image_id' => $image->id
+        ]);
+
+        $response = $this->actingAs($user)
+                         ->get("/images/{$image->id}");
+
+        $response->assertStatus(200);
     }
 
-    public function testGetRawImage__NotShareable__503()
+    public function testGetImage__nonShared__403()
     {
-        // logged in but not my image and not shareable
-    }
+        $user  = factory(User::class)->create();
+        $image = factory(Image::class)->create([
+            'type' => Image::TYPE_RAW
+        ]);
+        factory(Legal::class)->create([
+            'shared'   => false,
+            'image_id' => $image->id
+        ]);
 
-    public function testGetRawImage__shareable()
-    {
-        // a shareable raw image of someone else
-    }
+        $response = $this->actingAs($user)
+                         ->get("/images/{$image->id}");
 
-    public function testGetRawImage__superAdmin()
-    {
-        // all raw images
+        $response->assertStatus(403);
     }
 }

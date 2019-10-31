@@ -31,7 +31,6 @@ class CreateImagesTable extends Migration
                 Image::BG_CUSTOM
             ]);
             $table->string('filename');
-            $table->string('hash');
             $table->integer('width');
             $table->integer('height');
             $table->timestamps();

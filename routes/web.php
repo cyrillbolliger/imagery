@@ -108,13 +108,13 @@ Route::get('/files/logos/{logo}', 'FileController@show')
 Route::post('/files/logos', 'FileController@storeChunk')
      ->middleware('can:create,App\Logo');
 
-///**
-// * Images
-// */
-//Route::get('/images/{image}', 'ImageController@show')
-//     ->where('image', '\d+')
-//     ->middleware('can:view,image');
-//
+/**
+ * Images
+ */
+Route::get('/images/{image}', 'ImageController@show')
+     ->where('image', '\d+')
+     ->middleware('can:view,image');
+
 //Route::get('/images', 'ImageController@index')
 //     ->middleware('can:viewAny,App\Image');
 //
@@ -128,10 +128,10 @@ Route::post('/files/logos', 'FileController@storeChunk')
 //
 //Route::post('/images', 'ImageController@store')
 //     ->middleware('can:create,App\Image');
-//
-///**
-// * Image Files
-// */
+
+/**
+ * Image Files
+ */
 //Route::get('/files/images/{image}', 'FileController@show')
 //     ->where('image', '\d+')
 //     ->middleware('can:view,image')
@@ -156,8 +156,8 @@ Route::get('/', function () {
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/images/raw', 'ImageController@listRaw');
-Route::get('/images/{image}', 'ImageController@get')->where('image', '\d+');
-Route::get('/images/raw/search/{query}', 'ImageController@searchRaw')->where('query', '.*');
-Route::post('/images/raw', 'ImageController@storeRaw');
-Route::delete('/images/{id}', 'ImageController@deleteRaw')->where('id', '\d+');
+//Route::get('/images/raw', 'ImageController@listRaw');
+//Route::get('/images/{image}', 'ImageController@get')->where('image', '\d+');
+//Route::get('/images/raw/search/{query}', 'ImageController@searchRaw')->where('query', '.*');
+//Route::post('/images/raw', 'ImageController@storeRaw');
+//Route::delete('/images/{id}', 'ImageController@deleteRaw')->where('id', '\d+');
