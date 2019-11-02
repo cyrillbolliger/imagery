@@ -129,8 +129,8 @@ Route::delete('/images/{image}', 'ImageController@destroy')
      ->where('image', '\d+')
      ->middleware('can:delete,image');
 
-//Route::post('/images', 'ImageController@store')
-//     ->middleware('can:create,App\Image');
+Route::post('/images', 'ImageController@store')
+     ->middleware('can:create,App\Image');
 
 /**
  * Image Files

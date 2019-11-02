@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Image;
 use App\Legal;
 use App\User;
+use Illuminate\Support\Facades\DB;
 use RootSeeder;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -225,9 +226,106 @@ class ImageTest extends TestCase
         ]);
     }
 
-    public function testPutImage__raw__200()
+    public function testPostImage__raw__200()
     {
+        $user     = factory(User::class)->create();
+        $filename = 'Image007.png';
+        $payload  = [
+            'base64data' => 'data:application/octet-stream;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAACmAAAApgHdff84AAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAMBQTFRF//////9V/79A/8wz/99A/9VA/89A/+lQ/+dN/+NO/+VO/+VR/+ZQ/+ZR/+VQ/+ZQ/+ZP/+ZR/+dQ/9dA/9hC/+ZQ/9dB/+dQ/+dQ/+FL/9dA/9dA/9dC/9tF/9tF/99J/99I/9dB/9hD/9dB/9hC/9hD/9lD/tZB/+NN/tZA/uNO/9dB/9dB/+ZQ/+VP/9dB/NA//9dB/+ZQtNJGvMZDxbhAzqs90qU826w83K4877w+770++M1E/NBA/9dB/+ZQfYTn/wAAADN0Uk5TAAMEBQgMECMrLjFFRmhtcHF7f4eIj5GSk6nGysrOz9bX2drb4ODi8PHy8/X5+fv8/v7+6tieJQAAAS5JREFUKFN9UldzwmAMEyEQKIQSymjYe+/1QQDp//+rPpAS6LXVk0+6s2zZwB0WAM8Li2d0inFnsXDixc4rn9iw7EpumZtExGZyKXvOlS/5K87tt/dMKOS0LdXIptQk659SLhRSW6lF9qU+2ZK2qbC/XZI04Gi5HHEgqWQnAFidzbzWlsbr2/V6W4+ldm2+6VhAkSSHUwVnY86BpkOS/AAQL69Iri/GHI/GXNYkV+U4AMf1G93J7WQO+/3BnG6TbsN3HcBbSNLyao773W5/NNelJC28vwU4rt/sj6JWo37Td53IPLibB5F5kSQHYwUnY06BxoNwXKvHWbX1vGCrOmPPApCM/Ywklvw/ROSkSv0ReyWKPZtPPx8qnc/igd9PCwC972fovfKwARQKYQEAX2+6R0mYkO06AAAAAElFTkSuQmCC',
+            'part'       => 0,
+            'filename'   => $filename,
+        ];
 
+        $response = $this->actingAs($user)
+                         ->postJson("/files/images", $payload);
+
+        $response->assertStatus(200);
+
+        /**
+         * Above was precondition, the real test starts here
+         */
+        $image = factory(Image::class)->make([
+            'background' => Image::BG_CUSTOM,
+            'type'       => Image::TYPE_RAW
+        ]);
+
+        $data             = $image->toArray();
+        $data['filename'] = $filename; // excluded from toArray method
+
+        unset($data['user_id']);
+        unset($data['width']);
+        unset($data['height']);
+
+        $response = $this->actingAs($user)
+                         ->postJson("/images", $data);
+
+        $imageId = $response->json('id');
+
+        $response->assertStatus(201);
+        $response->assertJsonFragment(['user_id' => $user->id]);
+        $response->assertJsonFragment(['width' => 24]);
+        $response->assertJsonFragment(['height' => 24]);
+        $response->assertJsonFragment(['src' => route('image', ['image' => $imageId])]);
+        $response->assertJsonFragment(['thumb_src' => route('thumbnail', ['image' => $imageId])]);
+        $response->assertJsonMissing(['filename']);
+        $this->assertDatabaseHas('images', [
+            'id' => $imageId
+        ]);
+
+        $finalFilename = DB::table('images')->find($imageId)->filename;
+        $this->assertFileExists(disk_path(Image::getImageStorageDir().'/'.$finalFilename));
+        $this->assertFileExists(disk_path(Image::getThumbnailStorageDir().'/'.$finalFilename));
+    }
+
+    public function testPostImage__raw__200()
+    {
+        $user     = factory(User::class)->create();
+        $filename = 'Image007.png';
+        $payload  = [
+            'base64data' => 'data:application/octet-stream;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAACmAAAApgHdff84AAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAMBQTFRF//////9V/79A/8wz/99A/9VA/89A/+lQ/+dN/+NO/+VO/+VR/+ZQ/+ZR/+VQ/+ZQ/+ZP/+ZR/+dQ/9dA/9hC/+ZQ/9dB/+dQ/+dQ/+FL/9dA/9dA/9dC/9tF/9tF/99J/99I/9dB/9hD/9dB/9hC/9hD/9lD/tZB/+NN/tZA/uNO/9dB/9dB/+ZQ/+VP/9dB/NA//9dB/+ZQtNJGvMZDxbhAzqs90qU826w83K4877w+770++M1E/NBA/9dB/+ZQfYTn/wAAADN0Uk5TAAMEBQgMECMrLjFFRmhtcHF7f4eIj5GSk6nGysrOz9bX2drb4ODi8PHy8/X5+fv8/v7+6tieJQAAAS5JREFUKFN9UldzwmAMEyEQKIQSymjYe+/1QQDp//+rPpAS6LXVk0+6s2zZwB0WAM8Li2d0inFnsXDixc4rn9iw7EpumZtExGZyKXvOlS/5K87tt/dMKOS0LdXIptQk659SLhRSW6lF9qU+2ZK2qbC/XZI04Gi5HHEgqWQnAFidzbzWlsbr2/V6W4+ldm2+6VhAkSSHUwVnY86BpkOS/AAQL69Iri/GHI/GXNYkV+U4AMf1G93J7WQO+/3BnG6TbsN3HcBbSNLyao773W5/NNelJC28vwU4rt/sj6JWo37Td53IPLibB5F5kSQHYwUnY06BxoNwXKvHWbX1vGCrOmPPApCM/Ywklvw/ROSkSv0ReyWKPZtPPx8qnc/igd9PCwC972fovfKwARQKYQEAX2+6R0mYkO06AAAAAElFTkSuQmCC',
+            'part'       => 0,
+            'filename'   => $filename,
+        ];
+
+        $response = $this->actingAs($user)
+                         ->postJson("/files/images", $payload);
+
+        $response->assertStatus(200);
+
+        /**
+         * Above was precondition, the real test starts here
+         */
+        $image = factory(Image::class)->make([
+            'background' => Image::BG_CUSTOM,
+            'type'       => Image::TYPE_RAW
+        ]);
+
+        $data             = $image->toArray();
+        $data['filename'] = $filename; // excluded from toArray method
+
+        unset($data['user_id']);
+        unset($data['width']);
+        unset($data['height']);
+
+        $response = $this->actingAs($user)
+                         ->postJson("/images", $data);
+
+        $imageId = $response->json('id');
+
+        $response->assertStatus(201);
+        $response->assertJsonFragment(['user_id' => $user->id]);
+        $response->assertJsonFragment(['width' => 24]);
+        $response->assertJsonFragment(['height' => 24]);
+        $response->assertJsonFragment(['src' => route('image', ['image' => $imageId])]);
+        $response->assertJsonFragment(['thumb_src' => route('thumbnail', ['image' => $imageId])]);
+        $response->assertJsonMissing(['filename']);
+        $this->assertDatabaseHas('images', [
+            'id' => $imageId
+        ]);
+
+        $finalFilename = DB::table('images')->find($imageId)->filename;
+        $this->assertFileExists(disk_path(Image::getImageStorageDir().'/'.$finalFilename));
+        $this->assertFileExists(disk_path(Image::getThumbnailStorageDir().'/'.$finalFilename));
     }
 
     // raw with original id 422

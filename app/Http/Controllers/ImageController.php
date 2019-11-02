@@ -150,18 +150,12 @@ class ImageController extends Controller
             $data['filename'] = $handler->storeFinal(Image::getImageStorageDir());
         }
 
-        if ( ! $image->update($data)) {
+        $image->fill($data);
+
+        $this->generateThumbnail($image);
+
+        if ( ! $image->save()) {
             return response('Could not save image.', 500);
-        }
-
-        if ($request->has('filename')) {
-            try {
-                $image->generateThumbnail();
-            } catch (\ImagickException | ThumbnailException $e) {
-                Log::error('Failed to generate thumbnail. File: '.$data['filename']);
-
-                return response('Internal Server Error.', 500);
-            }
         }
 
         return $image;
@@ -216,15 +210,37 @@ class ImageController extends Controller
             'deleted_at'  => ['sometimes', new ImmutableRule($image)],
         ]);
 
-        $data['filename'] = $this->validateAndStoreFile($data['filename']);
+        $handler          = $this->makeUploadHandler($data['filename']);
+        $data['filename'] = $handler->storeFinal(Image::getImageStorageDir());
 
         $image->fill($data);
+
+        $this->generateThumbnail($image);
 
         if ( ! $image->save()) {
             return response('Could not save image.', 500);
         }
 
         return $image;
+    }
+
+    /**
+     * Just a wrapper to handle errors of the generateThumbnail method of the
+     * model.
+     *
+     * @param  Image  $image
+     *
+     * @return Response|void
+     */
+    private function generateThumbnail(Image $image)
+    {
+        try {
+            $image->generateThumbnail();
+        } catch (\ImagickException | ThumbnailException $e) {
+            Log::error('Failed to generate thumbnail. File: '.$image->filename);
+
+            return response('Internal Server Error.', 500);
+        }
     }
 
     /**

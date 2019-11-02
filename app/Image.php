@@ -27,6 +27,8 @@ use Imagick;
  * @property string $filename
  * @property int $width
  * @property int $height
+ * @property string $src
+ * @property string $thumb_src
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
@@ -47,6 +49,32 @@ class Image extends Model implements FileModel
     public const BG_GRADIENT = 'gradient';
     public const BG_TRANSPARENT = 'transparent';
     public const BG_CUSTOM = 'custom';
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'filename',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'src',
+        'thumb_src'
+    ];
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 
     public function user()
     {
@@ -156,6 +184,16 @@ class Image extends Model implements FileModel
         return $query->join('legals', 'images.id', '=', 'legals.image_id')
                      ->select('images.*')
                      ->where('legals.shared', true);
+    }
+
+    public function getSrcAttribute()
+    {
+        return route('image', ['image' => $this->id]);
+    }
+
+    public function getThumbSrcAttribute()
+    {
+        return route('thumbnail', ['image' => $this->id]);
     }
 
     public function getRelPath()
