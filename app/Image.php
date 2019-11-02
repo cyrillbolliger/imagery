@@ -2,10 +2,12 @@
 
 namespace App;
 
+use App\Exceptions\ThumbnailException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Imagick;
 
 /**
@@ -29,7 +31,7 @@ use Imagick;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  */
-class Image extends Model
+class Image extends Model implements FileModel
 {
     use SoftDeletes;
 
@@ -73,32 +75,49 @@ class Image extends Model
 
     public static function getImageStorageDir()
     {
-        return self::getBaseDir().DIRECTORY_SEPARATOR.self::PATH_FULL;
+        $dir = self::getBaseDir().DIRECTORY_SEPARATOR.self::PATH_FULL;
+
+        return create_dir($dir);
     }
 
     public static function getThumbnailStorageDir()
     {
-        return self::getBaseDir().DIRECTORY_SEPARATOR.self::PATH_THUMB;
+        $dir = self::getBaseDir().DIRECTORY_SEPARATOR.self::PATH_THUMB;
+
+        return create_dir($dir);
     }
 
     private static function getBaseDir()
     {
-        return config('app.image_dir');
+        return trim(config('app.image_dir'), '/');
     }
 
     /**
-     * @param  string  $sourceImagePath
-     * @param  string  $thumbnailPath
+     * Generate a thumbnail of this image
      *
      * @throws \ImagickException
+     * @throws ThumbnailException
      */
-    public static function generateThumbnail(string $sourceImagePath, string $thumbnailPath)
+    public function generateThumbnail()
     {
-        $image = new Imagick(realpath($sourceImagePath));
+        $thumbPath = $this->getRelThumbPath();
 
-        $image->thumbnailImage(self::THUMB_MAX_WIDTH, self::THUMB_MAX_HEIGHT, true);
-        $image->writeImage($thumbnailPath);
-        $image->destroy();
+        if (Storage::exists($thumbPath)) {
+            return;
+        }
+
+        $imagePath = disk_path($this->getRelPath());
+        $image     = new Imagick(realpath($imagePath));
+
+        if ( ! (
+            $image->thumbnailImage(self::THUMB_MAX_WIDTH, self::THUMB_MAX_HEIGHT, true)
+            && $image->writeImage(disk_path($thumbPath))
+            && $image->destroy()
+        )) {
+            throw new ThumbnailException('Thumbnail generation failed.');
+        }
+
+        Storage::setVisibility($thumbPath, 'private');
     }
 
     /**
@@ -137,5 +156,15 @@ class Image extends Model
         return $query->join('legals', 'images.id', '=', 'legals.image_id')
                      ->select('images.*')
                      ->where('legals.shared', true);
+    }
+
+    public function getRelPath()
+    {
+        return self::getImageStorageDir().DIRECTORY_SEPARATOR.$this->filename;
+    }
+
+    public function getRelThumbPath()
+    {
+        return self::getThumbnailStorageDir().DIRECTORY_SEPARATOR.$this->filename;
     }
 }

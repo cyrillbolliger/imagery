@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 abstract class UploadStrategy
 {
@@ -167,6 +166,7 @@ abstract class UploadStrategy
         // collector.
         if ( ! Storage::exists($relFinalPath)) {
             Storage::move($relTmpPath, $relFinalPath);
+            Storage::setVisibility($relFinalPath, 'private');
         }
 
         return $finalFilename.'.'.$extension;

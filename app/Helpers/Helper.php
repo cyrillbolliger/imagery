@@ -8,7 +8,7 @@ if ( ! function_exists('disk_path')) {
      *
      * @return string
      */
-    function disk_path($path = '')
+    function disk_path(string $path = ''): string
     {
         $disk = config('filesystems.default');
         $base = config("filesystems.disks.$disk.root");
@@ -17,14 +17,20 @@ if ( ! function_exists('disk_path')) {
     }
 
     /**
-     * Get the path relative to the storage folder.
+     * Asserts that the given path exists and creates it if not
      *
      * @param  string  $path
+     * @param  string  $visibility
      *
      * @return string
      */
-    function relative_storage_path($path = '')
+    function create_dir(string $path, $visibility = 'private'): string
     {
-        return str_replace(storage_path(), '', $path);
+        if ( ! \Illuminate\Support\Facades\Storage::exists($path)) {
+            \Illuminate\Support\Facades\Storage::makeDirectory($path);
+            \Illuminate\Support\Facades\Storage::setVisibility($path, $visibility);
+        }
+
+        return $path;
     }
 }

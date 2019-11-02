@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ImageResource;
+use App\Exceptions\ThumbnailException;
+use App\Http\Controllers\Upload\RegularUploadStrategy;
 use App\Image;
-use App\Logo;
 use App\Rules\FileExtensionRule;
 use App\Rules\ImageOriginalRule;
 use App\Rules\ImmutableRule;
 use App\Rules\UserLogoRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 
 class ImageController extends Controller
@@ -145,11 +146,22 @@ class ImageController extends Controller
         ]);
 
         if ($request->has('filename')) {
-            $data['filename'] = $this->validateAndStoreFile($data['filename']);
+            $handler          = $this->makeUploadHandler($data['filename']);
+            $data['filename'] = $handler->storeFinal(Image::getImageStorageDir());
         }
 
         if ( ! $image->update($data)) {
             return response('Could not save image.', 500);
+        }
+
+        if ($request->has('filename')) {
+            try {
+                $image->generateThumbnail();
+            } catch (\ImagickException | ThumbnailException $e) {
+                Log::error('Failed to generate thumbnail. File: '.$data['filename']);
+
+                return response('Internal Server Error.', 500);
+            }
         }
 
         return $image;
@@ -213,5 +225,20 @@ class ImageController extends Controller
         }
 
         return $image;
+    }
+
+    /**
+     * UploadHandler factory
+     *
+     * @param  string  $filename
+     *
+     * @return RegularUploadStrategy
+     */
+    private function makeUploadHandler(string $filename)
+    {
+        return new RegularUploadStrategy(
+            self::ALLOWED_EXT,
+            $filename
+        );
     }
 }

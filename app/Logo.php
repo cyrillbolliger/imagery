@@ -77,6 +77,11 @@ class Logo extends Model implements FileModel
 
     public static function getStorageDir()
     {
-        return config('app.logo_dir');
+        return create_dir(config('app.logo_dir'));
+    }
+
+    public function getRelThumbPath()
+    {
+        // TODO: Implement thumbnails
     }
 }

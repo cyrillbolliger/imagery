@@ -34,12 +34,34 @@ class FileController extends Controller
      */
     public function show(FileModel $model)
     {
-        $path = $model->getRelPath();
+        return $this->fileResponse($model->getRelPath());
+    }
 
-        if ( ! Storage::exists($path)) {
+    /**
+     * Display the specified resource file.
+     *
+     * @param  FileModel  $model
+     *
+     * @return Response
+     */
+    public function showThumbnail(FileModel $model)
+    {
+        return $this->fileResponse($model->getRelThumbPath());
+    }
+
+    /**
+     * Respond with file, if it exists, else with a 404
+     *
+     * @param  string  $relPath
+     *
+     * @return Response
+     */
+    private function fileResponse(string $relPath)
+    {
+        if ( ! Storage::exists($relPath)) {
             return response('File not found', 404);
         }
 
-        return response()->file(disk_path($path));
+        return response()->file(disk_path($relPath));
     }
 }
