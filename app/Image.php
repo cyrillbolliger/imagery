@@ -134,7 +134,7 @@ class Image extends Model
      */
     public function scopeShareable($query)
     {
-        return $query->join('legals', 'images.id', '=', 'legals.id')
+        return $query->join('legals', 'images.id', '=', 'legals.image_id')
                      ->select('images.*')
                      ->where('legals.shared', true);
     }
