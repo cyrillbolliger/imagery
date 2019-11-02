@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Domain\UploadHandler;
 use App\Group;
 use App\Logo;
 use App\Role;
 use App\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use RootSeeder;
 use Tests\TestCase;
@@ -139,10 +139,6 @@ class LogoTest extends TestCase
         $data             = $logo->toArray();
         $data['filename'] = $filename; // excluded from toArray method
 
-        $tempFilename   = UploadHandler::computeTmpFilename($filename);
-        $relTmpFilePath = UploadHandler::getRelDirPath().DIRECTORY_SEPARATOR.$tempFilename;
-        $finalFilename  = UploadHandler::computeFinalFilename($relTmpFilePath).'.png';
-
         $response = $this->actingAs($manager)
                          ->putJson("/logos/$logo->id", $data);
 
@@ -154,6 +150,7 @@ class LogoTest extends TestCase
             'name' => $logo->name
         ]);
 
+        $finalFilename = DB::table('logos')->find($logo->id)->filename;
         $this->assertFileExists(disk_path(config('app.logo_dir').'/'.$finalFilename));
     }
 
@@ -283,10 +280,6 @@ class LogoTest extends TestCase
         $data['groups']   = [$group->id];
         unset($data['added_by']); // not mutable
 
-        $tempFilename   = UploadHandler::computeTmpFilename($filename);
-        $relTmpFilePath = UploadHandler::getRelDirPath().DIRECTORY_SEPARATOR.$tempFilename;
-        $finalFilename  = UploadHandler::computeFinalFilename($relTmpFilePath).'.png';
-
         $response = $this->actingAs($manager)
                          ->postJson("/logos", $data);
 
@@ -297,6 +290,7 @@ class LogoTest extends TestCase
             'name' => $logo->name
         ]);
 
+        $finalFilename = DB::table('logos')->find($response->json('id'))->filename;
         $this->assertFileExists(disk_path(config('app.logo_dir').'/'.$finalFilename));
     }
 

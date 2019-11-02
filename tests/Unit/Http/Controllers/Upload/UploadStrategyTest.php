@@ -2,12 +2,12 @@
 
 namespace Tests\Unit;
 
-use App\Domain\UploadHandler;
+use App\Http\Controllers\Upload\RegularUploadStrategy;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class UploadHandlerTest extends TestCase
+class UploadStrategyTest extends TestCase
 {
     use WithFaker;
 
@@ -17,7 +17,7 @@ class UploadHandlerTest extends TestCase
 
         Storage::deleteDirectory($uploadDir);
 
-        new UploadHandler();
+        new RegularUploadStrategy([]);
 
         $this->assertTrue(Storage::exists($uploadDir));
     }
@@ -33,28 +33,9 @@ class UploadHandlerTest extends TestCase
         $ttl = config('app.uploads_ttl');
         touch($imgOld, time() - $ttl - 1);
 
-        new UploadHandler();
+        new RegularUploadStrategy([]);
 
         $this->assertFileNotExists($imgOld);
         $this->assertFileExists($imgNew);
-    }
-
-    public function testSaveChunk()
-    {
-        $fileName = 'test';
-
-        $chunk1 = 'data:application/octet-stream;base64,MTIzNA=='; // 1234
-        $chunk2 = 'data:application/octet-stream;base64,YXNkZg=='; // asdf
-
-        $uploader = new UploadHandler();
-
-        $uploader->saveChunk($chunk1, $fileName, 0);
-        $uploader->saveChunk($chunk2, $fileName, 5);
-
-        $relFilePath = UploadHandler::getRelDirPath().DIRECTORY_SEPARATOR.$fileName;
-
-        $content = Storage::get($relFilePath);
-
-        $this->assertEquals('1234asdf', $content);
     }
 }

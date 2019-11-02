@@ -284,7 +284,18 @@ return [
     |
     */
 
-    'uploads_max_file_size' => env('APP_MAX_UPLOAD_SIZE', 8),
+    'uploads_max_file_size' => env('APP_MAX_UPLOAD_SIZE', 8.0),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Max size of uploaded chunk
+    |--------------------------------------------------------------------------
+    |
+    | The chunk will be rejected, if the max size is exceeded. Size in Megabyte.
+    |
+    */
+
+    'uploads_max_chunk_size' => env('APP_MAX_CHUNK_SIZE', 1.0),
 
     /*
     |--------------------------------------------------------------------------
