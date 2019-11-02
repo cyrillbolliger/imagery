@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Image;
 use App\Legal;
+use App\Logo;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use RootSeeder;
@@ -46,7 +47,8 @@ class ImageTest extends TestCase
                          'last_name',
                          'email'
                      ],
-                     'filename',
+                     'src',
+                     'thumb_src',
                      'width',
                      'height',
                      'created_at'
@@ -277,9 +279,16 @@ class ImageTest extends TestCase
         $this->assertFileExists(disk_path(Image::getThumbnailStorageDir().'/'.$finalFilename));
     }
 
-    public function testPostImage__raw__200()
+    public function testPutImage__raw__200()
     {
-        $user     = factory(User::class)->create();
+        $user = factory(User::class)->create();
+
+        $image = factory(Image::class)->create([
+            'background' => Image::BG_CUSTOM,
+            'type'       => Image::TYPE_RAW,
+            'user_id'    => $user->id,
+        ]);
+
         $filename = 'Image007.png';
         $payload  = [
             'base64data' => 'data:application/octet-stream;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAACmAAAApgHdff84AAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAMBQTFRF//////9V/79A/8wz/99A/9VA/89A/+lQ/+dN/+NO/+VO/+VR/+ZQ/+ZR/+VQ/+ZQ/+ZP/+ZR/+dQ/9dA/9hC/+ZQ/9dB/+dQ/+dQ/+FL/9dA/9dA/9dC/9tF/9tF/99J/99I/9dB/9hD/9dB/9hC/9hD/9lD/tZB/+NN/tZA/uNO/9dB/9dB/+ZQ/+VP/9dB/NA//9dB/+ZQtNJGvMZDxbhAzqs90qU826w83K4877w+770++M1E/NBA/9dB/+ZQfYTn/wAAADN0Uk5TAAMEBQgMECMrLjFFRmhtcHF7f4eIj5GSk6nGysrOz9bX2drb4ODi8PHy8/X5+fv8/v7+6tieJQAAAS5JREFUKFN9UldzwmAMEyEQKIQSymjYe+/1QQDp//+rPpAS6LXVk0+6s2zZwB0WAM8Li2d0inFnsXDixc4rn9iw7EpumZtExGZyKXvOlS/5K87tt/dMKOS0LdXIptQk659SLhRSW6lF9qU+2ZK2qbC/XZI04Gi5HHEgqWQnAFidzbzWlsbr2/V6W4+ldm2+6VhAkSSHUwVnY86BpkOS/AAQL69Iri/GHI/GXNYkV+U4AMf1G93J7WQO+/3BnG6TbsN3HcBbSNLyao773W5/NNelJC28vwU4rt/sj6JWo37Td53IPLibB5F5kSQHYwUnY06BxoNwXKvHWbX1vGCrOmPPApCM/Ywklvw/ROSkSv0ReyWKPZtPPx8qnc/igd9PCwC972fovfKwARQKYQEAX2+6R0mYkO06AAAAAElFTkSuQmCC',
@@ -295,46 +304,224 @@ class ImageTest extends TestCase
         /**
          * Above was precondition, the real test starts here
          */
-        $image = factory(Image::class)->make([
-            'background' => Image::BG_CUSTOM,
-            'type'       => Image::TYPE_RAW
-        ]);
-
-        $data             = $image->toArray();
         $data['filename'] = $filename; // excluded from toArray method
 
-        unset($data['user_id']);
-        unset($data['width']);
-        unset($data['height']);
-
         $response = $this->actingAs($user)
-                         ->postJson("/images", $data);
+                         ->putJson("/images/{$image->id}", $data);
 
-        $imageId = $response->json('id');
-
-        $response->assertStatus(201);
+        $response->assertStatus(200);
         $response->assertJsonFragment(['user_id' => $user->id]);
         $response->assertJsonFragment(['width' => 24]);
         $response->assertJsonFragment(['height' => 24]);
-        $response->assertJsonFragment(['src' => route('image', ['image' => $imageId])]);
-        $response->assertJsonFragment(['thumb_src' => route('thumbnail', ['image' => $imageId])]);
-        $response->assertJsonMissing(['filename']);
-        $this->assertDatabaseHas('images', [
-            'id' => $imageId
-        ]);
 
-        $finalFilename = DB::table('images')->find($imageId)->filename;
+        $finalFilename = DB::table('images')->find($image->id)->filename;
         $this->assertFileExists(disk_path(Image::getImageStorageDir().'/'.$finalFilename));
-        $this->assertFileExists(disk_path(Image::getThumbnailStorageDir().'/'.$finalFilename));
     }
 
-    // raw with original id 422
-    // raw with logo 422
-    // raw with background != custom 422
+    public function testPutImage__rawOriginalId__422()
+    {
+        $user = factory(User::class)->create(['super_admin' => true]);
 
-    // final with background != custom && original_id 422
-    // final with original id of shared image 200
-    // final with original id of non shared image 422
-    // final with original id of own image 200
-    // final with no original id && background == custom 422
+        $original = factory(Image::class)->create([
+            'background' => Image::BG_CUSTOM,
+            'type'       => Image::TYPE_RAW,
+            'user_id'    => $user->id,
+        ]);
+        factory(Legal::class)->create([
+            'shared'   => true,
+            'image_id' => $original->id
+        ]);
+
+        $image = factory(Image::class)->create([
+            'background' => Image::BG_CUSTOM,
+            'type'       => Image::TYPE_RAW,
+            'user_id'    => $user->id,
+        ]);
+
+        $data['original_id'] = $original->id;
+
+        $response = $this->actingAs($user)
+                         ->putJson("/images/{$image->id}", $data);
+
+        $response->assertStatus(422);
+    }
+
+    public function testPutImage__rawLogoId__422()
+    {
+        $user = factory(User::class)->create(['super_admin' => true]);
+
+        $image = factory(Image::class)->create([
+            'background' => Image::BG_CUSTOM,
+            'type'       => Image::TYPE_RAW,
+            'user_id'    => $user->id,
+        ]);
+
+        $data['logo_id'] = factory(Logo::class)->create()->id;
+
+        $response = $this->actingAs($user)
+                         ->putJson("/images/{$image->id}", $data);
+
+        $response->assertStatus(422);
+    }
+
+    public function testPutImage__rawBackground__422()
+    {
+        $user = factory(User::class)->create(['super_admin' => true]);
+
+        $image = factory(Image::class)->create([
+            'background' => Image::BG_CUSTOM,
+            'type'       => Image::TYPE_RAW,
+            'user_id'    => $user->id,
+        ]);
+
+        $data['background'] = Image::BG_GRADIENT;
+
+        $response = $this->actingAs($user)
+                         ->putJson("/images/{$image->id}", $data);
+
+        $response->assertStatus(422);
+    }
+
+    public function testPutImage__finalGradientOriginalId__422()
+    {
+        $user = factory(User::class)->create(['super_admin' => true]);
+
+        $original = factory(Image::class)->create([
+            'background' => Image::BG_CUSTOM,
+            'type'       => Image::TYPE_RAW,
+            'user_id'    => $user->id,
+        ]);
+        factory(Legal::class)->create([
+            'shared'   => true,
+            'image_id' => $original->id
+        ]);
+
+        $image = factory(Image::class)->create([
+            'background' => Image::BG_GRADIENT,
+            'type'       => Image::TYPE_FINAL,
+            'user_id'    => $user->id,
+        ]);
+
+        $data['original_id'] = $original->id;
+
+        $response = $this->actingAs($user)
+                         ->putJson("/images/{$image->id}", $data);
+
+        $response->assertStatus(422);
+    }
+
+    public function testPutImage__finalSharedOriginalId__200()
+    {
+        $user = factory(User::class)->create(['super_admin' => true]);
+
+        $original = factory(Image::class)->create([
+            'background' => Image::BG_CUSTOM,
+            'type'       => Image::TYPE_RAW,
+            'user_id'    => $user->id,
+        ]);
+        factory(Legal::class)->create([
+            'shared'   => true,
+            'image_id' => $original->id
+        ]);
+
+        $image = factory(Image::class)->create([
+            'background' => Image::BG_CUSTOM,
+            'type'       => Image::TYPE_FINAL,
+            'user_id'    => $user->id,
+        ]);
+
+        $data['original_id'] = $original->id;
+
+        $response = $this->actingAs($user)
+                         ->putJson("/images/{$image->id}", $data);
+
+        $response->assertStatus(200);
+    }
+
+    public function testPutImage__finalNonSharedOriginalId__422()
+    {
+        $user      = factory(User::class)->create();
+        $otherUser = factory(User::class)->create();
+
+        $original = factory(Image::class)->create([
+            'background' => Image::BG_CUSTOM,
+            'type'       => Image::TYPE_RAW,
+            'user_id'    => $otherUser,
+        ]);
+        factory(Legal::class)->create([
+            'shared'   => false,
+            'image_id' => $original->id
+        ]);
+
+        $image = factory(Image::class)->create([
+            'background' => Image::BG_CUSTOM,
+            'type'       => Image::TYPE_FINAL,
+            'user_id'    => $user->id,
+        ]);
+
+        $data['original_id'] = $original->id;
+
+        $response = $this->actingAs($user)
+                         ->putJson("/images/{$image->id}", $data);
+
+        $response->assertStatus(422);
+    }
+
+    public function testPutImage__finalOwnOriginalId__422()
+    {
+        $user = factory(User::class)->create(['super_admin' => true]);
+
+        $image = factory(Image::class)->create([
+            'background' => Image::BG_CUSTOM,
+            'type'       => Image::TYPE_FINAL,
+            'user_id'    => $user->id,
+        ]);
+        factory(Legal::class)->create([
+            'shared'   => true,
+            'image_id' => $image->id
+        ]);
+
+        $data['original_id'] = $image->id;
+
+        $response = $this->actingAs($user)
+                         ->putJson("/images/{$image->id}", $data);
+
+        $response->assertStatus(422);
+    }
+
+    public function testPutImage__finalNoOriginalId__422()
+    {
+        $user = factory(User::class)->create(['super_admin' => true]);
+
+        $image = factory(Image::class)->create([
+            'background' => Image::BG_CUSTOM,
+            'type'       => Image::TYPE_FINAL,
+            'user_id'    => $user->id,
+        ]);
+
+        $data['original_id'] = null;
+
+        $response = $this->actingAs($user)
+                         ->putJson("/images/{$image->id}", $data);
+
+        $response->assertStatus(422);
+    }
+
+    public function testPutImage__finalNoOriginalId__200()
+    {
+        $user = factory(User::class)->create(['super_admin' => true]);
+
+        $image = factory(Image::class)->create([
+            'background' => Image::BG_TRANSPARENT,
+            'type'       => Image::TYPE_FINAL,
+            'user_id'    => $user->id,
+        ]);
+
+        $data['original_id'] = null;
+
+        $response = $this->actingAs($user)
+                         ->putJson("/images/{$image->id}", $data);
+
+        $response->assertStatus(200);
+    }
 }

@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Exceptions\ThumbnailException;
 use App\Http\Controllers\Upload\RegularUploadStrategy;
 use App\Image;
+use App\Rules\EmptyIfRule;
 use App\Rules\FileExtensionRule;
+use App\Rules\ImageBackgroundRule;
+use App\Rules\ImageLogoRule;
 use App\Rules\ImageOriginalRule;
 use App\Rules\ImmutableRule;
 use App\Rules\UserLogoRule;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -102,6 +106,7 @@ class ImageController extends Controller
      */
     public function update(Request $request, Image $image)
     {
+        /** @var User $user */
         $user = Auth::user();
 
         $data = $request->validate([
@@ -111,25 +116,20 @@ class ImageController extends Controller
                 'sometimes',
                 'nullable',
                 'exists:logos,id',
-                new UserLogoRule($user)
+                new UserLogoRule($user),
+                new ImageLogoRule($image),
             ],
             'background'  => [
                 'sometimes',
                 'required',
-                'in:'.Image::BG_CUSTOM.','.Image::BG_TRANSPARENT.','.Image::BG_GRADIENT
+                'in:'.Image::BG_CUSTOM.','.Image::BG_TRANSPARENT.','.Image::BG_GRADIENT,
+                new ImageBackgroundRule($image),
             ],
             // if mutable we would have to check the legal etc
             'type'        => ['sometimes', new ImmutableRule($image)],
             'original_id' => [
-                'bail',
                 'sometimes',
-                'nullable',
-                'exists:images,id',
-                new ImageOriginalRule(
-                    $user,
-                    $request->get('background', $image->background),
-                    $request->get('type', $image->type)
-                )
+                new ImageOriginalRule($image),
             ],
             'filename'    => [
                 'sometimes',
@@ -180,22 +180,17 @@ class ImageController extends Controller
                 'sometimes',
                 'nullable',
                 'exists:logos,id',
-                new UserLogoRule($user)
+                new UserLogoRule($user),
+                new ImageLogoRule($image),
             ],
             'background'  => [
                 'required',
-                'in:'.Image::BG_CUSTOM.','.Image::BG_TRANSPARENT.','.Image::BG_GRADIENT
+                'in:'.Image::BG_CUSTOM.','.Image::BG_TRANSPARENT.','.Image::BG_GRADIENT,
+                new ImageBackgroundRule($image),
             ],
             'type'        => ['required', 'in:'.Image::TYPE_RAW.','.Image::TYPE_FINAL],
             'original_id' => [
-                'bail',
-                'nullable',
-                'exists:images,id',
-                new ImageOriginalRule(
-                    $user,
-                    $request->get('background', $image->background),
-                    $request->get('type', $image->type)
-                )
+                new ImageOriginalRule($image),
             ],
             'filename'    => [
                 'required',

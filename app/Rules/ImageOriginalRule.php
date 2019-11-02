@@ -3,44 +3,28 @@
 namespace App\Rules;
 
 use App\Image;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class ImageOriginalRule implements Rule
 {
     /**
-     * The user
+     * The model that receives the validated data
      *
-     * @var Authenticatable
+     * @var Model
      */
-    private $user;
-
-    /**
-     * The background value
-     *
-     * @var string
-     */
-    private $background;
-
-    /**
-     * The type value
-     *
-     * @var string
-     */
-    private $type;
+    private $model;
 
     /**
      * Create a new rule instance.
      *
-     * @param  Authenticatable  $user
-     * @param  string  $background
-     * @param  string  $type
+     * @param  Model  $model
      */
-    public function __construct(Authenticatable $user, string $background, string $type)
+    public function __construct(Model $model)
     {
-        $this->user       = $user;
-        $this->background = $background;
-        $this->type       = $type;
+        $this->model = clone $model;
+        $this->model->fill(request()->toArray());
     }
 
     /**
@@ -55,17 +39,28 @@ class ImageOriginalRule implements Rule
     {
         if ($value) {
             // only image with a custom background can have an original
-            if ($this->background !== Image::BG_CUSTOM) {
+            if ($this->model->background !== Image::BG_CUSTOM) {
                 return false;
             }
 
             // only final images can have an original
-            if ($this->type !== Image::TYPE_FINAL) {
+            if ($this->model->type !== Image::TYPE_FINAL) {
                 return false;
             }
 
-            $original = Image::find($value)->get();
-            if ($original->user_id->is($this->user)) {
+            // no image can't be derived from itself
+            if ($this->model->id === $value) {
+                return false;
+            }
+
+            $original = Image::find($value);
+
+            // the original image must exist
+            if ( ! $original) {
+                return false;
+            }
+
+            if ($original->user->is(Auth::user())) {
                 // the original image must either be uploaded by this user
                 return true;
             } else {
@@ -74,12 +69,18 @@ class ImageOriginalRule implements Rule
             }
         } else {
             // raw image never have an original
-            if ($this->type === Image::TYPE_RAW) {
+            if ($this->model->type === Image::TYPE_RAW) {
                 return true;
             }
 
+            // final images with a custom background must have an original
+            if ($this->model->type === Image::TYPE_FINAL
+                && $this->model->background === Image::BG_CUSTOM) {
+                return false;
+            }
+
             // non custom images never have an original
-            return $this->background !== Image::BG_CUSTOM;
+            return $this->model->background !== Image::BG_CUSTOM;
         }
     }
 
