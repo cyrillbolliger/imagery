@@ -4,7 +4,25 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
+/**
+ * Class Legal
+ * @package App
+ *
+ * @property int $id
+ * @property int $image_id
+ * @property Image $image
+ * @property string $right_of_personality
+ * @property string $originator_type
+ * @property string $licence
+ * @property string $originator
+ * @property string|null $stock_url
+ * @property bool $shared
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ */
 class Legal extends Model
 {
     use SoftDeletes;

@@ -149,6 +149,27 @@ Route::post('/files/images', 'FileController@storeChunk')
      ->middleware('can:create,App\Image');
 
 /**
+ * Legal
+ */
+Route::get('/legals/{legal}', 'LegalController@show')
+     ->where('legal', '\d+')
+     ->middleware('can:view,legal');
+
+//Route::get('/legals', 'LegalController@index')
+//     ->middleware('can:viewAny,App\Legal');
+//
+//Route::put('/legals/{legal}', 'LegalController@update')
+//     ->where('legal', '\d+')
+//     ->middleware('can:update,legal');
+//
+//Route::delete('/legals/{legal}', 'LegalController@destroy')
+//     ->where('legal', '\d+')
+//     ->middleware('can:delete,legal');
+//
+//Route::post('/legals', 'LegalController@store')
+//     ->middleware('can:create,App\Legal');
+
+/**
  * Old routes
  *
  * @todo: clean up
@@ -159,8 +180,4 @@ Route::get('/', function () {
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
-//Route::get('/images/raw', 'ImageController@listRaw');
-//Route::get('/images/{image}', 'ImageController@get')->where('image', '\d+');
 //Route::get('/images/raw/search/{query}', 'ImageController@searchRaw')->where('query', '.*');
-//Route::post('/images/raw', 'ImageController@storeRaw');
-//Route::delete('/images/{id}', 'ImageController@deleteRaw')->where('id', '\d+');
