@@ -5,6 +5,7 @@
             <li>asdf</li>
             <li>asdf 2</li>
         </ul>
+        <p>{{ $t('key') }}</p>
     </div>
 </template>
 
