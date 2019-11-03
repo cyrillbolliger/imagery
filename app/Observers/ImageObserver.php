@@ -47,40 +47,4 @@ class ImageObserver
     {
         $this->setImageDims($image);
     }
-
-    /**
-     * Handle the image "deleted" event.
-     *
-     * @param  \App\Image  $image
-     *
-     * @return void
-     */
-    public function deleted(Image $image)
-    {
-        //
-    }
-
-    /**
-     * Handle the image "restored" event.
-     *
-     * @param  \App\Image  $image
-     *
-     * @return void
-     */
-    public function restored(Image $image)
-    {
-        //
-    }
-
-    /**
-     * Handle the image "force deleted" event.
-     *
-     * @param  \App\Image  $image
-     *
-     * @return void
-     */
-    public function forceDeleted(Image $image)
-    {
-        //
-    }
 }
