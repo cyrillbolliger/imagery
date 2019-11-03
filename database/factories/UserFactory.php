@@ -41,6 +41,7 @@ $factory->define(User::class, function (Faker $faker) {
 $factory->state(User::class, 'root', [
     'first_name'  => 'Root',
     'last_name'   => 'User',
+    'email'       => 'user@root.login',
     'super_admin' => true,
     'lang'        => User::LANG_EN
 ]);

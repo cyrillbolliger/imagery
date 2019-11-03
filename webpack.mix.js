@@ -1,5 +1,8 @@
 const mix = require('laravel-mix');
 
+mix.disableSuccessNotifications();
+mix.browserSync('imagery.test:8888');
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management

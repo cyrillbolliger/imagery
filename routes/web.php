@@ -11,169 +11,171 @@
 |
 */
 
-/**
- * Users
- */
-Route::get('/users/{user}', 'UserController@show')
-     ->where('user', '\d+')
-     ->middleware('can:manage,user');
+Route::prefix('api')->group(function () {
+    /**
+     * Users
+     */
+    Route::get('/users/{user}', 'UserController@show')
+         ->where('user', '\d+')
+         ->middleware('can:manage,user');
 
-Route::get('/users', 'UserController@index')
-     ->middleware('can:list,App\User');
+    Route::get('/users', 'UserController@index')
+         ->middleware('can:list,App\User');
 
-Route::put('/users/{user}', 'UserController@update')
-     ->where('user', '\d+')
-     ->middleware('can:manage,user');
+    Route::put('/users/{user}', 'UserController@update')
+         ->where('user', '\d+')
+         ->middleware('can:manage,user');
 
-Route::delete('/users/{user}', 'UserController@destroy')
-     ->where('user', '\d+')
-     ->middleware('can:manage,user');
+    Route::delete('/users/{user}', 'UserController@destroy')
+         ->where('user', '\d+')
+         ->middleware('can:manage,user');
 
-Route::post('/users', 'UserController@store')
-     ->middleware('can:create,App\User');
+    Route::post('/users', 'UserController@store')
+         ->middleware('can:create,App\User');
 
-/**
- * Roles
- */
-Route::get('/users/{user}/roles/{role}', 'RoleController@show')
-     ->where(['user' => '\d+', 'role' => '\d+'])
-     ->middleware('can:view,role');
+    /**
+     * Roles
+     */
+    Route::get('/users/{user}/roles/{role}', 'RoleController@show')
+         ->where(['user' => '\d+', 'role' => '\d+'])
+         ->middleware('can:view,role');
 
-Route::get('/users/{user}/roles', 'RoleController@index')
-     ->where('user', '\d+')
-     ->middleware('can:view,App\Role');
+    Route::get('/users/{user}/roles', 'RoleController@index')
+         ->where('user', '\d+')
+         ->middleware('can:view,App\Role');
 
-Route::put('/users/{user}/roles/{role}', 'RoleController@update')
-     ->where(['user' => '\d+', 'role' => '\d+'])
-     ->middleware('can:update,role');
+    Route::put('/users/{user}/roles/{role}', 'RoleController@update')
+         ->where(['user' => '\d+', 'role' => '\d+'])
+         ->middleware('can:update,role');
 
-Route::delete('/users/{user}/roles/{role}', 'RoleController@destroy')
-     ->where(['user' => '\d+', 'role' => '\d+'])
-     ->middleware('can:delete,role');
+    Route::delete('/users/{user}/roles/{role}', 'RoleController@destroy')
+         ->where(['user' => '\d+', 'role' => '\d+'])
+         ->middleware('can:delete,role');
 
-Route::post('/users/{user}/roles', 'RoleController@store')
-     ->where('user', '\d+')
-     ->middleware('can:create,App\Role');
+    Route::post('/users/{user}/roles', 'RoleController@store')
+         ->where('user', '\d+')
+         ->middleware('can:create,App\Role');
 
-/**
- * Groups
- */
-Route::get('/groups/{group}', 'GroupController@show')
-     ->where('group', '\d+')
-     ->middleware('can:view,group');
+    /**
+     * Groups
+     */
+    Route::get('/groups/{group}', 'GroupController@show')
+         ->where('group', '\d+')
+         ->middleware('can:view,group');
 
-Route::get('/groups', 'GroupController@index')
-     ->middleware('can:viewAny,App\Group');
+    Route::get('/groups', 'GroupController@index')
+         ->middleware('can:viewAny,App\Group');
 
-Route::put('/groups/{group}', 'GroupController@update')
-     ->where('group', '\d+')
-     ->middleware('can:update,group');
+    Route::put('/groups/{group}', 'GroupController@update')
+         ->where('group', '\d+')
+         ->middleware('can:update,group');
 
-Route::delete('/groups/{group}', 'GroupController@destroy')
-     ->where('group', '\d+')
-     ->middleware('can:delete,group');
+    Route::delete('/groups/{group}', 'GroupController@destroy')
+         ->where('group', '\d+')
+         ->middleware('can:delete,group');
 
-Route::post('/groups', 'GroupController@store')
-     ->middleware('can:create,App\Group');
+    Route::post('/groups', 'GroupController@store')
+         ->middleware('can:create,App\Group');
 
-/**
- * Logos
- */
-Route::get('/logos/{logo}', 'LogoController@show')
-     ->where('logo', '\d+')
-     ->middleware('can:view,logo');
+    /**
+     * Logos
+     */
+    Route::get('/logos/{logo}', 'LogoController@show')
+         ->where('logo', '\d+')
+         ->middleware('can:view,logo');
 
-Route::get('/logos', 'LogoController@index')
-     ->middleware('can:viewAny,App\Logo');
+    Route::get('/logos', 'LogoController@index')
+         ->middleware('can:viewAny,App\Logo');
 
-Route::put('/logos/{logo}', 'LogoController@update')
-     ->where('logo', '\d+')
-     ->middleware('can:update,logo');
+    Route::put('/logos/{logo}', 'LogoController@update')
+         ->where('logo', '\d+')
+         ->middleware('can:update,logo');
 
-Route::delete('/logos/{logo}', 'LogoController@destroy')
-     ->where('logo', '\d+')
-     ->middleware('can:delete,logo');
+    Route::delete('/logos/{logo}', 'LogoController@destroy')
+         ->where('logo', '\d+')
+         ->middleware('can:delete,logo');
 
-Route::post('/logos', 'LogoController@store')
-     ->middleware('can:create,App\Logo');
+    Route::post('/logos', 'LogoController@store')
+         ->middleware('can:create,App\Logo');
 
-/**
- * Logo Files
- */
-Route::get('/files/logos/{logo}', 'FileController@show')
-     ->where('logo', '\d+')
-     ->middleware('can:view,logo')
-     ->name('logo');
+    /**
+     * Logo Files
+     */
+    Route::get('/files/logos/{logo}', 'FileController@show')
+         ->where('logo', '\d+')
+         ->middleware('can:view,logo')
+         ->name('logo');
 
-Route::post('/files/logos', 'FileController@storeChunk')
-     ->middleware('can:create,App\Logo');
+    Route::post('/files/logos', 'FileController@storeChunk')
+         ->middleware('can:create,App\Logo');
 
-/**
- * Images
- */
-Route::get('/images/{image}', 'ImageController@show')
-     ->where('image', '\d+')
-     ->middleware('can:view,image');
+    /**
+     * Images
+     */
+    Route::get('/images/{image}', 'ImageController@show')
+         ->where('image', '\d+')
+         ->middleware('can:view,image');
 
-Route::get('/images/raw', 'ImageController@indexRaw')
-     ->middleware('can:viewAny,App\Image');
+    Route::get('/images/raw', 'ImageController@indexRaw')
+         ->middleware('can:viewAny,App\Image');
 
-Route::get('/images/final', 'ImageController@indexFinal')
-     ->middleware('can:viewAny,App\Image');
+    Route::get('/images/final', 'ImageController@indexFinal')
+         ->middleware('can:viewAny,App\Image');
 
-Route::put('/images/{image}', 'ImageController@update')
-     ->where('image', '\d+')
-     ->middleware('can:update,image');
+    Route::put('/images/{image}', 'ImageController@update')
+         ->where('image', '\d+')
+         ->middleware('can:update,image');
 
-Route::delete('/images/{image}', 'ImageController@destroy')
-     ->where('image', '\d+')
-     ->middleware('can:delete,image');
+    Route::delete('/images/{image}', 'ImageController@destroy')
+         ->where('image', '\d+')
+         ->middleware('can:delete,image');
 
-Route::post('/images', 'ImageController@store')
-     ->middleware('can:create,App\Image');
+    Route::post('/images', 'ImageController@store')
+         ->middleware('can:create,App\Image');
 
-/**
- * Image Files
- */
-Route::get('/files/images/{image}', 'FileController@show')
-     ->where('image', '\d+')
-     ->middleware('can:view,image')
-     ->name('image');
+    /**
+     * Image Files
+     */
+    Route::get('/files/images/{image}', 'FileController@show')
+         ->where('image', '\d+')
+         ->middleware('can:view,image')
+         ->name('image');
 
-Route::get('/files/images/{image}/thumbnail', 'FileController@showThumbnail')
-     ->where('image', '\d+')
-     ->middleware('can:view,image')
-     ->name('thumbnail');
+    Route::get('/files/images/{image}/thumbnail', 'FileController@showThumbnail')
+         ->where('image', '\d+')
+         ->middleware('can:view,image')
+         ->name('thumbnail');
 
-Route::post('/files/images', 'FileController@storeChunk')
-     ->middleware('can:create,App\Image');
+    Route::post('/files/images', 'FileController@storeChunk')
+         ->middleware('can:create,App\Image');
 
-/**
- * Legal
- */
-Route::get('/images/{image}/legal', 'LegalController@show')
-     ->where('image', '\d+')
-     ->middleware('can:view,image');
+    /**
+     * Legal
+     */
+    Route::get('/images/{image}/legal', 'LegalController@show')
+         ->where('image', '\d+')
+         ->middleware('can:view,image');
 
-Route::put('/images/{image}/legal', 'LegalController@update')
-     ->where('image', '\d+')
-     ->middleware('can:update,image');
+    Route::put('/images/{image}/legal', 'LegalController@update')
+         ->where('image', '\d+')
+         ->middleware('can:update,image');
 
-// no delete route: delete the image (then the legal is deleted as well)
+    // no delete route: delete the image (then the legal is deleted as well)
 
-Route::post('/images/{image}/legal', 'LegalController@store')
-     ->where('image', '\d+')
-     ->middleware('can:update,image'); // the legal is an extension of the image
-
-/**
- * Old routes
- *
- * @todo: clean up
- */
-Route::get('/', function () {
-    return view('welcome');
+    Route::post('/images/{image}/legal', 'LegalController@store')
+         ->where('image', '\d+')
+         ->middleware('can:update,image'); // the legal is an extension of the image
 });
-Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
 
-//Route::get('/images/raw/search/{query}', 'ImageController@searchRaw')->where('query', '.*');
+/**
+ * The Frontend
+ */
+Auth::routes();
+Route::get('/', 'HomeController@index');
+
+/**
+ * "Catch all" route
+ *
+ * This route is necessary for the view router to work
+ */
+Route::fallback('HomeController@index');
