@@ -33,7 +33,7 @@ class LegalTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-                         ->get("/legals/{$legal->id}");
+                         ->getJson("/legals/{$legal->id}");
 
         $response->assertStatus(200)
                  ->assertJsonStructure([
@@ -77,11 +77,35 @@ class LegalTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-                         ->get("/legals");
+                         ->getJson("/legals");
 
         $response->assertStatus(200)
                  ->assertJsonFragment(['id' => $legal1->id])
                  ->assertJsonFragment(['id' => $legal2->id])
                  ->assertJsonMissing(['id' => $legal3->id]);
+    }
+
+    public function testPut_200()
+    {
+        $user  = factory(User::class)->create();
+        $image = factory(Image::class)->create([
+            'user_id' => $user->id,
+            'type'    => Image::TYPE_RAW
+        ]);
+        $legal = factory(Legal::class)->create([
+            'image_id' => $image->id
+        ]);
+
+        $legal->right_of_personality = Legal::PERSONALITY_PUBLIC_INTEREST;
+        $legal->originator_type      = Legal::ORIGINATOR_AGENCY;
+        $legal->originator           = 'The star photographer';
+        $legal->licence              = Legal::LICENCE_CC_ATTRIBUTION;
+        $legal->stock_url            = 'https://starphtotographer.example/best-pic';
+        $legal->shared               = false;
+
+        $response = $this->actingAs($user)
+                         ->putJson("/legals/{$legal->id}", $legal->toArray());
+
+        $response->assertStatus(200);
     }
 }

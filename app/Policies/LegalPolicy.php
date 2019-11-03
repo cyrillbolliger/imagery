@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Image;
 use App\Legal;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -34,7 +35,7 @@ class LegalPolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+        return $user->can('viewAny', Image::class);
     }
 
     /**
@@ -59,7 +60,7 @@ class LegalPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->can('create', Image::class);
     }
 
     /**
@@ -72,7 +73,7 @@ class LegalPolicy
      */
     public function update(User $user, Legal $legal)
     {
-        //
+        return $user->can('update', $legal->image);
     }
 
     /**
@@ -85,32 +86,6 @@ class LegalPolicy
      */
     public function delete(User $user, Legal $legal)
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the legal.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Legal  $legal
-     *
-     * @return mixed
-     */
-    public function restore(User $user, Legal $legal)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the legal.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Legal  $legal
-     *
-     * @return mixed
-     */
-    public function forceDelete(User $user, Legal $legal)
-    {
-        //
+        return $user->can('delete', $legal->image);
     }
 }

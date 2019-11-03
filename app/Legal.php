@@ -43,6 +43,13 @@ class Legal extends Model
     public const LICENCE_CC_ATTRIBUTION = 'creative_commons_attribution';
     public const LICENCE_OTHER = 'other';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
     public function image()
     {
         return $this->belongsTo(Image::class);

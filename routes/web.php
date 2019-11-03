@@ -158,10 +158,10 @@ Route::get('/legals/{legal}', 'LegalController@show')
 Route::get('/legals', 'LegalController@index')
      ->middleware('can:viewAny,App\Legal');
 
-//Route::put('/legals/{legal}', 'LegalController@update')
-//     ->where('legal', '\d+')
-//     ->middleware('can:update,legal');
-//
+Route::put('/legals/{legal}', 'LegalController@update')
+     ->where('legal', '\d+')
+     ->middleware('can:update,legal');
+
 //Route::delete('/legals/{legal}', 'LegalController@destroy')
 //     ->where('legal', '\d+')
 //     ->middleware('can:delete,legal');
