@@ -3,6 +3,7 @@
 use App\Group;
 use App\GroupLogo;
 use App\Image;
+use App\Legal;
 use App\Logo;
 use App\Role;
 use App\User;
@@ -24,5 +25,6 @@ class DatabaseSeeder extends Seeder
         factory(Role::class)->create();
         factory(GroupLogo::class)->create();
         factory(Image::class, 10)->create();
+        factory(Legal::class)->create();
     }
 }

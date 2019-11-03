@@ -151,23 +151,19 @@ Route::post('/files/images', 'FileController@storeChunk')
 /**
  * Legal
  */
-Route::get('/legals/{legal}', 'LegalController@show')
-     ->where('legal', '\d+')
-     ->middleware('can:view,legal');
+Route::get('/images/{image}/legal', 'LegalController@show')
+     ->where('image', '\d+')
+     ->middleware('can:view,image');
 
-Route::get('/legals', 'LegalController@index')
-     ->middleware('can:viewAny,App\Legal');
+Route::put('/images/{image}/legal', 'LegalController@update')
+     ->where('image', '\d+')
+     ->middleware('can:update,image');
 
-Route::put('/legals/{legal}', 'LegalController@update')
-     ->where('legal', '\d+')
-     ->middleware('can:update,legal');
+// no delete route: delete the image (then the legal is deleted as well)
 
-//Route::delete('/legals/{legal}', 'LegalController@destroy')
-//     ->where('legal', '\d+')
-//     ->middleware('can:delete,legal');
-//
-//Route::post('/legals', 'LegalController@store')
-//     ->middleware('can:create,App\Legal');
+Route::post('/images/{image}/legal', 'LegalController@store')
+     ->where('image', '\d+')
+     ->middleware('can:update,image'); // the legal is an extension of the image
 
 /**
  * Old routes

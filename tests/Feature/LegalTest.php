@@ -6,6 +6,7 @@ use App\Image;
 use App\Legal;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use RootSeeder;
 use Tests\TestCase;
 
@@ -33,7 +34,7 @@ class LegalTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-                         ->getJson("/legals/{$legal->id}");
+                         ->getJson("/images/{$image->id}/legal");
 
         $response->assertStatus(200)
                  ->assertJsonStructure([
@@ -48,41 +49,8 @@ class LegalTest extends TestCase
                      'created_at',
                      'updated_at',
                      'deleted_at',
-                 ]);
-    }
-
-    public function testGetIndex_200()
-    {
-        $user   = factory(User::class)->create();
-        $image1 = factory(Image::class)->create([
-            'type' => Image::TYPE_RAW
-        ]);
-        $legal1 = factory(Legal::class)->create([
-            'shared'   => true,
-            'image_id' => $image1->id
-        ]);
-        $image2 = factory(Image::class)->create([
-            'type' => Image::TYPE_RAW
-        ]);
-        $legal2 = factory(Legal::class)->create([
-            'shared'   => true,
-            'image_id' => $image2->id
-        ]);
-        $image3 = factory(Image::class)->create([
-            'type' => Image::TYPE_RAW
-        ]);
-        $legal3 = factory(Legal::class)->create([
-            'shared'   => false,
-            'image_id' => $image3->id
-        ]);
-
-        $response = $this->actingAs($user)
-                         ->getJson("/legals");
-
-        $response->assertStatus(200)
-                 ->assertJsonFragment(['id' => $legal1->id])
-                 ->assertJsonFragment(['id' => $legal2->id])
-                 ->assertJsonMissing(['id' => $legal3->id]);
+                 ])
+                 ->assertJsonFragment(['id' => $legal->id]);
     }
 
     public function testPut_200()
@@ -104,8 +72,67 @@ class LegalTest extends TestCase
         $legal->shared               = false;
 
         $response = $this->actingAs($user)
-                         ->putJson("/legals/{$legal->id}", $legal->toArray());
+                         ->putJson("/images/{$image->id}/legal", $legal->toArray());
 
         $response->assertStatus(200);
+        $this->assertDatabaseHas('legals', [
+            'id'                   => $legal->id,
+            'right_of_personality' => $legal->right_of_personality,
+            'originator_type'      => $legal->originator_type,
+            'originator'           => $legal->originator,
+            'licence'              => $legal->licence,
+            'stock_url'            => $legal->stock_url,
+            'shared'               => $legal->shared,
+        ]);
+    }
+
+    public function testPost_201()
+    {
+        $user  = factory(User::class)->create();
+        $image = factory(Image::class)->create([
+            'user_id' => $user->id,
+            'type'    => Image::TYPE_RAW
+        ]);
+        $legal = factory(Legal::class)->make([
+            'licence'   => Legal::LICENCE_CC,
+            'stock_url' => 'https://google.com'
+        ]);
+
+        $data = $legal->toArray();
+        unset($data['image_id']);
+
+        $response = $this->actingAs($user)
+                         ->postJson("/images/{$image->id}/legal", $data);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('legals', [
+            'image_id' => $image->id
+        ]);
+    }
+
+    public function testPost_saveMultiple_409()
+    {
+        $user  = factory(User::class)->create();
+        $image = factory(Image::class)->create([
+            'user_id' => $user->id,
+            'type'    => Image::TYPE_RAW
+        ]);
+        $legal = factory(Legal::class)->create([
+            'licence'   => Legal::LICENCE_CC,
+            'stock_url' => 'https://google.com',
+            'image_id'  => $image->id,
+        ]);
+
+        $data = $legal->toArray();
+        unset($data['id']);
+        unset($data['image_id']);
+        unset($data['created_at']);
+        unset($data['updated_at']);
+
+        $response = $this->actingAs($user)
+                         ->postJson("/images/{$image->id}/legal", $data);
+
+        $response->assertStatus(409);
+        $this->assertEquals(1, DB::table('legals')->where('image_id', $image->id)->count());
     }
 }

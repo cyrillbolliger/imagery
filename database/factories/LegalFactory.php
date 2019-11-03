@@ -2,6 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use App\Image;
 use App\Legal;
 use Faker\Generator as Faker;
 
@@ -43,7 +44,7 @@ $factory->define(Legal::class, function (Faker $faker) {
     }
 
     return [
-        'image_id'             => 1, // todo: make dynamic
+        'image_id'             => factory(Image::class)->create(['type' => \App\Image::TYPE_RAW])->id,
         'right_of_personality' => $personality,
         'originator_type'      => $originator_type,
         'licence'              => $originator_type === Legal::ORIGINATOR_STOCK ? $licence : null,
