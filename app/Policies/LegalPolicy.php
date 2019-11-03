@@ -34,7 +34,7 @@ class LegalPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**

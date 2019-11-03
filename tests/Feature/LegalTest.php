@@ -20,11 +20,6 @@ class LegalTest extends TestCase
         $this->seed(RootSeeder::class);
     }
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function testGet_200()
     {
         $user  = factory(User::class)->create();
@@ -54,5 +49,39 @@ class LegalTest extends TestCase
                      'updated_at',
                      'deleted_at',
                  ]);
+    }
+
+    public function testGetIndex_200()
+    {
+        $user   = factory(User::class)->create();
+        $image1 = factory(Image::class)->create([
+            'type' => Image::TYPE_RAW
+        ]);
+        $legal1 = factory(Legal::class)->create([
+            'shared'   => true,
+            'image_id' => $image1->id
+        ]);
+        $image2 = factory(Image::class)->create([
+            'type' => Image::TYPE_RAW
+        ]);
+        $legal2 = factory(Legal::class)->create([
+            'shared'   => true,
+            'image_id' => $image2->id
+        ]);
+        $image3 = factory(Image::class)->create([
+            'type' => Image::TYPE_RAW
+        ]);
+        $legal3 = factory(Legal::class)->create([
+            'shared'   => false,
+            'image_id' => $image3->id
+        ]);
+
+        $response = $this->actingAs($user)
+                         ->get("/legals");
+
+        $response->assertStatus(200)
+                 ->assertJsonFragment(['id' => $legal1->id])
+                 ->assertJsonFragment(['id' => $legal2->id])
+                 ->assertJsonMissing(['id' => $legal3->id]);
     }
 }

@@ -155,9 +155,9 @@ Route::get('/legals/{legal}', 'LegalController@show')
      ->where('legal', '\d+')
      ->middleware('can:view,legal');
 
-//Route::get('/legals', 'LegalController@index')
-//     ->middleware('can:viewAny,App\Legal');
-//
+Route::get('/legals', 'LegalController@index')
+     ->middleware('can:viewAny,App\Legal');
+
 //Route::put('/legals/{legal}', 'LegalController@update')
 //     ->where('legal', '\d+')
 //     ->middleware('can:update,legal');
