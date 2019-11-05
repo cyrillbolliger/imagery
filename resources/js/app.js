@@ -17,9 +17,11 @@ import {routes} from './routes';
 /**
  * Register global components
  */
-import NavShowButton from "./components/misc/NavShowButton";
+import AIconNamed from "./components/atoms/AIconNamed";
+import MMenuButtonShow from "./components/molecules/MMenuButtonShow";
 
-window.Vue.component('NavShowButton', NavShowButton);
+window.Vue.component('AIconNamed', AIconNamed);
+window.Vue.component('MMenuButtonShow', MMenuButtonShow);
 
 /**
  *  Routing

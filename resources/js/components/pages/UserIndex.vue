@@ -2,7 +2,7 @@
     <main class="col">
         <header class="row justify-content-between">
             <h1 class="col">Users</h1>
-            <NavShowButton></NavShowButton>
+            <MMenuButtonShow></MMenuButtonShow>
         </header>
         <ul>
             <li>asdf</li>

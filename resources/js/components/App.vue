@@ -1,17 +1,17 @@
 <template>
     <div class="row">
-        <BaseNav class="col-lg-3 sticky-top" v-if="isOpen"></BaseNav>
+        <OMenu class="col-lg-3 sticky-top" v-if="isOpen"></OMenu>
         <router-view></router-view>
     </div>
 </template>
 
 <script>
-    import BaseNav from "./BaseNav";
+    import OMenu from "./organisms/OMenu";
     import {mapGetters} from "vuex";
 
     export default {
         name: "App",
-        components: {BaseNav},
+        components: {OMenu},
         computed: {
             ...mapGetters('menu', ['isOpen']),
         }
