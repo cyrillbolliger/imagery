@@ -1,5 +1,7 @@
 <template>
-    <AIconNamed @clicked="open" icon="menu" v-if="!isOpen">{{$t('nav.show')}}</AIconNamed>
+    <transition name="bounce">
+        <AIconNamed @clicked="open" icon="menu" v-if="!isOpen">{{$t('nav.show')}}</AIconNamed>
+    </transition>
 </template>
 
 <script>

@@ -13,5 +13,10 @@
         "title": "Menu",
         "hide": "Hide",
         "show": "Menu"
+    },
+    "users": {
+        "index": {
+            "title": "Users"
+        }
     }
 }

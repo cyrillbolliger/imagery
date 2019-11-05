@@ -1,7 +1,11 @@
 <template>
     <div class="row">
-        <OMenu class="col-lg-3 sticky-top" v-if="isOpen"></OMenu>
-        <router-view></router-view>
+        <transition name="slideLeft">
+            <OMenu class="col-xl-3 sticky-top" v-if="isOpen"></OMenu>
+        </transition>
+        <main class="page-main col mt-3 mb-3">
+            <router-view></router-view>
+        </main>
     </div>
 </template>
 
@@ -18,6 +22,12 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    .page-main {
+        position: absolute;
 
+        @include media-breakpoint-up(xl) {
+            position: static;
+        }
+    }
 </style>

@@ -1,19 +1,19 @@
 <template>
-    <main class="col">
-        <header class="row justify-content-between">
-            <h1 class="col">Users</h1>
-            <MMenuButtonShow></MMenuButtonShow>
-        </header>
+    <div class="col">
+        <MHeader>{{$t('users.index.title')}}</MHeader>
         <ul>
             <li>asdf</li>
             <li>asdf 2</li>
         </ul>
-    </main>
+    </div>
 </template>
 
 <script>
+    import MHeader from "../molecules/MHeader";
+
     export default {
         name: "UserIndex",
+        components: {MHeader},
     }
 </script>
 

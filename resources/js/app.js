@@ -6,6 +6,7 @@
 
 import './bootstrap';
 import 'bootstrap-material-design-icons/scss/material-icons.scss';
+import 'vue2-animate/src/sass/vue2-animate.scss'
 
 window.Vue = require('vue');
 import VueRouter from 'vue-router';
@@ -18,10 +19,8 @@ import {routes} from './routes';
  * Register global components
  */
 import AIconNamed from "./components/atoms/AIconNamed";
-import MMenuButtonShow from "./components/molecules/MMenuButtonShow";
 
 window.Vue.component('AIconNamed', AIconNamed);
-window.Vue.component('MMenuButtonShow', MMenuButtonShow);
 
 /**
  *  Routing
