@@ -1,18 +1,32 @@
 const mix = require('laravel-mix');
 
+// disable the os notifications if everything went well
 mix.disableSuccessNotifications();
+
+// load browsersync with this domain
 mix.browserSync('imagery.test:8888');
 
-/*
- |--------------------------------------------------------------------------
- | Mix Asset Management
- |--------------------------------------------------------------------------
- |
- | Mix provides a clean, fluent API for defining some Webpack build steps
- | for your Laravel application. By default, we are compiling the Sass
- | file for the application as well as bundling up all the JS files.
- |
- */
+// compile js
+mix.js('resources/js/app.js', 'public/js');
+//.sourceMaps();
 
-mix.js('resources/js/app.js', 'public/js')
-   .sass('resources/sass/app.scss', 'public/css');
+// compile scss
+mix.sass('resources/sass/app.scss', 'public/css');
+
+// webpack stuff
+mix.webpackConfig({
+    module: {
+        rules: [{
+            test: /\.scss$/,
+            use: [{
+                loader: "sass-loader",
+                options: {
+                    data: '@import "app";',
+                    includePaths: [
+                        path.resolve(__dirname, 'resources/sass')
+                    ]
+                }
+            }]
+        }]
+    }
+});

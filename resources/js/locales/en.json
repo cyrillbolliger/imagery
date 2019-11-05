@@ -1,3 +1,17 @@
 {
-    "key": "translation 1234"
+    "route": {
+        "gallery": "Gallery",
+        "create_image": "Create Image",
+        "settings": "Settings",
+        "users": "Users",
+        "groups": "Groups",
+        "logos": "Logos",
+        "account": "My Account",
+        "logout": "Logout"
+    },
+    "nav": {
+        "title": "Menu",
+        "hide": "Hide",
+        "show": "Menu"
+    }
 }

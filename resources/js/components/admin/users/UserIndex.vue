@@ -1,17 +1,19 @@
 <template>
-    <div>
-        <h1>Users</h1>
+    <main class="col">
+        <header class="row justify-content-between">
+            <h1 class="col">Users</h1>
+            <NavShowButton></NavShowButton>
+        </header>
         <ul>
             <li>asdf</li>
             <li>asdf 2</li>
         </ul>
-        <p>{{ $t('key') }}</p>
-    </div>
+    </main>
 </template>
 
 <script>
     export default {
-        name: "UserIndex"
+        name: "UserIndex",
     }
 </script>
 

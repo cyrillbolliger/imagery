@@ -4,8 +4,8 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-
-require('./bootstrap');
+import './bootstrap';
+import 'bootstrap-material-design-icons/scss/material-icons.scss';
 
 window.Vue = require('vue');
 import VueRouter from 'vue-router';
@@ -13,6 +13,13 @@ import App from './components/App';
 import i18n from './i18n'
 import {store} from './store/store';
 import {routes} from './routes';
+
+/**
+ * Register global components
+ */
+import NavShowButton from "./components/misc/NavShowButton";
+
+window.Vue.component('NavShowButton', NavShowButton);
 
 /**
  *  Routing
@@ -25,11 +32,8 @@ const router = new VueRouter({
 });
 
 /**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
+ * Initialize Vue
  */
-
 const app = new Vue({
     el: '#app',
     render: h => h(App),

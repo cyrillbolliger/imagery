@@ -12,6 +12,7 @@
     "devDependencies": {
         "axios": "^0.19",
         "bootstrap": "^4.0.0",
+        "bootstrap-material-design-icons": "^2.2.0",
         "browser-sync": "^2.26.7",
         "browser-sync-webpack-plugin": "^2.0.1",
         "cross-env": "^5.1",
