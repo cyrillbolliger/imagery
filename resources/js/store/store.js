@@ -2,11 +2,13 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import menu from './modules/menu';
+import user from './modules/user';
 
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
     modules: {
-        menu
+        menu,
+        user
     }
 });

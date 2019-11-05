@@ -42,3 +42,9 @@ const app = new Vue({
     router,
     i18n,
 });
+
+
+/**
+ * inject the current user
+ */
+app.$store.dispatch('user/set', user);

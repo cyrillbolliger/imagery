@@ -28,6 +28,7 @@ use Illuminate\Support\Collection;
  * @property bool $super_admin
  * @property string $lang possible values in User::LANGUAGES
  * @property int $login_count
+ * @property-read bool $is_admin
  * @property Carbon|null $last_login
  * @property string|null $remember_token
  * @property Carbon|null $created_at
@@ -91,6 +92,15 @@ class User extends Authenticatable
     ];
 
     /**
+     * Expose those accessors
+     *
+     * @var array
+     */
+    protected $appends = [
+        'is_admin'
+    ];
+
+    /**
      * The user that created this user
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -148,6 +158,16 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->super_admin ? true : $this->adminRoles()->exists();
+    }
+
+    /**
+     * Expose the is admin property
+     *
+     * @return bool
+     */
+    public function getIsAdminAttribute(): bool
+    {
+        return $this->isAdmin();
     }
 
     /**

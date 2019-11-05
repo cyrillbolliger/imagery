@@ -11,7 +11,7 @@
         <ul class="o-menu__item-list list-unstyled mt-3">
             <MMenuItem icon="image" to="/">{{$t('route.create_image')}}</MMenuItem>
             <MMenuItem icon="collections" to="/images/gallery">{{$t('route.gallery')}}</MMenuItem>
-            <li>
+            <li v-if="isAdmin">
                 <MMenuItem active="" icon="settings" to="/admin/users">{{$t('route.settings')}}</MMenuItem>
                 <ul class="list-unstyled ml-4">
                     <MMenuItem icon="chevron-right" to="/admin/users">{{$t('route.users')}}</MMenuItem>
@@ -27,13 +27,16 @@
 
 <script>
     import MMenuItem from "../molecules/MMenuItem";
-    import {mapActions} from "vuex";
+    import {mapActions, mapGetters} from "vuex";
 
     export default {
         name: "OMenu",
         components: {MMenuItem},
         methods: {
             ...mapActions('menu', ['close']),
+        },
+        computed: {
+            ...mapGetters('user', ['isAdmin']),
         }
     }
 </script>
