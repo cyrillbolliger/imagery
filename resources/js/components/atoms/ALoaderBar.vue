@@ -15,7 +15,7 @@
 
 <style lang="scss" scoped>
     .a-loader {
-        background: lighten($secondary, 50);
+        background: lighten($primary, 50);
         height: 3px;
         position: relative;
         width: 100%;
@@ -24,7 +24,7 @@
 
         &__bar {
             position: absolute;
-            background: $secondary;
+            background: $primary;
             transition: transform .2s linear;
             left: 0;
             top: 0;

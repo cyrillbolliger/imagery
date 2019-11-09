@@ -33,7 +33,7 @@
             color: $gray-200;
 
             &:hover, &:focus {
-                color: $primary;
+                color: $secondary;
                 outline: none;
                 text-decoration: none;
 
@@ -43,7 +43,7 @@
             }
 
             &.active {
-                color: $primary;
+                color: $secondary;
             }
         }
 

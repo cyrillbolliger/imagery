@@ -6,6 +6,7 @@
             :headers="headers"
             :loading="list.loading"
             :rows="list.data"
+            actionKey="id"
         ></ODataTable>
     </div>
 </template>
@@ -23,7 +24,7 @@
                 headers: [
                     {label: this.$t('user.first_name'), key: 'first_name', sortable: true},
                     {label: this.$t('user.last_name'), key: 'last_name', sortable: true},
-                    {label: this.$t('user.email'), key: 'email'},
+                    {label: this.$t('user.email'), key: 'email', sortable: true},
                 ],
             }
         },

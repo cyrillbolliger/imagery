@@ -1,14 +1,20 @@
 <template>
     <div class="o-data-table">
-        <div class="o-data-table__search mb-3">
-            <MSearch @search="filter($event)"></MSearch>
+        <div class="mb-3 row justify-content-between">
+            <button @click="$emit('newEntry')"
+                    class="btn btn-outline-primary ml-3"
+            >{{$t('table.add')}}
+            </button>
+            <div class="o-data-table__search col">
+                <MSearch @search="filter($event)"></MSearch>
+            </div>
         </div>
-        <table class="table table-hover">
+        <table class="o-data-table__table table table-hover">
             <thead>
             <tr>
-                <th :class="loading ? 'border-bottom-0' : ''"
-                    scope="col"
+                <th class="o-data-table__header-cell border-bottom-0"
                     v-for="{label, sortable, key} in headers"
+                    scope="col"
                 >
                     <AButtonSort
                         :direction="getSortDirection(key)"
@@ -34,8 +40,15 @@
             </tr>
             </tbody>
             <tbody v-if="!loading">
-            <tr v-for="row in sortedRows">
-                <td v-for="{key} in headers">{{ row[key] }}</td>
+            <tr class="o-data-table__row" v-for="row in sortedRows">
+                <td v-for="({key}, index) in headers">
+                    {{ row[key] }}
+                    <button @click="$emit('edit', row[actionKey])"
+                            class="o-data-table__item-action btn btn-link p-0 ml-2"
+                            v-if="0 === index"
+                    >{{$t('table.edit')}}
+                    </button>
+                </td>
             </tr>
             </tbody>
             <tfoot v-if="!loading">
@@ -81,6 +94,10 @@
             },
             error: {
                 type: Boolean
+            },
+            actionKey: {
+                required: true,
+                type: String
             }
         },
         computed: {
@@ -173,9 +190,44 @@
         }
 
         &__search {
-            @include media-breakpoint-up(lg) {
-                padding-left: calc(100% - 350px);
+            width: 100%;
+            max-width: 350px;
+        }
+
+        &__table {
+            position: relative;
+        }
+
+        &__header-cell {
+            position: sticky;
+            top: -1px;
+            background: #F3F4F5;
+
+            color: $gray-600;
+            font-size: 0.875em;
+            text-transform: uppercase;
+
+            &::after {
+                content: ' ';
+                height: 5px;
+                display: block;
+                position: absolute;
+                bottom: -5px;
+                left: 0;
+                right: 0;
+                box-shadow: inset 0 5px 5px -5px $gray-500;
             }
+        }
+
+        &__item-action {
+            color: $body-bg;
+            font-size: 0.875em;
+        }
+
+        &__row:hover &__item-action,
+        &__row:focus &__item-action {
+            color: $primary;
+            cursor: pointer;
         }
     }
 </style>

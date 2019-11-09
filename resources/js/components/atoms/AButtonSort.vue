@@ -3,7 +3,7 @@
         @click="click"
         class="a-button-sort btn btn-link p-0 d-flex"
     >
-        <span class="a-button-sort__label"><slot></slot></span>
+        <span class="a-button-sort__label font-weight-bold"><slot></slot></span>
         <span class="a-button-sort__icon">
             <i :class="iconClass" v-if="state"></i>
         </span>
@@ -61,6 +61,12 @@
     .a-button-sort {
         padding: 0;
         color: $primary;
+
+        &__label,
+        &__icon {
+            font-size: 0.875em;
+            text-transform: uppercase;
+        }
 
         &:hover, &:focus {
             color: darken($primary, 20);
