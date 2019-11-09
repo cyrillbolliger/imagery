@@ -7,8 +7,7 @@ mix.disableSuccessNotifications();
 mix.browserSync('imagery.test:8888');
 
 // compile js
-mix.js('resources/js/app.js', 'public/js');
-//.sourceMaps();
+mix.js('resources/js/app.js', 'public/js').sourceMaps();
 
 // compile scss
 mix.sass('resources/sass/app.scss', 'public/css');
