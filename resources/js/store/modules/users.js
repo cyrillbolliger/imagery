@@ -1,7 +1,7 @@
 import Api from '../../service/api';
 
 const state = {
-    users: null,
+    users: [],
     list: {
         get data() {
             return state.users
@@ -15,7 +15,7 @@ const getters = {
     get(state, id) {
     },
     list(state) {
-        if (null === state.list.data) {
+        if (!state.list.data.length) {
             fetchAll();
         }
 
@@ -51,7 +51,7 @@ const fetchAll = function () {
             state.users = response.data;
         })
         .catch(reason => {
-            state.users = null;
+            state.users = [];
             state.list.lastError = reason;
         }).finally(() => {
         state.list.loading = false;
