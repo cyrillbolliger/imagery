@@ -37,7 +37,7 @@ class LogoFileTest extends TestCase
         $group->logos()->attach($logo);
 
         $response = $this->actingAs($manager)
-                         ->get("/files/logos/$logo->id");
+                         ->get("/api/1/files/logos/$logo->id");
 
         $response->assertStatus(200);
     }
@@ -58,7 +58,7 @@ class LogoFileTest extends TestCase
         $group->logos()->attach($logo);
 
         $response = $this->actingAs($manager)
-                         ->get("/files/logos/$logo->id");
+                         ->get("/api/1/files/logos/$logo->id");
 
         $response->assertStatus(404);
     }
@@ -78,7 +78,7 @@ class LogoFileTest extends TestCase
         $logo = factory(Logo::class)->create();
 
         $response = $this->actingAs($manager)
-                         ->get("/files/logos/$logo->id");
+                         ->get("/api/1/files/logos/$logo->id");
 
         $response->assertStatus(403);
     }
@@ -102,7 +102,7 @@ class LogoFileTest extends TestCase
         ];
 
         $response = $this->actingAs($manager)
-                         ->postJson("/files/logos", $payload);
+                         ->postJson("/api/1/files/logos", $payload);
 
         $response->assertStatus(200);
     }
@@ -126,7 +126,7 @@ class LogoFileTest extends TestCase
         ];
 
         $response = $this->actingAs($manager)
-                         ->postJson("/files/logos", $payload);
+                         ->postJson("/api/1/files/logos", $payload);
 
         $response->assertStatus(403);
     }
@@ -150,7 +150,7 @@ class LogoFileTest extends TestCase
         ];
 
         $response = $this->actingAs($manager)
-                         ->postJson("/files/logos", $payload);
+                         ->postJson("/api/1/files/logos", $payload);
 
         $response->assertStatus(422);
     }

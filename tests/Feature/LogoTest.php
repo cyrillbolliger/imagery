@@ -39,7 +39,7 @@ class LogoTest extends TestCase
         $group->logos()->attach($logo);
 
         $response = $this->actingAs($manager)
-                         ->getJson("/logos/$logo->id");
+                         ->getJson("/api/1/logos/$logo->id");
 
         $response->assertStatus(200);
         $response->assertJsonFragment(['id' => $logo->id]);
@@ -52,7 +52,7 @@ class LogoTest extends TestCase
         $logo    = factory(Logo::class)->create();
 
         $response = $this->actingAs($manager)
-                         ->getJson("/logos/$logo->id");
+                         ->getJson("/api/1/logos/$logo->id");
 
         $response->assertStatus(403);
     }
@@ -73,7 +73,7 @@ class LogoTest extends TestCase
         $group->logos()->attach($logo);
 
         $response = $this->actingAs($manager)
-                         ->getJson("/logos");
+                         ->getJson("/api/1/logos");
 
         $response->assertStatus(403);
     }
@@ -97,7 +97,7 @@ class LogoTest extends TestCase
         $group->logos()->attach($logo2);
 
         $response = $this->actingAs($manager)
-                         ->getJson("/logos");
+                         ->getJson("/api/1/logos");
 
         $response->assertStatus(200);
         $response->assertJsonFragment(['id' => $logo1->id]);
@@ -128,7 +128,7 @@ class LogoTest extends TestCase
         ];
 
         $response = $this->actingAs($manager)
-                         ->postJson("/files/logos", $payload);
+                         ->postJson("/api/1/files/logos", $payload);
 
         $response->assertStatus(200);
 
@@ -140,7 +140,7 @@ class LogoTest extends TestCase
         $data['filename'] = $filename; // excluded from toArray method
 
         $response = $this->actingAs($manager)
-                         ->putJson("/logos/$logo->id", $data);
+                         ->putJson("/api/1/logos/$logo->id", $data);
 
         $response->assertStatus(200);
         $response->assertJsonFragment(['name' => $logo->name]);
@@ -177,7 +177,7 @@ class LogoTest extends TestCase
         ];
 
         $response = $this->actingAs($manager)
-                         ->postJson("/files/logos", $payload);
+                         ->postJson("/api/1/files/logos", $payload);
 
         $response->assertStatus(200);
 
@@ -189,7 +189,7 @@ class LogoTest extends TestCase
         $data['filename'] = $filename; // excluded from toArray method
 
         $response = $this->actingAs($manager)
-                         ->putJson("/logos/$logo->id", $data);
+                         ->putJson("/api/1/logos/$logo->id", $data);
 
         $response->assertStatus(422);
         $response->assertJsonPath('errors.file.0', 'The uploaded file has an invalid mime type.');
@@ -211,7 +211,7 @@ class LogoTest extends TestCase
         $group->logos()->attach($logo);
 
         $response = $this->actingAs($manager)
-                         ->deleteJson("/logos/$logo->id");
+                         ->deleteJson("/api/1/logos/$logo->id");
 
         $response->assertStatus(204);
         $this->assertDatabaseMissing('group_logo', ['logo_id' => $logo->id]);
@@ -238,7 +238,7 @@ class LogoTest extends TestCase
         $nonAdminGroup->logos()->attach($logo);
 
         $response = $this->actingAs($manager)
-                         ->deleteJson("/logos/$logo->id");
+                         ->deleteJson("/api/1/logos/$logo->id");
 
         $response->assertStatus(422);
         $response->assertJsonPath('errors.groups.0',
@@ -265,7 +265,7 @@ class LogoTest extends TestCase
         ];
 
         $response = $this->actingAs($manager)
-                         ->postJson("/files/logos", $payload);
+                         ->postJson("/api/1/files/logos", $payload);
 
         $response->assertStatus(200);
 
@@ -281,7 +281,7 @@ class LogoTest extends TestCase
         unset($data['added_by']); // not mutable
 
         $response = $this->actingAs($manager)
-                         ->postJson("/logos", $data);
+                         ->postJson("/api/1/logos", $data);
 
         $response->assertStatus(201);
         $response->assertJsonFragment(['name' => $logo->name]);
@@ -316,7 +316,7 @@ class LogoTest extends TestCase
         ];
 
         $response = $this->actingAs($manager)
-                         ->putJson("/logos/$logo->id", $data);
+                         ->putJson("/api/1/logos/$logo->id", $data);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('group_logo', [
@@ -354,7 +354,7 @@ class LogoTest extends TestCase
         ];
 
         $response = $this->actingAs($manager)
-                         ->putJson("/logos/$logo->id", $data);
+                         ->putJson("/api/1/logos/$logo->id", $data);
 
         $response->assertStatus(422);
         $response->assertJsonPath('errors.groups.0', 'You can only set groups to groups you\'re admin of.');
@@ -380,7 +380,7 @@ class LogoTest extends TestCase
         ];
 
         $response = $this->actingAs($manager)
-                         ->putJson("/logos/$logo->id", $data);
+                         ->putJson("/api/1/logos/$logo->id", $data);
 
         $response->assertStatus(422);
         $response->assertJsonPath('errors.groups.0', 'The logo must be associated with at least one group.');
@@ -408,7 +408,7 @@ class LogoTest extends TestCase
         ];
 
         $response = $this->actingAs($manager)
-                         ->putJson("/logos/$logo->id", $data);
+                         ->putJson("/api/1/logos/$logo->id", $data);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('group_logo', [

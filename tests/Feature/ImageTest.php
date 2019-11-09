@@ -36,7 +36,7 @@ class ImageTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-                         ->get("/images/{$image->id}");
+                         ->get("/api/1/images/{$image->id}");
 
         $response->assertStatus(200)
                  ->assertJsonStructure([
@@ -63,7 +63,7 @@ class ImageTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-                         ->get("/images/{$image->id}");
+                         ->get("/api/1/images/{$image->id}");
 
         $response->assertStatus(200);
     }
@@ -80,7 +80,7 @@ class ImageTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-                         ->get("/images/{$image->id}");
+                         ->get("/api/1/images/{$image->id}");
 
         $response->assertStatus(200);
     }
@@ -97,7 +97,7 @@ class ImageTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-                         ->get("/images/{$image->id}");
+                         ->get("/api/1/images/{$image->id}");
 
         $response->assertStatus(403);
     }
@@ -129,7 +129,7 @@ class ImageTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-                         ->get("/images/raw");
+                         ->get("/api/1/images/raw");
 
         $response->assertStatus(200)
                  ->assertJsonFragment(['id' => $shared1->id])
@@ -152,7 +152,7 @@ class ImageTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-                         ->get("/images/final");
+                         ->get("/api/1/images/final");
 
         $response->assertStatus(200)
                  ->assertJsonFragment(['id' => $final1->id])
@@ -171,7 +171,7 @@ class ImageTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-                         ->delete("/images/{$image->id}");
+                         ->delete("/api/1/images/{$image->id}");
 
         $response->assertStatus(204);
         $this->assertDatabaseMissing('legals', [
@@ -193,7 +193,7 @@ class ImageTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-                         ->delete("/images/{$image->id}");
+                         ->delete("/api/1/images/{$image->id}");
 
         $response->assertStatus(403);
         $this->assertDatabaseHas('legals', [
@@ -215,7 +215,7 @@ class ImageTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-                         ->delete("/images/{$image->id}");
+                         ->delete("/api/1/images/{$image->id}");
 
         $response->assertStatus(204);
         $this->assertDatabaseMissing('legals', [
@@ -239,7 +239,7 @@ class ImageTest extends TestCase
         ];
 
         $response = $this->actingAs($user)
-                         ->postJson("/files/images", $payload);
+                         ->postJson("/api/1/files/images", $payload);
 
         $response->assertStatus(200);
 
@@ -259,7 +259,7 @@ class ImageTest extends TestCase
         unset($data['height']);
 
         $response = $this->actingAs($user)
-                         ->postJson("/images", $data);
+                         ->postJson("/api/1/images", $data);
 
         $imageId = $response->json('id');
 
@@ -297,7 +297,7 @@ class ImageTest extends TestCase
         ];
 
         $response = $this->actingAs($user)
-                         ->postJson("/files/images", $payload);
+                         ->postJson("/api/1/files/images", $payload);
 
         $response->assertStatus(200);
 
@@ -307,7 +307,7 @@ class ImageTest extends TestCase
         $data['filename'] = $filename; // excluded from toArray method
 
         $response = $this->actingAs($user)
-                         ->putJson("/images/{$image->id}", $data);
+                         ->putJson("/api/1/images/{$image->id}", $data);
 
         $response->assertStatus(200);
         $response->assertJsonFragment(['user_id' => $user->id]);
@@ -341,7 +341,7 @@ class ImageTest extends TestCase
         $data['original_id'] = $original->id;
 
         $response = $this->actingAs($user)
-                         ->putJson("/images/{$image->id}", $data);
+                         ->putJson("/api/1/images/{$image->id}", $data);
 
         $response->assertStatus(422);
     }
@@ -359,7 +359,7 @@ class ImageTest extends TestCase
         $data['logo_id'] = factory(Logo::class)->create()->id;
 
         $response = $this->actingAs($user)
-                         ->putJson("/images/{$image->id}", $data);
+                         ->putJson("/api/1/images/{$image->id}", $data);
 
         $response->assertStatus(422);
     }
@@ -377,7 +377,7 @@ class ImageTest extends TestCase
         $data['background'] = Image::BG_GRADIENT;
 
         $response = $this->actingAs($user)
-                         ->putJson("/images/{$image->id}", $data);
+                         ->putJson("/api/1/images/{$image->id}", $data);
 
         $response->assertStatus(422);
     }
@@ -405,7 +405,7 @@ class ImageTest extends TestCase
         $data['original_id'] = $original->id;
 
         $response = $this->actingAs($user)
-                         ->putJson("/images/{$image->id}", $data);
+                         ->putJson("/api/1/images/{$image->id}", $data);
 
         $response->assertStatus(422);
     }
@@ -433,7 +433,7 @@ class ImageTest extends TestCase
         $data['original_id'] = $original->id;
 
         $response = $this->actingAs($user)
-                         ->putJson("/images/{$image->id}", $data);
+                         ->putJson("/api/1/images/{$image->id}", $data);
 
         $response->assertStatus(200);
     }
@@ -462,7 +462,7 @@ class ImageTest extends TestCase
         $data['original_id'] = $original->id;
 
         $response = $this->actingAs($user)
-                         ->putJson("/images/{$image->id}", $data);
+                         ->putJson("/api/1/images/{$image->id}", $data);
 
         $response->assertStatus(422);
     }
@@ -484,7 +484,7 @@ class ImageTest extends TestCase
         $data['original_id'] = $image->id;
 
         $response = $this->actingAs($user)
-                         ->putJson("/images/{$image->id}", $data);
+                         ->putJson("/api/1/images/{$image->id}", $data);
 
         $response->assertStatus(422);
     }
@@ -502,7 +502,7 @@ class ImageTest extends TestCase
         $data['original_id'] = null;
 
         $response = $this->actingAs($user)
-                         ->putJson("/images/{$image->id}", $data);
+                         ->putJson("/api/1/images/{$image->id}", $data);
 
         $response->assertStatus(422);
     }
@@ -520,7 +520,7 @@ class ImageTest extends TestCase
         $data['original_id'] = null;
 
         $response = $this->actingAs($user)
-                         ->putJson("/images/{$image->id}", $data);
+                         ->putJson("/api/1/images/{$image->id}", $data);
 
         $response->assertStatus(200);
     }

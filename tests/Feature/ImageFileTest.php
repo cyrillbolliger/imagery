@@ -28,7 +28,7 @@ class ImageFileTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-                         ->get("/files/images/$image->id");
+                         ->get("/api/1/files/images/$image->id");
 
         $response->assertStatus(200);
     }
@@ -44,7 +44,7 @@ class ImageFileTest extends TestCase
         ];
 
         $response = $this->actingAs($user)
-                         ->postJson("/files/images", $payload);
+                         ->postJson("/api/1/files/images", $payload);
 
         $response->assertStatus(200);
     }
@@ -60,7 +60,7 @@ class ImageFileTest extends TestCase
         $image->generateThumbnail();
 
         $response = $this->actingAs($user)
-                         ->get("/files/images/$image->id/thumbnail");
+                         ->get("/api/1/files/images/$image->id/thumbnail");
 
         $response->assertStatus(200);
     }
@@ -76,7 +76,7 @@ class ImageFileTest extends TestCase
         ];
 
         $response = $this->actingAs($user)
-                         ->postJson("/files/images", $payload);
+                         ->postJson("/api/1/files/images", $payload);
 
         $response->assertStatus(422);
     }

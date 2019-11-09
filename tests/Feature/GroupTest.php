@@ -33,7 +33,7 @@ class GroupTest extends TestCase
         );
 
         $response = $this->actingAs($manager)
-                         ->getJson("/groups/$group->id");
+                         ->getJson("/api/1/groups/$group->id");
 
         $response->assertStatus(403);
     }
@@ -51,7 +51,7 @@ class GroupTest extends TestCase
         );
 
         $response = $this->actingAs($manager)
-                         ->getJson("/groups/$group->id");
+                         ->getJson("/api/1/groups/$group->id");
 
         $response->assertStatus(200);
         $response->assertJson($group->toArray());
@@ -73,7 +73,7 @@ class GroupTest extends TestCase
         );
 
         $response = $this->actingAs($manager)
-                         ->getJson("/groups/$child->id");
+                         ->getJson("/api/1/groups/$child->id");
 
         $response->assertStatus(200);
         $response->assertJson($child->toArray());
@@ -119,7 +119,7 @@ class GroupTest extends TestCase
         );
 
         $response = $this->actingAs($manager)
-                         ->getJson("/groups");
+                         ->getJson("/api/1/groups");
 
         $response->assertStatus(200);
 
@@ -159,7 +159,7 @@ class GroupTest extends TestCase
         $child->parent_id = $root2->id;
 
         $response = $this->actingAs($manager)
-                         ->putJson("/groups/$child->id", $child->toArray());
+                         ->putJson("/api/1/groups/$child->id", $child->toArray());
 
         $response->assertStatus(200);
         $response->assertJsonFragment(['id' => $child->id]);
@@ -191,7 +191,7 @@ class GroupTest extends TestCase
         $child->parent_id = $root2->id;
 
         $response = $this->actingAs($manager)
-                         ->putJson("/groups/$child->id", $child->toArray());
+                         ->putJson("/api/1/groups/$child->id", $child->toArray());
 
         $response->assertStatus(422);
         $this->assertNotEmpty($response->json('errors.parent_id'));
@@ -223,7 +223,7 @@ class GroupTest extends TestCase
         $child->parent_id = $root2->id;
 
         $response = $this->actingAs($manager)
-                         ->putJson("/groups/$child->id", $child->toArray());
+                         ->putJson("/api/1/groups/$child->id", $child->toArray());
 
         $response->assertStatus(422);
         $this->assertNotEmpty($response->json('errors.parent_id'));
@@ -244,7 +244,7 @@ class GroupTest extends TestCase
         $group->name = 'changed';
 
         $response = $this->actingAs($manager)
-                         ->putJson("/groups/$group->id", $group->toArray());
+                         ->putJson("/api/1/groups/$group->id", $group->toArray());
 
         $response->assertStatus(403);
     }
@@ -273,7 +273,7 @@ class GroupTest extends TestCase
         $gen1->parent_id = $gen3->id;
 
         $response = $this->actingAs($manager)
-                         ->putJson("/groups/$gen1->id", $gen1->toArray());
+                         ->putJson("/api/1/groups/$gen1->id", $gen1->toArray());
 
         $response->assertStatus(422);
         $this->assertNotEmpty($response->json('errors.parent_id'));
@@ -292,7 +292,7 @@ class GroupTest extends TestCase
         );
 
         $response = $this->actingAs($manager)
-                         ->deleteJson("/groups/$group->id");
+                         ->deleteJson("/api/1/groups/$group->id");
 
         $response->assertStatus(204);
         $this->assertDatabaseMissing('groups', [
@@ -317,7 +317,7 @@ class GroupTest extends TestCase
         );
 
         $response = $this->actingAs($manager)
-                         ->deleteJson("/groups/$root->id");
+                         ->deleteJson("/api/1/groups/$root->id");
 
         $response->assertStatus(422);
         $this->assertNotEmpty($response->json('errors.children'));
@@ -340,7 +340,7 @@ class GroupTest extends TestCase
         );
 
         $response = $this->actingAs($manager)
-                         ->deleteJson("/groups/$group->id");
+                         ->deleteJson("/api/1/groups/$group->id");
 
         $response->assertStatus(403);
         $this->assertDatabaseHas('groups', [
@@ -368,7 +368,7 @@ class GroupTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->postJson("/groups", $child->toArray());
+                         ->postJson("/api/1/groups", $child->toArray());
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('groups', [
@@ -395,7 +395,7 @@ class GroupTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->postJson("/groups", $child->toArray());
+                         ->postJson("/api/1/groups", $child->toArray());
 
         $response->assertStatus(403);
         $this->assertDatabaseMissing('groups', [
@@ -414,7 +414,7 @@ class GroupTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->postJson("/groups", $group->toArray());
+                         ->postJson("/api/1/groups", $group->toArray());
 
         $response->assertStatus(422);
         $this->assertNotEmpty($response->json('errors.parent_id'));

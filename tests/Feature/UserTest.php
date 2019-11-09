@@ -28,7 +28,7 @@ class UserTest extends TestCase
         $managed = User::first();
 
         $response = $this->actingAs($manager)
-                         ->getJson('/users/'.$managed->id);
+                         ->getJson('/api/1/users/'.$managed->id);
 
         $response->assertStatus(403);
     }
@@ -39,7 +39,7 @@ class UserTest extends TestCase
         $managed = $manager;
 
         $response = $this->actingAs($manager)
-                         ->getJson('/users/'.$managed->id);
+                         ->getJson('/api/1/users/'.$managed->id);
 
         $response->assertStatus(200)
                  ->assertJsonStructure([
@@ -67,7 +67,7 @@ class UserTest extends TestCase
         $managed = factory(User::class)->create();
 
         $response = $this->actingAs($manager)
-                         ->getJson('/users/'.$managed->id);
+                         ->getJson('/api/1/users/'.$managed->id);
 
         $response->assertStatus(200);
     }
@@ -82,7 +82,7 @@ class UserTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->getJson('/users/'.$managed->id);
+                         ->getJson('/api/1/users/'.$managed->id);
 
         $response->assertStatus(200);
     }
@@ -102,7 +102,7 @@ class UserTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->getJson('/users/'.$managed->id);
+                         ->getJson('/api/1/users/'.$managed->id);
 
         $response->assertStatus(200);
     }
@@ -112,7 +112,7 @@ class UserTest extends TestCase
         $user = factory(User::class)->create(['super_admin' => false]);
 
         $response = $this->actingAs($user)
-                         ->getJson('/users/');
+                         ->getJson('/api/1/users/');
 
         $response->assertStatus(403);
     }
@@ -123,7 +123,7 @@ class UserTest extends TestCase
         $users = User::all();
 
         $response = $this->actingAs($user)
-                         ->getJson('/users/');
+                         ->getJson('/api/1/users/');
 
         $response->assertStatus(200);
         $response->assertJson($users->toArray());
@@ -148,7 +148,7 @@ class UserTest extends TestCase
         $roleAdmin2   = $manager->roles()->save(factory(Role::class)->make(['admin' => true, 'group_id' => $root2]));
 
         $response = $this->actingAs($manager)
-                         ->getJson('/users/');
+                         ->getJson('/api/1/users/');
 
         $response->assertStatus(200);
 
@@ -168,7 +168,7 @@ class UserTest extends TestCase
         sleep(1); // so we can test the modified time
 
         $response = $this->actingAs($manager)
-                         ->putJson('/users/'.$managed->id, $managed->toArray());
+                         ->putJson('/api/1/users/'.$managed->id, $managed->toArray());
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('users', [
@@ -192,7 +192,7 @@ class UserTest extends TestCase
         $managed->first_name = 'Changed';
 
         $response = $this->actingAs($manager)
-                         ->putJson('/users/'.$managed->id, $managed->toArray());
+                         ->putJson('/api/1/users/'.$managed->id, $managed->toArray());
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('users', [
@@ -213,7 +213,7 @@ class UserTest extends TestCase
         $managed->super_admin = true;
 
         $response = $this->actingAs($manager)
-                         ->putJson('/users/'.$managed->id, $managed->toArray());
+                         ->putJson('/api/1/users/'.$managed->id, $managed->toArray());
 
         $response->assertStatus(422);
         $this->assertNotEmpty($response->json('errors.super_admin'));
@@ -232,7 +232,7 @@ class UserTest extends TestCase
         $managed->super_admin = false;
 
         $response = $this->actingAs($manager)
-                         ->putJson('/users/'.$managed->id, $managed->toArray());
+                         ->putJson('/api/1/users/'.$managed->id, $managed->toArray());
 
         $response->assertStatus(422);
         $this->assertNotEmpty($response->json('errors.super_admin'));
@@ -251,7 +251,7 @@ class UserTest extends TestCase
         $managed->last_name = 'Super Admin';
 
         $response = $this->actingAs($manager)
-                         ->putJson('/users/'.$managed->id, $managed->toArray());
+                         ->putJson('/api/1/users/'.$managed->id, $managed->toArray());
 
         $response->assertStatus(200);
     }
@@ -266,7 +266,7 @@ class UserTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->putJson('/users/'.$managed->id, [
+                         ->putJson('/api/1/users/'.$managed->id, [
                              'id'       => $managed->id,
                              'password' => 'weak' // we can't set this using the toArray method
                          ]);
@@ -285,7 +285,7 @@ class UserTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->putJson('/users/'.$managed->id, [
+                         ->putJson('/api/1/users/'.$managed->id, [
                              'added_by' => $manager->id
                          ]);
 
@@ -303,7 +303,7 @@ class UserTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->putJson('/users/'.$managed->id, [
+                         ->putJson('/api/1/users/'.$managed->id, [
                              'deleted_at' => date('Y-m-d H:i:s')
                          ]);
 
@@ -324,7 +324,7 @@ class UserTest extends TestCase
         $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
 
         $response = $this->actingAs($manager)
-                         ->putJson('/users/'.$managed->id, $data);
+                         ->putJson('/api/1/users/'.$managed->id, $data);
 
         $response->assertStatus(200);
     }
@@ -335,7 +335,7 @@ class UserTest extends TestCase
         $managed = $manager;
 
         $response = $this->actingAs($manager)
-                         ->deleteJson('/users/'.$managed->id);
+                         ->deleteJson('/api/1/users/'.$managed->id);
 
         $response->assertStatus(204);
         $this->assertNull(User::find($managed->id));
@@ -352,7 +352,7 @@ class UserTest extends TestCase
         unset($data['added_by']); // immutable
 
         $response = $this->actingAs($manager)
-                         ->postJson('/users', $data);
+                         ->postJson('/api/1/users', $data);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('users', [
@@ -374,7 +374,7 @@ class UserTest extends TestCase
         unset($data['added_by']); // immutable
 
         $response = $this->actingAs($manager)
-                         ->postJson('/users', $data);
+                         ->postJson('/api/1/users', $data);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('users', [
@@ -393,7 +393,7 @@ class UserTest extends TestCase
         $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
 
         $response = $this->actingAs($manager)
-                         ->postJson('/users', $data);
+                         ->postJson('/api/1/users', $data);
 
         $response->assertStatus(422);
         $this->assertNotEmpty($response->json('errors.super_admin'));
@@ -416,7 +416,7 @@ class UserTest extends TestCase
         $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
 
         $response = $this->actingAs($manager)
-                         ->postJson('/users', $data);
+                         ->postJson('/api/1/users', $data);
 
         $response->assertStatus(422);
         $this->assertNotEmpty($response->json('errors.managed_by'));
@@ -440,7 +440,7 @@ class UserTest extends TestCase
         unset($data['added_by']); // immutable
 
         $response = $this->actingAs($manager)
-                         ->postJson('/users', $data);
+                         ->postJson('/api/1/users', $data);
 
         $response->assertStatus(201);
     }
@@ -459,7 +459,7 @@ class UserTest extends TestCase
         unset($data['added_by']); // immutable
 
         $response = $this->actingAs($manager)
-                         ->postJson('/users', $data);
+                         ->postJson('/api/1/users', $data);
 
         $response->assertStatus(201);
     }
@@ -478,7 +478,7 @@ class UserTest extends TestCase
         $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
 
         $response = $this->actingAs($manager)
-                         ->postJson('/users', $data);
+                         ->postJson('/api/1/users', $data);
 
         $response->assertStatus(422);
         $this->assertNotEmpty($response->json('errors.default_logo'));
@@ -498,7 +498,7 @@ class UserTest extends TestCase
         unset($data['added_by']); // immutable
 
         $response = $this->actingAs($manager)
-                         ->postJson('/users', $data);
+                         ->postJson('/api/1/users', $data);
 
         $response->assertStatus(201);
     }
@@ -513,7 +513,7 @@ class UserTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->putJson('/users/'.$managed->id, [
+                         ->putJson('/api/1/users/'.$managed->id, [
                              'first_name' => 'changed',
                          ]);
 
@@ -535,7 +535,7 @@ class UserTest extends TestCase
         unset($data['first_name']);
 
         $response = $this->actingAs($manager)
-                         ->postJson('/users', $data);
+                         ->postJson('/api/1/users', $data);
 
         $response->assertStatus(422);
         $this->assertNotEmpty($response->json('errors.first_name'));

@@ -27,7 +27,7 @@ class RoleTest extends TestCase
         $managed = factory(User::class)->create(['super_admin' => false]);
 
         $response = $this->actingAs($manager)
-                         ->getJson("/users/$managed->id/roles");
+                         ->getJson("/api/1/users/$managed->id/roles");
 
         $response->assertStatus(403);
     }
@@ -50,7 +50,7 @@ class RoleTest extends TestCase
         $managed->roles()->save(factory(Role::class)->make(['admin' => false]));
 
         $response = $this->actingAs($manager)
-                         ->getJson("/users/$managed->id/roles");
+                         ->getJson("/api/1/users/$managed->id/roles");
 
         $response->assertStatus(200);
         $response->assertJson($managed->roles->toArray());
@@ -75,7 +75,7 @@ class RoleTest extends TestCase
         $managed->roles()->save(factory(Role::class)->make()); // should not be part of the results
 
         $response = $this->actingAs($manager)
-                         ->getJson("/users/$managed->id/roles/$role->id");
+                         ->getJson("/api/1/users/$managed->id/roles/$role->id");
 
         $response->assertStatus(200);
 
@@ -99,7 +99,7 @@ class RoleTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->getJson("/users/$managed->id/roles/$role->id");
+                         ->getJson("/api/1/users/$managed->id/roles/$role->id");
 
         $response->assertStatus(404);
     }
@@ -114,7 +114,7 @@ class RoleTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->getJson("/users/$managed->id/roles/$role->id");
+                         ->getJson("/api/1/users/$managed->id/roles/$role->id");
 
         $response->assertStatus(403);
     }
@@ -140,7 +140,7 @@ class RoleTest extends TestCase
         $role->user_id = $managedNew->id;
 
         $response = $this->actingAs($manager)
-                         ->putJson("/users/$managedOld->id/roles/$role->id", $role->toArray());
+                         ->putJson("/api/1/users/$managedOld->id/roles/$role->id", $role->toArray());
 
         $response->assertStatus(422);
         $this->assertNotEmpty($response->json('errors.user_id'));
@@ -165,7 +165,7 @@ class RoleTest extends TestCase
         $role->group_id = $group->id;
 
         $response = $this->actingAs($manager)
-                         ->putJson("/users/$managed->id/roles/$role->id", $role->toArray());
+                         ->putJson("/api/1/users/$managed->id/roles/$role->id", $role->toArray());
 
         $response->assertStatus(403);
     }
@@ -190,7 +190,7 @@ class RoleTest extends TestCase
         $role->group_id = factory(Group::class)->create()->id;
 
         $response = $this->actingAs($manager)
-                         ->putJson("/users/$managed->id/roles/$role->id", $role->toArray());
+                         ->putJson("/api/1/users/$managed->id/roles/$role->id", $role->toArray());
 
         $response->assertStatus(403);
     }
@@ -224,7 +224,7 @@ class RoleTest extends TestCase
         $role->admin    = true;
 
         $response = $this->actingAs($manager)
-                         ->putJson("/users/$managed->id/roles/$role->id", $role->toArray());
+                         ->putJson("/api/1/users/$managed->id/roles/$role->id", $role->toArray());
 
         $response->assertStatus(200);
     }
@@ -249,7 +249,7 @@ class RoleTest extends TestCase
         $managed->roles()->save($role);
 
         $response = $this->actingAs($manager)
-                         ->deleteJson("/users/$managed->id/roles/$role->id");
+                         ->deleteJson("/api/1/users/$managed->id/roles/$role->id");
 
         $response->assertStatus(204);
         $this->assertDatabaseMissing('roles', [
@@ -277,7 +277,7 @@ class RoleTest extends TestCase
         $managed->roles()->save($role);
 
         $response = $this->actingAs($manager)
-                         ->deleteJson("/users/$managed->id/roles/$role->id");
+                         ->deleteJson("/api/1/users/$managed->id/roles/$role->id");
 
         $response->assertStatus(403);
         $this->assertDatabaseHas('roles', [
@@ -306,7 +306,7 @@ class RoleTest extends TestCase
         $managed->roles()->save($role);
 
         $response = $this->actingAs($manager)
-                         ->deleteJson("/users/$managed->id/roles/$role->id");
+                         ->deleteJson("/api/1/users/$managed->id/roles/$role->id");
 
         $response->assertStatus(403);
         $this->assertDatabaseHas('roles', [
@@ -336,7 +336,7 @@ class RoleTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->postJson("/users/$managed->id/roles/$role->id", $role->toArray());
+                         ->postJson("/api/1/users/$managed->id/roles/$role->id", $role->toArray());
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('roles', [
@@ -365,7 +365,7 @@ class RoleTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->postJson("/users/$managed->id/roles/$role->id", $role->toArray());
+                         ->postJson("/api/1/users/$managed->id/roles/$role->id", $role->toArray());
 
         $response->assertStatus(403);
         $this->assertDatabaseMissing('roles', [
@@ -395,7 +395,7 @@ class RoleTest extends TestCase
         ]);
 
         $response = $this->actingAs($manager)
-                         ->postJson("/users/$managed->id/roles/$role->id", $role->toArray());
+                         ->postJson("/api/1/users/$managed->id/roles/$role->id", $role->toArray());
 
         $response->assertStatus(403);
         $this->assertDatabaseMissing('roles', [

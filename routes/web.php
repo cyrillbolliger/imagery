@@ -11,7 +11,7 @@
 |
 */
 
-Route::prefix('api')->group(function () {
+Route::prefix('api/1')->group(function () {
     /**
      * Users
      */

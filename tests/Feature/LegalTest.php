@@ -34,7 +34,7 @@ class LegalTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-                         ->getJson("/images/{$image->id}/legal");
+                         ->getJson("/api/1/images/{$image->id}/legal");
 
         $response->assertStatus(200)
                  ->assertJsonStructure([
@@ -72,7 +72,7 @@ class LegalTest extends TestCase
         $legal->shared               = false;
 
         $response = $this->actingAs($user)
-                         ->putJson("/images/{$image->id}/legal", $legal->toArray());
+                         ->putJson("/api/1/images/{$image->id}/legal", $legal->toArray());
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('legals', [
@@ -102,7 +102,7 @@ class LegalTest extends TestCase
         unset($data['image_id']);
 
         $response = $this->actingAs($user)
-                         ->postJson("/images/{$image->id}/legal", $data);
+                         ->postJson("/api/1/images/{$image->id}/legal", $data);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('legals', [
@@ -130,7 +130,7 @@ class LegalTest extends TestCase
         unset($data['updated_at']);
 
         $response = $this->actingAs($user)
-                         ->postJson("/images/{$image->id}/legal", $data);
+                         ->postJson("/api/1/images/{$image->id}/legal", $data);
 
         $response->assertStatus(409);
         $this->assertEquals(1, DB::table('legals')->where('image_id', $image->id)->count());
