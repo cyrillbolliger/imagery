@@ -43,10 +43,10 @@
             <tr class="o-data-table__row" v-for="row in sortedRows">
                 <td v-for="({key}, index) in headers">
                     {{ row[key] }}
-                    <button @click="$emit('edit', row[actionKey])"
+                    <button @click="$emit('details', row[actionKey])"
                             class="o-data-table__item-action btn btn-link p-0 ml-2"
                             v-if="0 === index"
-                    >{{$t('table.edit')}}
+                    >{{$t('table.details')}}
                     </button>
                 </td>
             </tr>

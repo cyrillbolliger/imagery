@@ -19,7 +19,7 @@
         "total_unfiltered": "Showing {displayed} out of {total} records.",
         "total_filtered": "Filtered list. Showing {displayed} out of {total} records.",
         "add": "Add New",
-        "edit": "Edit"
+        "details": "Details"
     },
     "search": {
         "search": "Search"
