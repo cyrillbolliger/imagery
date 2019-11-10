@@ -2,20 +2,23 @@
     <div class="col">
         <MHeader>{{$t('users.index.title')}}</MHeader>
         <ODataTable
-            :error="null !== list.lastError"
+            :error="null !== lastError"
             :headers="headers"
-            :loading="list.loading"
-            :rows="list.data"
+            :loading="loading"
+            :rows="users"
             actionKey="id"
-            @details="show($event)"
+            @details="dialogShow($event)"
         ></ODataTable>
         <ODialog
             :title="dialogTitle"
-            @close="dialog.show = false"
-            v-if="dialog.show"
+            @close="dialogUser = false"
+            v-if="dialogUser"
         >
             <template #default>
-                <MUserForm v-if="dialogUser"></MUserForm>
+                <MUserForm
+                    :user="dialogUser"
+                    v-if="dialogUser"
+                ></MUserForm>
             </template>
             <template #footer>
                 Footer
@@ -26,14 +29,15 @@
 
 <script>
     import MHeader from "../molecules/MHeader";
-    import {mapGetters} from "vuex";
     import ODataTable from "../organisms/ODataTable";
     import ODialog from "../organisms/ODialog";
     import MUserForm from "../molecules/MUserForm";
+    import UserRepository from "../../repositories/UserRepository";
 
     export default {
         name: "UserIndex",
         components: {MUserForm, ODialog, ODataTable, MHeader},
+
         data() {
             return {
                 headers: [
@@ -41,31 +45,61 @@
                     {label: this.$t('user.last_name'), key: 'last_name', sortable: true},
                     {label: this.$t('user.email'), key: 'email', sortable: true},
                 ],
-                dialog: {
-                    show: false,
-                    id: null
-                }
+                users: {},
+                loading: true,
+                dialogUser: null,
+                dialogUserOriginal: null,
+                lastError: null
             }
         },
+
         computed: {
-            ...mapGetters('users', ['list', 'get']),
             dialogTitle() {
                 return this.dialogUser ?
                     `${this.dialogUser.first_name} ${this.dialogUser.last_name}` :
-                    this.$t('users.dialog.loading');
-            },
-            dialogUser() {
-                return this.get(this.dialog.id);
+                    this.$t('users.index.create');
             }
         },
-        methods: {
-            show(id) {
-                this.dialog.id = id;
-                this.dialog.show = true;
-            }
-        },
+
         created() {
-            this.show(415);
+            this.getAll();
+        },
+
+        methods: {
+            getAll() {
+                this.loading = true;
+                UserRepository.getAll()
+                    .then(({data}) => this.populateUsers(data))
+                    .catch(reason => this.lastError = reason)
+                    .finally(() => this.loading = false);
+            },
+
+            dialogShow(id) {
+                const key = this.userPropName(id);
+
+                if (this.users.hasOwnProperty(key)) {
+                    this.dialogUser = this.users[key];
+                    this.dialogUserOriginal = _.cloneDeep(this.dialogUser);
+                } else {
+                    alert('Error: unknown user id');
+                }
+            },
+
+            populateUsers(data) {
+                const users = {};
+                let key = '';
+
+                for (let idx in data) {
+                    key = this.userPropName(data[idx].id);
+                    users[key] = data[idx];
+                }
+
+                this.users = users;
+            },
+
+            userPropName(id) {
+                return `id-${id}`;
+            },
         }
     }
 </script>

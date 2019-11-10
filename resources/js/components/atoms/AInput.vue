@@ -1,10 +1,12 @@
 <template>
-    <div class="form-group row">
-        <label :for="id" class="col-sm-2 col-form-label">
-            {{$t('user.first_name')}}
-            <span v-if="required">*</span>
-        </label>
-        <div class="col-sm-10">
+    <AFormGroup>
+        <template #label>
+            <label :for="id" class="col-form-label">
+                {{label}}
+                <span v-if="required">*</span>
+            </label>
+        </template>
+        <template #input>
             <input
                 :id="id"
                 :required="required"
@@ -12,13 +14,17 @@
                 :value="value"
                 @input="$emit('input', $event.target.value)"
                 class="form-control">
-        </div>
-    </div>
+        </template>
+    </AFormGroup>
 </template>
 
 <script>
+    import Slugify from "../../mixins/Slugify";
+    import AFormGroup from "../atoms/AFormGroup";
+
     export default {
         name: "AInput",
+        components: {AFormGroup},
         props: {
             label: {
                 required: true,
@@ -39,12 +45,10 @@
         },
         computed: {
             id() {
-                // keep only 0-9, a-z, A-Z without any umlauts
-                return this.label.replace(/[^0-9\x41-\x5A\x61-\x7A]/g, '')
-                    .replace(/\s+/g, '-')
-                    .replace(/-+/g, '-');
+                return this.slugify(this.label)
             }
-        }
+        },
+        mixins: [Slugify]
     }
 </script>
 
