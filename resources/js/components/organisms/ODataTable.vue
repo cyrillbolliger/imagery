@@ -140,7 +140,12 @@
             filteredRows(value) {
                 this.sortedRows = sort(value, this.sortBy, this.sortDirection);
             }
-
+        },
+        mounted() {
+            if (this.rows.length && !this.sortedRows.length) {
+                // this populates the table when navigating away and back again
+                this.filteredRows = filter(this.rows, this.term, this.searchableKeys);
+            }
         }
     }
 
