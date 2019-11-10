@@ -10,12 +10,12 @@
             @details="show($event)"
         ></ODataTable>
         <ODialog
-            :title="dialog.title"
+            :title="dialogTitle"
             @close="dialog.show = false"
             v-if="dialog.show"
         >
             <template #default>
-                Main content
+                <MUserForm v-if="dialogUser"></MUserForm>
             </template>
             <template #footer>
                 Footer
@@ -29,10 +29,11 @@
     import {mapGetters} from "vuex";
     import ODataTable from "../organisms/ODataTable";
     import ODialog from "../organisms/ODialog";
+    import MUserForm from "../molecules/MUserForm";
 
     export default {
         name: "UserIndex",
-        components: {ODialog, ODataTable, MHeader},
+        components: {MUserForm, ODialog, ODataTable, MHeader},
         data() {
             return {
                 headers: [
@@ -41,21 +42,30 @@
                     {label: this.$t('user.email'), key: 'email', sortable: true},
                 ],
                 dialog: {
-                    show: true,
-                    title: 'Peter Moser'
+                    show: false,
+                    id: null
                 }
             }
         },
         computed: {
             ...mapGetters('users', ['list', 'get']),
+            dialogTitle() {
+                return this.dialogUser ?
+                    `${this.dialogUser.first_name} ${this.dialogUser.last_name}` :
+                    this.$t('users.dialog.loading');
+            },
+            dialogUser() {
+                return this.get(this.dialog.id);
+            }
         },
         methods: {
             show(id) {
-                //this.get(id);
+                this.dialog.id = id;
+                this.dialog.show = true;
             }
         },
         created() {
-            this.get(1);
+            this.show(415);
         }
     }
 </script>

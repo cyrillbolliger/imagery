@@ -2,7 +2,6 @@ import Api from '../../service/api';
 
 const state = {
     users: [],
-    apiCallLoading: true,
     list: {
         get data() {
             return state.users
@@ -19,7 +18,17 @@ const state = {
 
 const getters = {
     get() {
-        return id => getById(id);
+        return id => {
+            if (!id) {
+                return state.get.data;
+            }
+
+            if (!state.get.data || state.get.data.id !== id) {
+                getById(id);
+            }
+
+            return state.get.data;
+        };
     },
     list(state) {
         if (!state.list.data.length) {
@@ -53,24 +62,15 @@ const fetchAll = function () {
     state.list.loading = true;
     state.list.lastError = null;
 
-    if (state.apiCallLoading) {
-        usersWatchers.fetchAll = fetchAll;
-        return;
-    } else {
-        delete usersWatchers.fetchAll;
-    }
-
-    state.apiCallLoading = true;
-    Api().get('users')
+    return Api().get('users')
         .then(response => {
-            updateUsers(response.data);
+            state.users = response.data;
         })
         .catch(reason => {
             state.users = [];
             state.list.lastError = reason;
         }).finally(() => {
         state.list.loading = false;
-        state.apiCallLoading = false;
     });
 };
 
@@ -79,42 +79,22 @@ const getById = function (id) {
     state.get.lastError = null;
     state.get.data = null;
 
-    if (state.apiCallLoading) {
-        usersWatchers.getById = getById;
-        return state.get.data;
-    } else {
-        delete usersWatchers.getById;
-    }
-
     for (let user of state.users) {
         if (id === user.id) {
             state.get.loading = false;
-            return user;
+            state.get.data = user;
+            return;
         }
     }
 
-    state.apiCallLoading = true;
     Api().get('users/' + id)
         .then(response => {
-            updateUsers(state.users.push(response.data));
+            state.get.data = response.data;
+            fetchAll();
         })
         .catch(reason => {
             state.get.lastError = reason;
         }).finally(() => {
         state.get.loading = false;
-        state.apiCallLoading = false;
     });
 };
-
-let usersWatchers = {};
-
-const updateUsers = function (data) {
-    state.users = data;
-    state.list.loading = false;
-
-    for (let key in usersWatchers) {
-        // noinspection JSUnfilteredForInLoop
-        usersWatchers[key].call();
-    }
-};
-

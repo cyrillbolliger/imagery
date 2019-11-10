@@ -27,6 +27,9 @@
     "users": {
         "index": {
             "title": "Users"
+        },
+        "dialog": {
+            "loading": "Loading ..."
         }
     },
     "user": {
