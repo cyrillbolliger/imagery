@@ -15,8 +15,9 @@
                     :value="value"
                     @input="$emit('input', $event.target.value)"
                     class="form-control"
+                    autocomplete="new-password"
                     id="password">
-                <div class="input-group-append">
+                <div class="input-group-append" v-if="value">
                     <button @click.prevent="visible = !visible" class="btn btn-outline-primary">
                         <i :class="visible ? 'mdi-visibility-off' : 'mdi-visibility'" class="mdi"></i>
                     </button>

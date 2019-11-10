@@ -49,6 +49,7 @@
         &__container {
             max-width: 768px;
             width: 100%;
+            max-height: 100vh;
             background: $body-bg;
             box-shadow: $box-shadow;
 
@@ -56,6 +57,7 @@
                 max-width: 720px;
                 margin-top: 24px;
                 margin-bottom: 24px;
+                max-height: calc(100vh - 2 * 24px);
             }
         }
 
@@ -71,6 +73,13 @@
         }
 
         &__content {
+            overflow: scroll;
+            height: calc(100vh - 2 * 3.5rem);
+
+            @include media-breakpoint-up(md) {
+                height: auto;
+                max-height: calc(100vh - 2 * 24px - 2 * 3.5rem);
+            }
         }
     }
 </style>

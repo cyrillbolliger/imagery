@@ -7,6 +7,7 @@
 import './bootstrap';
 import 'bootstrap-material-design-icons/scss/material-icons.scss';
 import 'vue2-animate/src/sass/vue2-animate.scss'
+import 'vue-search-select/dist/VueSearchSelect.css'
 
 window.Vue = require('vue');
 import VueRouter from 'vue-router';

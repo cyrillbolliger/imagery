@@ -1,5 +1,5 @@
 <template>
-    <form class="m-user-form">
+    <form autocomplete="off" class="m-user-form">
         <AInput
             :label="$t('user.first_name')"
             :required="true"
@@ -31,6 +31,18 @@
                 ></ACheckbox>
             </template>
         </AFormGroup>
+        <ASelect
+            :label="$t('user.language')"
+            :options="options"
+            :required="true"
+            v-model="user.lang"
+        ></ASelect>
+        <ASelect
+            :label="$t('user.managed_by')"
+            :options="groups"
+            :required="true"
+            v-model="user.managed_by"
+        ></ASelect>
     </form>
 </template>
 
@@ -39,10 +51,21 @@
     import APasswordSet from "../atoms/APasswordSet";
     import ACheckbox from "../atoms/ACheckbox";
     import AFormGroup from "../atoms/AFormGroup";
+    import ASelect from "../atoms/ASelect";
 
     export default {
         name: "MUserForm",
-        components: {AFormGroup, ACheckbox, AInput, APasswordSet},
+        components: {ASelect, AFormGroup, ACheckbox, AInput, APasswordSet},
+
+        data() {
+            return {
+                options: [
+                    {value: 'de', text: this.$t('languages.de')},
+                    {value: 'fr', text: this.$t('languages.fr')},
+                    {value: 'en', text: this.$t('languages.en')},
+                ],
+            }
+        },
 
         props: {
             user: {
@@ -53,7 +76,10 @@
         computed: {
             amISuperAdmin() {
                 return true;
-            }
+            },
+            groups() {
+                return [{value: 123, text: 'todo'}]
+            },
         },
 
         created() {

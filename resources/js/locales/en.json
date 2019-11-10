@@ -24,6 +24,11 @@
     "search": {
         "search": "Search"
     },
+    "languages": {
+        "de": "German",
+        "fr": "French",
+        "en": "English"
+    },
     "users": {
         "index": {
             "title": "Users",
@@ -38,6 +43,7 @@
         "password_placeholder": "Unchanged",
         "password_empty_info": "Leave empty to keep password unchanged.",
         "super_admin": "Super Admin",
-        "super_admin_desc": "This user can do literally everything."
+        "super_admin_desc": "This user can do literally everything.",
+        "language": "Language"
     }
 }
