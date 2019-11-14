@@ -2,7 +2,6 @@
     <div class="col">
         <MHeader>{{$t('users.index.title')}}</MHeader>
         <ODataTable
-            :error="null !== lastError"
             :headers="headers"
             :loading="loading"
             :rows="users"
@@ -32,7 +31,6 @@
     import ODataTable from "../organisms/ODataTable";
     import ODialog from "../organisms/ODialog";
     import MUserForm from "../molecules/MUserForm";
-    import UserRepository from "../../repositories/UserRepository";
 
     export default {
         name: "UserIndex",
@@ -45,15 +43,17 @@
                     {label: this.$t('user.last_name'), key: 'last_name', sortable: true},
                     {label: this.$t('user.email'), key: 'email', sortable: true},
                 ],
-                users: {},
-                loading: true,
                 dialogUser: null,
-                dialogUserOriginal: null,
-                lastError: null
             }
         },
 
         computed: {
+            users() {
+                return this.$store.getters['users/getAll'];
+            },
+            loading() {
+                return this.$store.getters['users/loading'];
+            },
             dialogTitle() {
                 return this.dialogUser ?
                     `${this.dialogUser.first_name} ${this.dialogUser.last_name}` :
@@ -62,43 +62,18 @@
         },
 
         created() {
-            this.getAll();
+            this.$store.dispatch('users/load')
+                .catch(reason => alert(`Failed retrieving users: ${reason}`));
         },
 
         methods: {
-            getAll() {
-                this.loading = true;
-                UserRepository.getAll()
-                    .then(({data}) => this.populateUsers(data))
-                    .catch(reason => this.lastError = reason)
-                    .finally(() => this.loading = false);
-            },
-
             dialogShow(id) {
-                const key = this.userPropName(id);
+                // clone user so changes are only pushed back into the store when saving
+                this.dialogUser = _.cloneDeep(this.$store.getters['users/getById'](id));
 
-                if (this.users.hasOwnProperty(key)) {
-                    this.dialogUser = this.users[key];
-                    this.dialogUserOriginal = _.cloneDeep(this.dialogUser);
-                } else {
+                if (null === this.dialogUser) {
                     alert('Error: unknown user id');
                 }
-            },
-
-            populateUsers(data) {
-                const users = {};
-                let key = '';
-
-                for (let idx in data) {
-                    key = this.userPropName(data[idx].id);
-                    users[key] = data[idx];
-                }
-
-                this.users = users;
-            },
-
-            userPropName(id) {
-                return `id-${id}`;
             },
         }
     }

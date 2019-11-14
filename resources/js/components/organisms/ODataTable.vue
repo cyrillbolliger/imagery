@@ -92,9 +92,6 @@
                 required: true,
                 type: Boolean,
             },
-            error: {
-                type: Boolean
-            },
             actionKey: {
                 required: true,
                 type: String
