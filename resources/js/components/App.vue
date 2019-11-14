@@ -6,16 +6,18 @@
         <main class="page-main col mt-3 mb-3">
             <router-view></router-view>
         </main>
+        <OSnackbars></OSnackbars>
     </div>
 </template>
 
 <script>
     import OMenu from "./organisms/OMenu";
     import {mapGetters} from "vuex";
+    import OSnackbars from "./organisms/OSnackbars";
 
     export default {
         name: "App",
-        components: {OMenu},
+        components: {OSnackbars, OMenu},
         computed: {
             ...mapGetters('menu', ['isOpen']),
         }

@@ -29,6 +29,11 @@
         "fr": "French",
         "en": "English"
     },
+    "snackbar": {
+        "retry": "Retry",
+        "reload": "Reload",
+        "server_error": "Uuups, there was a server error."
+    },
     "users": {
         "index": {
             "title": "Users",
@@ -44,6 +49,7 @@
         "password_empty_info": "Leave empty to keep password unchanged.",
         "super_admin": "Super Admin",
         "super_admin_desc": "This user can do literally everything.",
-        "language": "Language"
+        "language": "Language",
+        "not_found": "We were unable to retrieve this user. Try to reload."
     }
 }

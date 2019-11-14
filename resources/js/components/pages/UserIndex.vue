@@ -31,10 +31,13 @@
     import ODataTable from "../organisms/ODataTable";
     import ODialog from "../organisms/ODialog";
     import MUserForm from "../molecules/MUserForm";
+    import * as Snackbar from "../../service/Snackbar"
+    import {mapGetters} from "vuex";
 
     export default {
         name: "UserIndex",
         components: {MUserForm, ODialog, ODataTable, MHeader},
+
 
         data() {
             return {
@@ -47,13 +50,13 @@
             }
         },
 
+
         computed: {
-            users() {
-                return this.$store.getters['users/getAll'];
-            },
-            loading() {
-                return this.$store.getters['users/loading'];
-            },
+            ...mapGetters({
+                users: 'users/getAll',
+                getUserById: 'users/getById',
+                loading: 'users/loading',
+            }),
             dialogTitle() {
                 return this.dialogUser ?
                     `${this.dialogUser.first_name} ${this.dialogUser.last_name}` :
@@ -61,20 +64,48 @@
             }
         },
 
+
         created() {
-            this.$store.dispatch('users/load')
-                .catch(reason => alert(`Failed retrieving users: ${reason}`));
+            this.retrieveData();
         },
+
 
         methods: {
             dialogShow(id) {
-                // clone user so changes are only pushed back into the store when saving
-                this.dialogUser = _.cloneDeep(this.$store.getters['users/getById'](id));
+                // clone user so changes are only pushed back
+                // into the store when saving
+                this.dialogUser = _.cloneDeep(this.getUserById(id));
 
                 if (null === this.dialogUser) {
-                    alert('Error: unknown user id');
+                    const snackbar = new Snackbar(
+                        this.$t('user.not_found'),
+                        Snackbar.ERROR,
+                        this.$t('snackbar.reload')
+                    );
+
+                    console.error(`No user with id ${id} in store.`);
+
+                    this.$store.dispatch('snackbar/push', snackbar)
+                        .then(() => this.retrieveData());
                 }
             },
+
+            retrieveData() {
+                this.$store.dispatch('users/load')
+                    .catch(reason => {
+                        const snackbar = new Snackbar(
+                            this.$t('snackbar.server_error'),
+                            Snackbar.ERROR,
+                            this.$t('snackbar.retry')
+                        );
+
+                        console.error(reason);
+
+                        this.$store.dispatch('snackbar/push', snackbar)
+                            .then(() => this.retrieveData());
+                    });
+            },
+
         }
     }
 </script>

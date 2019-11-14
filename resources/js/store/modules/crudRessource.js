@@ -1,4 +1,4 @@
-import Api from '../../service/api';
+import Api from '../../service/Api';
 
 const state = {
     data: [],
