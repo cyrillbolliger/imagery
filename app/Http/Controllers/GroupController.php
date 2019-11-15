@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Group;
 use App\Rules\CanManageGroupRule;
-use App\Rules\ConnectedGroupRule;
 use App\Rules\ImmutableRule;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
@@ -15,12 +16,16 @@ class GroupController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Collection
      */
     public function index()
     {
         /** @var User $user */
         $user = Auth::user();
+
+        if ($user->super_admin) {
+            return Group::all();
+        }
 
         return $user->manageableGroups();
     }
@@ -31,7 +36,7 @@ class GroupController extends Controller
      * @param  Request  $request
      * @param  Group  $group
      *
-     * @return \Illuminate\Http\Response
+     * @return Response|Group
      */
     public function store(Request $request, Group $group)
     {
@@ -59,7 +64,7 @@ class GroupController extends Controller
      *
      * @param  \App\Group  $group
      *
-     * @return \Illuminate\Http\Response
+     * @return Response|Group
      */
     public function show(Group $group)
     {
@@ -72,7 +77,7 @@ class GroupController extends Controller
      * @param  Request  $request
      * @param  \App\Group  $group
      *
-     * @return \Illuminate\Http\Response
+     * @return Response|Group
      */
     public function update(Request $request, Group $group)
     {
@@ -117,7 +122,7 @@ class GroupController extends Controller
      *
      * @param  \App\Group  $group
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      * @throws \Exception
      */
     public function destroy(Group $group)

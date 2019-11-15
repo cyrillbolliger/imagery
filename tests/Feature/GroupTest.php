@@ -133,6 +133,22 @@ class GroupTest extends TestCase
         $response->assertJsonMissing(['id' => $useOnly->id]);
     }
 
+    public function testGetGroups__superAdmin__200()
+    {
+        $group1 = factory(Group::class)->create(['name' => 'group1']);
+        $group2 = factory(Group::class)->create(['name' => 'group2']);
+
+        $manager = factory(User::class)->create(['super_admin' => true]);
+
+        $response = $this->actingAs($manager)
+                         ->getJson("/api/1/groups");
+
+        $response->assertStatus(200);
+
+        $response->assertJsonFragment(['id' => $group1->id])
+                 ->assertJsonFragment(['id' => $group2->id]);
+    }
+
     public function testPutGroup__admin__200()
     {
         $root1 = factory(Group::class)->create();
