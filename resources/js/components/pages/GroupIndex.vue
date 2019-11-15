@@ -43,7 +43,7 @@
         data() {
             return {
                 headers: [
-                    {label: this.$t('group.name'), key: 'name', sortable: true},
+                    {label: this.$t('group.name'), key: 'tree_name', sortable: true},
                 ],
                 dialogGroup: null,
             }
