@@ -1,22 +1,22 @@
 <template>
     <div class="col">
-        <MHeader>{{$t('users.index.title')}}</MHeader>
+        <MHeader>{{$t('groups.index.title')}}</MHeader>
         <ODataTable
             :headers="headers"
             :loading="loading"
-            :rows="users"
-            actionKey="id"
+            :rows="groups"
             @details="dialogShow($event)"
+            actionKey="id"
         ></ODataTable>
         <ODialog
-            :title="dialogTitle"
-            @close="dialogUser = false"
-            v-if="dialogUser"
+            :title="dialogGroup.name"
+            @close="dialogGroup = false"
+            v-if="dialogGroup"
         >
             <template #default>
                 <MUserForm
-                    :user="dialogUser"
-                    v-if="dialogUser"
+                    :user="dialogGroup"
+                    v-if="dialogGroup"
                 ></MUserForm>
             </template>
             <template #footer>
@@ -36,58 +36,51 @@
     import ResourceLoad from "../../mixins/ResourceLoad";
 
     export default {
-        name: "UserIndex",
+        name: "GroupIndex",
         components: {MUserForm, ODialog, ODataTable, MHeader},
 
 
         data() {
             return {
                 headers: [
-                    {label: this.$t('user.first_name'), key: 'first_name', sortable: true},
-                    {label: this.$t('user.last_name'), key: 'last_name', sortable: true},
-                    {label: this.$t('user.email'), key: 'email', sortable: true},
+                    {label: this.$t('group.name'), key: 'name', sortable: true},
                 ],
-                dialogUser: null,
+                dialogGroup: null,
             }
         },
 
 
         computed: {
             ...mapGetters({
-                users: 'users/getAll',
-                getUserById: 'users/getById',
-                loading: 'users/loading',
+                groups: 'groups/getAll',
+                getGroupById: 'groups/getById',
+                loading: 'groups/loading',
             }),
-            dialogTitle() {
-                return this.dialogUser ?
-                    `${this.dialogUser.first_name} ${this.dialogUser.last_name}` :
-                    this.$t('users.index.create');
-            }
         },
 
 
         created() {
-            this.resourceLoad('users');
+            this.resourceLoad('groups');
         },
 
 
         methods: {
             dialogShow(id) {
-                // clone user so changes are only pushed back
+                // clone group so changes are only pushed back
                 // into the store when saving
-                this.dialogUser = _.cloneDeep(this.getUserById(id));
+                this.dialogGroup = _.cloneDeep(this.getGroupById(id));
 
-                if (null === this.dialogUser) {
+                if (null === this.dialogGroup) {
                     const snackbar = new Snackbar.Snackbar(
-                        this.$t('user.not_found'),
+                        this.$t('group.not_found'),
                         Snackbar.ERROR,
                         this.$t('snackbar.reload')
                     );
 
-                    console.error(`No user with id ${id} in store.`);
+                    console.error(`No group with id ${id} in store.`);
 
                     this.$store.dispatch('snackbar/push', snackbar)
-                        .then(() => this.resourceLoad('users'));
+                        .then(() => this.resourceLoad('groups'));
                 }
             },
         },

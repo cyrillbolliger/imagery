@@ -39,10 +39,13 @@
         ></ASelect>
         <ASelect
             :label="$t('user.managed_by')"
-            :options="groups"
+            :options="groupsSelect"
             :required="true"
             v-model="user.managed_by"
         ></ASelect>
+        <!-- user roles -->
+        <!-- admin roles -->
+        <!-- default logo (if role; only role logos selectable) -->
     </form>
 </template>
 
@@ -52,6 +55,8 @@
     import ACheckbox from "../atoms/ACheckbox";
     import AFormGroup from "../atoms/AFormGroup";
     import ASelect from "../atoms/ASelect";
+    import ResourceLoad from "../../mixins/ResourceLoad";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "MUserForm",
@@ -74,17 +79,28 @@
         },
 
         computed: {
+            ...mapGetters({
+                groups: 'groups/getAll',
+                logos: 'logos/getAll'
+            }),
             amISuperAdmin() {
                 return true;
             },
-            groups() {
-                return [{value: 123, text: 'todo'}]
+            groupsSelect() {
+                return this.groups.map(group => ({
+                        value: group.id,
+                        text: group.name
+                    })
+                ).sort((a, b) => a.text.localeCompare(b.text));
             },
         },
 
         created() {
-            console.log(this.user);
-        }
+            this.resourceLoad('groups');
+            this.resourceLoad('logos');
+        },
+
+        mixins: [ResourceLoad],
 
     }
 </script>

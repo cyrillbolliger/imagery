@@ -4,7 +4,7 @@ import Vuex from 'vuex';
 import menu from './modules/menu';
 import snackbar from "./modules/snackbar";
 import user from './modules/user';
-import crudRessource from "./modules/crudRessource";
+import resource from "./modules/resource";
 
 Vue.use(Vuex);
 
@@ -13,6 +13,8 @@ export const store = new Vuex.Store({
         menu,
         snackbar,
         user,
-        users: crudRessource('users')
+        users: resource('users'),
+        groups: resource('groups'),
+        logos: resource('logos'),
     }
 });

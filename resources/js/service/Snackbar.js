@@ -7,9 +7,9 @@ class Snackbar {
     /**
      * Constructor.
      *
-     * @param {String} message
-     * @param {SUCCESS|ERROR} type
-     * @param {String|null} actionLabel optional
+     * @param {string} message
+     * @param {string} type
+     * @param {string|null} actionLabel optional
      */
     constructor(
         message,
