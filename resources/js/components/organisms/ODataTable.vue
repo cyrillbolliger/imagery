@@ -109,13 +109,14 @@
         computed: {
             totalRows() {
                 const total = this.rows.length;
+                const displayed = this.filteredRows.length;
+                let filtered = '';
 
                 if (this.filterTerm) {
-                    const displayed = this.filteredRows.length;
-                    return this.$t('table.total_filtered', {total, displayed});
-                } else {
-                    return this.$t('table.total_unfiltered', {total});
+                    filtered = this.$t('table.filtered') + ' ';
                 }
+
+                return filtered + this.$t('table.total', {total, displayed});
             },
             searchableKeys() {
                 return this.headers

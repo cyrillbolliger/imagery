@@ -16,8 +16,8 @@
     },
     "table": {
         "loading": "Loading... Please wait",
-        "total_unfiltered": "Showing {displayed} out of {total} records.",
-        "total_filtered": "Filtered list. Showing {displayed} out of {total} records.",
+        "total": "Showing {displayed} out of {total} records.",
+        "filtered": "Filtered list.",
         "add": "Add New",
         "details": "Details"
     },
