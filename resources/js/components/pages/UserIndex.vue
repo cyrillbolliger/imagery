@@ -7,6 +7,7 @@
             :rows="users"
             actionKey="id"
             @details="dialogShow($event)"
+            sortBy="first_name"
         ></ODataTable>
         <ODialog
             :title="dialogTitle"

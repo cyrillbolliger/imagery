@@ -73,8 +73,6 @@
         components: {MSearch, AButtonSort, ALoaderBar},
         data() {
             return {
-                sortBy: null,
-                sortDirection: null,
                 sortedRows: [],
                 filterTerm: '',
                 filteredRows: [],
@@ -95,6 +93,17 @@
             actionKey: {
                 required: true,
                 type: String
+            },
+            sortBy: {
+                type: String,
+                default: null
+            },
+            sortDirection: {
+                type: String,
+                default: 'asc',
+                validator(value) {
+                    return ['asc', 'desc'].includes(value);
+                }
             }
         },
         computed: {
@@ -165,7 +174,7 @@
     };
 
     const sort = function (data, key, direction) {
-        if (!direction) {
+        if (!direction || !key) {
             return data;
         }
 

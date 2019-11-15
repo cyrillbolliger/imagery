@@ -7,6 +7,7 @@
             :rows="groups"
             @details="dialogShow($event)"
             actionKey="id"
+            sortBy="tree_name"
         ></ODataTable>
         <ODialog
             :title="dialogGroup.name"
