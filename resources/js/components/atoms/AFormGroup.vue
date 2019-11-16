@@ -5,6 +5,9 @@
         </div>
         <div class="col-sm-9">
             <slot name="input"></slot>
+            <small class="form-text text-muted" v-if="$slots.helptext">
+                <slot name="helptext"></slot>
+            </small>
         </div>
     </div>
 </template>

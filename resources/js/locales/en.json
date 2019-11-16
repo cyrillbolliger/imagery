@@ -51,6 +51,12 @@
         "super_admin_desc": "This user can do literally everything.",
         "language": "Language",
         "not_found": "We were unable to retrieve this user. Try to reload.",
-        "managed_by": "Managed by"
+        "managed_by": "Managed by",
+        "managed_by_helptext": "This group is responsible for managing this user.",
+        "admin_of": "Admin of",
+        "admin_of_helptext": "This user can use the logo of and manage the specified groups, its child groups and its users.",
+        "roles_loading_failed": "Failed to get 'Admin of' and 'User of' info.",
+        "user_of": "User of",
+        "user_of_helptext": "This user can use the logos of the specified groups, but can't change anything."
     }
 }

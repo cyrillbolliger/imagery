@@ -7,13 +7,18 @@
             </label>
         </template>
         <template #input>
-            <input
+            <!-- set random name to disable chrome's wrong autofill guess -->
+            <MultiSelect
                 :id="id"
+                :name="'a'+Math.random().toString(36).substring(8)"
+                :options="options"
                 :required="required"
-                :type="type"
-                :value="value"
-                @input="$emit('input', $event.target.value)"
-                class="form-control">
+                :selected-options="value"
+                @select="$emit('input', $event)"
+            ></MultiSelect>
+        </template>
+        <template #helptext v-if="helptext.length">
+            {{helptext}}
         </template>
     </AFormGroup>
 </template>
@@ -21,26 +26,30 @@
 <script>
     import SlugifyMixin from "../../mixins/SlugifyMixin";
     import AFormGroup from "../atoms/AFormGroup";
+    import {MultiSelect} from 'vue-search-select'
 
     export default {
-        name: "AInput",
-        components: {AFormGroup},
+        name: "AMultiSelect",
+        components: {AFormGroup, MultiSelect},
+        mixins: [SlugifyMixin],
         props: {
             label: {
                 required: true,
                 type: String
             },
-            type: {
-                default: 'text',
-                type: String
+            options: {
+                required: true,
             },
             required: {
                 default: false,
                 type: Boolean
             },
             value: {
-                default: '',
-                type: String
+                required: true,
+            },
+            helptext: {
+                type: String,
+                default: ''
             }
         },
         computed: {
@@ -48,7 +57,6 @@
                 return this.slugify(this.label)
             }
         },
-        mixins: [SlugifyMixin]
     }
 </script>
 

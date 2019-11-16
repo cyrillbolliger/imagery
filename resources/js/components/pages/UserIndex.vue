@@ -6,12 +6,12 @@
             :loading="loading"
             :rows="users"
             actionKey="id"
-            @details="dialogShow($event)"
+            @details="navigateToSingleUser($event)"
             sortBy="first_name"
         ></ODataTable>
         <ODialog
             :title="dialogTitle"
-            @close="dialogUser = false"
+            @close="navigateToList"
             v-if="dialogUser"
         >
             <template #default>
@@ -32,9 +32,9 @@
     import ODataTable from "../organisms/ODataTable";
     import ODialog from "../organisms/ODialog";
     import MUserForm from "../molecules/MUserForm";
-    import * as Snackbar from "../../service/Snackbar"
     import {mapGetters} from "vuex";
-    import ResourceLoad from "../../mixins/ResourceLoad";
+    import ResourceLoadMixin from "../../mixins/ResourceLoadMixin";
+    import SnackbarMixin from "../../mixins/SnackbarMixin";
 
     export default {
         name: "UserIndex",
@@ -67,34 +67,72 @@
         },
 
 
+        props: {
+            userId: {
+                default: null
+            }
+        },
+
+
         created() {
-            this.resourceLoad('users');
+            const loading = this.resourceLoad('users');
+
+            // navigate directly to user, if one is set
+            loading.then(() => {
+                if (this.isSingleUserRoute()) {
+                    this.dialogShow(parseInt(this.userId));
+                } else {
+                    this.dialogClose();
+                }
+            });
         },
 
 
         methods: {
+            isSingleUserRoute() {
+                return this.userId !== null;
+            },
+
+            navigateToSingleUser(id) {
+                this.$router.push({name: 'usersSingle', params: {userId: id}});
+            },
+
+            navigateToList() {
+                this.$router.push({name: 'usersAll'});
+            },
+
             dialogShow(id) {
                 // clone user so changes are only pushed back
                 // into the store when saving
                 this.dialogUser = _.cloneDeep(this.getUserById(id));
 
                 if (null === this.dialogUser) {
-                    const snackbar = new Snackbar.Snackbar(
-                        this.$t('user.not_found'),
-                        Snackbar.ERROR,
-                        this.$t('snackbar.reload')
-                    );
-
-                    console.error(`No user with id ${id} in store.`);
-
-                    this.$store.dispatch('snackbar/push', snackbar)
-                        .then(() => this.resourceLoad('users'));
+                    this.snackErrorRetry(
+                        `No user with id ${id} in store.`,
+                        this.$t('user.not_found')
+                    ).then(() => this.resourceLoad('users'))
+                        .then(() => this.dialogShow(id));
                 }
             },
+
+            dialogClose() {
+                this.dialogUser = null;
+            }
         },
 
 
-        mixins: [ResourceLoad],
+        watch: {
+            userId(value) {
+                if (value) {
+                    this.dialogShow(parseInt(value));
+                } else {
+                    this.dialogClose();
+                }
+            }
+        },
+
+
+        mixins: [ResourceLoadMixin, SnackbarMixin],
     }
 </script>
 

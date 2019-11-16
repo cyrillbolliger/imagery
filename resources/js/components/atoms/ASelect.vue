@@ -17,11 +17,14 @@
                 @input="$emit('input', $event)"
                 class="form-control"></ModelSelect>
         </template>
+        <template #helptext v-if="helptext.length">
+            {{helptext}}
+        </template>
     </AFormGroup>
 </template>
 
 <script>
-    import Slugify from "../../mixins/Slugify";
+    import SlugifyMixin from "../../mixins/SlugifyMixin";
     import AFormGroup from "../atoms/AFormGroup";
     import {ModelSelect} from 'vue-search-select'
 
@@ -43,13 +46,17 @@
             value: {
                 required: true,
             },
+            helptext: {
+                type: String,
+                default: ''
+            }
         },
         computed: {
             id() {
                 return this.slugify(this.label)
             }
         },
-        mixins: [Slugify]
+        mixins: [SlugifyMixin]
     }
 </script>
 

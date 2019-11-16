@@ -3,7 +3,7 @@
         <input
             :checked="value"
             :id="id"
-            @input="$emit('input', 'on' === $event.target.value)"
+            @change="$emit('input', $event.target.checked)"
             class="form-check-input"
             type="checkbox">
         <label :for="id" class="form-check-label">
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-    import Slugify from "../../mixins/Slugify";
+    import SlugifyMixin from "../../mixins/SlugifyMixin";
 
     export default {
         name: "ACheckbox",
@@ -36,7 +36,7 @@
                 return this.slugify(this.label)
             }
         },
-        mixins: [Slugify]
+        mixins: [SlugifyMixin]
     }
 </script>
 

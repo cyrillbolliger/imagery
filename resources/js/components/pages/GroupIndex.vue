@@ -34,7 +34,7 @@
     import MUserForm from "../molecules/MUserForm";
     import * as Snackbar from "../../service/Snackbar"
     import {mapGetters} from "vuex";
-    import ResourceLoad from "../../mixins/ResourceLoad";
+    import ResourceLoadMixin from "../../mixins/ResourceLoadMixin";
 
     export default {
         name: "GroupIndex",
@@ -87,7 +87,7 @@
         },
 
 
-        mixins: [ResourceLoad],
+        mixins: [ResourceLoadMixin],
     }
 </script>
 
