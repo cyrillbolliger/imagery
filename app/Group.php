@@ -17,6 +17,7 @@ use Illuminate\Support\Collection;
  * @property int $added_by
  * @property User|null $addedBy
  * @property string $name
+ * @property-read int[] $root_path
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
@@ -33,6 +34,15 @@ class Group extends Model
     protected $fillable = [
         'parent_id',
         'name',
+    ];
+
+    /**
+     * Expose those accessors
+     *
+     * @var array
+     */
+    protected $appends = [
+        'root_path'
     ];
 
     /**
@@ -107,6 +117,35 @@ class Group extends Model
     public function users()
     {
         return $this->hasMany(User::class, 'managed_by');
+    }
+
+    /**
+     * Return the path to the root using the group ids. Starts at this group.
+     *
+     * @return array
+     */
+    public function getRootPathAttribute(): array
+    {
+        /** @var Group[] $ancestors */
+        $ancestors = $this->ancestors()->get()->all();
+
+        if (empty($ancestors)) {
+            return [];
+        } else {
+            $ancestors = $ancestors[0];
+        }
+
+        $path = [$this->id];
+        while (true) {
+            if ( ! empty($ancestors)) {
+                $path[]    = $ancestors->id;
+                $ancestors = $ancestors->ancestors;
+            } else {
+                break;
+            }
+        }
+
+        return $path;
     }
 
     /**
