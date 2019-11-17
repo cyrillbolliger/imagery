@@ -6,11 +6,13 @@ import snackbar from "./modules/snackbar";
 import user from './modules/user';
 import resource from "./modules/resource";
 import groups from "./modules/groups";
+import counter from "./modules/counter";
 
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
     modules: {
+        counter,
         menu,
         snackbar,
         user,

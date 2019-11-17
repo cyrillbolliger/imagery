@@ -1,5 +1,6 @@
 <template>
     <form autocomplete="off" class="m-user-form">
+        <h5>{{$t('user.name')}}</h5>
         <AInput
             :label="$t('user.first_name')"
             :required="true"
@@ -10,6 +11,7 @@
             :required="true"
             v-model="user.last_name"
         ></AInput>
+        <h5 class="pt-3">{{$t('user.login')}}</h5>
         <AInput
             :label="$t('user.email')"
             :required="true"
@@ -19,18 +21,43 @@
         <APasswordSet
             v-model="user.password"
         ></APasswordSet>
-        <AFormGroup>
+
+        <h5 class="pt-3">{{$t('user.privileges')}}</h5>
+        <AFormGroup v-if="amISuperAdmin">
             <template #label>
                 {{ $t('user.super_admin') }}
             </template>
             <template #input>
                 <ACheckbox
                     :label="$t('user.super_admin_desc')"
-                    v-if="amISuperAdmin"
                     v-model="user.super_admin"
                 ></ACheckbox>
             </template>
         </AFormGroup>
+        <AFormGroup v-if="!user.super_admin">
+            <template #label>
+                {{ $t('user.group_privileges') }}
+            </template>
+            <template #input>
+                <MGroupTree
+                    :groups="groups"
+                    :roles="roles"
+                    :user="user"
+                    @change="updateRoles"
+                    v-if="!rolesLoading"
+                ></MGroupTree>
+                <div class="d-flex justify-content-center"
+                     v-if="rolesLoading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </template>
+        </AFormGroup>
+
+
+        <h5 class="pt-3">{{$t('user.other_fields')}}</h5>
+
         <ASelect
             :label="$t('user.language')"
             :options="options"
@@ -44,25 +71,15 @@
             v-model="user.managed_by"
             :helptext="$t('user.managed_by_helptext')"
         ></ASelect>
-        <AMultiSelect
-            :helptext="$t('user.admin_of_helptext')"
-            :label="$t('user.admin_of')"
-            :options="groupsAdminOfSelect"
-            :required="false"
-            @input="updateUserOfSelection"
-            v-if="!user.super_admin"
-            v-model="adminOf"
-        ></AMultiSelect>
-        <AMultiSelect
-            :helptext="$t('user.user_of_helptext')"
-            :label="$t('user.user_of')"
-            :options="groupsUserOfSelect"
-            :required="false"
-            v-if="!user.super_admin"
-            v-model="userOf"
-        ></AMultiSelect>
 
-        <!-- todo: default logo (if role; only role logos selectable) -->
+        <!--        todo: default logo (if role; only role logos selectable) -->
+        <!--        load available logos looking at the editedRoles data field -->
+        <!--        <ASelect-->
+        <!--            :label="$t('user.logo')"-->
+        <!--            :options="logosSelect"-->
+        <!--            :required="true"-->
+        <!--            v-model=""-->
+        <!--        ></ASelect>-->
 
     </form>
 </template>
@@ -78,10 +95,11 @@
     import {mapGetters} from "vuex";
     import Api from "../../service/Api";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
+    import MGroupTree from "./MGroupTree";
 
     export default {
         name: "MUserForm",
-        components: {ASelect, AFormGroup, ACheckbox, AInput, APasswordSet, AMultiSelect},
+        components: {MGroupTree, ASelect, AFormGroup, ACheckbox, AInput, APasswordSet, AMultiSelect},
         mixins: [ResourceLoadMixin, SnackbarMixin],
 
 
@@ -96,6 +114,7 @@
                 rolesLodingPromise: null,
                 groupsLoadingPromise: null,
                 roles: [],
+                editedRoles: [],
                 adminOf: [],
                 userOf: []
             }
@@ -118,25 +137,9 @@
             amISuperAdmin() {
                 return true;
             },
-            adminGroupIds() {
-                return this.adminOf.map(item => item.value);
-            },
             groupsSelect() {
                 return this.groupsPrepareSelectData(this.groups);
             },
-            groupsAdminOfSelect() {
-                // get all groups that are not below the already selected groups
-                const groups = this.groups.filter(
-                    ({root_path}) => !this.groupDescendsFrom(root_path, this.adminGroupIds)
-                );
-
-                return this.groupsPrepareSelectData(groups);
-            },
-            groupsUserOfSelect() {
-                // all groups without the groups the user is admin of
-                return this.groupsSelect
-                    .filter(item => !this.adminGroupIds.includes(item.value));
-            }
         },
 
 
@@ -159,63 +162,27 @@
 
             rolesLoad() {
                 this.rolesLoading = true;
-                return Api().get(`users/${user.id}/roles`)
+                return Api().get(`users/${this.user.id}/roles`)
                     .then(response => response.data)
                     .then(roles => this.roles = roles)
-                    .then(() => this.loadRolesGroups())
-                    .finally(() => this.rolesLoading = false)
+                    .then(() => this.setRolesReady())
                     .catch(reason => {
                         this.snackErrorRetry(reason, this.$t('user.roles_loading_failed'))
                             .then(() => this.rolesLoad());
                     });
             },
 
-            loadRolesGroups() {
+            setRolesReady() {
                 Promise.all([this.groupsLoadingPromise, this.rolesLodingPromise])
                     .then(() => {
-                        let adminGroups = [];
-                        let userGroups = [];
-
-                        for (let role of this.roles) {
-                            const group = this.getGroupById(role.group_id);
-
-                            if (!group) {
-                                // we don't have the rights to change this group
-                                continue;
-                            }
-
-                            if (role.admin) {
-                                adminGroups.push(group);
-                            } else {
-                                userGroups.push(group);
-                            }
-                        }
-
-                        this.adminOf = this.groupsPrepareSelectData(adminGroups);
-                        this.userOf = this.groupsPrepareSelectData(userGroups);
+                        this.rolesLoading = false;
                     });
             },
 
-            updateUserOfSelection() {
-                this.userOf = this.userOf
-                    .filter(item => !this.adminGroupIds.includes(item.value));
-            },
-
-            groupDescendsFrom(group, possibleAncestorsIds) {
-                return group.root_path.some(
-                    groupId => possibleAncestorsIds.includes(groupId)
-                );
+            updateRoles(data) {
+                this.editedRoles = data;
             },
         },
-
-
-        watch: {
-
-            adminOf() {
-                // todo: ensure we don't have any descending groups (only the top most)
-            }
-        },
-
     }
 </script>
 

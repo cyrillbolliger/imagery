@@ -41,6 +41,13 @@
         }
     },
     "user": {
+        "nav_edit": "Edit",
+        "nav_stats": "Stats",
+        "name": "Name",
+        "login": "Login Data",
+        "privileges": "Privileges",
+        "group_privileges": "Group Privileges",
+        "other_fields": "Other",
         "first_name": "First name",
         "last_name": "Last name",
         "email": "Email",
@@ -58,5 +65,9 @@
         "roles_loading_failed": "Failed to get 'Admin of' and 'User of' info.",
         "user_of": "User of",
         "user_of_helptext": "This user can use the logos of the specified groups, but can't change anything."
+    },
+    "role": {
+        "use": "use",
+        "manage": "manage"
     }
 }

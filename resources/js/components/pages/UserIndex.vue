@@ -15,10 +15,7 @@
             v-if="dialogUser"
         >
             <template #default>
-                <MUserForm
-                    :user="dialogUser"
-                    v-if="dialogUser"
-                ></MUserForm>
+                <OUser :user="dialogUser"></OUser>
             </template>
             <template #footer>
                 Footer
@@ -35,10 +32,11 @@
     import {mapGetters} from "vuex";
     import ResourceLoadMixin from "../../mixins/ResourceLoadMixin";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
+    import OUser from "../organisms/OUser";
 
     export default {
         name: "UserIndex",
-        components: {MUserForm, ODialog, ODataTable, MHeader},
+        components: {OUser, ODialog, ODataTable, MHeader},
 
 
         data() {
