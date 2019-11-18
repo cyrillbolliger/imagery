@@ -154,24 +154,4 @@ class GroupTest extends TestCase
                 )->where('id', $child1->id)->first()['descendants']
             )->where('id', $grandchild->id));
     }
-
-    public function testWithRootPath()
-    {
-        $root       = factory(Group::class)->create([
-            'name'      => 'root',
-            'parent_id' => null
-        ]);
-        $child      = factory(Group::class)->create([
-            'name'      => 'child1',
-            'parent_id' => $root->id
-        ]);
-        $grandchild = factory(Group::class)->create([
-            'name'      => 'grandchild',
-            'parent_id' => $child->id
-        ]);
-
-        $test = Group::find($grandchild->id);
-
-        $this->assertEquals([$grandchild->id, $child->id, $root->id], $test->root_path);
-    }
 }

@@ -77,7 +77,6 @@ class GroupTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJson($child->toArray());
-        $this->assertArrayHasKey('root_path', $response->json());
     }
 
     public function testGetGroups__admin__200()
