@@ -47,7 +47,7 @@
         "login": "Login Data",
         "privileges": "Privileges",
         "group_privileges": "Group Privileges",
-        "other_fields": "Other",
+        "misc_fields": "Miscellaneous",
         "first_name": "First name",
         "last_name": "Last name",
         "email": "Email",
@@ -67,7 +67,7 @@
         "user_of_helptext": "This user can use the logos of the specified groups, but can't change anything."
     },
     "role": {
-        "use": "use",
-        "manage": "manage"
+        "use": "Use Logos",
+        "manage": "Manage Group"
     }
 }

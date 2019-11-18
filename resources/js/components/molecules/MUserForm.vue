@@ -22,6 +22,21 @@
             v-model="user.password"
         ></APasswordSet>
 
+        <h5 class="pt-3">{{$t('user.misc_fields')}}</h5>
+        <ASelect
+            :label="$t('user.language')"
+            :options="options"
+            :required="true"
+            v-model="user.lang"
+        ></ASelect>
+        <ASelect
+            :helptext="$t('user.managed_by_helptext')"
+            :label="$t('user.managed_by')"
+            :options="groupsSelect"
+            :required="true"
+            v-model="user.managed_by"
+        ></ASelect>
+
         <h5 class="pt-3">{{$t('user.privileges')}}</h5>
         <AFormGroup v-if="amISuperAdmin">
             <template #label>
@@ -54,33 +69,6 @@
                 </div>
             </template>
         </AFormGroup>
-
-
-        <h5 class="pt-3">{{$t('user.other_fields')}}</h5>
-
-        <ASelect
-            :label="$t('user.language')"
-            :options="options"
-            :required="true"
-            v-model="user.lang"
-        ></ASelect>
-        <ASelect
-            :label="$t('user.managed_by')"
-            :options="groupsSelect"
-            :required="true"
-            v-model="user.managed_by"
-            :helptext="$t('user.managed_by_helptext')"
-        ></ASelect>
-
-        <!--        todo: default logo (if role; only role logos selectable) -->
-        <!--        load available logos looking at the editedRoles data field -->
-        <!--        <ASelect-->
-        <!--            :label="$t('user.logo')"-->
-        <!--            :options="logosSelect"-->
-        <!--            :required="true"-->
-        <!--            v-model=""-->
-        <!--        ></ASelect>-->
-
     </form>
 </template>
 
@@ -96,11 +84,12 @@
     import Api from "../../service/Api";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
     import MGroupTree from "./MGroupTree";
+    import PrepareSelectMixin from "../../mixins/PrepareSelectMixin";
 
     export default {
         name: "MUserForm",
         components: {MGroupTree, ASelect, AFormGroup, ACheckbox, AInput, APasswordSet, AMultiSelect},
-        mixins: [ResourceLoadMixin, SnackbarMixin],
+        mixins: [ResourceLoadMixin, SnackbarMixin, PrepareSelectMixin],
 
 
         data() {
@@ -111,7 +100,7 @@
                     {value: 'en', text: this.$t('languages.en')},
                 ],
                 rolesLoading: false,
-                rolesLodingPromise: null,
+                rolesLoadingPromise: null,
                 groupsLoadingPromise: null,
                 roles: [],
                 editedRoles: [],
@@ -132,34 +121,23 @@
             ...mapGetters({
                 groups: 'groups/getAll',
                 getGroupById: 'groups/getById',
-                logos: 'logos/getAll',
             }),
             amISuperAdmin() {
                 return true;
             },
             groupsSelect() {
-                return this.groupsPrepareSelectData(this.groups);
+                return this.prepareSelectData(this.groups, 'id', 'tree_name');
             },
         },
 
 
         created() {
             this.groupsLoadingPromise = this.resourceLoad('groups');
-            this.rolesLodingPromise = this.rolesLoad();
-
-            this.resourceLoad('logos');
+            this.rolesLoadingPromise = this.rolesLoad();
         },
 
 
         methods: {
-            groupsPrepareSelectData(groups) {
-                return groups.map(group => ({
-                        value: group.id,
-                        text: group.tree_name
-                    })
-                ).sort((a, b) => a.text.localeCompare(b.text));
-            },
-
             rolesLoad() {
                 this.rolesLoading = true;
                 return Api().get(`users/${this.user.id}/roles`)
@@ -173,10 +151,8 @@
             },
 
             setRolesReady() {
-                Promise.all([this.groupsLoadingPromise, this.rolesLodingPromise])
-                    .then(() => {
-                        this.rolesLoading = false;
-                    });
+                Promise.all([this.groupsLoadingPromise, this.rolesLoadingPromise])
+                    .then(() => this.rolesLoading = false);
             },
 
             updateRoles(data) {

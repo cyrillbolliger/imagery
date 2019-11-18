@@ -15,6 +15,7 @@
                 :required="required"
                 :value="value"
                 @input="$emit('input', $event)"
+                :disabled="disabled"
                 class="form-control"></ModelSelect>
         </template>
         <template #helptext v-if="helptext.length">
@@ -49,6 +50,10 @@
             helptext: {
                 type: String,
                 default: ''
+            },
+            disabled: {
+                type: Boolean,
+                default: false
             }
         },
         computed: {
