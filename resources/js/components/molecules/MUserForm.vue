@@ -4,22 +4,23 @@
         <AInput
             :label="$t('user.first_name')"
             :required="true"
-            v-model="user.first_name"
+            :validation="validations.first_name"
+            v-model.trim="user.first_name"
         ></AInput>
         <AInput
             :label="$t('user.last_name')"
             :required="true"
-            v-model="user.last_name"
+            v-model.trim="user.last_name"
         ></AInput>
         <h5 class="pt-3">{{$t('user.login')}}</h5>
         <AInput
             :label="$t('user.email')"
             :required="true"
             type="email"
-            v-model="user.email"
+            v-model.trim="user.email"
         ></AInput>
         <APasswordSet
-            v-model="user.password"
+            v-model.trim="user.password"
         ></APasswordSet>
 
         <h5 class="pt-3">{{$t('user.misc_fields')}}</h5>
@@ -98,6 +99,7 @@
     import SnackbarMixin from "../../mixins/SnackbarMixin";
     import MGroupTree from "./MGroupTree";
     import PrepareSelectMixin from "../../mixins/PrepareSelectMixin";
+    import {required, minLength, maxLength} from 'vuelidate/lib/validators';
 
     export default {
         name: "MUserForm",
@@ -120,6 +122,15 @@
                 adminOf: [],
                 userOf: [],
                 saving: false,
+                validations: {
+                    first_name: {
+                        rules: {
+                            required,
+                            maxLength: maxLength(80)
+                        },
+                        message: this.$t('validation.required')
+                    },
+                }
             }
         },
 

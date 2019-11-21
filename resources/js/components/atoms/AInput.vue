@@ -12,8 +12,13 @@
                 :required="required"
                 :type="type"
                 :value="value"
-                @input="$emit('input', $event.target.value)"
+                :class="validClass"
+                @input="onInput"
                 class="form-control">
+        </template>
+        <template
+            #helptext
+            v-if="validation && $v.value.$error">{{validation.message}}
         </template>
     </AFormGroup>
 </template>
@@ -25,6 +30,7 @@
     export default {
         name: "AInput",
         components: {AFormGroup},
+        mixins: [SlugifyMixin],
         props: {
             label: {
                 required: true,
@@ -41,14 +47,48 @@
             value: {
                 default: '',
                 type: String
+            },
+            validation: {
+                default: null,
+                type: Object
             }
         },
         computed: {
             id() {
                 return this.slugify(this.label)
+            },
+            validClass() {
+                if (!this.validation) {
+                    return;
+                }
+
+                if (this.$v.value.$error) {
+                    return 'is-invalid';
+                }
+
+                if (this.$v.value.$dirty && !this.$v.value.$error) {
+                    return 'is-valid';
+                }
+
+                return '';
             }
         },
-        mixins: [SlugifyMixin]
+        validations() {
+            if (this.validation) {
+                return {
+                    value: this.validation.rules
+                }
+            }
+        },
+        methods: {
+            onInput(event) {
+                this.$emit('input', event.target.value);
+
+                if (this.validation) {
+                    this.$v.value.$touch();
+                }
+            }
+        },
     }
 </script>
 

@@ -13,6 +13,7 @@ window.Vue = require('vue');
 import VueRouter from 'vue-router';
 import App from './components/App';
 import i18n from './i18n'
+import Vuelidate from 'vuelidate'
 import {store} from './store/store';
 import {routes} from './routes';
 
@@ -32,6 +33,11 @@ const router = new VueRouter({
     routes,
     mode: 'history'
 });
+
+/**
+ * Other Plugins
+ */
+window.Vue.use(Vuelidate);
 
 /**
  * Initialize Vue

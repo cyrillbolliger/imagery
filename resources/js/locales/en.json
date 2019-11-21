@@ -34,6 +34,9 @@
         "reload": "Reload",
         "server_error": "Uuups, there was a server error."
     },
+    "validation": {
+        "required": "This information is required."
+    },
     "users": {
         "index": {
             "title": "Users",
@@ -55,7 +58,7 @@
         "password_placeholder": "Unchanged",
         "password_empty_info": "Leave empty to keep password unchanged.",
         "super_admin": "Super Admin",
-        "super_admin_desc": "This user can do literally everything.",
+        "super_admin_desc": "This user can do everything.",
         "language": "Language",
         "not_found": "We were unable to retrieve this user. Try to reload.",
         "managed_by": "Managed by",
