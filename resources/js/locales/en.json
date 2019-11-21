@@ -35,7 +35,8 @@
         "server_error": "Uuups, there was a server error."
     },
     "validation": {
-        "required": "This information is required."
+        "required": "This information is required.",
+        "email": "Please enter a valid email address."
     },
     "users": {
         "index": {
@@ -70,7 +71,8 @@
         "user_of_helptext": "This user can use the logos of the specified groups, but can't change anything.",
         "save": "Save User",
         "saving": "Saving...",
-        "saving_failed": "Failed to save user"
+        "saving_failed": "Failed to save user",
+        "password_insecure": "This password is insecure. Make it longer or ensure it contains numbers and special characters (and lower and uppercase characters of course)."
     },
     "role": {
         "use": "Use Logos",
