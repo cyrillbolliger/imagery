@@ -31,7 +31,7 @@ class RoleController extends Controller
      * @param  User  $managed
      * @param  Role  $role
      *
-     * @return void
+     * @return Response
      */
     public function store(Request $request, User $managed, Role $role)
     {
@@ -52,7 +52,8 @@ class RoleController extends Controller
             return response('Could not save role.', 500);
         }
 
-        return $role;
+        // requery to retrieve it without any associations
+        return response(Role::find($role->id), 201);
     }
 
     /**
