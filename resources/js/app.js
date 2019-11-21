@@ -44,7 +44,6 @@ const app = new Vue({
     i18n,
 });
 
-
 /**
  * inject the current user
  */

@@ -15,10 +15,10 @@
             v-if="dialogUser"
         >
             <template #default>
-                <OUser :user="dialogUser"></OUser>
-            </template>
-            <template #footer>
-                Footer
+                <OUser
+                    :user="dialogUser"
+                    @close="navigateToList"
+                ></OUser>
             </template>
         </ODialog>
     </div>
@@ -28,7 +28,6 @@
     import MHeader from "../molecules/MHeader";
     import ODataTable from "../organisms/ODataTable";
     import ODialog from "../organisms/ODialog";
-    import MUserForm from "../molecules/MUserForm";
     import {mapGetters} from "vuex";
     import ResourceLoadMixin from "../../mixins/ResourceLoadMixin";
     import SnackbarMixin from "../../mixins/SnackbarMixin";

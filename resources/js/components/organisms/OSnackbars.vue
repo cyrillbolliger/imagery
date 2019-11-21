@@ -25,11 +25,12 @@
 
 <style lang="scss" scoped>
     .o-snackbars {
-        z-index: $zindex-fixed;
+        z-index: $zindex-popover;
         position: fixed;
         bottom: 0;
         left: 50%;
         transform: translateX(-50%);
         width: 90%;
+        max-width: 800px;
     }
 </style>

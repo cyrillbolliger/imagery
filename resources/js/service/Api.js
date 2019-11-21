@@ -10,7 +10,7 @@ export default () => {
         baseURL: '/api/1/',
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': token
+            'X-CSRF-TOKEN': token.content
         }
     });
 }

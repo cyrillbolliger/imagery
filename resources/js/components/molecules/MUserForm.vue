@@ -56,7 +56,7 @@
             <template #input>
                 <MGroupTree
                     :groups="groups"
-                    :roles="roles"
+                    :roles="detachedRoles"
                     :user="user"
                     @change="updateRoles"
                     v-if="!rolesLoading"
@@ -69,6 +69,19 @@
                 </div>
             </template>
         </AFormGroup>
+
+        <div class="d-flex align-items-center">
+            <button
+                :disabled="saving"
+                @click.prevent="save"
+                class="btn btn-primary"
+            >{{$t('user.save')}}
+            </button>
+            <span class="d-block ml-3" v-if="saving">{{$t('user.saving')}}</span>
+            <div class="spinner-border spinner-border-sm text-primary ml-3" role="status" v-if="saving">
+                <span class="sr-only">Saving...</span>
+            </div>
+        </div>
     </form>
 </template>
 
@@ -105,7 +118,8 @@
                 roles: [],
                 editedRoles: [],
                 adminOf: [],
-                userOf: []
+                userOf: [],
+                saving: false,
             }
         },
 
@@ -121,12 +135,16 @@
             ...mapGetters({
                 groups: 'groups/getAll',
                 getGroupById: 'groups/getById',
+                getUserById: 'users/getById',
             }),
             amISuperAdmin() {
                 return true;
             },
             groupsSelect() {
                 return this.prepareSelectData(this.groups, 'id', 'tree_name');
+            },
+            detachedRoles() {
+                return _.cloneDeep(this.roles);
             },
         },
 
@@ -142,7 +160,10 @@
                 this.rolesLoading = true;
                 return Api().get(`users/${this.user.id}/roles`)
                     .then(response => response.data)
-                    .then(roles => this.roles = roles)
+                    .then(roles => {
+                        this.roles = roles;
+                        this.editedRoles = _.cloneDeep(roles);
+                    })
                     .then(() => this.setRolesReady())
                     .catch(reason => {
                         this.snackErrorRetry(reason, this.$t('user.roles_loading_failed'))
@@ -158,6 +179,91 @@
             updateRoles(data) {
                 this.editedRoles = data;
             },
+
+            save() {
+                this.saving = true;
+
+                Promise.all([this.saveUser(), this.saveRoles()])
+                    .finally(() => this.saving = false)
+                    .then(() => this.$emit('saved', true))
+                    .catch(reason => {
+                        this.snackErrorRetry(reason, this.$t('user.saving_failed'))
+                            .then(() => this.save());
+                    });
+            },
+
+            saveUser() {
+                if (_.isEqual(this.user, this.getUserById(this.user.id))) {
+                    return new Promise(resolve => resolve());
+                }
+
+                return this.$store.dispatch('users/update', this.user);
+            },
+
+            saveRoles() {
+                const before = this.roles.map(role => role.group_id);
+                const after = this.editedRoles.map(role => role.group_id);
+
+                const toAdd = after.filter(id => !before.includes(id));
+                const toDelete = before.filter(id => !after.includes(id));
+                const toUpdate = after.filter(id => before.includes(id));
+
+                const rolesToAdd = this.editedRoles.filter(role => toAdd.includes(role.group_id));
+                const rolesToDelete = this.roles.filter(role => toDelete.includes(role.group_id));
+                const rolesToUpdate = this.editedRoles.filter(edited => {
+                    if (toUpdate.includes(edited.group_id)) {
+                        const original = this.roles.filter(o => o.group_id === edited.group_id)[0];
+                        return edited.admin !== original.admin;
+                    }
+                });
+
+                let promises = [];
+
+                rolesToAdd.forEach(
+                    role => promises.push(this.roleAdd(role))
+                );
+
+                rolesToDelete.forEach(
+                    role => promises.push(this.roleDelete(role))
+                );
+
+                rolesToUpdate.forEach(
+                    role => promises.push(this.roleUpdate(role))
+                );
+
+                return Promise.all(promises);
+            },
+
+            getById(id, objects) {
+                const hits = objects.find(obj => obj.id === id);
+                return hits && hits.length ? hits[0] : null;
+            },
+
+            roleAdd(role) {
+                return Api().post(`users/${this.user.id}/roles`, role)
+                    .then(r => {
+                        this.roles.push(r.data);
+
+                        const idx = this.editedRoles.findIndex(edited => edited.group_id === role.group_id);
+                        this.editedRoles.splice(idx, 1, r.data);
+                    });
+            },
+
+            roleDelete(role) {
+                return Api().delete(`users/${this.user.id}/roles/${role.id}`)
+                    .then(() => {
+                        const idx = this.roles.findIndex(r => r.id === role.id);
+                        this.roles.splice(idx, 1);
+                    });
+            },
+
+            roleUpdate(role) {
+                return Api().put(`users/${this.user.id}/roles/${role.id}`, role)
+                    .then(updatedRole => {
+                        const idx = this.roles.findIndex(r => r.id === role.id);
+                        this.roles.splice(idx, 1, updatedRole.data);
+                    });
+            }
         },
     }
 </script>

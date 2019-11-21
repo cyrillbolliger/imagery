@@ -20,6 +20,7 @@
             :user="user"
             class="mt-3"
             v-show="'edit' === currentTab"
+            @saved="$emit('close', $event)"
         ></MUserForm>
     </div>
 </template>

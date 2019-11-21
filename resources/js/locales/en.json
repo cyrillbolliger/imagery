@@ -64,7 +64,10 @@
         "admin_of_helptext": "This user can use the logo of and manage the specified groups, its child groups and its users.",
         "roles_loading_failed": "Failed to get 'Admin of' and 'User of' info.",
         "user_of": "User of",
-        "user_of_helptext": "This user can use the logos of the specified groups, but can't change anything."
+        "user_of_helptext": "This user can use the logos of the specified groups, but can't change anything.",
+        "save": "Save User",
+        "saving": "Saving...",
+        "saving_failed": "Failed to save user"
     },
     "role": {
         "use": "Use Logos",

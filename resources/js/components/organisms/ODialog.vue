@@ -12,11 +12,6 @@
                     <slot></slot>
                 </div>
             </section>
-            <footer class="row">
-                <div class="o-dialog__footer col pt-3 pb-3">
-                    <slot name="footer"></slot>
-                </div>
-            </footer>
         </div>
     </div>
 </template>
@@ -74,11 +69,11 @@
 
         &__content {
             overflow: scroll;
-            height: calc(100vh - 2 * 3.5rem);
+            height: calc(100vh - 3.5rem);
 
             @include media-breakpoint-up(md) {
                 height: auto;
-                max-height: calc(100vh - 2 * 24px - 2 * 3.5rem);
+                max-height: calc(100vh - 2 * 24px - 3.5rem);
             }
         }
     }
