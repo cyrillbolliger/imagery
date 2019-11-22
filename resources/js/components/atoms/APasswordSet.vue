@@ -13,19 +13,22 @@
                     :required="required"
                     :type="visible ? 'text' : 'password'"
                     :value="value"
-                    :class="validClass"
                     @input="onInput"
                     class="form-control"
+                    :class="validClass"
                     autocomplete="new-password"
                     id="password">
                 <div class="input-group-append" v-if="value">
-                    <button @click.prevent="visible = !visible" class="btn btn-outline-primary">
+                    <button
+                        :class="buttonValidClass"
+                        @click.prevent="visible = !visible"
+                        class="btn">
                         <i :class="visible ? 'mdi-visibility-off' : 'mdi-visibility'" class="mdi"></i>
                     </button>
                 </div>
             </div>
             <small class="form-text text-muted" v-if="!value">{{$t('user.password_empty_info')}}</small>
-            <small class="form-text text-muted" v-if="$v.value.$error">{{$t('user.password_insecure')}}</small>
+            <small class="form-text text-muted" v-if="$v.value.$error && value">{{$t('user.password_insecure')}}</small>
         </template>
     </AFormGroup>
 </template>
@@ -44,20 +47,26 @@
         },
 
         computed: {
+            valid() {
+                return this.$v.value.$dirty && !this.$v.value.$error;
+            },
             validClass() {
-                if (!this.validation) {
-                    return;
-                }
-
                 if (this.$v.value.$error) {
                     return 'is-invalid';
-                }
-
-                if (this.$v.value.$dirty && !this.$v.value.$error) {
+                } else if (this.valid) {
                     return 'is-valid';
+                } else {
+                    return '';
                 }
-
-                return '';
+            },
+            buttonValidClass() {
+                if (this.$v.value.$error) {
+                    return 'btn-outline-danger';
+                } else if (this.valid) {
+                    return 'btn-outline-success';
+                } else {
+                    return 'btn-outline-primary';
+                }
             }
         },
 
@@ -75,6 +84,10 @@
         validations: {
             value: {
                 entropy(value) {
+                    if ('' === value) {
+                        return true;
+                    }
+
                     if (!value || 'string' !== typeof value) {
                         return false;
                     }
