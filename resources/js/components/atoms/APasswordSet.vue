@@ -28,7 +28,8 @@
                 </div>
             </div>
             <small class="form-text text-muted" v-if="!value">{{$t('user.password_empty_info')}}</small>
-            <small class="form-text text-muted" v-if="$v.value.$error && value">{{$t('user.password_insecure')}}</small>
+            <small class="form-text text-danger"
+                   v-if="$v.value.$error && value">{{$t('user.password_insecure')}}</small>
         </template>
     </AFormGroup>
 </template>

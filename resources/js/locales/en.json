@@ -32,11 +32,13 @@
     "snackbar": {
         "retry": "Retry",
         "reload": "Reload",
+        "dismiss": "Dismiss",
         "server_error": "Uuups, there was a server error."
     },
     "validation": {
         "required": "This information is required.",
-        "email": "Please enter a valid email address."
+        "email": "Please enter a valid email address.",
+        "double_check_form": "There are some errors in your form data. Please double check your input."
     },
     "users": {
         "index": {

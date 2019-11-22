@@ -16,6 +16,19 @@ export default {
         },
 
 
+        snackErrorDismiss(error, message) {
+            const snackbar = new Snackbar.Snackbar(
+                message,
+                Snackbar.ERROR,
+                this.$t('snackbar.dismiss')
+            );
+
+            console.error(error);
+
+            return this.$store.dispatch('snackbar/push', snackbar);
+        },
+
+
         snackSuccessDismiss(message) {
             const snackbar = new Snackbar.Snackbar(
                 message,

@@ -214,9 +214,13 @@
                 Promise.all([this.saveUser(), this.saveRoles()])
                     .finally(() => this.saving = false)
                     .then(() => this.$emit('saved', true))
-                    .catch(reason => {
-                        this.snackErrorRetry(reason, this.$t('user.saving_failed'))
-                            .then(() => this.save());
+                    .catch(error => {
+                        if (error.response && 422 === error.response.status) {
+                            this.snackErrorDismiss(error, this.$t('validation.double_check_form'));
+                        } else {
+                            this.snackErrorRetry(error, this.$t('user.saving_failed'))
+                                .then(() => this.save());
+                        }
                     });
             },
 

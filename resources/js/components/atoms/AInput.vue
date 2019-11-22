@@ -18,7 +18,8 @@
         </template>
         <template
             #helptext
-            v-if="validation && $v.value.$error">{{validation.message}}
+            v-if="validation && $v.value.$error"
+        ><span class="text-danger">{{validation.message}}</span>
         </template>
     </AFormGroup>
 </template>
