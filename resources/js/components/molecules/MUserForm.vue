@@ -23,6 +23,7 @@
         ></AInput>
         <APasswordSet
             v-model.trim="currentUser.password"
+            :required="newUser"
         ></APasswordSet>
 
         <h5 class="pt-3">{{$t('user.misc_fields')}}</h5>
@@ -30,6 +31,7 @@
             :label="$t('user.language')"
             :options="options"
             :required="true"
+            :validation="validations.language"
             v-model="currentUser.lang"
         ></ASelect>
         <ASelect
@@ -37,6 +39,7 @@
             :label="$t('user.managed_by')"
             :options="groupsSelect"
             :required="true"
+            :validation="validations.managed_by"
             v-model="currentUser.managed_by"
         ></ASelect>
 
@@ -85,6 +88,19 @@
                 <span class="sr-only">Saving...</span>
             </div>
         </div>
+
+        <div class="d-flex align-items-center" v-if="currentUser.id">
+            <button
+                :disabled="removing"
+                @click.prevent="remove"
+                class="btn btn-sm btn-link text-danger pl-0 mt-2"
+            >{{$t('user.remove')}}
+            </button>
+            <span class="d-block ml-3" v-if="removing">{{$t('user.removing')}}</span>
+            <div class="spinner-border spinner-border-sm text-primary ml-3" role="status" v-if="removing">
+                <span class="sr-only">Removing...</span>
+            </div>
+        </div>
     </form>
 </template>
 
@@ -124,6 +140,7 @@
                 adminOf: [],
                 userOf: [],
                 saving: false,
+                removing: false,
                 savedUser: null,
                 validations: {
                     first_name: {
@@ -146,7 +163,24 @@
                             email,
                             maxLength: maxLength(80)
                         },
-                        message: this.$t('validation.email')
+                        messages: {
+                            required: this.$t('validation.required'),
+                            email: this.$t('validation.email'),
+                            maxLength: this.$t('validation.max_length', {max: 80}),
+                            unique: this.$t('user.email_exists'),
+                        }
+                    },
+                    language: {
+                        rules: {
+                            required,
+                        },
+                        message: this.$t('validation.required')
+                    },
+                    managed_by: {
+                        rules: {
+                            required,
+                        },
+                        message: this.$t('validation.required')
                     },
                 }
             }
@@ -179,6 +213,9 @@
             currentUser() {
                 return this.savedUser ? this.savedUser : this.user;
             },
+            newUser() {
+                return !('id' in this.currentUser);
+            },
         },
 
 
@@ -192,7 +229,7 @@
             rolesLoad() {
                 this.rolesLoading = true;
 
-                if (!('id' in this.currentUser)) {
+                if (this.newUser) {
                     return new Promise(resolve => resolve())
                         .then(() => this.setRolesReady());
                 }
@@ -219,6 +256,26 @@
                 this.editedRoles = data;
             },
 
+            remove() {
+                const full_name = `${this.currentUser.first_name} ${this.currentUser.last_name}`;
+                const confirmation = this.$t('user.remove_confirmation', {user: full_name});
+                if (!confirm(confirmation)) {
+                    return;
+                }
+
+                this.removing = true;
+                this.$store.dispatch('users/delete', this.currentUser)
+                    .finally(() => this.removing = false)
+                    .then(() => {
+                        this.$emit('removed', true);
+                        this.snackSuccessDismiss(this.$t('user.removed'))
+                    })
+                    .catch(error => {
+                        this.snackErrorRetry(error, this.$t('user.removing_failed'))
+                            .then(() => this.remove());
+                    });
+            },
+
             save() {
                 this.saving = true;
 
@@ -227,9 +284,17 @@
                 // else we don't have a user id on creation
                     .then(() => this.saveRoles())
                     .finally(() => this.saving = false)
-                    .then(() => this.$emit('saved', true))
+                    .then(() => {
+                        this.$emit('saved', true);
+                        this.snackSuccessDismiss(this.$t('user.saved'))
+                    })
                     .catch(error => {
                         if (error.response && 422 === error.response.status) {
+                            if ('email' in error.response.data.errors
+                                && error.response.data.errors.email[0] === 'The email has already been taken.') {
+                                const email = this.user.email;
+                                this.$set(this.validations.email.rules, 'unique', (value) => value !== email);
+                            }
                             this.snackErrorDismiss(error, this.$t('validation.double_check_form'));
                         } else {
                             this.snackErrorRetry(error, this.$t('user.saving_failed'))
@@ -243,7 +308,7 @@
                     return new Promise(resolve => resolve());
                 }
 
-                if (!('id' in this.currentUser)) {
+                if (this.newUser) {
                     return this.$store.dispatch('users/add', this.currentUser)
                         .then(user => this.savedUser = user);
                 }

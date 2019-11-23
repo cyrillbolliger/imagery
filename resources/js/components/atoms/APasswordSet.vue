@@ -9,7 +9,7 @@
         <template #input>
             <div class="input-group">
                 <input
-                    :placeholder="$t('user.password_placeholder')"
+                    :placeholder="required ? '' : $t('user.password_placeholder')"
                     :required="required"
                     :type="visible ? 'text' : 'password'"
                     :value="value"
@@ -27,9 +27,11 @@
                     </button>
                 </div>
             </div>
-            <small class="form-text text-muted" v-if="!value">{{$t('user.password_empty_info')}}</small>
+            <small class="form-text text-muted" v-if="!value && !required">{{$t('user.password_empty_info')}}</small>
             <small class="form-text text-danger"
-                   v-if="$v.value.$error && value">{{$t('user.password_insecure')}}</small>
+                   v-if="!$v.value.entropy">{{$t('user.password_insecure')}}</small>
+            <small class="form-text text-danger"
+                   v-if="!$v.value.required && $v.value.$error">{{$t('validation.required')}}</small>
         </template>
     </AFormGroup>
 </template>
@@ -103,6 +105,10 @@
 
                     return entropy >= 2 ** 48;
                 },
+
+                required(value) {
+                    return this.required ? value.length : true
+                }
             },
         },
 

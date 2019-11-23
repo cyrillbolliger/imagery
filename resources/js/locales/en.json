@@ -36,8 +36,9 @@
         "server_error": "Uuups, there was a server error."
     },
     "validation": {
-        "required": "This information is required.",
+        "required": "This field is required.",
         "email": "Please enter a valid email address.",
+        "max_length": "Input too long. The max length is {max} characters.",
         "double_check_form": "There are some errors in your form data. Please double check your input."
     },
     "users": {
@@ -57,6 +58,7 @@
         "first_name": "First name",
         "last_name": "Last name",
         "email": "Email",
+        "email_exists": "There is already an account with this email address.",
         "password": "Password",
         "password_placeholder": "Unchanged",
         "password_empty_info": "Leave empty to keep password unchanged.",
@@ -73,7 +75,13 @@
         "user_of_helptext": "This user can use the logos of the specified groups, but can't change anything.",
         "save": "Save User",
         "saving": "Saving...",
-        "saving_failed": "Failed to save user",
+        "saved": "User saved.",
+        "saving_failed": "Failed to save user. Try again.",
+        "remove": "Delete User",
+        "removing": "Deleting user",
+        "removed": "User deleted.",
+        "remove_confirmation": "Do you really want to delete {user}?",
+        "removing_failed": "Faild to delete user. Try again.",
         "password_insecure": "This password is insecure. Make it longer or ensure it contains numbers and special characters (and lower and uppercase characters of course)."
     },
     "role": {

@@ -16,10 +16,15 @@
                 @input="onInput"
                 class="form-control">
         </template>
-        <template
-            #helptext
-            v-if="validation && $v.value.$error"
-        ><span class="text-danger">{{validation.message}}</span>
+        <template #helptext v-if="validation && $v.value.$error">
+            <div v-if="validation.messages">
+                <div v-for="(message, key) in validation.messages">
+                    <span class="text-danger" v-if="false === $v.value[key]">{{message}}</span>
+                </div>
+            </div>
+            <div v-else>
+                <span class="text-danger">{{validation.message}}</span>
+            </div>
         </template>
     </AFormGroup>
 </template>

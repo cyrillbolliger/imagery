@@ -21,6 +21,7 @@
             class="mt-3"
             v-show="'edit' === currentTab"
             @saved="$emit('close', $event)"
+            @removed="$emit('close', $event)"
         ></MUserForm>
     </div>
 </template>
