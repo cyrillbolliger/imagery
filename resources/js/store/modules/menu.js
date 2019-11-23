@@ -1,7 +1,7 @@
-import {breakpoints} from "../../constants";
+import {isXl} from "../../service/Window";
 
 const state = {
-    open: window.innerWidth >= breakpoints.xl
+    open: isXl()
 };
 
 const getters = {

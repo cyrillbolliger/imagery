@@ -28,6 +28,7 @@
 <script>
     import MMenuItem from "../molecules/MMenuItem";
     import {mapActions, mapGetters} from "vuex";
+    import {isXl} from "../../service/Window";
 
     export default {
         name: "OMenu",
@@ -37,6 +38,13 @@
         },
         computed: {
             ...mapGetters('user', ['isAdmin']),
+        },
+        watch: {
+            '$route'() {
+                if (!isXl()) {
+                    this.$store.dispatch('menu/close');
+                }
+            }
         }
     }
 </script>
