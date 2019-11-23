@@ -76,6 +76,8 @@
                 sortedRows: [],
                 filterTerm: '',
                 filteredRows: [],
+                direction: this.sortDirection,
+                by: this.sortBy,
             }
         },
         props: {
@@ -128,12 +130,12 @@
         },
         methods: {
             sort(field, direction) {
-                this.sortBy = field;
-                this.sortDirection = direction;
+                this.by = field;
+                this.direction = direction;
                 this.sortedRows = sort(this.filteredRows, field, direction);
             },
             getSortDirection(field) {
-                return field === this.sortBy ? this.sortDirection : null;
+                return field === this.by ? this.direction : null;
             },
             filter(term) {
                 this.filterTerm = term;
@@ -145,7 +147,7 @@
                 this.filteredRows = filter(value, this.term, this.searchableKeys);
             },
             filteredRows(value) {
-                this.sortedRows = sort(value, this.sortBy, this.sortDirection);
+                this.sortedRows = sort(value, this.by, this.direction);
             }
         },
         mounted() {
