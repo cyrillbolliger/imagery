@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <transition name="slideLeft">
-            <OMenu class="col-xl-3 sticky-top" v-if="isOpen"></OMenu>
+            <OMenu class="page-nav col-xl-3 sticky-top" v-if="isOpen"></OMenu>
         </transition>
         <main class="page-main col mt-3 mb-3">
             <router-view></router-view>
@@ -31,5 +31,9 @@
         @include media-breakpoint-up(xl) {
             position: static;
         }
+    }
+
+    .page-nav {
+        animation-duration: 0.5s;
     }
 </style>
