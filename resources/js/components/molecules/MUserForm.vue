@@ -290,17 +290,22 @@
                     })
                     .catch(error => {
                         if (error.response && 422 === error.response.status) {
-                            if ('email' in error.response.data.errors
-                                && error.response.data.errors.email[0] === 'The email has already been taken.') {
-                                const email = this.user.email;
-                                this.$set(this.validations.email.rules, 'unique', (value) => value !== email);
-                            }
-                            this.snackErrorDismiss(error, this.$t('validation.double_check_form'));
+                            this.handleValidationError(error);
                         } else {
                             this.snackErrorRetry(error, this.$t('user.saving_failed'))
                                 .then(() => this.save());
                         }
                     });
+            },
+
+            handleValidationError(error) {
+                if ('email' in error.response.data.errors
+                    && error.response.data.errors.email[0] === 'The email has already been taken.') {
+                    const email = this.user.email;
+                    this.$set(this.validations.email.rules, 'unique', (value) => value !== email);
+                }
+
+                this.snackErrorDismiss(error, this.$t('validation.double_check_form'));
             },
 
             saveUser() {
