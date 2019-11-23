@@ -19,8 +19,7 @@ export default {
         snackErrorDismiss(error, message) {
             const snackbar = new Snackbar.Snackbar(
                 message,
-                Snackbar.ERROR,
-                this.$t('snackbar.dismiss')
+                Snackbar.ERROR
             );
 
             console.error(error);
@@ -32,8 +31,7 @@ export default {
         snackSuccessDismiss(message) {
             const snackbar = new Snackbar.Snackbar(
                 message,
-                Snackbar.SUCCESS,
-                this.$t('snackbar.dismiss')
+                Snackbar.SUCCESS
             );
 
             return this.$store.dispatch('snackbar/push', snackbar);

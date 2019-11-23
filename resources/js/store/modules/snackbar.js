@@ -18,12 +18,16 @@ const mutations = {
 };
 
 const actions = {
-    push({commit, state}, snackbar) {
-        snackbar.id = state.id++;
-        commit('push', snackbar);
+    push(context, snackbar) {
+        snackbar.setId(state.id++);
+        context.commit('push', snackbar);
 
         return snackbar.launch()
-            .then(() => commit('remove', snackbar.id));
+            .then(() => context.commit('remove', snackbar.id));
+    },
+
+    dismiss({commit}, snackbar) {
+        commit('remove', snackbar.id);
     }
 };
 

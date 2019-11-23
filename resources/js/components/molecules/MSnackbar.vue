@@ -5,13 +5,21 @@
                 <i class="mdi mdi-error-outline pr-2" v-if="isError"></i>
                 <span class="m-snackbar__message">{{snackbar.message}}</span>
             </div>
-            <button
-                @click="doAction"
-                class="m-snackbar__action btn btn-link pl-2"
-                type="button"
-                v-if="hasAction"
-            >{{snackbar.actionLabel}}
-            </button>
+            <div class="m-snackbar__actions">
+                <button
+                    @click="dismiss"
+                    class="m-snackbar__action m-snackbar__action--secondary btn btn-link pl-2"
+                    type="button"
+                >{{$t('snackbar.dismiss')}}
+                </button>
+                <button
+                    @click="doAction"
+                    class="m-snackbar__action btn btn-link pl-2"
+                    type="button"
+                    v-if="hasAction"
+                >{{snackbar.actionLabel}}
+                </button>
+            </div>
         </div>
     </transition>
 </template>
@@ -38,6 +46,9 @@
         methods: {
             doAction() {
                 this.snackbar.doAction();
+            },
+            dismiss() {
+                this.$store.dispatch('snackbar/dismiss', this.snackbar);
             }
         }
     }
@@ -54,12 +65,25 @@
         justify-content: space-between;
         box-shadow: $box-shadow;
 
+        &__actions {
+            display: flex;
+            flex-direction: column-reverse;
+
+            @include media-breakpoint-up(sm) {
+                flex-direction: row;
+            }
+        }
+
         &__action {
             font-weight: bold;
             color: lighten($primary, 20);
 
             &:hover, &:focus {
                 color: lighten($primary, 40);
+            }
+
+            &--secondary {
+                color: $gray-500;
             }
         }
     }
