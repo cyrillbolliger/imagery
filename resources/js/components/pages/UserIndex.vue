@@ -6,8 +6,9 @@
             :loading="loading"
             :rows="users"
             actionKey="id"
-            @details="navigateToSingleUser($event)"
+            @details="navigateToUsersEdit($event)"
             sortBy="first_name"
+            @newEntry="navigateToUsersCreate()"
         ></ODataTable>
         <ODialog
             :title="dialogTitle"
@@ -46,6 +47,7 @@
                     {label: this.$t('user.email'), key: 'email', sortable: true},
                 ],
                 dialogUser: null,
+                createUser: false,
             }
         },
 
@@ -57,7 +59,7 @@
                 loading: 'users/loading',
             }),
             dialogTitle() {
-                return this.dialogUser ?
+                return this.dialogUser && !this.createUser ?
                     `${this.dialogUser.first_name} ${this.dialogUser.last_name}` :
                     this.$t('users.index.create');
             }
@@ -67,6 +69,9 @@
         props: {
             userId: {
                 default: null
+            },
+            create: {
+                default: false
             }
         },
 
@@ -76,8 +81,10 @@
 
             // navigate directly to user, if one is set
             loading.then(() => {
-                if (this.isSingleUserRoute()) {
-                    this.dialogShow(parseInt(this.userId));
+                if (this.isRouteUserCreate()) {
+                    this.dialogShowCreate();
+                } else if (this.isRouteUserEdit()) {
+                    this.dialogShowEdit(parseInt(this.userId));
                 } else {
                     this.dialogClose();
                 }
@@ -86,19 +93,29 @@
 
 
         methods: {
-            isSingleUserRoute() {
+            isRouteUserEdit() {
                 return this.userId !== null;
             },
 
-            navigateToSingleUser(id) {
-                this.$router.push({name: 'usersSingle', params: {userId: id}});
+            isRouteUserCreate() {
+                return this.create;
+            },
+
+            navigateToUsersEdit(id) {
+                this.$router.push({name: 'usersEdit', params: {userId: id}});
+            },
+
+            navigateToUsersCreate() {
+                this.$router.push({name: 'usersCreate'});
             },
 
             navigateToList() {
                 this.$router.push({name: 'usersAll'});
             },
 
-            dialogShow(id) {
+            dialogShowEdit(id) {
+                this.createUser = false;
+
                 // clone user so changes are only pushed back
                 // into the store when saving
                 this.dialogUser = _.cloneDeep(this.getUserById(id));
@@ -108,12 +125,18 @@
                         `No user with id ${id} in store.`,
                         this.$t('user.not_found')
                     ).then(() => this.resourceLoad('users'))
-                        .then(() => this.dialogShow(id));
+                        .then(() => this.dialogShowEdit(id));
                 }
             },
 
             dialogClose() {
                 this.dialogUser = null;
+                this.createUser = false;
+            },
+
+            dialogShowCreate() {
+                this.createUser = true;
+                this.dialogUser = {};
             }
         },
 
@@ -121,11 +144,18 @@
         watch: {
             userId(value) {
                 if (value) {
-                    this.dialogShow(parseInt(value));
+                    this.dialogShowEdit(parseInt(value));
                 } else {
                     this.dialogClose();
                 }
-            }
+            },
+            create(value) {
+                if (value) {
+                    this.dialogShowCreate();
+                } else {
+                    this.dialogClose();
+                }
+            },
         },
 
 

@@ -43,12 +43,12 @@
                 const list = this.sortGroups(this.addRolesToGroups(this.groups));
                 let map = {}, node, root, i;
 
-                for (i = 0; i < list.length; i += 1) {
+                for (i = 0; i < list.length; i++) {
                     map[list[i].id] = i; // initialize the map
                     list[i].children = []; // initialize the children
                 }
 
-                for (i = 0; i < list.length; i += 1) {
+                for (i = 0; i < list.length; i++) {
                     node = list[i];
                     if (node.parent_id !== null) {
                         list[map[node.parent_id]].children.push(node);
@@ -119,17 +119,23 @@
             },
 
             getRoleByGroupIdOrCreateNew(groupId, admin) {
-                const existing = this.roles.filter(role =>
-                    role.user_id === this.user.id && role.group_id === groupId
-                );
+                let userId;
 
-                if (existing.length) {
-                    existing[0].admin = admin;
-                    return existing[0];
+                if ('id' in this.user) {
+                    const existing = this.roles.filter(role =>
+                        role.user_id === this.user.id && role.group_id === groupId
+                    );
+
+                    if (existing.length) {
+                        existing[0].admin = admin;
+                        return existing[0];
+                    }
+
+                    userId = this.user.id;
                 }
 
                 return {
-                    user_id: this.user.id,
+                    user_id: userId,
                     group_id: groupId,
                     admin: admin
                 };

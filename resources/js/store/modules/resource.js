@@ -100,7 +100,10 @@ export default function getStore(resource) {
             const ticket = commit('addLoading');
             return Api().post(resource, payload)
                 .then(response => response.data)
-                .then(data => commit('add', data))
+                .then(data => {
+                    commit('add', data);
+                    return data;
+                })
                 .finally(() => commit('removeLoading', ticket));
         },
 
@@ -108,7 +111,10 @@ export default function getStore(resource) {
             const ticket = commit('addLoading');
             return Api().put(`${resource}/${payload.id}`, payload)
                 .then(response => response.data)
-                .then(data => commit('update', data))
+                .then(data => {
+                    commit('update', data);
+                    return data;
+                })
                 .finally(() => commit('removeLoading', ticket));
         },
 

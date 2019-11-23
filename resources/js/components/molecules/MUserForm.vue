@@ -5,13 +5,13 @@
             :label="$t('user.first_name')"
             :required="true"
             :validation="validations.first_name"
-            v-model.trim="user.first_name"
+            v-model.trim="currentUser.first_name"
         ></AInput>
         <AInput
             :label="$t('user.last_name')"
             :required="true"
             :validation="validations.last_name"
-            v-model.trim="user.last_name"
+            v-model.trim="currentUser.last_name"
         ></AInput>
         <h5 class="pt-3">{{$t('user.login')}}</h5>
         <AInput
@@ -19,10 +19,10 @@
             :required="true"
             type="email"
             :validation="validations.email"
-            v-model.trim="user.email"
+            v-model.trim="currentUser.email"
         ></AInput>
         <APasswordSet
-            v-model.trim="user.password"
+            v-model.trim="currentUser.password"
         ></APasswordSet>
 
         <h5 class="pt-3">{{$t('user.misc_fields')}}</h5>
@@ -30,14 +30,14 @@
             :label="$t('user.language')"
             :options="options"
             :required="true"
-            v-model="user.lang"
+            v-model="currentUser.lang"
         ></ASelect>
         <ASelect
             :helptext="$t('user.managed_by_helptext')"
             :label="$t('user.managed_by')"
             :options="groupsSelect"
             :required="true"
-            v-model="user.managed_by"
+            v-model="currentUser.managed_by"
         ></ASelect>
 
         <h5 class="pt-3">{{$t('user.privileges')}}</h5>
@@ -48,11 +48,11 @@
             <template #input>
                 <ACheckbox
                     :label="$t('user.super_admin_desc')"
-                    v-model="user.super_admin"
+                    v-model="currentUser.super_admin"
                 ></ACheckbox>
             </template>
         </AFormGroup>
-        <AFormGroup v-if="!user.super_admin">
+        <AFormGroup v-if="!currentUser.super_admin">
             <template #label>
                 {{ $t('user.group_privileges') }}
             </template>
@@ -60,7 +60,7 @@
                 <MGroupTree
                     :groups="groups"
                     :roles="detachedRoles"
-                    :user="user"
+                    :user="currentUser"
                     @change="updateRoles"
                     v-if="!rolesLoading"
                 ></MGroupTree>
@@ -124,6 +124,7 @@
                 adminOf: [],
                 userOf: [],
                 saving: false,
+                savedUser: null,
                 validations: {
                     first_name: {
                         rules: {
@@ -155,6 +156,7 @@
         props: {
             user: {
                 required: true,
+                type: Object,
             }
         },
 
@@ -174,6 +176,9 @@
             detachedRoles() {
                 return _.cloneDeep(this.roles);
             },
+            currentUser() {
+                return this.savedUser ? this.savedUser : this.user;
+            },
         },
 
 
@@ -186,7 +191,13 @@
         methods: {
             rolesLoad() {
                 this.rolesLoading = true;
-                return Api().get(`users/${this.user.id}/roles`)
+
+                if (!('id' in this.currentUser)) {
+                    return new Promise(resolve => resolve())
+                        .then(() => this.setRolesReady());
+                }
+
+                return Api().get(`users/${this.currentUser.id}/roles`)
                     .then(response => response.data)
                     .then(roles => {
                         this.roles = roles;
@@ -211,7 +222,10 @@
             save() {
                 this.saving = true;
 
-                Promise.all([this.saveUser(), this.saveRoles()])
+                this.saveUser()
+                // saving roles must come after saving the user,
+                // else we don't have a user id on creation
+                    .then(() => this.saveRoles())
                     .finally(() => this.saving = false)
                     .then(() => this.$emit('saved', true))
                     .catch(error => {
@@ -225,11 +239,16 @@
             },
 
             saveUser() {
-                if (_.isEqual(this.user, this.getUserById(this.user.id))) {
+                if (_.isEqual(this.currentUser, this.getUserById(this.currentUser.id))) {
                     return new Promise(resolve => resolve());
                 }
 
-                return this.$store.dispatch('users/update', this.user);
+                if (!('id' in this.currentUser)) {
+                    return this.$store.dispatch('users/add', this.currentUser)
+                        .then(user => this.savedUser = user);
+                }
+
+                return this.$store.dispatch('users/update', this.currentUser);
             },
 
             saveRoles() {
@@ -251,9 +270,10 @@
 
                 let promises = [];
 
-                rolesToAdd.forEach(
-                    role => promises.push(this.roleAdd(role))
-                );
+                rolesToAdd.forEach(role => {
+                    role.user_id = this.currentUser.id; // needed for newly created users
+                    promises.push(this.roleAdd(role))
+                });
 
                 rolesToDelete.forEach(
                     role => promises.push(this.roleDelete(role))
@@ -272,7 +292,7 @@
             },
 
             roleAdd(role) {
-                return Api().post(`users/${this.user.id}/roles`, role)
+                return Api().post(`users/${role.user_id}/roles`, role)
                     .then(r => {
                         this.roles.push(r.data);
 
@@ -282,7 +302,7 @@
             },
 
             roleDelete(role) {
-                return Api().delete(`users/${this.user.id}/roles/${role.id}`)
+                return Api().delete(`users/${role.user_id}/roles/${role.id}`)
                     .then(() => {
                         const idx = this.roles.findIndex(r => r.id === role.id);
                         this.roles.splice(idx, 1);
@@ -290,7 +310,7 @@
             },
 
             roleUpdate(role) {
-                return Api().put(`users/${this.user.id}/roles/${role.id}`, role)
+                return Api().put(`users/${role.user_id}/roles/${role.id}`, role)
                     .then(updatedRole => {
                         const idx = this.roles.findIndex(r => r.id === role.id);
                         this.roles.splice(idx, 1, updatedRole.data);
