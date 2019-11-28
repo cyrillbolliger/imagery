@@ -97,9 +97,12 @@ class GroupController extends Controller
                     }
                 },
                 function ($attribute, $value, $fail) use ($group) {
-                    // assert the branch doesn't get deconnected or circular
+                    // assert the branch doesn't get disconnected or circular
                     if (Group::find($value)->isDescendantOf($group)) {
                         $fail('No, no, no, your child must never be your parent. Rethink about the :attribute.');
+                    }
+                    if ($value === $group->id) {
+                        $fail("You ain't your own parent, are ya?");
                     }
                 }
             ],
