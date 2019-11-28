@@ -101,7 +101,6 @@
     import ACheckbox from "../atoms/ACheckbox";
     import AFormGroup from "../atoms/AFormGroup";
     import ASelect from "../atoms/ASelect";
-    import AMultiSelect from "../atoms/AMultiSelect";
     import ResourceLoadMixin from "../../mixins/ResourceLoadMixin";
     import {mapGetters} from "vuex";
     import Api from "../../service/Api";
