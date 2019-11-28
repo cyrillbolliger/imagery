@@ -76,31 +76,22 @@
             </template>
         </AFormGroup>
 
-        <div class="d-flex align-items-center">
-            <button
-                :disabled="saving"
-                @click.prevent="save"
-                class="btn btn-primary"
-            >{{$t('user.save')}}
-            </button>
-            <span class="d-block ml-3" v-if="saving">{{$t('user.saving')}}</span>
-            <div class="spinner-border spinner-border-sm text-primary ml-3" role="status" v-if="saving">
-                <span class="sr-only">Saving...</span>
-            </div>
-        </div>
+        <AButtonWait
+            :button-text="$t('user.save')"
+            :working="saving"
+            :working-text="$t('user.saving')"
+            @buttonClicked="save"
+        ></AButtonWait>
 
-        <div class="d-flex align-items-center" v-if="currentUser.id">
-            <button
-                :disabled="removing"
-                @click.prevent="remove"
-                class="btn btn-sm btn-link text-danger pl-0 mt-2"
-            >{{$t('user.remove')}}
-            </button>
-            <span class="d-block ml-3" v-if="removing">{{$t('user.removing')}}</span>
-            <div class="spinner-border spinner-border-sm text-primary ml-3" role="status" v-if="removing">
-                <span class="sr-only">Removing...</span>
-            </div>
-        </div>
+        <AButtonWait
+            :button-text="$t('user.remove')"
+            :working="removing"
+            :working-text="$t('user.removing')"
+            @buttonClicked="remove"
+            button-class="btn btn-sm btn-link text-danger pl-0 mt-2"
+            v-if="currentUser.id"
+        ></AButtonWait>
+
     </form>
 </template>
 
@@ -118,10 +109,11 @@
     import MGroupTree from "./MGroupTree";
     import PrepareSelectMixin from "../../mixins/PrepareSelectMixin";
     import {required, email, maxLength} from 'vuelidate/lib/validators';
+    import AButtonWait from "../atoms/AButtonWait";
 
     export default {
         name: "MUserForm",
-        components: {MGroupTree, ASelect, AFormGroup, ACheckbox, AInput, APasswordSet, AMultiSelect},
+        components: {AButtonWait, MGroupTree, ASelect, AFormGroup, ACheckbox, AInput, APasswordSet},
         mixins: [ResourceLoadMixin, SnackbarMixin, PrepareSelectMixin],
 
 
@@ -202,7 +194,7 @@
                 getUserById: 'users/getById',
             }),
             amISuperAdmin() {
-                return true;
+                return this.$store.getters['user/object'].super_admin;
             },
             groupsSelect() {
                 return this.prepareSelectData(this.groups, 'id', 'tree_name');
