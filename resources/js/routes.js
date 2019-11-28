@@ -25,8 +25,21 @@ export const routes = [
         name: 'usersAll'
     },
     {
+        path: '/admin/groups/create',
+        component: GroupIndex,
+        props: {create: true},
+        name: 'groupsCreate'
+    },
+    {
+        path: '/admin/groups/:groupId',
+        component: GroupIndex,
+        props: true,
+        name: 'groupsEdit'
+    },
+    {
         path: '/admin/groups',
-        component: GroupIndex
-    }
+        component: GroupIndex,
+        name: 'groupsAll'
+    },
     // {path: '*', component: NotFound}
 ];

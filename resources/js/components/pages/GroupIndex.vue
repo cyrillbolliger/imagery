@@ -5,23 +5,21 @@
             :headers="headers"
             :loading="loading"
             :rows="groups"
-            @details="dialogShow($event)"
             actionKey="id"
+            @details="navigateToGroupsEdit($event)"
             sortBy="tree_name"
+            @newEntry="navigateToGroupsCreate()"
         ></ODataTable>
         <ODialog
-            :title="dialogGroup.name"
-            @close="dialogGroup = false"
+            :title="dialogTitle"
+            @close="navigateToList"
             v-if="dialogGroup"
         >
             <template #default>
-                <MUserForm
-                    :user="dialogGroup"
-                    v-if="dialogGroup"
-                ></MUserForm>
-            </template>
-            <template #footer>
-                Footer
+                <OGroup
+                    :group="dialogGroup"
+                    @close="navigateToList"
+                ></OGroup>
             </template>
         </ODialog>
     </div>
@@ -31,14 +29,14 @@
     import MHeader from "../molecules/MHeader";
     import ODataTable from "../organisms/ODataTable";
     import ODialog from "../organisms/ODialog";
-    import MUserForm from "../molecules/MUserForm";
-    import * as Snackbar from "../../service/Snackbar"
     import {mapGetters} from "vuex";
     import ResourceLoadMixin from "../../mixins/ResourceLoadMixin";
+    import SnackbarMixin from "../../mixins/SnackbarMixin";
+    import OGroup from "../organisms/OGroup";
 
     export default {
         name: "GroupIndex",
-        components: {MUserForm, ODialog, ODataTable, MHeader},
+        components: {OGroup, ODialog, ODataTable, MHeader},
 
 
         data() {
@@ -47,6 +45,7 @@
                     {label: this.$t('group.name'), key: 'tree_name', sortable: true},
                 ],
                 dialogGroup: null,
+                createGroup: false,
             }
         },
 
@@ -57,37 +56,108 @@
                 getGroupById: 'groups/getById',
                 loading: 'groups/loading',
             }),
+            dialogTitle() {
+                return this.dialogGroup && !this.createGroup ?
+                    this.dialogGroup.name :
+                    this.$t('groups.index.create');
+            }
+        },
+
+
+        props: {
+            groupId: {
+                default: null
+            },
+            create: {
+                default: false
+            }
         },
 
 
         created() {
-            this.resourceLoad('groups');
+            const loading = this.resourceLoad('groups');
+
+            // navigate directly to group, if one is set
+            loading.then(() => {
+                if (this.isRouteGroupCreate()) {
+                    this.dialogShowCreate();
+                } else if (this.isRouteGroupEdit()) {
+                    this.dialogShowEdit(parseInt(this.groupId));
+                } else {
+                    this.dialogClose();
+                }
+            });
         },
 
 
         methods: {
-            dialogShow(id) {
+            isRouteGroupEdit() {
+                return this.groupId !== null;
+            },
+
+            isRouteGroupCreate() {
+                return this.create;
+            },
+
+            navigateToGroupsEdit(id) {
+                this.$router.push({name: 'groupsEdit', params: {groupId: id}});
+            },
+
+            navigateToGroupsCreate() {
+                this.$router.push({name: 'groupsCreate'});
+            },
+
+            navigateToList() {
+                this.$router.push({name: 'groupsAll'});
+            },
+
+            dialogShowEdit(id) {
+                this.createGroup = false;
+
                 // clone group so changes are only pushed back
                 // into the store when saving
                 this.dialogGroup = _.cloneDeep(this.getGroupById(id));
 
                 if (null === this.dialogGroup) {
-                    const snackbar = new Snackbar.Snackbar(
-                        this.$t('group.not_found'),
-                        Snackbar.ERROR,
-                        this.$t('snackbar.reload')
-                    );
+                    this.snackErrorRetry(
+                        `No group with id ${id} in store.`,
+                        this.$t('group.not_found')
+                    ).then(() => this.resourceLoad('groups'))
+                        .then(() => this.dialogShowEdit(id));
+                }
+            },
 
-                    console.error(`No group with id ${id} in store.`);
+            dialogClose() {
+                this.dialogGroup = null;
+                this.createGroup = false;
+            },
 
-                    this.$store.dispatch('snackbar/push', snackbar)
-                        .then(() => this.resourceLoad('groups'));
+            dialogShowCreate() {
+                this.createGroup = true;
+                this.dialogGroup = {};
+            }
+        },
+
+
+        watch: {
+            groupId(value) {
+                if (value) {
+                    this.dialogShowEdit(parseInt(value));
+                } else {
+                    this.dialogClose();
+                }
+            },
+            create(value) {
+                if (value) {
+                    this.dialogShowCreate();
+                } else {
+                    this.dialogClose();
                 }
             },
         },
 
 
-        mixins: [ResourceLoadMixin],
+        mixins: [ResourceLoadMixin, SnackbarMixin],
     }
 </script>
 

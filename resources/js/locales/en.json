@@ -81,11 +81,35 @@
         "removing": "Deleting user",
         "removed": "User deleted.",
         "remove_confirmation": "Do you really want to delete {user}?",
-        "removing_failed": "Faild to delete user. Try again.",
+        "removing_failed": "Failed to delete user. Try again.",
         "password_insecure": "This password is insecure. Make it longer or ensure it contains numbers and special characters (and lower and uppercase characters of course)."
     },
     "role": {
         "use": "Use Logos",
         "manage": "Manage Group"
+    },
+    "groups": {
+        "index": {
+            "title": "Groups",
+            "create": "Create Group"
+        }
+    },
+    "group": {
+        "name": "Name",
+        "nav_edit": "Edit",
+        "nav_stats": "Stats",
+        "parent": "Parent Group",
+        "logos": "Logos",
+        "logos_helptext": "Members of this group can use these logos.",
+        "not_found": "We were unable to retrieve this group. Try to reload.",
+        "save": "Save Group",
+        "saving": "Saving...",
+        "saved": "Group saved.",
+        "saving_failed": "Failed to save group. Try again.",
+        "remove": "Delete Group",
+        "removing": "Deleting group",
+        "removed": "Group deleted.",
+        "remove_confirmation": "Do you really want to delete {group}?",
+        "removing_failed": "Failed to delete group. Try again."
     }
 }
