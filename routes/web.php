@@ -77,6 +77,14 @@ Route::prefix('api/1')->group(function () {
     Route::post('/groups', 'GroupController@store')
          ->middleware('can:create,App\Group');
 
+    Route::get('/groups/{group}/logos', 'LogoController@listByGroup')
+         ->where('group', '\d+')
+         ->middleware('can:view,group');
+
+    Route::get('/groups/{group}/users', 'UserController@listByGroup')
+         ->where('group', '\d+')
+         ->middleware('can:view,group');
+
     /**
      * Logos
      */

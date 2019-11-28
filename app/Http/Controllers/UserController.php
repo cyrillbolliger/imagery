@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserRequest;
+use App\Group;
 use App\Rules\ImmutableRule;
 use App\Rules\PasswordRule;
 use App\Rules\SuperAdminRule;
-use App\Rules\UniqueUpdateRule;
 use App\Rules\UserLogoRule;
 use App\Rules\UserManagedByRule;
 use App\User;
@@ -78,6 +77,18 @@ class UserController extends Controller
     public function show(User $managed)
     {
         return $managed;
+    }
+
+    /**
+     * Display a listing of the users associated with the given group.
+     *
+     * @param  Group  $group
+     *
+     * @return User[]
+     */
+    public function listByGroup(Group $group)
+    {
+        return $group->users;
     }
 
     /**

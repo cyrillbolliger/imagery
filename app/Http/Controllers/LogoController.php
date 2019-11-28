@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Group;
 use App\Http\Controllers\Upload\RegularUploadStrategy;
 use App\Logo;
 use App\Rules\CanManageGroupRule;
@@ -20,7 +21,7 @@ class LogoController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Support\Collection
      */
     public function index()
     {
@@ -36,7 +37,7 @@ class LogoController extends Controller
      * @param  Request  $request
      * @param  Logo  $logo
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|Logo
      */
     public function store(Request $request, Logo $logo)
     {
@@ -91,11 +92,23 @@ class LogoController extends Controller
      *
      * @param  \App\Logo  $logo
      *
-     * @return \Illuminate\Http\Response
+     * @return Logo
      */
     public function show(Logo $logo)
     {
         return $logo;
+    }
+
+    /**
+     * Display a listing of the logos associated with the given group.
+     *
+     * @param  Group  $group
+     *
+     * @return Logo[]
+     */
+    public function listByGroup(Group $group)
+    {
+        return $group->logos;
     }
 
     /**
@@ -104,7 +117,7 @@ class LogoController extends Controller
      * @param  Request  $request
      * @param  \App\Logo  $logo
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|Logo
      */
     public function update(Request $request, Logo $logo)
     {

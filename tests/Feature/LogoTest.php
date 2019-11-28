@@ -105,6 +105,33 @@ class LogoTest extends TestCase
         $response->assertJsonMissing(['id' => $logo3->id]);
     }
 
+    public function testGetLogosByGroup__200()
+    {
+        $group = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $group->id
+            ])
+        );
+
+        $logo1 = factory(Logo::class)->create();
+        $logo2 = factory(Logo::class)->create();
+        $logo3 = factory(Logo::class)->create();
+        $group->logos()->attach($logo1);
+        $group->logos()->attach($logo2);
+
+        $response = $this->actingAs($manager)
+                         ->getJson("/api/1/groups/{$group->id}/logos");
+
+        $response->assertStatus(200);
+        $response->assertJsonFragment(['id' => $logo1->id]);
+        $response->assertJsonFragment(['id' => $logo2->id]);
+        $response->assertJsonMissing(['id' => $logo3->id]);
+    }
+
     public function testPutLogo__admin__200()
     {
         $group = factory(Group::class)->create();

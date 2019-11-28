@@ -159,6 +159,27 @@ class UserTest extends TestCase
         $response->assertJsonMissing(['id' => $detachedUser->id]);
     }
 
+    public function testGetUsersByGroup__admin_200()
+    {
+        $group = factory(Group::class)->create();
+
+        $user1        = $group->users()->save(factory(User::class)->make());
+        $user2        = $group->users()->save(factory(User::class)->make());
+        $detachedUser = factory(User::class)->create();
+
+        $manager = factory(User::class)->create();
+        $manager->roles()->save(factory(Role::class)->make(['admin' => true, 'group_id' => $group]));
+
+        $response = $this->actingAs($manager)
+                         ->getJson("/api/1/groups/{$group->id}/users/");
+
+        $response->assertStatus(200);
+
+        $response->assertJsonFragment($user1->toArray());
+        $response->assertJsonFragment($user2->toArray());
+        $response->assertJsonMissing(['id' => $detachedUser->id]);
+    }
+
     public function testPutUser__superAdmin_200()
     {
         $manager = factory(User::class)->create(['super_admin' => true]);
