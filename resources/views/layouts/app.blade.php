@@ -15,6 +15,10 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    @auth
+        <link rel="stylesheet" href="{{ route('fonts', 'SanukOT-Bold.otf') }}" as="font" type="font/otf" crossorigin>
+        <link rel="stylesheet" href="{{ route('fonts', 'SanukOT-Fat.otf') }}" as="font" type="font/otf" crossorigin>
+@endauth
 
     <!-- Styles -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">

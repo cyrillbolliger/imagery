@@ -173,6 +173,16 @@ Route::prefix('api/1')->group(function () {
     Route::post('/images/{image}/legal', 'LegalController@store')
          ->where('image', '\d+')
          ->middleware('can:update,image'); // the legal is an extension of the image
+
+    /**
+     * Fonts
+     *
+     * Load them using the protected routes because we do only have a licence
+     * to use but not to distribute the fonts.
+     */
+    Route::get('/files/fonts/{font}', 'FontController@show')
+         ->where('font', '[\w-\.]+')
+         ->name('fonts');
 });
 
 /**
