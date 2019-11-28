@@ -11,8 +11,8 @@
             <li class="nav-item">
                 <button
                     :class="tabStatsClasses"
-                    @click="currentTab = 'stats'"
-                >{{$t('group.nav_stats')}}
+                    @click="currentTab = 'details'"
+                >{{$t('group.nav_details')}}
                 </button>
             </li>
         </ul>
@@ -23,16 +23,22 @@
             class="mt-3"
             v-show="'edit' === currentTab"
         ></MGroupForm>
+        <MGroupDetails
+            :group="group"
+            class="mt-3"
+            v-show="'details' === currentTab"
+        ></MGroupDetails>
     </div>
 </template>
 
 <script>
     import MGroupForm from "../molecules/MGroupForm";
+    import MGroupDetails from "../molecules/MGroupDetails";
 
 
     export default {
         name: "OGroup",
-        components: {MGroupForm},
+        components: {MGroupForm, MGroupDetails},
 
         data() {
             return {

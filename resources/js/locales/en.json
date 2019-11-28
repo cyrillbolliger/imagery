@@ -97,10 +97,12 @@
     "group": {
         "name": "Name",
         "nav_edit": "Edit",
-        "nav_stats": "Stats",
+        "nav_details": "Details",
         "parent": "Parent Group",
         "logos": "Logos",
-        "logos_helptext": "Members of this group can use these logos.",
+        "users": "Users",
+        "logos_helptext": "Members of this group can use the logos listed below.",
+        "users_helptext": "The following users are member of this group.",
         "not_found": "We were unable to retrieve this group. Try to reload.",
         "save": "Save Group",
         "saving": "Saving...",
@@ -110,6 +112,10 @@
         "removing": "Deleting group",
         "removed": "Group deleted.",
         "remove_confirmation": "Do you really want to delete {group}?",
-        "removing_failed": "Failed to delete group. Try again."
+        "removing_failed": "Failed to delete group. Try again.",
+        "no_logos": "No logos are associated with this group.",
+        "no_users": "No users are directly associated with this group. But the admins of the parent groups inherit this group.",
+        "logos_loading_failed": "Failed to get logos. Try again.",
+        "users_loading_failed": "Failed to get users. Try again."
     }
 }
