@@ -8,6 +8,7 @@
         ></AInput>
 
         <ASelect
+            v-if="!isRootGroup"
             :label="$t('group.parent')"
             :options="groupsSelect"
             :required="true"
@@ -100,6 +101,9 @@
             },
             newGroup() {
                 return !('id' in this.currentGroup);
+            },
+            isRootGroup() {
+                return this.currentGroup.parent_id === null;
             },
         },
 
