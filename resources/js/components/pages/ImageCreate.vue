@@ -1,15 +1,15 @@
 <template>
     <div>
         <h1>Create Image</h1>
-        <ACanvas></ACanvas>
+        <OImagery></OImagery>
     </div>
 </template>
 
 <script>
-    import ACanvas from "../atoms/ACanvas";
+    import OImagery from "../organisms/OImagery";
     export default {
         name: "ImageCreate",
-        components: {ACanvas}
+        components: {OImagery}
     }
 </script>
 

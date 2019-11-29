@@ -5,7 +5,14 @@
             class="a-canvas"
             ref="canvas"></canvas>
         <br>
-        <input type="text" v-model="text">
+        <ABar
+            :alignment="alignment"
+            :font-size="fontSize"
+            :image-width="width"
+            :schema="schema"
+            :type="type"
+            @drawn="drawBar($event)"
+        ></ABar>
         <br>
         <button @click="alignLeft()">left</button>
         <button @click="alignRight()">right</button>
@@ -23,20 +30,19 @@
 </template>
 
 <script>
-    import {Bar, Schemes, Alignments, Types} from "../../service/canvas/Bar";
-    import FontFaceObserver from "fontfaceobserver";
+    import {Schemes, Alignments, Types} from "../../service/canvas/Bar";
+    import ABar from "../atoms/ABar";
 
     export default {
-        name: "ACanvas",
+        name: "OImagery",
+        components: {ABar},
         data() {
             return {
                 canvas: null,
                 context: null,
-                alignment: null,
-                bar: null,
+                alignment: Alignments.left,
                 type: Types.headline,
                 schema: Schemes.green,
-                text: 'grüne jetzt',
                 width: 800,
                 height: 800,
                 fontSize: 50,
@@ -46,32 +52,20 @@
         mounted() {
             this.canvas = this.$refs.canvas;
             this.context = this.canvas.getContext('2d');
-            this.redraw();
+            this.canvas.width = this.width;
+            this.canvas.height = this.height;
 
-            this.loadFonts().then(() => this.redraw());
+            // this ensures the bar will get drawn on load
+            this.fontSize = 60;
         },
 
         methods: {
-            redraw() {
-                this.canvas.width = this.width;
-                this.canvas.height = this.height;
-
-                this.clear();
-
-                this.bar = new Bar(
-                    this.context,
-                    this.schema,
-                    this.alignment,
-                    this.type
-                );
-
-                this.bar.fontSize = this.fontSize;
-                this.bar.text = this.text;
-            },
-
-            clear() {
-                this.context.fillStyle = 'black';
-                this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            drawBar(bar) {
+                // use the if because it might be called before the context is
+                // ready (child component is mounted but parent isn't)
+                if (this.context) {
+                    this.context.drawImage(bar, 0, 0);
+                }
             },
 
             alignLeft() {
@@ -113,36 +107,7 @@
                 this.height /= 2;
                 this.fontSize /= 2;
             },
-
-            loadFonts() {
-                const fat = new FontFaceObserver('SanukFat');
-                const bold = new FontFaceObserver('SanukBold');
-
-                return Promise.all([fat.load(), bold.load()]);
-            },
         },
-
-        watch: {
-            alignment() {
-                this.redraw();
-            },
-            schema() {
-                this.redraw();
-            },
-            text() {
-                this.clear();
-                this.bar.text = this.text;
-            },
-            type() {
-                this.redraw();
-            },
-            width() {
-                this.redraw();
-            },
-            height() {
-                this.redraw();
-            }
-        }
     }
 </script>
 

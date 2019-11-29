@@ -50,15 +50,16 @@ const realCharHeightFactor = 0.74;
 const charPaddingFactor = 0.2;
 
 class Bar {
-    constructor(context, schema, alignment, type) {
-        this._c = context;
-        this._schema = schema;
-        this._alignment = alignment;
-        this._font = type;
+    constructor() {
+        this._canvas = document.createElement('canvas');
+        this._context = this._canvas.getContext('2d');
+
+        this._schema = Schemes.green;
+        this._alignment = Alignments.left;
         this._fontSize = 16;
         this._text = '';
-        this._x = 0;
-        this._top = 100;
+
+        this._imageWidth = 0;
         this._barOversize = 0;
         this._textDims = {
             width: null,
@@ -68,83 +69,84 @@ class Bar {
     }
 
     set text(text) {
-        this._text = text.toLocaleUpperCase();
-        this._draw();
+        this._text = text.toLocaleUpperCase().trim();
     }
 
     set fontSize(fontSize) {
         this._fontSize = fontSize;
-        this._draw();
     }
 
     set alignment(alignment) {
         this._alignment = alignment;
-        this._draw();
     }
 
-    get barWidth() {
-        const textWidth = this._textDims.width;
-        const padding = this._textDims.padding;
-
-        return this._barOversize + textWidth + padding;
+    set schema(schema) {
+        this._schema = schema;
     }
 
-    get barHeight() {
-        const textHeight = this._textDims.height;
-        const padding = this._textDims.padding;
-
-        return textHeight + 2 * padding;
+    set type(type) {
+        this._font = type;
     }
 
-    _draw() {
-        this._setBarOversize();
+    set imageWidth(width) {
+        this._imageWidth = width;
+    }
+
+    draw() {
         this._setFont();
+        this._setBarOversize();
         this._setTextDims();
-        this._setX();
+        this._setCanvasWidth();
+        this._setCanvasHeight();
+        this._setFont(); // the resizing kills the font settings
 
         this._drawBackground();
         this._drawFont();
+
+        return this._canvas;
+    }
+
+    _setFont() {
+        this._context.font = `${this._fontSize}px ${this._font}`;
     }
 
     _setBarOversize() {
-        this._barOversize = this._getCanvasWidth() * barSizeFactor;
+        this._barOversize = this._imageWidth * barSizeFactor;
     }
 
     _setTextDims() {
-        this._textDims.width = this._c.measureText(this._text).width;
+        this._textDims.width = this._context.measureText(this._text).width;
         this._textDims.height = parseInt(this._fontSize) * realCharHeightFactor;
         this._textDims.padding = parseInt(this._fontSize) * charPaddingFactor;
     }
 
-    _setFont() {
-        this._c.font = `${this._fontSize}px ${this._font}`;
+    _setCanvasWidth() {
+        const textWidth = this._textDims.width;
+        const padding = this._textDims.padding;
+
+        this._canvas.width = this._barOversize + textWidth + padding;
     }
 
-    _setX() {
-        if (this._alignment === Alignments.left) {
-            this._x = 0;
-        } else {
-            this._x = this._getCanvasWidth() - this.barWidth;
-        }
-    }
+    _setCanvasHeight() {
+        const textHeight = this._textDims.height;
+        const padding = this._textDims.padding;
 
-    _getCanvasWidth() {
-        return this._c.canvas.width;
+        this._canvas.height = textHeight + 2 * padding;
     }
 
     _drawBackground() {
         if (this._schema === Schemes.white) {
             this._setGradientBackground();
         } else {
-            this._c.fillStyle = this._schema.background;
+            this._context.fillStyle = this._schema.background;
         }
 
-        this._c.fillRect(this._x, this._top, this.barWidth, this.barHeight);
+        this._context.fillRect(0, 0, this._canvas.width, this._canvas.height);
     }
 
     _setGradientBackground() {
         let x, x1;
-        const canvasWidth = this._getCanvasWidth();
+        const canvasWidth = this._canvas.width;
         const gradientWidth = this._barOversize;
         const preGradient = this._barOversize / 4;
 
@@ -156,29 +158,29 @@ class Bar {
             x1 = canvasWidth - gradientWidth - preGradient;
         }
 
-        const gradient = this._c.createLinearGradient(x, 0, x1, 0);
+        const gradient = this._context.createLinearGradient(x, 0, x1, 0);
         gradient.addColorStop(0, '#aaaaaa');
         gradient.addColorStop(1, '#ffffff');
 
-        this._c.fillStyle = gradient;
+        this._context.fillStyle = gradient;
     }
 
     _drawFont() {
-        const y = this._top + this.barHeight - this._textDims.padding;
+        const y = this._canvas.height - this._textDims.padding;
         const x = this._getTextX();
 
-        this._c.fillStyle = this._schema.text;
-        this._c.textAlign = 'left';
-        this._c.textBaseline = 'baseline';
+        this._context.fillStyle = this._schema.text;
+        this._context.textAlign = 'left';
+        this._context.textBaseline = 'alphabetic';
 
-        this._c.fillText(this._text, x, y);
+        this._context.fillText(this._text, x, y);
     }
 
     _getTextX() {
         if (this._alignment === Alignments.left) {
-            return this._x + this._barOversize;
+            return this._barOversize;
         } else {
-            return this._x + this._textDims.padding;
+            return this._textDims.padding;
         }
     }
 }
