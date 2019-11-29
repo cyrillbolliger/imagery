@@ -36,7 +36,7 @@
                 bar: null,
                 type: Types.headline,
                 schema: Schemes.green,
-                text: 'hello',
+                text: 'grüne jetzt',
                 width: 800,
                 height: 800,
                 fontSize: 50,

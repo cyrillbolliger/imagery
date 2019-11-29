@@ -133,12 +133,37 @@ class Bar {
     }
 
     _drawBackground() {
-        this._c.fillStyle = this._schema.background;
+        if (this._schema === Schemes.white) {
+            this._setGradientBackground();
+        } else {
+            this._c.fillStyle = this._schema.background;
+        }
+
         this._c.fillRect(this._x, this._top, this.barWidth, this.barHeight);
     }
 
+    _setGradientBackground() {
+        let x, x1;
+        const canvasWidth = this._getCanvasWidth();
+        const gradientWidth = this._barOversize;
+        const preGradient = this._barOversize / 4;
+
+        if (this._alignment === Alignments.left) {
+            x = preGradient;
+            x1 = preGradient + gradientWidth;
+        } else {
+            x = canvasWidth - preGradient;
+            x1 = canvasWidth - gradientWidth - preGradient;
+        }
+
+        const gradient = this._c.createLinearGradient(x, 0, x1, 0);
+        gradient.addColorStop(0, '#aaaaaa');
+        gradient.addColorStop(1, '#ffffff');
+
+        this._c.fillStyle = gradient;
+    }
+
     _drawFont() {
-        const top = this._top + this._textDims.padding;
         const y = this._top + this.barHeight - this._textDims.padding;
         const x = this._getTextX();
 
