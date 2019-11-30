@@ -117,5 +117,10 @@
         "no_users": "No users are directly associated with this group. But the admins of the parent groups inherit this group.",
         "logos_loading_failed": "Failed to get logos. Try again.",
         "users_loading_failed": "Failed to get users. Try again."
+    },
+    "images": {
+        "create": {
+            "fontSize": "Font size"
+        }
     }
 }

@@ -49,6 +49,15 @@ const realCharHeightFactor = 0.74;
  */
 const charPaddingFactor = 0.2;
 
+/**
+ * Specifies the margin below the bar in relation to the bars inner height.
+ * This should be one 1/12, but this is too close (especially when using the
+ * character J) so we'll go with 1/10;
+ *
+ * @type {number}
+ */
+const barMarginFactor = 0.1;
+
 class Bar {
     constructor() {
         this._canvas = document.createElement('canvas');
@@ -128,10 +137,22 @@ class Bar {
     }
 
     _setCanvasHeight() {
+        const innerHeight = this._getBarHeight();
+
+        this._canvas.height = innerHeight * (1 + barMarginFactor);
+    }
+
+    /**
+     * Since we have a margin below the bar the bar height is smaller than the
+     * canvas height.
+     *
+     * @returns {Number}
+     * @private
+     */
+    _getBarHeight() {
         const textHeight = this._textDims.height;
         const padding = this._textDims.padding;
-
-        this._canvas.height = textHeight + 2 * padding;
+        return textHeight + 2 * padding;
     }
 
     _drawBackground() {
@@ -141,7 +162,7 @@ class Bar {
             this._context.fillStyle = this._schema.background;
         }
 
-        this._context.fillRect(0, 0, this._canvas.width, this._canvas.height);
+        this._context.fillRect(0, 0, this._canvas.width, this._getBarHeight());
     }
 
     _setGradientBackground() {
@@ -166,7 +187,7 @@ class Bar {
     }
 
     _drawFont() {
-        const y = this._canvas.height - this._textDims.padding;
+        const y = this._getBarHeight() - this._textDims.padding;
         const x = this._getTextX();
 
         this._context.fillStyle = this._schema.text;

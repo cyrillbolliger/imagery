@@ -3,7 +3,9 @@
 </template>
 
 <script>
-    import {Bar} from "../../service/canvas/Bar";
+    const sublineHeadlineSizeRatio = 0.4;
+
+    import {Bar, Types} from "../../service/canvas/Bar";
     import FontFaceObserver from "fontfaceobserver";
 
     export default {
@@ -25,7 +27,7 @@
             schema: {
                 required: true,
             },
-            fontSize: {
+            baseFontSize: {
                 required: true,
                 type: Number,
             },
@@ -35,12 +37,22 @@
             }
         },
 
+        computed: {
+            fontSize() {
+                if (this.type === Types.headline) {
+                    return this.baseFontSize;
+                } else {
+                    return this.baseFontSize * sublineHeadlineSizeRatio;
+                }
+            },
+        },
+
         mounted() {
-            this.loadFonts().then(() => this.redraw());
+            this.loadFonts().then(() => this.draw());
         },
 
         methods: {
-            redraw() {
+            draw() {
                 this.bar.text = this.text;
                 this.bar.alignment = this.alignment;
                 this.bar.type = this.type;
@@ -61,22 +73,22 @@
 
         watch: {
             text() {
-                this.redraw();
+                this.draw();
             },
             alignment() {
-                this.redraw();
+                this.draw();
             },
             type() {
-                this.redraw();
+                this.draw();
             },
             schema() {
-                this.redraw();
+                this.draw();
             },
-            fontSize() {
-                this.redraw();
+            baseFontSize() {
+                this.draw();
             },
             imageWidth() {
-                this.redraw();
+                this.draw();
             },
         }
     }
