@@ -16,6 +16,10 @@ export default class BarBlock {
         this._alignment = alignment;
     }
 
+    get width() {
+        return this._canvas.width;
+    }
+
     draw() {
         this._bars = this._primary
             .concat(this._secondary)

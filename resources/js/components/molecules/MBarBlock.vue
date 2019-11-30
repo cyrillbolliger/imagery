@@ -7,8 +7,8 @@
             :key="`headlinePrimary-${n}`"
             :schema="schemaHeadlinePrimary"
             :type="typeHeadline"
-            @drawn="update(headlinesPrimary, n, $event)"
-            v-for="n in countHeadlinesPrimary"
+            @drawn="update(headlinesPrimary, n, ...arguments)"
+            v-for="n in headlinesPrimaryCount"
         ></ABar>
         <ABar
             :alignment="alignment"
@@ -17,8 +17,8 @@
             :key="`headlineSecondary-${n}`"
             :schema="schemaHeadlineSecondary"
             :type="typeHeadline"
-            @drawn="update(headlinesSecondary, n, $event)"
-            v-for="n in countHeadlinesSecondary"
+            @drawn="update(headlinesSecondary, n, ...arguments)"
+            v-for="n in headlinesSecondaryCount"
         ></ABar>
         <ABar
             :alignment="alignment"
@@ -27,15 +27,21 @@
             :key="`subline-${n}`"
             :schema="schemaSubline"
             :type="typeSubline"
-            @drawn="update(sublines, n, $event)"
-            v-for="n in countSublines"
+            @drawn="update(sublines, n, ...arguments)"
+            v-for="n in sublinesCount"
         ></ABar>
+
+        <div class="alert alert-warning" role="alert" v-if="tooMuchText">
+            {{$t('images.create.tooMuchText')}}
+        </div>
 
         <input
             @input="draw()"
             id="font-size"
-            max="100"
-            min="10"
+            :disabled="tooMuchText"
+            :max="fontSizeMax"
+            :min="fontSizeMin"
+            step="1"
             type="range"
             v-model.number="fontSize"
         >
@@ -44,6 +50,8 @@
 </template>
 
 <script>
+    const minFontSizeFactor = 0.08; // the correct 175% would be 0.0925
+
     import {Schemes, Types} from "../../service/canvas/Bar";
     import BarBlock from "../../service/canvas/BarBlock";
     import ABar from "../atoms/ABar";
@@ -57,13 +65,16 @@
                 headlinesPrimary: [],
                 headlinesSecondary: [],
                 sublines: [],
-                countHeadlinesPrimary: 1,
-                countHeadlinesSecondary: 1,
-                countSublines: 1,
-                fontSize: 50,
+                headlinesPrimaryCount: 1,
+                headlinesSecondaryCount: 1,
+                sublinesCount: 1,
+                fontSizeMax: 100,
+                fontSize: 100,
                 typeHeadline: Types.headline,
                 typeSubline: Types.subline,
+                tooMuchText: false,
                 block: null,
+                eventCounter: {},
             }
         },
 
@@ -80,6 +91,10 @@
             imageWidth: {
                 required: true,
                 type: Number,
+            },
+            imageHeight: {
+                required: true,
+                type: Number
             }
         },
 
@@ -100,6 +115,19 @@
                 } else {
                     return Schemes.white;
                 }
+            },
+            fontSizeMin() {
+                // base the minimal font size on a normalized side length of
+                // the image.
+                // to get a normalized side length, square the image width,
+                // and multiply it with the height, then take the third root.
+                // this way we only violate the corporate design rules on slim
+                // portrait images (without violation, we can't write anything
+                // meaning full on a instagram story)
+                const cube = this.imageHeight * this.imageWidth ** 2;
+                const sideNormalized = Math.pow(cube, 1 / 3);
+                const min = sideNormalized * minFontSizeFactor;
+                return Math.ceil(min);
             }
         },
 
@@ -116,14 +144,67 @@
         },
 
         methods: {
-            update(array, index, bar) {
+            update(array, index, bar, event) {
                 this.$set(array, index, bar);
-                this.draw();
+
+                if (this.isSingleBarEvent(event)) {
+                    this.draw();
+                    return;
+                }
+
+                if (!this.eventCounter[event]) {
+                    this.eventCounter[event] = 0;
+                }
+
+                const barCount = this.headlinesPrimaryCount
+                    + this.headlinesSecondaryCount
+                    + this.sublinesCount;
+
+                this.eventCounter[event]++;
+
+                if (this.eventCounter[event] === barCount) {
+                    this.eventCounter[event] = 0;
+                    this.draw();
+                }
+
             },
             draw() {
                 this.block.alignment = this.alignment;
 
-                this.$emit('drawn', this.block.draw());
+                this.block.draw(); // called twice. first call is needed to determine size for content based font adjustment
+                const fitsInImage = this.adjustFontSize();
+
+                if (fitsInImage) {
+                    this.$emit('drawn', this.block.draw());
+                }
+            },
+            adjustFontSize() {
+                const min = this.fontSizeMin;
+                const imageToBlockRatio = this.imageWidth / this.block.width;
+                let max = this.fontSize * imageToBlockRatio;
+                max = Math.floor(max); // the range slider wants integers
+
+                if (max < min) {
+                    this.fontSize = min;
+                    this.fontSizeMax = min;
+                    this.tooMuchText = true;
+                    return false;
+                } else {
+                    this.tooMuchText = false;
+                }
+
+                if (this.block.width > this.imageWidth) {
+                    this.fontSizeMax = max;
+                    this.fontSize = max;
+                    return false;
+                }
+
+                this.fontSizeMax = max;
+
+                return true;
+            },
+            isSingleBarEvent(event) {
+                return ['text', 'schema'].indexOf(event) !== -1;
             },
         },
     }

@@ -8,6 +8,7 @@
         <MBarBlock
             :alignment="alignment"
             :image-width="width"
+            :image-height="height"
             :color-schema="schema"
             @drawn="drawBarBlock($event)"
         ></MBarBlock>
@@ -18,9 +19,6 @@
         <button @click="makeGreen()">green</button>
         <button @click="makeWhite()">white</button>
         <button @click="makeGreenGreen()">green-green</button>
-        <br>
-        <button @click="makeHeadline()">headline</button>
-        <button @click="makeSubline()">subline</button>
         <br>
         <button @click="scaleUp()">scaleUp</button>
         <button @click="scaleDown()">scaleDown</button>
@@ -39,7 +37,6 @@
                 canvas: null,
                 context: null,
                 alignment: Alignments.left,
-                type: Types.headline,
                 schema: 'green',
                 width: 800,
                 height: 800,
@@ -82,14 +79,6 @@
 
             makeGreenGreen() {
                 this.schema = 'green-green';
-            },
-
-            makeHeadline() {
-                this.type = Types.headline;
-            },
-
-            makeSubline() {
-                this.type = Types.subline;
             },
 
             scaleUp() {

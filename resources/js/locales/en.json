@@ -120,7 +120,8 @@
     },
     "images": {
         "create": {
-            "fontSize": "Font size"
+            "fontSize": "Font size",
+            "tooMuchText": "Your bars contain too much text. Shorten it!"
         }
     }
 }

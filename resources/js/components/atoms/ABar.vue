@@ -48,11 +48,11 @@
         },
 
         mounted() {
-            this.loadFonts().then(() => this.draw());
+            this.loadFonts().then(() => this.draw('font'));
         },
 
         methods: {
-            draw() {
+            draw(action) {
                 this.bar.text = this.text;
                 this.bar.alignment = this.alignment;
                 this.bar.type = this.type;
@@ -60,7 +60,7 @@
                 this.bar.fontSize = this.fontSize;
                 this.bar.imageWidth = this.imageWidth;
 
-                this.$emit('drawn', this.bar.draw());
+                this.$emit('drawn', this.bar.draw(), action);
             },
 
             loadFonts() {
@@ -73,22 +73,22 @@
 
         watch: {
             text() {
-                this.draw();
+                this.draw('text');
             },
             alignment() {
-                this.draw();
+                this.draw('alignment');
             },
             type() {
-                this.draw();
+                this.draw('type');
             },
             schema() {
-                this.draw();
+                this.draw('schema');
             },
             baseFontSize() {
-                this.draw();
+                this.draw('baseFontSize');
             },
             imageWidth() {
-                this.draw();
+                this.draw('imageWidth');
             },
         }
     }
