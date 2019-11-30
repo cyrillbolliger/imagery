@@ -263,6 +263,11 @@
                 let max = this.fontSize * imageToBlockRatio;
                 max = Math.floor(max); // the range slider wants integers
 
+                if (this.fontSize < min) {
+                    this.fontSize = min;
+                    return false;
+                }
+
                 if (max < min) {
                     this.fontSize = min;
                     this.fontSizeMax = min;
