@@ -48,7 +48,12 @@
         },
 
         mounted() {
+            this.draw('create');
             this.loadFonts().then(() => this.draw('font'));
+        },
+
+        destroyed() {
+            this.$emit('removed');
         },
 
         methods: {

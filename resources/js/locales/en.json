@@ -121,7 +121,10 @@
     "images": {
         "create": {
             "fontSize": "Font size",
-            "tooMuchText": "Your bars contain too much text. Shorten it!"
+            "tooMuchText": "Your bars contain too much text. Shorten it!",
+            "barAdd": "Add Bar",
+            "barRemove": "Remove Bar",
+            "headlineSecondaryAdd": "Two magenta headlines are only allowed, if the message requires it and would make less sense otherwise. Click Cancel to insert a second magenta bar. (You have to Click cancel, because people never read the message but just click OK.)"
         }
     }
 }

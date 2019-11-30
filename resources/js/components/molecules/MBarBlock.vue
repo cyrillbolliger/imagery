@@ -8,8 +8,25 @@
             :schema="schemaHeadlinePrimary"
             :type="typeHeadline"
             @drawn="update(headlinesPrimary, n, ...arguments)"
+            @removed="remove(headlinesPrimary, n)"
             v-for="n in headlinesPrimaryCount"
         ></ABar>
+        <button
+            :class="buttonClassPrimaryHeadline"
+            @click="headlinesPrimaryCount++"
+            class="btn"
+            v-if="headlinesCount < 3"
+        >{{$t('images.create.barAdd')}}
+        </button>
+        <button
+            :class="buttonClassPrimaryHeadline"
+            @click="headlinesPrimaryCount--"
+            class="btn"
+            v-if="headlinesPrimaryCount > 1"
+        >{{$t('images.create.barRemove')}}
+        </button>
+        <br>
+
         <ABar
             :alignment="alignment"
             :base-font-size="fontSize"
@@ -18,8 +35,23 @@
             :schema="schemaHeadlineSecondary"
             :type="typeHeadline"
             @drawn="update(headlinesSecondary, n, ...arguments)"
+            @removed="remove(headlinesSecondary, n)"
             v-for="n in headlinesSecondaryCount"
         ></ABar>
+        <button
+            @click="headlinesSecondaryAdd"
+            class="btn btn-primary"
+            v-if="headlinesCount < 3"
+        >{{$t('images.create.barAdd')}}
+        </button>
+        <button
+            @click="headlinesSecondaryCount--"
+            class="btn btn-primary"
+            v-if="headlinesSecondaryCount > 1"
+        >{{$t('images.create.barRemove')}}
+        </button>
+        <br>
+
         <ABar
             :alignment="alignment"
             :base-font-size="fontSize"
@@ -28,8 +60,24 @@
             :schema="schemaSubline"
             :type="typeSubline"
             @drawn="update(sublines, n, ...arguments)"
+            @removed="remove(sublines, n)"
             v-for="n in sublinesCount"
         ></ABar>
+        <button
+            :class="buttonClassSubline"
+            @click="sublinesCount++"
+            class="btn"
+            v-if="sublinesCount < 2"
+        >{{$t('images.create.barAdd')}}
+        </button>
+        <button
+            :class="buttonClassSubline"
+            @click="sublinesCount--"
+            class="btn"
+            v-if="sublinesCount > 1"
+        >{{$t('images.create.barRemove')}}
+        </button>
+        <br>
 
         <div class="alert alert-warning" role="alert" v-if="tooMuchText">
             {{$t('images.create.tooMuchText')}}
@@ -119,6 +167,22 @@
                 }
             },
 
+            buttonClassSubline() {
+                if ('green-green' === this.colorSchema) {
+                    return 'btn-secondary';
+                } else {
+                    return 'btn-outline-secondary';
+                }
+            },
+
+            buttonClassPrimaryHeadline() {
+                if ('white' === this.colorSchema) {
+                    return 'btn-outline-secondary';
+                } else {
+                    return 'btn-secondary';
+                }
+            },
+
             fontSizeMin() {
                 // base the minimal font size on a normalized side length of
                 // the image.
@@ -134,9 +198,13 @@
             },
 
             barCount() {
-                return this.headlinesPrimaryCount
-                    + this.headlinesSecondaryCount
+                return this.headlinesCount
                     + this.sublinesCount;
+            },
+
+            headlinesCount() {
+                return this.headlinesPrimaryCount
+                    + this.headlinesSecondaryCount;
             }
         },
 
@@ -171,6 +239,11 @@
                     this.eventCounter[event] = 0;
                     this.draw();
                 }
+            },
+
+            remove(array, index) {
+                this.$delete(array, index);
+                this.draw();
             },
 
             draw() {
@@ -211,8 +284,16 @@
             },
 
             isSingleBarEvent(event) {
-                return ['text', 'schema'].indexOf(event) !== -1;
+                return ['text', 'schema', 'create'].indexOf(event) !== -1;
             },
+
+            headlinesSecondaryAdd() {
+                const message = this.$t('images.create.headlineSecondaryAdd');
+
+                if (!confirm(message)) {
+                    this.headlinesSecondaryCount++;
+                }
+            }
         },
     }
 </script>
