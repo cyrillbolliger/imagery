@@ -10,7 +10,7 @@
             :image-width="width"
             :image-height="height"
             :color-schema="schema"
-            @drawn="drawBarBlock($event)"
+            @drawn="updateBarBlock($event)"
         ></MBarBlock>
         <br>
         <button @click="alignLeft()">left</button>
@@ -26,39 +26,41 @@
 </template>
 
 <script>
-    import {Alignments, Types} from "../../service/canvas/Bar";
+    import {Alignments} from "../../service/canvas/Bar";
     import MBarBlock from "../molecules/MBarBlock";
+    import Image from "../../service/canvas/Image";
 
     export default {
         name: "OImagery",
         components: {MBarBlock},
         data() {
             return {
-                canvas: null,
-                context: null,
                 alignment: Alignments.left,
                 schema: 'green',
                 width: 800,
                 height: 800,
                 fontSize: 50,
+                barBlock: null,
+                image: null
             }
         },
 
         mounted() {
-            this.canvas = this.$refs.canvas;
-            this.context = this.canvas.getContext('2d');
-            this.canvas.width = this.width;
-            this.canvas.height = this.height;
+            this.image = new Image(this.$refs.canvas);
+            this.draw();
         },
 
         methods: {
-            drawBarBlock(block) {
-                // use the if because it might be called before the context is
-                // ready (child component is mounted but parent isn't)
-                if (this.context) {
-                    this.context.clearRect(0, 0, this.width, this.height);
-                    this.context.drawImage(block, 0, 0);
-                }
+            updateBarBlock(barBlock) {
+                this.image.width = this.width;
+                this.image.height = this.height;
+                this.image.alignment = this.alignment;
+                this.image.barBlock = barBlock;
+                this.draw();
+            },
+
+            draw() {
+                this.image.draw();
             },
 
             alignLeft() {

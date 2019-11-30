@@ -210,5 +210,6 @@ export {
     Bar,
     Schemes,
     Alignments,
-    Types
+    Types,
+    barSizeFactor
 }

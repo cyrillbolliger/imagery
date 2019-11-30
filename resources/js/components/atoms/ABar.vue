@@ -99,8 +99,6 @@
     }
 </script>
 
-<style lang="scss" scoped>
-    .a-canvas {
-        border: 1px solid red;
-    }
+<style scoped>
+
 </style>
