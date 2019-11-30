@@ -106,9 +106,11 @@
                     return Schemes.green;
                 }
             },
+
             schemaHeadlineSecondary() {
                 return Schemes.magenta;
             },
+
             schemaSubline() {
                 if ('green-green' === this.colorSchema) {
                     return Schemes.green;
@@ -116,6 +118,7 @@
                     return Schemes.white;
                 }
             },
+
             fontSizeMin() {
                 // base the minimal font size on a normalized side length of
                 // the image.
@@ -128,6 +131,12 @@
                 const sideNormalized = Math.pow(cube, 1 / 3);
                 const min = sideNormalized * minFontSizeFactor;
                 return Math.ceil(min);
+            },
+
+            barCount() {
+                return this.headlinesPrimaryCount
+                    + this.headlinesSecondaryCount
+                    + this.sublinesCount;
             }
         },
 
@@ -156,18 +165,14 @@
                     this.eventCounter[event] = 0;
                 }
 
-                const barCount = this.headlinesPrimaryCount
-                    + this.headlinesSecondaryCount
-                    + this.sublinesCount;
-
                 this.eventCounter[event]++;
 
-                if (this.eventCounter[event] === barCount) {
+                if (this.eventCounter[event] === this.barCount) {
                     this.eventCounter[event] = 0;
                     this.draw();
                 }
-
             },
+
             draw() {
                 this.block.alignment = this.alignment;
 
@@ -178,6 +183,7 @@
                     this.$emit('drawn', this.block.draw());
                 }
             },
+
             adjustFontSize() {
                 const min = this.fontSizeMin;
                 const imageToBlockRatio = this.imageWidth / this.block.width;
@@ -203,6 +209,7 @@
 
                 return true;
             },
+
             isSingleBarEvent(event) {
                 return ['text', 'schema'].indexOf(event) !== -1;
             },
