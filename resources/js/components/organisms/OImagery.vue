@@ -3,13 +3,13 @@
         <canvas
             :style="`width: ${width/2}px; height: ${height/2}px;`"
             class="a-canvas"
-            @mousedown.stop="dragStartMouse($event)"
-            @mousemove.stop="moveMouse($event)"
-            @mouseup.stop="dragStopMouse($event)"
-            @touchcancel.stop="dragStopTouch($event)"
-            @touchend.stop="dragStopTouch($event)"
-            @touchmove.stop="dragMoveTouch($event)"
-            @touchstart.stop="dragStartTouch($event)"
+            @mousedown.stop="mouseDragStart($event)"
+            @mousemove.stop="mouseMove($event)"
+            @mouseup.stop="mouseDragStop($event)"
+            @touchcancel.stop="touchDragStop($event)"
+            @touchend.stop="touchDragStop($event)"
+            @touchmove.stop="touchDragMove($event)"
+            @touchstart.stop="touchDragStart($event)"
             ref="canvas"
         ></canvas>
         <br>
@@ -60,6 +60,12 @@
                 height: 800,
                 fontSize: 50,
                 backgroundType: null,
+                canvasPos: {
+                    x: 0,
+                    y: 0,
+                    width: 0,
+                    height: 0,
+                },
 
                 barBlock: null,
                 backgroundBlock: null,
@@ -73,6 +79,9 @@
         mounted() {
             this.canvas = this.$refs.canvas;
 
+            this.setCanvasPos();
+            window.addEventListener('resize', this.setCanvasPos());
+
             this.$nextTick(() => {
                 this.canvas.width = this.width;
                 this.canvas.height = this.height;
@@ -83,7 +92,10 @@
                 this.updateBackgroundLayer(this.backgroundBlock);
                 this.updateBarLayer(this.barBlock);
             });
+        },
 
+        destroyed() {
+            window.removeEventListener('resize', this.setCanvasPos());
         },
 
         methods: {
@@ -147,22 +159,42 @@
                 this.fontSize /= 2;
             },
 
-            dragStartMouse(event) {
+            setCanvasPos() {
+                const pos = this.canvas.getBoundingClientRect();
+                this.canvasPos.x = pos.x;
+                this.canvasPos.y = pos.y;
+                this.canvasPos.width = pos.width;
+                this.canvasPos.height = pos.height;
+            },
+
+            mouseDragStart(event) {
                 console.log(event);
             },
-            moveMouse(event) {
+            mouseMove(event) {
+                const pos = {
+                    x: (event.clientX - this.canvasPos.x) * this.width / this.canvasPos.width,
+                    y: (event.clientY - this.canvasPos.y) * this.height / this.canvasPos.height,
+                };
+
+                if (this.dragObj) {
+                    // todo: notify drag object
+                } else {
+                    this.backgroundLayer.mousePos = pos;
+                    this.barLayer.mousePos = pos;
+                }
+
+                this.draw();
+            },
+            mouseDragStop(event) {
                 console.log(event);
             },
-            dragStopMouse(event) {
+            touchDragStart(event) {
                 console.log(event);
             },
-            dragStartTouch(event) {
+            touchDragMove(event) {
                 console.log(event);
             },
-            dragMoveTouch(event) {
-                console.log(event);
-            },
-            dragStopTouch(event) {
+            touchDragStop(event) {
                 console.log(event);
             },
         },

@@ -31,11 +31,6 @@ export default class BackgroundLayer {
             return;
         }
 
-        // this._setX0pos();
-        // this._setY0pos();
-        // this._setX1pos();
-        // this._setY1pos();
-
         this._context.drawImage(this._block, 0, 0);
     }
 }
