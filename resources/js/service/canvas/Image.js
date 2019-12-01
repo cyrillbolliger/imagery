@@ -1,5 +1,7 @@
 import {barSizeFactor, Alignments} from "./Bar";
 
+const rotationAngle = -0.0872664626; // 5 degrees ccw in radians cw
+
 export default class Image {
     constructor(canvas) {
         this._canvas = canvas;
@@ -47,21 +49,43 @@ export default class Image {
             return;
         }
 
-        //this._context.rotate(-5 * Math.PI / 180);
-        this._context.drawImage(this._barBlock, this._getBlockXpos(), 0);
-        //this._context.rotate(5 * Math.PI / 180);
+        // move the origin to the desired position, then rotate. apply the
+        // image to the origin afterwards. this way we the offsets are measured
+        // horizontal and vertical respectively (unrotated). reset the origin
+        // and rotation afterwards.
+        this._context.translate(this._getBlockXpos(), this._getBlockYpos());
+        this._context.rotate(rotationAngle);
+        this._context.drawImage(this._barBlock, 0, 0);
+        this._context.setTransform(1, 0, 0, 1, 0, 0);
     }
 
     _getBlockXpos() {
+        if (this._alignment === Alignments.left) {
+            return -this._getBlockOversize();
+        }
+
+        return this._canvas.width - this._barBlock.width + this._getBlockOversize();
+    }
+
+    _getBlockOversize() {
         // todo: add border with
         // 2*border width if the border is shown
 
-        const oversize = this._canvas.width * barSizeFactor;
-
         if (this._alignment === Alignments.left) {
-            return -oversize;
+            return this._canvas.width * barSizeFactor;
         }
 
-        return this._canvas.width - this._barBlock.width + oversize;
+        const rotationCorr = Math.sin(rotationAngle) * this._barBlock.height;
+        return this._canvas.width * barSizeFactor + rotationCorr;
+    }
+
+    _getBlockYpos() {
+        if (this._alignment === Alignments.left) {
+            return -Math.sin(rotationAngle) * this._barBlock.width;
+        }
+
+        const visibleBlockWidth = this._barBlock.width - this._getBlockOversize();
+
+        return -Math.tan(rotationAngle) * visibleBlockWidth;
     }
 }
