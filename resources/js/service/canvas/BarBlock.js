@@ -1,4 +1,4 @@
-import {Alignments} from "./Bar";
+import {Alignments} from "./Constants";
 
 export default class BarBlock {
     constructor(primary, secondary, sublines) {

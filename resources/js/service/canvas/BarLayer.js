@@ -1,6 +1,4 @@
-import {barSizeFactor, Alignments} from "./Bar";
-
-const rotationAngle = -0.0872664626; // 5 degrees ccw in radians cw
+import {BarSizeFactor, Alignments, RotationAngle} from "./Constants";
 
 export default class BarLayer {
     constructor(canvas) {
@@ -41,7 +39,7 @@ export default class BarLayer {
         // horizontal and vertical respectively (unrotated). reset the origin
         // and rotation afterwards.
         this._context.translate(this._getBlockXpos(), this._getBlockYpos());
-        this._context.rotate(rotationAngle);
+        this._context.rotate(RotationAngle);
         this._context.drawImage(this._block, 0, 0);
         this._context.setTransform(1, 0, 0, 1, 0, 0);
     }
@@ -59,20 +57,20 @@ export default class BarLayer {
         // 2*border width if the border is shown
 
         if (this._alignment === Alignments.left) {
-            return this._canvas.width * barSizeFactor;
+            return this._canvas.width * BarSizeFactor;
         }
 
-        const rotationCorr = Math.sin(rotationAngle) * this._block.height;
-        return this._canvas.width * barSizeFactor + rotationCorr;
+        const rotationCorr = Math.sin(RotationAngle) * this._block.height;
+        return this._canvas.width * BarSizeFactor + rotationCorr;
     }
 
     _getBlockYpos() {
         if (this._alignment === Alignments.left) {
-            return -Math.sin(rotationAngle) * this._block.width;
+            return -Math.sin(RotationAngle) * this._block.width;
         }
 
         const visibleBlockWidth = this._block.width - this._getBlockOversize();
 
-        return -Math.tan(rotationAngle) * visibleBlockWidth;
+        return -Math.tan(RotationAngle) * visibleBlockWidth;
     }
 }

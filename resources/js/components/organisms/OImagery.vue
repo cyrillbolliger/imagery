@@ -25,6 +25,7 @@
             :image-height="height"
             :image-width="width"
             @drawn="updateBackgroundLayer($event)"
+            @typeChanged="backgroundType = $event"
         ></MBackgroundBlock>
 
         <br>
@@ -41,7 +42,7 @@
 </template>
 
 <script>
-    import {Alignments} from "../../service/canvas/Bar";
+    import {Alignments, BackgroundTypes} from "../../service/canvas/Constants";
     import MBarBlock from "../molecules/MBarBlock";
     import BarLayer from "../../service/canvas/BarLayer";
     import BackgroundLayer from "../../service/canvas/BackgroundLayer";
@@ -54,14 +55,17 @@
             return {
                 canvas: null,
                 alignment: Alignments.left,
-                schema: 'green',
+                schema: 'white',
                 width: 800,
                 height: 800,
                 fontSize: 50,
+                backgroundType: null,
+
                 barBlock: null,
                 backgroundBlock: null,
                 barLayer: null,
                 backgroundLayer: null,
+
                 dragObj: null,
             }
         },
@@ -162,6 +166,16 @@
                 console.log(event);
             },
         },
+
+        watch: {
+            backgroundType(value) {
+                if (BackgroundTypes.gradient === value) {
+                    this.makeWhite();
+                } else {
+                    this.makeGreen();
+                }
+            },
+        }
     }
 </script>
 

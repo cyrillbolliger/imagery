@@ -26,20 +26,18 @@
                     name="background"
                     type="radio"
                     v-model="background"
+                    @click="$refs.uploader.click()"
                 >{{$t('images.create.backgroundImage')}}
             </label>
         </div>
 
-        <div class="custom-file" v-if="background === types.image">
-            <input
-                :placeholder="$t('images.create.selectImage')"
-                @change="setImage($event)"
-                class="custom-file-input"
-                id="customFile"
-                type="file"
-            >
-            <label class="custom-file-label" for="customFile">{{$t('images.create.browse')}}</label>
-        </div>
+        <input
+            @change="setImage($event)"
+            class="custom-file-input"
+            id="customFile"
+            ref="uploader"
+            type="file"
+        >
 
         <div
             class="alert alert-warning"
@@ -52,10 +50,19 @@
 
 <script>
     import {Types, Background} from "../../service/canvas/Background";
+    import SnackbarMixin from "../../mixins/SnackbarMixin";
+
+    const mimeTypesAllowed = [
+        'image/jpeg',
+        'image/png',
+        'image/svg',
+        'image/svg+xml'
+    ];
 
     export default {
         name: "MBackgroundBlock",
         components: {},
+        mixins: [SnackbarMixin],
 
         data() {
             return {
@@ -106,26 +113,60 @@
                 this.block.type = this.background;
                 this.block.image = this.image;
 
-                this.$emit('drawn', this.block.draw());
+                let canvas;
+
+                try {
+                    canvas = this.block.draw();
+                    this.$emit('drawn', canvas);
+                } catch (e) {
+                    this.snackErrorDismiss(
+                        e,
+                        this.$t('images.create.uploaded_image_not_processable')
+                    );
+                }
             },
 
             setImage(event) {
-                const file = event.target.files[0];
+                if (!event.target.files.length) {
+                    return; // no file was selected
+                }
+
+                const blob = event.target.files[0];
                 const image = new Image();
                 const reader = new FileReader();
 
                 reader.onload = (e) => {
-                    image.src = e.target.result;
-                    this.image = image;
+                    if (this.mimeValidate(blob.type)) {
+                        image.src = e.target.result;
+                        this.image = image;
+                    }
                 };
 
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(blob);
+            },
+
+            mimeValidate(type) {
+                if (mimeTypesAllowed.indexOf(type) === -1) {
+                    this.snackErrorDismiss(
+                        `"${type}" is not a supported mime type.`,
+                        this.$t('images.create.invalid_mime')
+                    );
+
+                    return false;
+                }
+
+                return true;
             },
         },
 
         watch: {
-            background() {
+            background(value) {
+                if (Types.image === value && !this.image) {
+                    return;
+                }
+
                 this.draw();
+                this.$emit('typeChanged', value);
             },
             image() {
                 this.draw();

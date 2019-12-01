@@ -1,36 +1,5 @@
-const Schemes = {
-    white: {
-        background: '#ffffff',
-        text: '#84b414',
-    },
-    green: {
-        background: '#84b414',
-        text: '#ffffff',
-    },
-    magenta: {
-        background: '#e10078',
-        text: '#ffffff',
-    }
-};
+import {Alignments, BarSchemes as Schemes, BarSizeFactor} from "./Constants";
 
-const Alignments = {
-    left: 0,
-    right: 1
-};
-
-const Types = {
-    headline: 'SanukFat',
-    subline: 'SanukBold'
-};
-
-/**
- * Specifies the oversize of the bar in relation to the canvas width.
- *
- * 0.2 means that we'll add 20% of the canvas width to the bar.
- *
- * @type {number}
- */
-const barSizeFactor = 0.2;
 
 /**
  * If we multiply the font size with factor we should get the height of
@@ -58,7 +27,7 @@ const charPaddingFactor = 0.2;
  */
 const barMarginFactor = 0.1;
 
-class Bar {
+export default class Bar {
     constructor() {
         this._canvas = document.createElement('canvas');
         this._context = this._canvas.getContext('2d');
@@ -120,7 +89,7 @@ class Bar {
     }
 
     _setBarOversize() {
-        this._barOversize = this._imageWidth * barSizeFactor;
+        this._barOversize = this._imageWidth * BarSizeFactor;
     }
 
     _setTextDims() {
@@ -204,12 +173,4 @@ class Bar {
             return this._textDims.padding;
         }
     }
-}
-
-export {
-    Bar,
-    Schemes,
-    Alignments,
-    Types,
-    barSizeFactor
 }

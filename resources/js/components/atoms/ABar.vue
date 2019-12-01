@@ -5,7 +5,8 @@
 <script>
     const sublineHeadlineSizeRatio = 0.4;
 
-    import {Bar, Types} from "../../service/canvas/Bar";
+    import Bar from "../../service/canvas/Bar";
+    import {BarTypes as Types} from "../../service/canvas/Constants";
     import FontFaceObserver from "fontfaceobserver";
 
     export default {
