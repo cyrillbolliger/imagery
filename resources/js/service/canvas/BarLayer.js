@@ -11,14 +11,6 @@ export default class BarLayer {
                               // object before the canvas in the dom is ready
     }
 
-    set width(width) {
-        this._canvas.width = width;
-    }
-
-    set height(height) {
-        this._canvas.height = height;
-    }
-
     set block(block) {
         this._block = block;
     }

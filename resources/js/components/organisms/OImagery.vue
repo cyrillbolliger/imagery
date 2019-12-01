@@ -3,15 +3,30 @@
         <canvas
             :style="`width: ${width/2}px; height: ${height/2}px;`"
             class="a-canvas"
-            ref="canvas"></canvas>
+            @mousedown.stop="dragStartMouse($event)"
+            @mousemove.stop="moveMouse($event)"
+            @mouseup.stop="dragStopMouse($event)"
+            @touchcancel.stop="dragStopTouch($event)"
+            @touchend.stop="dragStopTouch($event)"
+            @touchmove.stop="dragMoveTouch($event)"
+            @touchstart.stop="dragStartTouch($event)"
+            ref="canvas"
+        ></canvas>
         <br>
         <MBarBlock
             :alignment="alignment"
             :image-width="width"
             :image-height="height"
             :color-schema="schema"
-            @drawn="updateBarBlock($event)"
+            @drawn="updateBarLayer($event)"
         ></MBarBlock>
+        <br>
+        <MBackgroundBlock
+            :image-height="height"
+            :image-width="width"
+            @drawn="updateBackgroundLayer($event)"
+        ></MBackgroundBlock>
+
         <br>
         <button @click="alignLeft()">left</button>
         <button @click="alignRight()">right</button>
@@ -28,39 +43,72 @@
 <script>
     import {Alignments} from "../../service/canvas/Bar";
     import MBarBlock from "../molecules/MBarBlock";
-    import Image from "../../service/canvas/Image";
+    import BarLayer from "../../service/canvas/BarLayer";
+    import BackgroundLayer from "../../service/canvas/BackgroundLayer";
+    import MBackgroundBlock from "../molecules/MBackgroundBlock";
 
     export default {
         name: "OImagery",
-        components: {MBarBlock},
+        components: {MBackgroundBlock, MBarBlock},
         data() {
             return {
+                canvas: null,
                 alignment: Alignments.left,
                 schema: 'green',
                 width: 800,
                 height: 800,
                 fontSize: 50,
                 barBlock: null,
-                image: null
+                backgroundBlock: null,
+                barLayer: null,
+                backgroundLayer: null,
+                dragObj: null,
             }
         },
 
         mounted() {
-            this.image = new Image(this.$refs.canvas);
-            this.draw();
+            this.canvas = this.$refs.canvas;
+
+            this.$nextTick(() => {
+                this.canvas.width = this.width;
+                this.canvas.height = this.height;
+
+                this.backgroundLayer = new BackgroundLayer(this.canvas);
+                this.barLayer = new BarLayer(this.canvas);
+
+                this.updateBackgroundLayer(this.backgroundBlock);
+                this.updateBarLayer(this.barBlock);
+            });
+
         },
 
         methods: {
-            updateBarBlock(barBlock) {
-                this.image.width = this.width;
-                this.image.height = this.height;
-                this.image.alignment = this.alignment;
-                this.image.barBlock = barBlock;
+            updateBarLayer(barBlock) {
+                this.barBlock = barBlock;
+
+                if (!this.barLayer) {
+                    return;
+                }
+
+                this.barLayer.alignment = this.alignment;
+                this.barLayer.block = this.barBlock;
+                this.draw();
+            },
+
+            updateBackgroundLayer(backgroundBlock) {
+                this.backgroundBlock = backgroundBlock;
+
+                if (!this.backgroundLayer) {
+                    return;
+                }
+
+                this.backgroundLayer.block = this.backgroundBlock;
                 this.draw();
             },
 
             draw() {
-                this.image.draw();
+                this.backgroundLayer.draw();
+                this.barLayer.draw();
             },
 
             alignLeft() {
@@ -94,12 +142,31 @@
                 this.height /= 2;
                 this.fontSize /= 2;
             },
+
+            dragStartMouse(event) {
+                console.log(event);
+            },
+            moveMouse(event) {
+                console.log(event);
+            },
+            dragStopMouse(event) {
+                console.log(event);
+            },
+            dragStartTouch(event) {
+                console.log(event);
+            },
+            dragMoveTouch(event) {
+                console.log(event);
+            },
+            dragStopTouch(event) {
+                console.log(event);
+            },
         },
     }
 </script>
 
 <style lang="scss" scoped>
     .a-canvas {
-        border: 1px solid red;
+        border: 1px solid black;
     }
 </style>
