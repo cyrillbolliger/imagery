@@ -104,7 +104,7 @@ export default class BarLayer {
             return -Math.sin(RotationAngle) * this._block.width;
         }
 
-        return -Math.tan(RotationAngle) * this._getVisibleBlockWidth;
+        return -Math.tan(RotationAngle) * this._getVisibleBlockWidth();
     }
 
     _getVisibleBlockWidth() {
@@ -112,8 +112,8 @@ export default class BarLayer {
     }
 
     _isHover() {
-        const rotatedVisibleHeight = this._block.height + Math.sin(RotationAngle) * this._getVisibleBlockWidth()
-        const rotatedVisibleWidth = this._block.width + Math.sin(RotationAngle) * this._block.height;
+        const rotatedVisibleHeight = this._block.height + (-Math.sin(RotationAngle)) * this._getVisibleBlockWidth();
+        const rotatedVisibleWidth = this._block.width + (-Math.sin(RotationAngle)) * this._block.height;
 
         const mouseX = this._mousePos.x;
         const mouseY = this._mousePos.y;
