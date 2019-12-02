@@ -6,6 +6,7 @@
             @mousedown.stop="mouseDragStart($event)"
             @mousemove.stop="mouseMove($event)"
             @mouseup.stop="mouseDragStop($event)"
+            @mouseleave.stop="mouseDragStop($event)"
             @touchcancel.stop="touchDragStop($event)"
             @touchend.stop="touchDragStop($event)"
             @touchmove.stop="touchDragMove($event)"
@@ -167,36 +168,48 @@
                 this.canvasPos.height = pos.height;
             },
 
-            mouseDragStart(event) {
-                console.log(event);
+            mouseDragStart() {
+                this.dragStart();
             },
             mouseMove(event) {
+                this.move(event);
+            },
+            mouseDragStop() {
+                this.dragStop();
+            },
+            touchDragStart() {
+                this.dragStart();
+            },
+            touchDragMove(event) {
+                this.move(event);
+            },
+            touchDragStop() {
+                this.dragStop();
+            },
+
+            dragStart() {
+                if (this.barLayer.touching) {
+                    this.dragObj = this.barLayer;
+                }
+            },
+            dragStop() {
+                this.dragObj = null;
+            },
+            move(event) {
                 const pos = {
                     x: (event.clientX - this.canvasPos.x) * this.width / this.canvasPos.width,
                     y: (event.clientY - this.canvasPos.y) * this.height / this.canvasPos.height,
                 };
 
                 if (this.dragObj) {
-                    // todo: notify drag object
-                } else {
-                    this.backgroundLayer.mousePos = pos;
-                    this.barLayer.mousePos = pos;
+                    this.dragObj.drag(pos);
                 }
 
+                this.backgroundLayer.mousePos = pos;
+                this.barLayer.mousePos = pos;
+
                 this.draw();
-            },
-            mouseDragStop(event) {
-                console.log(event);
-            },
-            touchDragStart(event) {
-                console.log(event);
-            },
-            touchDragMove(event) {
-                console.log(event);
-            },
-            touchDragStop(event) {
-                console.log(event);
-            },
+            }
         },
 
         watch: {
@@ -214,5 +227,9 @@
 <style lang="scss" scoped>
     .a-canvas {
         border: 1px solid black;
+
+        &.bar-touching {
+            cursor: ns-resize;
+        }
     }
 </style>

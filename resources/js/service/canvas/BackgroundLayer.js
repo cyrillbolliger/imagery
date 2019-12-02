@@ -18,6 +18,10 @@ export default class BackgroundLayer {
         this._drawBackground();
     }
 
+    drag(pos) {
+        console.log('dragBackground', pos);
+    }
+
     _setContext() {
         this._context = this._canvas.getContext('2d');
     }

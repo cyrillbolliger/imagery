@@ -33,11 +33,17 @@ export default class BarLayer {
 
         if (this._isHover() && !this._touching) {
             this._touching = true;
+            this._canvas.classList.add('bar-touching');
         }
 
         if (!this._isHover() && this._touching) {
             this._touching = false;
+            this._canvas.classList.remove('bar-touching');
         }
+    }
+
+    get touching() {
+        return this._touching;
     }
 
     draw() {
@@ -46,6 +52,15 @@ export default class BarLayer {
         this._drawBlock();
 
         return this._canvas;
+    }
+
+    drag(pos) {
+        const deltaY = pos.y - this._mousePos.y;
+        const y = this._y + deltaY;
+
+        if (this._inBounds(y)) {
+            this._y = y;
+        }
     }
 
     _setContext() {
@@ -112,17 +127,29 @@ export default class BarLayer {
     }
 
     _isHover() {
-        const rotatedVisibleHeight = this._block.height + (-Math.sin(RotationAngle)) * this._getVisibleBlockWidth();
-        const rotatedVisibleWidth = this._block.width + (-Math.sin(RotationAngle)) * this._block.height;
-
         const mouseX = this._mousePos.x;
         const mouseY = this._mousePos.y;
         const posX = this._getBlockXpos();
         const posY = this._y;
 
-        const xTouch = mouseX >= posX && mouseX <= posX + rotatedVisibleWidth;
-        const yTouch = mouseY >= posY && mouseY <= posY + rotatedVisibleHeight;
+        const xTouch = mouseX >= posX && mouseX <= posX + this._getRotatedVisibleWidth();
+        const yTouch = mouseY >= posY && mouseY <= posY + this._getRotatedVisibleHeight();
 
         return xTouch && yTouch;
+    }
+
+    _getRotatedVisibleHeight() {
+        return this._block.height + (-Math.sin(RotationAngle)) * this._getVisibleBlockWidth();
+    }
+
+    _getRotatedVisibleWidth() {
+        return this._block.width + (-Math.sin(RotationAngle)) * this._block.height;
+    }
+
+    _inBounds(y) {
+        const belowUpperBound = y > 0;
+        const aboveLowerBound = y + this._getRotatedVisibleHeight() < this._canvas.height;
+
+        return belowUpperBound && aboveLowerBound;
     }
 }
