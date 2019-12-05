@@ -1,0 +1,17 @@
+dist: bionic
+language: php
+php:
+  - 7.2
+before_install:
+  - yarn install
+before_script:
+  - composer self-update
+  - composer install --no-interaction
+script:
+  - vendor/bin/phpunit
+  - yarn prod
+deploy:
+  provider: script
+  script: bash deploy.sh
+  on:
+    branch: master
