@@ -2,9 +2,12 @@ dist: bionic
 language: php
 php:
   - 7.2
+services:
+  - mysql
 before_install:
   - yes | pecl install imagick
   - yarn install
+  - mysql -u root -p '' -e 'CREATE DATABASE IF NOT EXISTS laravel;'
 before_script:
   - composer self-update
   - composer install --no-interaction
