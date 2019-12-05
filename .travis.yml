@@ -3,7 +3,7 @@ language: php
 php:
   - 7.2
 before_install:
-  - pecl install imagick
+  - yes | pecl install imagick
   - yarn install
 before_script:
   - composer self-update
