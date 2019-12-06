@@ -3,6 +3,7 @@
         <canvas
             :style="`width: ${width/2}px; height: ${height/2}px;`"
             class="a-canvas"
+            :class="{dragging: dragObj}"
             @mousedown.stop="mouseDragStart($event)"
             @mousemove.stop="mouseMove($event)"
             @mouseup.stop="mouseDragStop($event)"
@@ -190,10 +191,14 @@
             dragStart() {
                 if (this.barLayer.touching) {
                     this.dragObj = this.barLayer;
+                    this.dragObj.dragging = true;
                 }
             },
             dragStop() {
-                this.dragObj = null;
+                if (this.dragObj) {
+                    this.dragObj.dragging = false;
+                    this.dragObj = null;
+                }
             },
             move(event) {
                 const pos = {
@@ -229,7 +234,11 @@
         border: 1px solid black;
 
         &.bar-touching {
-            cursor: ns-resize;
+            cursor: grab;
+        }
+
+        &.dragging {
+            cursor: grabbing !important;
         }
     }
 </style>

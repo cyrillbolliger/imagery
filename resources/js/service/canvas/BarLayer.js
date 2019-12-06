@@ -14,6 +14,7 @@ export default class BarLayer {
         this._y = 0;
 
         this._touching = false;
+        this._dragging = true;
         this._mousePos = {
             x: 0,
             y: 0,
@@ -40,6 +41,10 @@ export default class BarLayer {
             this._touching = false;
             this._canvas.classList.remove('bar-touching');
         }
+    }
+
+    set dragging(value) {
+        this._dragging = value;
     }
 
     get touching() {
