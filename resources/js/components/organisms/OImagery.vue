@@ -10,7 +10,7 @@
             @mouseout.stop="mouseLeave($event)"
             @touchcancel.stop="touchDragStop($event)"
             @touchend.stop="touchDragStop($event)"
-            @touchmove.stop="touchDragMove($event)"
+            @touchmove.stop.prevent="touchDragMove($event)"
             @touchstart.stop="touchDragStart($event)"
             ref="canvas"
         ></canvas>
@@ -187,7 +187,7 @@
                 this.dragStart();
             },
             touchDragMove(event) {
-                this.move(event);
+                this.move(event.touches[0]);
             },
             touchDragStop() {
                 this.dragStop();
