@@ -31,16 +31,7 @@ export default class BarLayer {
 
     set mousePos(mousePos) {
         this._mousePos = mousePos;
-
-        if (this._isHover() && !this._touching) {
-            this._touching = true;
-            this._canvas.classList.add('bar-touching');
-        }
-
-        if (!this._isHover() && this._touching) {
-            this._touching = false;
-            this._canvas.classList.remove('bar-touching');
-        }
+        this._touching = this._isHover();
     }
 
     set dragging(value) {
@@ -53,23 +44,18 @@ export default class BarLayer {
 
     draw() {
         this._setContext();
-
         this._drawBlock();
-
-        return this._canvas;
     }
 
     drag(pos) {
         const deltaY = pos.y - this._mousePos.y;
-        const y = this._y + deltaY;
-
-        if (this._inBounds(y)) {
-            this._y = y;
-        }
+        this._y += deltaY;
     }
 
     _setContext() {
-        this._context = this._canvas.getContext('2d');
+        if (!this._context) {
+            this._context = this._canvas.getContext('2d');
+        }
     }
 
     _drawBlock() {
@@ -83,7 +69,7 @@ export default class BarLayer {
         // image to the origin afterwards. this way we the offsets are measured
         // horizontal and vertical respectively (unrotated). reset the origin
         // and rotation afterwards.
-        this._context.translate(this._getBlockXpos(), this._y + this._getBlockYpos());
+        this._context.translate(this._getBlockXpos(), this._getBlockYpos());
         this._context.rotate(RotationAngle);
         this._context.drawImage(this._block, 0, 0);
         this._context.setTransform(1, 0, 0, 1, 0, 0);
@@ -120,11 +106,41 @@ export default class BarLayer {
     }
 
     _getBlockYpos() {
-        if (this._alignment === Alignments.left) {
-            return -Math.sin(RotationAngle) * this._block.width;
+        let y = this._y + this._getBlockYposUnadjusted();
+        const height = this._getRotatedVisibleHeight();
+        let topLimit = this._getFullHorizontalRotationTriangleHeight(); // todo: add border width
+        let bottomLimit = this._canvas.height + this._getFullHorizontalRotationTriangleHeight(); // todo: subtract border height
+
+        if (this._alignment === Alignments.right) {
+            topLimit = this._getVisibleHorizontalRotationTriangleHeight(); // todo: add border width
+            bottomLimit = this._canvas.height + this._getVisibleHorizontalRotationTriangleHeight(); // todo: subtract border height
         }
 
-        return -Math.tan(RotationAngle) * this._getVisibleBlockWidth();
+        if (y < topLimit) {
+            y = topLimit;
+        }
+
+        if (y + height > bottomLimit) {
+            y = bottomLimit - height;
+        }
+
+        return y;
+    }
+
+    _getBlockYposUnadjusted() {
+        if (this._alignment === Alignments.left) {
+            return this._getFullHorizontalRotationTriangleHeight();
+        }
+
+        return this._getVisibleHorizontalRotationTriangleHeight();
+    }
+
+    _getVisibleHorizontalRotationTriangleHeight() {
+        return Math.tan(-RotationAngle) * this._getVisibleBlockWidth();
+    }
+
+    _getFullHorizontalRotationTriangleHeight() {
+        return Math.sin(-RotationAngle) * this._block.width;
     }
 
     _getVisibleBlockWidth() {
@@ -134,27 +150,25 @@ export default class BarLayer {
     _isHover() {
         const mouseX = this._mousePos.x;
         const mouseY = this._mousePos.y;
-        const posX = this._getBlockXpos();
-        const posY = this._y;
+        const posXstart = this._getBlockXpos();
+        const posXend = posXstart + this._getRotatedFullWidth();
 
-        const xTouch = mouseX >= posX && mouseX <= posX + this._getRotatedVisibleWidth();
-        const yTouch = mouseY >= posY && mouseY <= posY + this._getRotatedVisibleHeight();
+        const posYstart = this._alignment === Alignments.left ?
+            this._getBlockYpos() - this._getFullHorizontalRotationTriangleHeight() :
+            this._getBlockYpos() - this._getVisibleHorizontalRotationTriangleHeight();
+        const posYend = posYstart + this._getRotatedVisibleHeight();
+
+        const xTouch = mouseX >= posXstart && mouseX <= posXend;
+        const yTouch = mouseY >= posYstart && mouseY <= posYend;
 
         return xTouch && yTouch;
     }
 
     _getRotatedVisibleHeight() {
-        return this._block.height + (-Math.sin(RotationAngle)) * this._getVisibleBlockWidth();
+        return this._block.height + Math.sin(-RotationAngle) * this._getVisibleBlockWidth();
     }
 
-    _getRotatedVisibleWidth() {
-        return this._block.width + (-Math.sin(RotationAngle)) * this._block.height;
-    }
-
-    _inBounds(y) {
-        const belowUpperBound = y > 0;
-        const aboveLowerBound = y + this._getRotatedVisibleHeight() < this._canvas.height;
-
-        return belowUpperBound && aboveLowerBound;
+    _getRotatedFullWidth() {
+        return this._block.width + Math.sin(-RotationAngle) * this._block.height;
     }
 }

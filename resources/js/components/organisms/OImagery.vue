@@ -3,11 +3,11 @@
         <canvas
             :style="`width: ${width/2}px; height: ${height/2}px;`"
             class="a-canvas"
-            :class="{dragging: dragObj}"
+            :class="{'bar-dragging': dragObj, 'bar-touching': barLayer && barLayer.touching}"
             @mousedown.stop="mouseDragStart($event)"
             @mousemove.stop="mouseMove($event)"
             @mouseup.stop="mouseDragStop($event)"
-            @mouseleave.stop="mouseDragStop($event)"
+            @mouseout.stop="mouseLeave($event)"
             @touchcancel.stop="touchDragStop($event)"
             @touchend.stop="touchDragStop($event)"
             @touchmove.stop="touchDragMove($event)"
@@ -163,8 +163,8 @@
 
             setCanvasPos() {
                 const pos = this.canvas.getBoundingClientRect();
-                this.canvasPos.x = pos.x;
-                this.canvasPos.y = pos.y;
+                this.canvasPos.x = pos.x + window.scrollX;
+                this.canvasPos.y = pos.y + window.scrollY;
                 this.canvasPos.width = pos.width;
                 this.canvasPos.height = pos.height;
             },
@@ -177,6 +177,10 @@
             },
             mouseDragStop() {
                 this.dragStop();
+            },
+            mouseLeave() {
+                this.dragStop();
+                this.move({pageX: -1, pageY: -1});
             },
             touchDragStart() {
                 this.dragStart();
@@ -202,8 +206,8 @@
             },
             move(event) {
                 const pos = {
-                    x: (event.clientX - this.canvasPos.x) * this.width / this.canvasPos.width,
-                    y: (event.clientY - this.canvasPos.y) * this.height / this.canvasPos.height,
+                    x: (event.pageX - this.canvasPos.x) * this.width / this.canvasPos.width,
+                    y: (event.pageY - this.canvasPos.y) * this.height / this.canvasPos.height,
                 };
 
                 if (this.dragObj) {
@@ -237,7 +241,7 @@
             cursor: grab;
         }
 
-        &.dragging {
+        &.bar-dragging {
             cursor: grabbing !important;
         }
     }
