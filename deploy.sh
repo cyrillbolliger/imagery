@@ -8,4 +8,4 @@ mv -t deploy app artisan bootstrap composer* config database public resources ro
 rsync -vrz --delete-after \
   $TRAVIS_BUILD_DIR/deploy/ $SSH_USER@$SSH_HOST:$DEPLOY_DIR
 
-ssh $SSH_USER@$SSH_HOST "cd $DEPLOY_DIR && /~/bin/composer install --optimize-autoloader --no-dev && php artisan config:cache"
+ssh $SSH_USER@$SSH_HOST "cd $DEPLOY_DIR && ~/bin/composer install --optimize-autoloader --no-dev && php artisan config:cache"
