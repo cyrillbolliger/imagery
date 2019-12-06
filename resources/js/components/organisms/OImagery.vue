@@ -31,15 +31,16 @@
         ></MBackgroundBlock>
 
         <br>
+        <button @click="scaleUp()">scaleUp</button>
+        <button @click="scaleDown()">scaleDown</button>
+
+        <br>
         <button @click="alignLeft()">left</button>
         <button @click="alignRight()">right</button>
         <br>
         <button @click="makeGreen()">green</button>
         <button @click="makeWhite()">white</button>
         <button @click="makeGreenGreen()">green-green</button>
-        <br>
-        <button @click="scaleUp()">scaleUp</button>
-        <button @click="scaleDown()">scaleDown</button>
     </div>
 </template>
 
@@ -229,6 +230,14 @@
                     this.makeGreen();
                 }
             },
+            width(value) {
+                this.canvas.width = value;
+                this.$nextTick(() => this.setCanvasPos());
+            },
+            height(value) {
+                this.canvas.height = value;
+                this.$nextTick(() => this.setCanvasPos());
+            }
         }
     }
 </script>

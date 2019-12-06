@@ -171,6 +171,12 @@
             image() {
                 this.draw();
             },
+            imageWidth() {
+                this.draw();
+            },
+            imageHeight() {
+                this.draw();
+            },
         },
     }
 </script>
