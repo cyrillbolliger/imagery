@@ -3,10 +3,14 @@ import {BarSizeFactor, Alignments, RotationAngle} from "./Constants";
 const shadowColorMouseOver = 'rgba(0,0,0,0.5)';
 const shadowMouseOverSize = 0.01;
 
+const borderMarginFactor = 2;
+const borderMarginFactorRadius = 3;
+
 export default class BarLayer {
     constructor(canvas) {
         this._canvas = canvas;
 
+        this._borderWidth = null;
         this._block = null;
         this._context = null; // deferred loading because we have to create this
                               // object before the canvas in the dom is ready
@@ -36,6 +40,10 @@ export default class BarLayer {
 
     set dragging(value) {
         this._dragging = value;
+    }
+
+    set borderWidth(value) {
+        this._borderWidth = value;
     }
 
     get touching() {
@@ -73,6 +81,7 @@ export default class BarLayer {
         this._context.rotate(RotationAngle);
         this._context.drawImage(this._block, 0, 0);
         this._context.setTransform(1, 0, 0, 1, 0, 0);
+        this._context.filter = 'none';
     }
 
     _setTouchEffect() {
@@ -94,26 +103,28 @@ export default class BarLayer {
     }
 
     _getBlockOversize() {
-        // todo: add border with
-        // 2*border width if the border is shown
+        const border = this._borderWidth;
 
         if (this._alignment === Alignments.left) {
-            return this._canvas.width * BarSizeFactor;
+            return this._canvas.width * BarSizeFactor - border;
         }
 
         const rotationCorr = Math.sin(RotationAngle) * this._block.height;
-        return this._canvas.width * BarSizeFactor + rotationCorr;
+        return this._canvas.width * BarSizeFactor + rotationCorr - border;
     }
 
     _getBlockYpos() {
         let y = this._y + this._getBlockYposUnadjusted();
         const height = this._getRotatedVisibleHeight();
-        let topLimit = this._getFullHorizontalRotationTriangleHeight(); // todo: add border width
-        let bottomLimit = this._canvas.height + this._getFullHorizontalRotationTriangleHeight(); // todo: subtract border height
+
+        const border = borderMarginFactor * this._borderWidth;
+        const borderRadius = borderMarginFactorRadius * this._borderWidth;
+        let topLimit = this._getFullHorizontalRotationTriangleHeight() + border;
+        let bottomLimit = this._canvas.height + this._getFullHorizontalRotationTriangleHeight() - borderRadius;
 
         if (this._alignment === Alignments.right) {
-            topLimit = this._getVisibleHorizontalRotationTriangleHeight(); // todo: add border width
-            bottomLimit = this._canvas.height + this._getVisibleHorizontalRotationTriangleHeight(); // todo: subtract border height
+            topLimit = this._getVisibleHorizontalRotationTriangleHeight() + borderRadius;
+            bottomLimit = this._canvas.height + this._getVisibleHorizontalRotationTriangleHeight() - border;
         }
 
         if (y < topLimit) {

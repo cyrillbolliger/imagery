@@ -29,6 +29,13 @@
             @drawn="updateBackgroundLayer($event)"
             @typeChanged="backgroundType = $event"
         ></MBackgroundBlock>
+        <br>
+        <MBorderBlock
+            :image-height="height"
+            :image-width="width"
+            @drawn="updateBorderLayer($event)"
+            @widthChanged="borderWidth = $event"
+        ></MBorderBlock>
 
         <br>
         <button @click="scaleUp()">scaleUp</button>
@@ -50,10 +57,12 @@
     import BarLayer from "../../service/canvas/BarLayer";
     import BackgroundLayer from "../../service/canvas/BackgroundLayer";
     import MBackgroundBlock from "../molecules/MBackgroundBlock";
+    import MBorderBlock from "../molecules/MBorderBlock";
+    import BorderLayer from "../../service/canvas/BorderLayer";
 
     export default {
         name: "OImagery",
-        components: {MBackgroundBlock, MBarBlock},
+        components: {MBorderBlock, MBackgroundBlock, MBarBlock},
         data() {
             return {
                 canvas: null,
@@ -63,6 +72,7 @@
                 height: 800,
                 fontSize: 50,
                 backgroundType: null,
+                borderWidth: 0,
                 canvasPos: {
                     x: 0,
                     y: 0,
@@ -72,6 +82,8 @@
 
                 barBlock: null,
                 backgroundBlock: null,
+                borderBlock: null,
+                borderLayer: null,
                 barLayer: null,
                 backgroundLayer: null,
 
@@ -90,9 +102,11 @@
                 this.canvas.height = this.height;
 
                 this.backgroundLayer = new BackgroundLayer(this.canvas);
+                this.borderLayer = new BorderLayer(this.canvas);
                 this.barLayer = new BarLayer(this.canvas);
 
                 this.updateBackgroundLayer(this.backgroundBlock);
+                this.updateBorderLayer(this.borderBlock);
                 this.updateBarLayer(this.barBlock);
             });
         },
@@ -111,6 +125,7 @@
 
                 this.barLayer.alignment = this.alignment;
                 this.barLayer.block = this.barBlock;
+                this.barLayer.borderWidth = this.borderWidth;
                 this.draw();
             },
 
@@ -125,8 +140,20 @@
                 this.draw();
             },
 
+            updateBorderLayer(borderBlock) {
+                this.borderBlock = borderBlock;
+
+                if (!this.borderLayer) {
+                    return;
+                }
+
+                this.borderLayer.block = this.borderBlock;
+                this.draw();
+            },
+
             draw() {
                 this.backgroundLayer.draw();
+                this.borderLayer.draw();
                 this.barLayer.draw();
             },
 
