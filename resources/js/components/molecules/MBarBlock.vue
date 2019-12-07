@@ -104,7 +104,7 @@
     const minFontSizeFactor = 0.08; // the correct 175% would be 0.0925
 
     import {BarSchemes as Schemes, BarTypes as Types} from "../../service/canvas/Constants";
-    import BarBlock from "../../service/canvas/BarBlock";
+    import BarBlock from "../../service/canvas/blocks/BarBlock";
     import ABar from "../atoms/ABar";
 
     export default {

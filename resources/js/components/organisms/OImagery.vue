@@ -54,11 +54,11 @@
 <script>
     import {Alignments, BackgroundTypes} from "../../service/canvas/Constants";
     import MBarBlock from "../molecules/MBarBlock";
-    import BarLayer from "../../service/canvas/BarLayer";
-    import BackgroundLayer from "../../service/canvas/BackgroundLayer";
+    import BarLayer from "../../service/canvas/layers/BarLayer";
+    import BackgroundLayer from "../../service/canvas/layers/BackgroundLayer";
     import MBackgroundBlock from "../molecules/MBackgroundBlock";
     import MBorderBlock from "../molecules/MBorderBlock";
-    import BorderLayer from "../../service/canvas/BorderLayer";
+    import BorderLayer from "../../service/canvas/layers/BorderLayer";
 
     export default {
         name: "OImagery",

@@ -1,4 +1,4 @@
-import {Alignments, BarSchemes as Schemes, BarSizeFactor} from "./Constants";
+import {Alignments, BarSchemes as Schemes, BarSizeFactor} from "./../Constants";
 
 
 /**

@@ -1,4 +1,4 @@
-import {BackgroundTypes as Types, RotationAngle} from "./Constants";
+import {BackgroundTypes as Types, RotationAngle} from "./../Constants";
 
 const transparentSquareSize = 20;
 const transparentSquareColor = '#d7d7d7';

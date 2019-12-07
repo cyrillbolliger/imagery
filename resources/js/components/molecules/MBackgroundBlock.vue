@@ -49,7 +49,7 @@
 </template>
 
 <script>
-    import {Types, Background} from "../../service/canvas/Background";
+    import {Types, Background} from "../../service/canvas/elements/Background";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
 
     const mimeTypesAllowed = [

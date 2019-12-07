@@ -1,4 +1,4 @@
-import {BarSizeFactor, Alignments, RotationAngle} from "./Constants";
+import {BarSizeFactor, Alignments, RotationAngle} from "./../Constants";
 import Layer from "./Layer";
 
 const shadowColorMouseOver = 'rgba(0,0,0,0.5)';

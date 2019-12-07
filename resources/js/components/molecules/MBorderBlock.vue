@@ -18,7 +18,7 @@
 </template>
 
 <script>
-    import {Border} from "../../service/canvas/Border";
+    import {Border} from "../../service/canvas/elements/Border";
     import ASelect from "../atoms/ASelect";
 
     export default {
