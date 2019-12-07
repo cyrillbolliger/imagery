@@ -36,7 +36,7 @@
             <input
                 :max="1"
                 :min="0"
-                @input="draw()"
+                @input="zoomImage()"
                 class="form-control-range"
                 id="image-zoom"
                 step="0.01"
@@ -75,6 +75,8 @@
         'image/svg',
         'image/svg+xml'
     ];
+
+    let requestedAnimationFrame;
 
     export default {
         name: "MBackgroundBlock",
@@ -176,6 +178,17 @@
                 bg.height = this.imageHeight;
 
                 return bg;
+            },
+
+            zoomImage() {
+                if (requestedAnimationFrame) {
+                    window.cancelAnimationFrame(requestedAnimationFrame);
+                }
+
+                requestedAnimationFrame = window.requestAnimationFrame(() => {
+                    this.block.zoom = this.zoom;
+                    this.$emit('drawn', this.block.draw());
+                });
             },
 
             setImage(event) {
