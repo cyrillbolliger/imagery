@@ -83,17 +83,20 @@
             {{$t('images.create.tooMuchText')}}
         </div>
 
-        <input
-            @input="draw()"
-            id="font-size"
-            :disabled="tooMuchText"
-            :max="fontSizeMax"
-            :min="fontSizeMin"
-            step="1"
-            type="range"
-            v-model.number="fontSize"
-        >
-        <label for="font-size">{{$t('images.create.fontSize')}}</label>
+        <div class="form-group">
+            <label for="font-size">{{$t('images.create.fontSize')}}</label>
+            <input
+                :disabled="tooMuchText"
+                :max="fontSizeMax"
+                :min="fontSizeMin"
+                @input="draw()"
+                class="form-control-range"
+                id="font-size"
+                step="1"
+                type="range"
+                v-model.number="fontSize"
+            >
+        </div>
     </div>
 </template>
 
