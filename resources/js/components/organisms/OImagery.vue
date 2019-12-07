@@ -27,7 +27,7 @@
             :image-height="height"
             :image-width="width"
             @drawn="updateBackgroundLayer($event)"
-            @typeChanged="backgroundType = $event"
+            @typeChanged="updateBackgroundType($event)"
         ></MBackgroundBlock>
         <br>
         <MBorderBlock
@@ -140,6 +140,13 @@
                 this.draw();
             },
 
+            updateBackgroundType(type) {
+                this.backgroundType = type;
+                this.$nextTick(() => {
+                    this.backgroundLayer.center();
+                });
+            },
+
             updateBorderLayer(borderBlock) {
                 this.borderBlock = borderBlock;
 
@@ -223,6 +230,9 @@
             dragStart() {
                 if (this.barLayer.touching) {
                     this.dragObj = this.barLayer;
+                    this.dragObj.dragging = true;
+                } else if (this.backgroundType === BackgroundTypes.image) {
+                    this.dragObj = this.backgroundLayer;
                     this.dragObj.dragging = true;
                 }
             },

@@ -204,6 +204,7 @@
                     if (this.mimeValidate(blob.type)) {
                         image.src = e.target.result;
                         this.image = image;
+                        this.$emit('typeChanged', Types.image);
                     }
                 };
 
