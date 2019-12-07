@@ -31,7 +31,7 @@
             </label>
         </div>
 
-        <div class="form-group" v-if="background === types.image && image">
+        <div class="form-group" v-if="background === types.image && image && !imageTooSmall">
             <label for="image-zoom">{{$t('images.create.imageZoom')}}</label>
             <input
                 :max="1"
