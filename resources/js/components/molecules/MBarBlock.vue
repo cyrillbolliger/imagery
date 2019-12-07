@@ -74,7 +74,7 @@
             :class="buttonClassSubline"
             @click="sublinesCount--"
             class="btn"
-            v-if="sublinesCount > 1"
+            v-if="sublinesCount > 0"
         >{{$t('images.create.barRemove')}}
         </button>
         <br>
