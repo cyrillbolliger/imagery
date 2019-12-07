@@ -102,6 +102,7 @@
 
 <script>
     const minFontSizeFactor = 0.08; // the correct 175% would be 0.0925
+    const maxFontSizeFactor = 1.08;
 
     import {BarSchemes as Schemes, BarTypes as Types} from "../../service/canvas/Constants";
     import BarBlock from "../../service/canvas/blocks/BarBlock";
@@ -262,7 +263,8 @@
 
             adjustFontSize() {
                 const min = this.fontSizeMin;
-                const imageToBlockRatio = this.imageWidth / this.block.width;
+                const maxWidth = this.imageWidth * maxFontSizeFactor;
+                const imageToBlockRatio = maxWidth / this.block.width;
                 let max = this.fontSize * imageToBlockRatio;
                 max = Math.floor(max); // the range slider wants integers
 
@@ -280,7 +282,7 @@
                     this.tooMuchText = false;
                 }
 
-                if (this.block.width > this.imageWidth) {
+                if (this.block.width > maxWidth) {
                     this.fontSizeMax = max;
                     this.fontSize = max;
                     return false;
