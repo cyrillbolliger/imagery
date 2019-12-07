@@ -31,6 +31,20 @@
             </label>
         </div>
 
+        <div class="form-group" v-if="background === types.image && image">
+            <label for="image-zoom">{{$t('images.create.imageZoom')}}</label>
+            <input
+                :max="1"
+                :min="0"
+                @input="draw()"
+                class="form-control-range"
+                id="image-zoom"
+                step="0.01"
+                type="range"
+                v-model.number="zoom"
+            >
+        </div>
+
         <input
             @change="setImage($event)"
             class="custom-file-input"
@@ -49,8 +63,11 @@
 </template>
 
 <script>
-    import {Types, Background} from "../../service/canvas/elements/Background";
+    import {BackgroundTypes as Types} from "../../service/canvas/Constants";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
+    import BackgroundGradient from "../../service/canvas/elements/BackgroundGradient";
+    import BackgroundTransparent from "../../service/canvas/elements/BackgroundTransparent";
+    import BackgroundImage from "../../service/canvas/elements/BackgroundImage";
 
     const mimeTypesAllowed = [
         'image/jpeg',
@@ -66,10 +83,11 @@
 
         data() {
             return {
-                block: new Background(),
+                block: null,
                 background: Types.gradient,
                 image: null,
-                types: Types
+                types: Types,
+                zoom: 0,
             }
         },
 
@@ -108,22 +126,56 @@
 
         methods: {
             draw() {
-                this.block.width = this.imageWidth;
-                this.block.height = this.imageHeight;
-                this.block.type = this.background;
-                this.block.image = this.image;
-
                 let canvas;
 
+                switch (this.background) {
+                    case Types.gradient:
+                        canvas = this.drawGradient();
+                        break;
+
+                    case Types.transparent:
+                        canvas = this.drawTransparent();
+                        break;
+
+                    case Types.image:
+                        canvas = this.drawImage();
+                        break;
+                }
+
+                this.$emit('drawn', canvas);
+            },
+
+            drawGradient() {
+                this.block = this.backgroundFactory(BackgroundGradient);
+                return this.block.draw();
+            },
+
+            drawTransparent() {
+                this.block = this.backgroundFactory(BackgroundTransparent);
+                return this.block.draw();
+            },
+
+            drawImage() {
+                this.block = this.backgroundFactory(BackgroundImage);
+                this.block.image = this.image;
+                this.block.zoom = this.zoom;
+
                 try {
-                    canvas = this.block.draw();
-                    this.$emit('drawn', canvas);
+                    return this.block.draw();
                 } catch (e) {
                     this.snackErrorDismiss(
                         e,
                         this.$t('images.create.uploaded_image_not_processable')
                     );
                 }
+            },
+
+            backgroundFactory(type) {
+                const bg = new type();
+                bg.width = this.imageWidth;
+                bg.height = this.imageHeight;
+
+                return bg;
             },
 
             setImage(event) {
