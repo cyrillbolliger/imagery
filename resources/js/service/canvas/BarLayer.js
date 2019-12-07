@@ -1,4 +1,5 @@
 import {BarSizeFactor, Alignments, RotationAngle} from "./Constants";
+import Layer from "./Layer";
 
 const shadowColorMouseOver = 'rgba(0,0,0,0.5)';
 const shadowMouseOverSize = 0.01;
@@ -6,15 +7,11 @@ const shadowMouseOverSize = 0.01;
 const borderMarginFactor = 2;
 const borderMarginFactorRadius = 3;
 
-export default class BarLayer {
+export default class BarLayer extends Layer {
     constructor(canvas) {
-        this._canvas = canvas;
+        super(canvas);
 
         this._borderWidth = null;
-        this._block = null;
-        this._context = null; // deferred loading because we have to create this
-                              // object before the canvas in the dom is ready
-
         this._y = 0;
 
         this._touching = false;
@@ -23,10 +20,6 @@ export default class BarLayer {
             x: 0,
             y: 0,
         };
-    }
-
-    set block(block) {
-        this._block = block;
     }
 
     set alignment(alignment) {
@@ -50,20 +43,9 @@ export default class BarLayer {
         return this._touching;
     }
 
-    draw() {
-        this._setContext();
-        this._drawBlock();
-    }
-
     drag(pos) {
         const deltaY = pos.y - this._mousePos.y;
         this._y += deltaY;
-    }
-
-    _setContext() {
-        if (!this._context) {
-            this._context = this._canvas.getContext('2d');
-        }
     }
 
     _drawBlock() {
