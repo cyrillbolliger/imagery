@@ -223,6 +223,11 @@
 
                 return true;
             },
+
+            adjustZoom(dimNew, dimOld) {
+                const ratio = dimNew / dimOld;
+                this.zoom *= ratio;
+            }
         },
 
         watch: {
@@ -235,12 +240,15 @@
                 this.$emit('typeChanged', value);
             },
             image() {
+                this.zoom = 0;
                 this.draw();
             },
-            imageWidth() {
+            imageWidth(valueNew, valueOld) {
+                this.adjustZoom(valueNew, valueOld);
                 this.draw();
             },
-            imageHeight() {
+            imageHeight(valueNew, valueOld) {
+                this.adjustZoom(valueNew, valueOld);
                 this.draw();
             },
         },
