@@ -85,18 +85,6 @@ class ImageController extends Controller
     }
 
     /**
-     * Return paginated list of raw images matching the query.
-     *
-     * @param  \App\Image  $image
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function searchRaw(Image $image)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  Request  $request
