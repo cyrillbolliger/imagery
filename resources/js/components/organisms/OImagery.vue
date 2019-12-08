@@ -27,7 +27,7 @@
             :image-height="height"
             :image-width="width"
             @drawn="updateBackgroundLayer($event)"
-            @typeChanged="updateBackgroundType($event)"
+            @typeChanged="backgroundType = $event"
         ></MBackgroundBlock>
         <br>
         <MBorderBlock
@@ -138,13 +138,6 @@
 
                 this.backgroundLayer.block = this.backgroundBlock;
                 this.draw();
-            },
-
-            updateBackgroundType(type) {
-                this.backgroundType = type;
-                this.$nextTick(() => {
-                    this.backgroundLayer.center();
-                });
             },
 
             updateBorderLayer(borderBlock) {
