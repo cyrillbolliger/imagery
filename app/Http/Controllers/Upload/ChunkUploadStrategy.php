@@ -124,13 +124,17 @@ class ChunkUploadStrategy extends UploadStrategy
     private function extractData(string $chunk): string
     {
         // the file is the part after the first comma
-        $start = strpos($chunk, ',') + 1;
+        $start = strpos($chunk, ',');
 
         if (false === $start) {
-            $this->validationErrorAbort(self::KEY_DATA, 'Invalid data format.');
+            if (0 === $this->part) {
+                $this->validationErrorAbort(self::KEY_DATA, 'Invalid data format.');
+            } else {
+                return $chunk;
+            }
         }
 
-        return substr($chunk, $start);
+        return substr($chunk, $start + 1);
     }
 
     /**
@@ -174,7 +178,8 @@ class ChunkUploadStrategy extends UploadStrategy
      */
     private function base64decode(string $base64): string
     {
-        $data = base64_decode($base64, true);
+        $base64 = str_replace(' ', '+', $base64); // https://www.php.net/manual/de/function.base64-decode.php#102113
+        $data   = base64_decode($base64, false);
 
         if (false === $data) {
             $this->validationErrorAbort(self::KEY_DATA, 'Unable to decode base64 encoded data.');
