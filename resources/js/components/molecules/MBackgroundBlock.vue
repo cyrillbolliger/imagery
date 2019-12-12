@@ -205,6 +205,7 @@
                         image.src = e.target.result;
                         this.image = image;
                         this.$emit('typeChanged', Types.image);
+                        this.$emit('imageChanged', image);
                     }
                 };
 

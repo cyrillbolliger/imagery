@@ -135,7 +135,8 @@
             "invalid_mime": "Only JPEG, PNG and SVG images are supported. Convert the image in one of those formats.",
             "border": "Border",
             "border_none": "The border is part of the corporate design. You may however omit the border if you use the image in a context where a border looks ugly.",
-            "imageZoom": "Image Zoom"
+            "imageZoom": "Image Zoom",
+            "uploadFailed": "Failed to store image. Please try again."
         }
     }
 }

@@ -28,6 +28,7 @@
             :image-width="width"
             @drawn="updateBackgroundLayer($event)"
             @typeChanged="backgroundType = $event"
+            @imageChanged="rawImage = $event"
         ></MBackgroundBlock>
         <br>
         <MBorderBlock
@@ -48,6 +49,10 @@
         <button @click="makeGreen()">green</button>
         <button @click="makeWhite()">white</button>
         <button @click="makeGreenGreen()">green-green</button>
+        <br>
+        <a download="image.png" ref="download">
+            <button @click="save()">Save</button>
+        </a>
     </div>
 </template>
 
@@ -59,6 +64,8 @@
     import MBackgroundBlock from "../molecules/MBackgroundBlock";
     import MBorderBlock from "../molecules/MBorderBlock";
     import BorderLayer from "../../service/canvas/layers/BorderLayer";
+    import Api from "../../service/Api";
+    import ImageUpload from "../../service/ImageUpload";
 
     export default {
         name: "OImagery",
@@ -71,7 +78,8 @@
                 width: 800,
                 height: 800,
                 fontSize: 50,
-                backgroundType: null,
+                backgroundType: BackgroundTypes.gradient,
+                rawImage: null,
                 borderWidth: 0,
                 canvasPos: {
                     x: 0,
@@ -224,7 +232,7 @@
                 if (this.barLayer.touching) {
                     this.dragObj = this.barLayer;
                     this.dragObj.dragging = true;
-                } else if (this.backgroundType === BackgroundTypes.image) {
+                } else if (this.backgroundType === s.BackgroundTypeimage) {
                     this.dragObj = this.backgroundLayer;
                     this.dragObj.dragging = true;
                 }
@@ -249,6 +257,65 @@
                 this.barLayer.mousePos = pos;
 
                 this.draw();
+            },
+
+            showLegalCheck() {
+                // todo
+            },
+
+            uploadRawImage() {
+                // todo
+            },
+
+            uploadFinalImage() {
+                const filename = this.uniqueFilename();
+                const finalImage = this.canvas.toDataURL();
+                const uploader = new ImageUpload(finalImage, filename);
+
+                uploader.upload('files/images')
+                    .then(() => this.uploadFinalImageMeta(filename))
+                    .catch(error => {
+                        this.snackErrorRetry(error, this.$t('images.create.uploadFailed'))
+                            .then(this.uploadFinalImage());
+                    });
+            },
+
+            uploadFinalImageMeta(filename) {
+                const payload = {
+                    logo_id: null, // todo
+                    background: this.backgroundType,
+                    type: 'final',
+                    original_id: null,
+                    filename: filename
+                };
+
+                Api().post('images', payload)
+                    .then(resp => console.log(resp))
+                    .catch(error => {
+                        this.snackErrorRetry(error, this.$t('images.create.uploadFailed'))
+                            .then(this.uploadFinalImageMeta());
+                    });
+            },
+
+            downloadFinalImage() {
+                const finalImage = this.canvas.toDataURL()
+                    .replace('image/png', 'image/octet-stream');
+
+                this.$refs.download.setAttribute('href', finalImage);
+            },
+
+            save() {
+                if (this.backgroundType === BackgroundTypes.image && this.image) {
+                    this.showLegalCheck();
+                    this.uploadRawImage();
+                }
+                this.uploadFinalImage();
+                this.downloadFinalImage();
+            },
+
+            uniqueFilename() {
+                this.$store.dispatch('counter/increment');
+                return this.$store.getters['counter/get'] + '.png';
             }
         },
 

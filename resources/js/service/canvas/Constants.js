@@ -4,9 +4,9 @@ export const Alignments = {
 };
 
 export const BackgroundTypes = {
-    gradient: 0,
-    transparent: 1,
-    image: 2
+    gradient: 'gradient',
+    transparent: 'transparent',
+    image: 'custom'
 };
 
 export const BarSchemes = {

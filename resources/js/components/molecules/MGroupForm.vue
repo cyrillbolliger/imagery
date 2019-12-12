@@ -42,7 +42,6 @@
     import AMultiSelect from "../atoms/AMultiSelect";
     import ResourceLoadMixin from "../../mixins/ResourceLoadMixin";
     import {mapGetters} from "vuex";
-    import Api from "../../service/Api";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
     import MGroupTree from "./MGroupTree";
     import PrepareSelectMixin from "../../mixins/PrepareSelectMixin";
