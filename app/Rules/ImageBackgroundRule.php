@@ -36,7 +36,11 @@ class ImageBackgroundRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        return $this->model->type === Image::TYPE_RAW && $value === Image::BG_CUSTOM;
+        if ($this->model->type === Image::TYPE_RAW) {
+            return $value === Image::BG_CUSTOM;
+        }
+
+        return true;
     }
 
     /**
