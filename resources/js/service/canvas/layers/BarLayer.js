@@ -45,7 +45,19 @@ export default class BarLayer extends Layer {
 
     drag(pos) {
         const deltaY = pos.y - this._mousePos.y;
-        this._y += deltaY;
+        const y = this._y + deltaY;
+
+        const margins = this._getYMargins();
+        const topLimit = margins.top;
+        const bottomLimit = this._canvas.height - margins.bottom - this._getRotatedVisibleHeight();
+
+        if (y < topLimit) {
+            this._y = topLimit;
+        } else if (y > bottomLimit) {
+            this._y = bottomLimit;
+        } else {
+            this._y = y;
+        }
     }
 
     _drawBlock() {
@@ -99,25 +111,43 @@ export default class BarLayer extends Layer {
         let y = this._y + this._getBlockYposUnadjusted();
         const height = this._getRotatedVisibleHeight();
 
-        const border = borderMarginFactor * this._borderWidth;
-        const borderRadius = borderMarginFactorRadius * this._borderWidth;
-        let topLimit = this._getFullHorizontalRotationTriangleHeight() + border;
-        let bottomLimit = this._canvas.height + this._getFullHorizontalRotationTriangleHeight() - borderRadius;
+        const limits = this._getYLimits();
 
-        if (this._alignment === Alignments.right) {
-            topLimit = this._getVisibleHorizontalRotationTriangleHeight() + borderRadius;
-            bottomLimit = this._canvas.height + this._getVisibleHorizontalRotationTriangleHeight() - border;
+        if (y < limits.top) {
+            y = limits.top;
         }
 
-        if (y < topLimit) {
-            y = topLimit;
-        }
-
-        if (y + height > bottomLimit) {
-            y = bottomLimit - height;
+        if (y + height > limits.bottom) {
+            y = limits.bottom - height;
         }
 
         return y;
+    }
+
+    _getYLimits() {
+        const margins = this._getYMargins();
+
+        const top = this._getVisibleHorizontalRotationTriangleHeight() + margins.top;
+        const bottom = this._canvas.height + this._getVisibleHorizontalRotationTriangleHeight() - margins.bottom;
+
+        return {top, bottom};
+    }
+
+    _getYMargins() {
+        const border = borderMarginFactor * this._borderWidth;
+        const borderRadius = borderMarginFactorRadius * this._borderWidth;
+
+        let top, bottom;
+
+        if (this._alignment === Alignments.right) {
+            top = borderRadius;
+            bottom = border;
+        } else {
+            top = border;
+            bottom = borderRadius;
+        }
+
+        return {top, bottom};
     }
 
     _getBlockYposUnadjusted() {
