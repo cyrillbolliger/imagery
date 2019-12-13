@@ -120,6 +120,7 @@
     },
     "images": {
         "create": {
+            "title": "Create Image",
             "fontSize": "Font size",
             "tooMuchText": "Your bars contain too much text. Shorten it!",
             "barAdd": "Add Bar",
@@ -136,7 +137,9 @@
             "border": "Border",
             "border_none": "The border is part of the corporate design. You may however omit the border if you use the image in a context where a border looks ugly.",
             "imageZoom": "Image Zoom",
-            "uploadFailed": "Failed to store image. Please try again."
+            "uploadFailed": "Failed to store image. Please try again.",
+            "generating": "Generating image",
+            "imageDownload": "Download image"
         }
     }
 }

@@ -1,4 +1,5 @@
 import Api from "./Api";
+import Vue from "vue";
 
 const uploadSliceSize = 1024 * 256; // 256 kb
 
@@ -7,6 +8,11 @@ export default class ImageUpload {
         this._image = image;
         this._start = 0;
         this._filename = filename;
+        this._subscribers = [];
+    }
+
+    subscribe(callback) {
+        this._subscribers.push(callback);
     }
 
     upload(endpoint) {
@@ -26,6 +32,8 @@ export default class ImageUpload {
         return Api().post(endpoint, payload)
             .then(() => {
                 this._start = this._start + uploadSliceSize;
+                this._notify();
+
                 return this._hasNextChunk() ? this.upload(endpoint) : true;
             });
     }
@@ -39,5 +47,11 @@ export default class ImageUpload {
 
     _hasNextChunk() {
         return this._start < this._image.length;
+    }
+
+    _notify() {
+        const progress = this._start / this._image.length;
+
+        this._subscribers.forEach(callback => callback(progress));
     }
 }
