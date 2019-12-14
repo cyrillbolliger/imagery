@@ -60,9 +60,11 @@
         ></MBorderBlock>
 
         <button
+            id="save"
             @click="save()"
             class="btn btn-primary">{{$t('images.create.generate')}}
         </button>
+    </div>
     </div>
 </template>
 

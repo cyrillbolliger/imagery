@@ -16,16 +16,12 @@
             </div>
         </div>
 
-        <a download="image.png"
-           ref="download"
-           @click="$emit('close')"
-           v-if="downloadReady"
-        >
-            <button class="btn btn-primary"
-            >{{$t('images.create.imageDownload')}}
-            </button>
-        </a>
-
+        <button
+            @click="downloadAndClose($event)"
+            class="btn btn-primary"
+            v-if="downloadReady"
+        >{{$t('images.create.imageDownload')}}
+        </button>
     </ODialog>
 </template>
 
@@ -191,14 +187,41 @@
 
             downloadButtonShow() {
                 this.downloadReady = true;
-
-                this.$nextTick(() => {
-                    const finalImage = this.imageData.canvas.toDataURL()
-                        .replace('image/png', 'image/octet-stream');
-
-                    this.$refs.download.setAttribute('href', finalImage);
-                });
             },
+
+            executeDownload() {
+                /**
+                 * There is some picky stuff in here, especially for chrome.
+                 *
+                 * @see https://stackoverflow.com/questions/3916191/download-data-url-file
+                 * @see https://stackoverflow.com/questions/37135417/download-canvas-as-png-in-fabric-js-giving-network-error/
+                 * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob
+                 */
+                this.imageData.canvas.toBlob(imageBlob => {
+                    const link = document.createElement('a');
+
+                    link.download = 'image.png';
+                    link.href = URL.createObjectURL(imageBlob);
+
+                    document.body.appendChild(link);
+
+                    link.onclick = () => {
+                        requestAnimationFrame(() => {
+                            URL.revokeObjectURL(link.href);
+                            link.removeAttribute('href');
+                            document.body.removeChild(link);
+                        });
+                    };
+
+                    link.click();
+                });
+
+            },
+
+            downloadAndClose() {
+                this.executeDownload();
+                this.$emit('close');
+            }
         }
     }
 </script>

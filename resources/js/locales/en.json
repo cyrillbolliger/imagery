@@ -161,6 +161,7 @@
             "greengreen": "Green - Green",
             "greengreenWarning": "You should only use this option, if your background is white.",
             "generate": "Generate Image",
+            "save": "Save",
             "sizes": {
                 "square": "Square",
                 "fbTimeline": "Facebook Timeline Image",
