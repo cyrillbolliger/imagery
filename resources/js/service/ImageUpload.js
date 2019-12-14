@@ -1,5 +1,4 @@
 import Api from "./Api";
-import Vue from "vue";
 
 const uploadSliceSize = 1024 * 256; // 256 kb
 
