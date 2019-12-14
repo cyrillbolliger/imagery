@@ -167,7 +167,7 @@
                 } catch (e) {
                     this.snackErrorDismiss(
                         e,
-                        this.$t('images.create.uploaded_image_not_processable')
+                        this.$t('images.create.uploadedImageNotProcessable')
                     );
                 }
             },
@@ -216,7 +216,7 @@
                 if (mimeTypesAllowed.indexOf(type) === -1) {
                     this.snackErrorDismiss(
                         `"${type}" is not a supported mime type.`,
-                        this.$t('images.create.invalid_mime')
+                        this.$t('images.create.mimeInvalid')
                     );
 
                     return false;

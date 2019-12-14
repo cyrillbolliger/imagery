@@ -3,21 +3,27 @@
         :title="$t('images.create.generating')"
         @close="$emit('close', $event)"
     >
-        <div class="progress">
+        <p>{{$t('images.create.waitPlease')}}</p>
+        <div class="progress" v-if="!downloadReady">
             <div
                 :aria-valuenow="uploadStatus"
                 aria-valuemax="100"
                 aria-valuemin="0"
+                :style="`width: ${uploadStatus}%`"
                 class="progress-bar"
                 role="progressbar"
-            >{{uploadStatus}}%
+            >{{Math.round(uploadStatus)}}%
             </div>
         </div>
 
         <a download="image.png"
            ref="download"
-           v-if="downloadReady">
-            <button>{{$t('images.create.imageDownload')}}</button>
+           @click="$emit('close')"
+           v-if="downloadReady"
+        >
+            <button class="btn btn-primary"
+            >{{$t('images.create.imageDownload')}}
+            </button>
         </a>
 
     </ODialog>
@@ -52,7 +58,27 @@
         },
 
 
-        computed: {},
+        computed: {
+            hasRawImage() {
+                return this.imageData.backgroundType === BackgroundTypes.image
+                    && this.imageData.rawImage;
+            },
+
+            uploadRawWeight() {
+                if (!this.hasRawImage) {
+                    return 0;
+                }
+
+                const raw = this.imageData.rawImage.src.length;
+                const final = this.imageData.canvas.toDataURL().length;
+
+                return 100 * raw / (raw + final);
+            },
+
+            uploadFinalWeight() {
+                return 100 - this.uploadRawWeight;
+            },
+        },
 
 
         mounted() {
@@ -63,14 +89,18 @@
         methods: {
             save() {
                 this.imageData.filename = this.uniqueFilename();
+                let upload;
 
-                if (this.imageData.backgroundType === BackgroundTypes.image && this.imageData.rawImage) {
+                if (this.hasRawImage) {
                     this.showLegalCheck();
-                    this.uploadRawImage();
+                    upload = this.uploadRawImage()
+                        .then(() => this.uploadFinalImage());
+                } else {
+                    upload = this.uploadFinalImage();
+
                 }
 
-                this.uploadFinalImage()
-                    .then(() => this.downloadButtonShow());
+                upload.then(() => this.downloadButtonShow());
             },
 
             showLegalCheck() {
@@ -78,14 +108,34 @@
             },
 
             uploadRawImage() {
-                // todo
+                this.imageData.filenameRaw = `raw-${this.imageData.filename}`;
+
+                const image = this.imageData.rawImage.src;
+                const filename = this.imageData.filenameRaw;
+                const uploader = new ImageUpload(image, filename);
+
+                uploader.subscribe(
+                    status => this.uploadStatus = status * this.uploadRawWeight
+                );
+
+                return uploader.upload('files/images')
+                    .then(() => this.uploadRawImageMeta())
+                    .catch(error => {
+                        this.snackErrorRetry(error, this.$t('images.create.uploadFailed'))
+                            .then(this.uploadRawImage());
+                    });
             },
 
             uploadFinalImage() {
-                const finalImage = this.imageData.canvas.toDataURL();
-                const uploader = new ImageUpload(finalImage, this.imageData.filename);
+                this.imageData.filenameFinal = `final-${this.imageData.filename}`;
 
-                uploader.subscribe(status => this.uploadStatus = status * 100);
+                const image = this.imageData.canvas.toDataURL();
+                const filename = this.imageData.filenameFinal;
+                const uploader = new ImageUpload(image, filename);
+
+                uploader.subscribe(
+                    status => this.uploadStatus = this.uploadRawWeight + status * this.uploadFinalWeight
+                );
 
                 return uploader.upload('files/images')
                     .then(() => this.uploadFinalImageMeta())
@@ -105,14 +155,37 @@
                     logo_id: null, // todo
                     background: this.imageData.backgroundType,
                     type: 'final',
-                    original_id: null, // todo
-                    filename: this.imageData.filename
+                    original_id: this.imageData.originalId,
+                    filename: this.imageData.filenameFinal
                 };
 
+                return this.uploadImageMeta(payload);
+            },
+
+            uploadRawImageMeta() {
+                const payload = {
+                    background: this.imageData.backgroundType,
+                    type: 'raw',
+                    filename: this.imageData.filenameRaw
+                };
+
+                const cb = resp => this.imageData.originalId = resp.data.id;
+
+                return this.uploadImageMeta(payload, cb);
+            },
+
+            uploadImageMeta(payload, successCallback = null) {
                 return Api().post('images', payload)
+                    .then(resp => {
+                        if (successCallback instanceof Function) {
+                            return successCallback(resp);
+                        } else {
+                            return resp;
+                        }
+                    })
                     .catch(error => {
                         this.snackErrorRetry(error, this.$t('images.create.uploadFailed'))
-                            .then(() => this.uploadFinalImageMeta());
+                            .then(() => this.uploadImageMeta(payload));
                     });
             },
 

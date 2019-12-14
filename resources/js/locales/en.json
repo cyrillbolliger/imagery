@@ -132,14 +132,15 @@
             "selectImage": "Click to select image to upload",
             "browse": "Browse",
             "imageTooSmall": "The selected image is too small to fill the canvas. Use a bigger one.",
-            "uploaded_image_not_processable": "The uploaded image could not be read.",
-            "invalid_mime": "Only JPEG, PNG and SVG images are supported. Convert the image in one of those formats.",
+            "uploadedImageNotProcessable": "The uploaded image could not be read.",
+            "mimeInvalid": "Only JPEG, PNG and SVG images are supported. Convert the image in one of those formats.",
             "border": "Border",
-            "border_none": "The border is part of the corporate design. You may however omit the border if you use the image in a context where a border looks ugly.",
+            "borderNone": "The border is part of the corporate design. You may however omit the border if you use the image in a context where a border looks ugly.",
             "imageZoom": "Image Zoom",
             "uploadFailed": "Failed to store image. Please try again.",
             "generating": "Generating image",
-            "imageDownload": "Download image"
+            "imageDownload": "Download image",
+            "waitPlease": "I'm busy generating your image, please hang on a few ticks. I'll be right there."
         }
     }
 }

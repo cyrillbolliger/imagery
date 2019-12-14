@@ -13,7 +13,7 @@
         <small
             class="d-block"
             v-if="!border"
-        >{{$t('images.create.border_none')}}</small>
+        >{{$t('images.create.borderNone')}}</small>
     </div>
 </template>
 

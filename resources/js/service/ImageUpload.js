@@ -30,11 +30,18 @@ export default class ImageUpload {
         };
 
         return Api().post(endpoint, payload)
-            .then(() => {
+            .then(resp => {
                 this._start = this._start + uploadSliceSize;
-                this._notify();
 
-                return this._hasNextChunk() ? this.upload(endpoint) : true;
+                if (this._hasNextChunk()) {
+                    this._notify();
+
+                    return this.upload(endpoint);
+                } else {
+                    this._notify(true);
+
+                    return resp;
+                }
             });
     }
 
@@ -49,8 +56,8 @@ export default class ImageUpload {
         return this._start < this._image.length;
     }
 
-    _notify() {
-        const progress = this._start / this._image.length;
+    _notify(complete) {
+        const progress = complete ? 1 : this._start / this._image.length;
 
         this._subscribers.forEach(callback => callback(progress));
     }
