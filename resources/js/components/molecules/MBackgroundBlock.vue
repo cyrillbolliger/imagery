@@ -1,8 +1,9 @@
 <template>
-    <div>
+    <div class="form-group">
+        <label class="mb-0 d-block">{{$t('images.create.background')}}</label>
         <div class="btn-group btn-group-toggle">
             <label :class="{'active': background === types.gradient}"
-                   class="btn btn-secondary">
+                   class="btn btn-secondary btn-sm">
                 <input
                     :value="types.gradient"
                     name="background"
@@ -11,7 +12,7 @@
                 >{{$t('images.create.backgroundGreen')}}
             </label>
             <label :class="{'active': background === types.transparent}"
-                   class="btn btn-secondary">
+                   class="btn btn-secondary btn-sm">
                 <input
                     :value="types.transparent"
                     name="background"
@@ -20,7 +21,7 @@
                 >{{$t('images.create.backgroundTransparent')}}
             </label>
             <label :class="{'active': background === types.image}"
-                   class="btn btn-secondary">
+                   class="btn btn-secondary btn-sm">
                 <input
                     :value="types.image"
                     name="background"
@@ -32,7 +33,10 @@
         </div>
 
         <div class="form-group" v-if="background === types.image && image && !imageTooSmall">
-            <label for="image-zoom">{{$t('images.create.imageZoom')}}</label>
+            <label
+                class="mb-0 mt-2"
+                for="image-zoom"
+            >{{$t('images.create.imageZoom')}}</label>
             <input
                 :max="1"
                 :min="0"
@@ -43,12 +47,12 @@
                 type="range"
                 v-model.number="zoom"
             >
+            <small>{{$t('images.create.imageDragHelp')}}</small>
         </div>
 
         <input
             @change="setImage($event)"
             class="custom-file-input"
-            id="customFile"
             ref="uploader"
             type="file"
         >
@@ -256,6 +260,8 @@
     }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+    .custom-file-input {
+        display: none;
+    }
 </style>

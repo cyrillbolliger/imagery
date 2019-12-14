@@ -1,19 +1,25 @@
 <template>
-    <div class="custom-control custom-switch">
-        <input
-            class="custom-control-input"
-            id="border-switch"
-            type="checkbox"
-            v-model="border"
-        >
+    <div class="form-group">
         <label
-            class="custom-control-label"
+            class="mb-0"
             for="border-switch"
         >{{$t('images.create.border')}}</label>
-        <small
-            class="d-block"
-            v-if="!border"
-        >{{$t('images.create.borderNone')}}</small>
+        <div class="custom-control custom-switch">
+            <input
+                class="custom-control-input"
+                id="border-switch"
+                type="checkbox"
+                v-model="border"
+            >
+            <label
+                class="custom-control-label"
+                for="border-switch"
+            >{{$t('images.create.borderShow')}}</label>
+            <small
+                class="d-block"
+                v-if="!border"
+            >{{$t('images.create.borderNone')}}</small>
+        </div>
     </div>
 </template>
 

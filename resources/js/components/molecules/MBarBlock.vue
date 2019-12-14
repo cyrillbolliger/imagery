@@ -1,90 +1,10 @@
 <template>
     <div>
-        <ABar
-            :alignment="alignment"
-            :base-font-size="fontSize"
-            :image-width="imageWidth"
-            :key="`headlinePrimary-${n}`"
-            :schema="schemaHeadlinePrimary"
-            :type="typeHeadline"
-            @drawn="update(headlinesPrimary, n, ...arguments)"
-            @removed="remove(headlinesPrimary, n)"
-            v-for="n in headlinesPrimaryCount"
-        ></ABar>
-        <button
-            :class="buttonClassPrimaryHeadline"
-            @click="headlinesPrimaryCount++"
-            class="btn"
-            v-if="headlinesCount < 3"
-        >{{$t('images.create.barAdd')}}
-        </button>
-        <button
-            :class="buttonClassPrimaryHeadline"
-            @click="headlinesPrimaryCount--"
-            class="btn"
-            v-if="headlinesPrimaryCount > 1"
-        >{{$t('images.create.barRemove')}}
-        </button>
-        <br>
-
-        <ABar
-            :alignment="alignment"
-            :base-font-size="fontSize"
-            :image-width="imageWidth"
-            :key="`headlineSecondary-${n}`"
-            :schema="schemaHeadlineSecondary"
-            :type="typeHeadline"
-            @drawn="update(headlinesSecondary, n, ...arguments)"
-            @removed="remove(headlinesSecondary, n)"
-            v-for="n in headlinesSecondaryCount"
-        ></ABar>
-        <button
-            @click="headlinesSecondaryAdd"
-            class="btn btn-primary"
-            v-if="headlinesCount < 3"
-        >{{$t('images.create.barAdd')}}
-        </button>
-        <button
-            @click="headlinesSecondaryCount--"
-            class="btn btn-primary"
-            v-if="headlinesSecondaryCount > 1"
-        >{{$t('images.create.barRemove')}}
-        </button>
-        <br>
-
-        <ABar
-            :alignment="alignment"
-            :base-font-size="fontSize"
-            :image-width="imageWidth"
-            :key="`subline-${n}`"
-            :schema="schemaSubline"
-            :type="typeSubline"
-            @drawn="update(sublines, n, ...arguments)"
-            @removed="remove(sublines, n)"
-            v-for="n in sublinesCount"
-        ></ABar>
-        <button
-            :class="buttonClassSubline"
-            @click="sublinesCount++"
-            class="btn"
-            v-if="sublinesCount < 2"
-        >{{$t('images.create.barAdd')}}
-        </button>
-        <button
-            :class="buttonClassSubline"
-            @click="sublinesCount--"
-            class="btn"
-            v-if="sublinesCount > 0"
-        >{{$t('images.create.barRemove')}}
-        </button>
-        <br>
-
-        <div class="alert alert-warning" role="alert" v-if="tooMuchText">
-            {{$t('images.create.tooMuchText')}}
-        </div>
-
         <div class="form-group">
-            <label for="font-size">{{$t('images.create.fontSize')}}</label>
+            <label
+                class="mb-0"
+                for="font-size"
+            >{{$t('images.create.fontSize')}}</label>
             <input
                 :disabled="tooMuchText"
                 :max="fontSizeMax"
@@ -97,6 +17,76 @@
                 v-model.number="fontSize"
             >
         </div>
+
+        <div class="form-group">
+            <label
+                class="mb-0"
+                for="font-size"
+            >{{$t('images.create.bars')}}</label>
+
+            <ABar
+                :alignment="alignment"
+                :base-font-size="fontSize"
+                :cloneable="headlinesCount < 3"
+                :deletable="headlinesPrimaryCount > 1"
+                :image-width="imageWidth"
+                :initialText="initialText ? initialText : 'Headline 1'"
+                :key="`headlinePrimary-${n}`"
+                :schema="schemaHeadlinePrimary"
+                :type="typeHeadline"
+                @clone="headlinesPrimaryAdd($event)"
+                @drawn="update(headlinesPrimary, n, ...arguments)"
+                @remove="headlinesPrimaryCount--"
+                @removed="remove(headlinesPrimary, n)"
+                v-for="n in headlinesPrimaryCount"
+            ></ABar>
+
+            <ABar
+                :alignment="alignment"
+                :base-font-size="fontSize"
+                :cloneable="headlinesCount < 3"
+                :deletable="headlinesSecondaryCount > 1"
+                :image-width="imageWidth"
+                :initialText="initialText ? initialText : 'Headline 2'"
+                :key="`headlineSecondary-${n}`"
+                :schema="schemaHeadlineSecondary"
+                :type="typeHeadline"
+                @clone="headlinesSecondaryAdd($event)"
+                @drawn="update(headlinesSecondary, n, ...arguments)"
+                @remove="headlinesSecondaryCount--"
+                @removed="remove(headlinesSecondary, n)"
+                v-for="n in headlinesSecondaryCount"
+            ></ABar>
+
+            <ABar
+                :alignment="alignment"
+                :base-font-size="fontSize"
+                :cloneable="sublinesCount < 2"
+                :deletable="sublinesCount > 0"
+                :image-width="imageWidth"
+                :initialText="initialText ? initialText : 'Subline'"
+                :key="`subline-${n}`"
+                :schema="schemaSubline"
+                :type="typeSubline"
+                @clone="sublinesAdd($event)"
+                @drawn="update(sublines, n, ...arguments)"
+                @remove="sublinesCount--"
+                @removed="remove(sublines, n)"
+                v-for="n in sublinesCount"
+            ></ABar>
+
+            <button
+                :class="buttonClassSubline"
+                @click="sublinesCount++"
+                class="btn"
+                v-if="sublinesCount === 0"
+            >{{$t('images.create.sublineAdd')}}
+            </button>
+
+            <div class="alert alert-warning" role="alert" v-if="tooMuchText">
+                {{$t('images.create.tooMuchText')}}
+            </div>
+        </div>
     </div>
 </template>
 
@@ -104,7 +94,7 @@
     const minFontSizeFactor = 0.08; // the correct 175% would be 0.0925
     const maxFontSizeFactor = 1.08;
 
-    import {BarSchemes as Schemes, BarTypes as Types} from "../../service/canvas/Constants";
+    import {BarSchemes as Schemes, BarTypes as Types, ColorSchemes} from "../../service/canvas/Constants";
     import BarBlock from "../../service/canvas/blocks/BarBlock";
     import ABar from "../atoms/ABar";
 
@@ -127,6 +117,7 @@
                 tooMuchText: false,
                 block: null,
                 eventCounter: {},
+                initialText: null,
             }
         },
 
@@ -136,9 +127,6 @@
             },
             colorSchema: {
                 required: true,
-                validator(value) {
-                    return ['white', 'green', 'green-green'].indexOf(value) !== -1;
-                }
             },
             imageWidth: {
                 required: true,
@@ -152,7 +140,7 @@
 
         computed: {
             schemaHeadlinePrimary() {
-                if ('white' === this.colorSchema) {
+                if (ColorSchemes.white === this.colorSchema) {
                     return Schemes.white;
                 } else {
                     return Schemes.green;
@@ -164,7 +152,7 @@
             },
 
             schemaSubline() {
-                if ('green-green' === this.colorSchema) {
+                if (ColorSchemes.greengreen === this.colorSchema) {
                     return Schemes.green;
                 } else {
                     return Schemes.white;
@@ -172,18 +160,10 @@
             },
 
             buttonClassSubline() {
-                if ('green-green' === this.colorSchema) {
+                if (ColorSchemes.greengreen === this.colorSchema) {
                     return 'btn-secondary';
                 } else {
                     return 'btn-outline-secondary';
-                }
-            },
-
-            buttonClassPrimaryHeadline() {
-                if ('white' === this.colorSchema) {
-                    return 'btn-outline-secondary';
-                } else {
-                    return 'btn-secondary';
                 }
             },
 
@@ -297,12 +277,24 @@
                 return ['text', 'schema', 'create'].indexOf(event) !== -1;
             },
 
-            headlinesSecondaryAdd() {
+            headlinesPrimaryAdd(text) {
+                this.initialText = text;
+                this.headlinesPrimaryCount++;
+            },
+
+            headlinesSecondaryAdd(text) {
+                this.initialText = text;
+
                 const message = this.$t('images.create.headlineSecondaryAdd');
 
                 if (!confirm(message)) {
                     this.headlinesSecondaryCount++;
                 }
+            },
+
+            sublinesAdd(text) {
+                this.initialText = text;
+                this.sublinesCount++;
             }
         },
     }

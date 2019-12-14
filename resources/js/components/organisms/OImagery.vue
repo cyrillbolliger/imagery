@@ -1,36 +1,57 @@
 <template>
-    <div>
-        <canvas
-            :style="`width: ${width/2}px; height: ${height/2}px;`"
-            class="a-canvas"
-            :class="{'bar-dragging': dragObj, 'bar-touching': barLayer && barLayer.touching}"
-            @mousedown.stop="mouseDragStart($event)"
-            @mousemove.stop="mouseMove($event)"
-            @mouseup.stop="mouseDragStop($event)"
-            @mouseout.stop="mouseLeave($event)"
-            @touchcancel.stop="touchDragStop($event)"
-            @touchend.stop="touchDragStop($event)"
-            @touchmove.stop.prevent="touchDragMove($event)"
-            @touchstart.stop="touchDragStart($event)"
-            ref="canvas"
-        ></canvas>
-        <br>
+    <div ref="container">
+        <MSizeBlock
+            @sizeChanged="setSize($event)"
+        ></MSizeBlock>
+
+        <!-- todo: logo -->
+
+        <MBackgroundBlock
+            :image-height="height"
+            :image-width="width"
+            @drawn="updateBackgroundLayer($event)"
+            @imageChanged="rawImage = $event"
+            @typeChanged="backgroundType = $event"
+        ></MBackgroundBlock>
+
+        <label class="mb-0 d-block" for="canvas">{{$t('images.create.preview')}}</label>
+        <small>{{$t('images.create.barDragHelp')}}</small>
+        <div class="o-imagery__canvas-zone">
+            <canvas
+                :class="canvasClasses"
+                :style="canvasStyleSize"
+                @mousedown.stop="mouseDragStart($event)"
+                @mousemove.stop="mouseMove($event)"
+                @mouseout.stop="mouseLeave($event)"
+                @mouseup.stop="mouseDragStop($event)"
+                @touchcancel.stop="touchDragStop($event)"
+                @touchend.stop="touchDragStop($event)"
+                @touchmove.stop.prevent="touchDragMove($event)"
+                @touchstart.stop="touchDragStart($event)"
+                class="o-imagery__canvas"
+                id="canvas"
+                ref="canvas"
+            ></canvas>
+        </div>
+
         <MBarBlock
+            class="mt-2"
             :alignment="alignment"
             :image-width="width"
             :image-height="height"
             :color-schema="schema"
             @drawn="updateBarLayer($event)"
         ></MBarBlock>
-        <br>
-        <MBackgroundBlock
-            :image-height="height"
-            :image-width="width"
-            @drawn="updateBackgroundLayer($event)"
-            @typeChanged="backgroundType = $event"
-            @imageChanged="rawImage = $event"
-        ></MBackgroundBlock>
-        <br>
+
+        <MAlignment
+            v-model="alignment"
+        ></MAlignment>
+
+        <MColorScheme
+            v-if="this.backgroundType !== backgroundTypes.gradient"
+            v-model="schema"
+        ></MColorScheme>
+
         <MBorderBlock
             :image-height="height"
             :image-width="width"
@@ -38,44 +59,38 @@
             @widthChanged="borderWidth = $event"
         ></MBorderBlock>
 
-        <br>
-        <button @click="scaleUp()">scaleUp</button>
-        <button @click="scaleDown()">scaleDown</button>
-
-        <br>
-        <button @click="alignLeft()">left</button>
-        <button @click="alignRight()">right</button>
-        <br>
-        <button @click="makeGreen()">green</button>
-        <button @click="makeWhite()">white</button>
-        <button @click="makeGreenGreen()">green-green</button>
-        <br>
-
-        <button @click="save()">Save</button>
+        <button
+            @click="save()"
+            class="btn btn-primary">{{$t('images.create.generate')}}
+        </button>
     </div>
 </template>
 
 <script>
-    import {Alignments, BackgroundTypes} from "../../service/canvas/Constants";
+    import {Alignments, BackgroundTypes, ColorSchemes} from "../../service/canvas/Constants";
     import MBarBlock from "../molecules/MBarBlock";
     import BarLayer from "../../service/canvas/layers/BarLayer";
     import BackgroundLayer from "../../service/canvas/layers/BackgroundLayer";
     import MBackgroundBlock from "../molecules/MBackgroundBlock";
     import MBorderBlock from "../molecules/MBorderBlock";
     import BorderLayer from "../../service/canvas/layers/BorderLayer";
+    import MSizeBlock from "../molecules/MSizeBlock";
+    import MAlignment from "../molecules/MAlignment";
+    import MColorScheme from "../molecules/MColorScheme";
 
     export default {
         name: "OImagery",
-        components: {MBorderBlock, MBackgroundBlock, MBarBlock},
+        components: {MAlignment, MSizeBlock, MBorderBlock, MBackgroundBlock, MBarBlock, MColorScheme},
         data() {
             return {
                 canvas: null,
                 alignment: Alignments.left,
-                schema: 'white',
+                schema: ColorSchemes.white,
                 width: 800,
                 height: 800,
                 fontSize: 50,
                 backgroundType: BackgroundTypes.gradient,
+                backgroundTypes: BackgroundTypes,
                 rawImage: null,
                 borderWidth: 0,
                 canvasPos: {
@@ -94,6 +109,37 @@
 
                 dragObj: null,
             }
+        },
+
+        computed: {
+            canvasClasses() {
+                return {
+                    'bar-dragging': this.dragObj,
+                    'bar-touching': this.barLayer && this.barLayer.touching,
+                    'transparent': this.backgroundType === BackgroundTypes.transparent,
+                }
+            },
+
+            canvasStyleSize() {
+                const padding = 30;
+                const vh = document.documentElement.clientHeight;
+                const vw = document.documentElement.clientWidth;
+
+                const maxHeight = vh < 768 ? 250 : 400;
+                const maxWidth = vw - padding > 400 ? 400 : vw - padding;
+
+                const imgHeight = this.height / 2;
+                const imgWidth = this.width / 2;
+
+                const hRatio = imgHeight / maxHeight;
+                const wRatio = imgWidth / maxWidth;
+                const ratio = Math.max(hRatio, wRatio);
+
+                const height = imgHeight / ratio;
+                const width = imgWidth / ratio;
+
+                return `height: ${height}px; width: ${width}px;`;
+            },
         },
 
         mounted() {
@@ -162,44 +208,19 @@
                 this.barLayer.draw();
             },
 
-            alignLeft() {
-                this.alignment = Alignments.left;
-            },
-
-            alignRight() {
-                this.alignment = Alignments.right;
-            },
-
-            makeGreen() {
-                this.schema = 'green';
-            },
-
-            makeWhite() {
-                this.schema = 'white';
-            },
-
-            makeGreenGreen() {
-                this.schema = 'green-green';
-            },
-
-            scaleUp() {
-                this.width *= 2;
-                this.height *= 2;
-                this.fontSize *= 2;
-            },
-
-            scaleDown() {
-                this.width /= 2;
-                this.height /= 2;
-                this.fontSize /= 2;
+            setSize(dims) {
+                this.width = dims.width;
+                this.height = dims.height;
             },
 
             setCanvasPos() {
-                const pos = this.canvas.getBoundingClientRect();
-                this.canvasPos.x = pos.x + window.scrollX;
-                this.canvasPos.y = pos.y + window.scrollY;
-                this.canvasPos.width = pos.width;
-                this.canvasPos.height = pos.height;
+                this.$nextTick(() => {
+                    const pos = this.canvas.getBoundingClientRect();
+                    this.canvasPos.x = pos.x + window.scrollX;
+                    this.canvasPos.y = pos.y + window.scrollY;
+                    this.canvasPos.width = pos.width;
+                    this.canvasPos.height = pos.height;
+                });
             },
 
             mouseDragStart() {
@@ -269,41 +290,54 @@
         watch: {
             backgroundType(value) {
                 if (BackgroundTypes.gradient === value) {
-                    this.makeWhite();
+                    this.schema = ColorSchemes.white;
                 } else {
-                    this.makeGreen();
+                    this.schema = ColorSchemes.green;
                 }
+
+                this.setCanvasPos();
             },
             width(value) {
                 this.canvas.width = value;
-                this.$nextTick(() => this.setCanvasPos());
+                this.setCanvasPos();
             },
             height(value) {
                 this.canvas.height = value;
-                this.$nextTick(() => this.setCanvasPos());
+                this.setCanvasPos();
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-    .a-canvas {
-        border: 1px solid black;
-
-        // https://stackoverflow.com/a/35362074
-        background-image: linear-gradient(45deg, #d7d7d7 25%, transparent 25%),
-        linear-gradient(-45deg, #d7d7d7 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, #d7d7d7 75%),
-        linear-gradient(-45deg, transparent 75%, #d7d7d7 75%);
-        background-size: 20px 20px;
-        background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-
-        &.bar-touching {
-            cursor: grab;
+    .o-imagery {
+        &__canvas-zone {
+            width: 100%;
+            background-color: $gray-500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1vw;
         }
 
-        &.bar-dragging {
-            cursor: grabbing !important;
+        &__canvas {
+            &.transparent {
+                // https://stackoverflow.com/a/35362074
+                background-image: linear-gradient(45deg, #d7d7d7 25%, transparent 25%),
+                linear-gradient(-45deg, #d7d7d7 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #d7d7d7 75%),
+                linear-gradient(-45deg, transparent 75%, #d7d7d7 75%);
+                background-size: 20px 20px;
+                background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            }
+
+            &.bar-touching {
+                cursor: grab;
+            }
+
+            &.bar-dragging {
+                cursor: grabbing !important;
+            }
         }
     }
 </style>

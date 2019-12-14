@@ -1,19 +1,40 @@
 <template>
-    <input type="text" v-model="text">
+    <div class="container mb-1">
+        <div class="row">
+            <input
+                :class="inputClass"
+                class="form-control col"
+                type="text"
+                v-model="text"
+            >
+            <button
+                :class="buttonClass"
+                :title="$t('images.create.barAdd')"
+                @click="$emit('clone', text)"
+                class="btn ml-1"
+                v-if="cloneable"><i class="mdi mdi-add"></i></button>
+            <button
+                :class="buttonClass"
+                :title="$t('images.create.barRemove')"
+                @click="$emit('remove')"
+                class="btn ml-1"
+                v-if="deletable"><i class="mdi mdi-remove"></i></button>
+        </div>
+    </div>
 </template>
 
 <script>
     const sublineHeadlineSizeRatio = 0.4;
 
     import Bar from "../../service/canvas/elements/Bar";
-    import {BarTypes as Types} from "../../service/canvas/Constants";
+    import {BarTypes as Types, BarSchemes as Schemes} from "../../service/canvas/Constants";
     import FontFaceObserver from "fontfaceobserver";
 
     export default {
         name: "ABar",
         data() {
             return {
-                text: 'grüne jetzt',
+                text: '',
                 bar: new Bar(),
             }
         },
@@ -35,7 +56,19 @@
             imageWidth: {
                 required: true,
                 type: Number,
-            }
+            },
+            deletable: {
+                required: true,
+                type: Boolean,
+            },
+            cloneable: {
+                required: true,
+                type: Boolean
+            },
+            initialText: {
+                required: true,
+                type: String
+            },
         },
 
         computed: {
@@ -46,9 +79,27 @@
                     return this.baseFontSize * sublineHeadlineSizeRatio;
                 }
             },
+
+            buttonClass() {
+                switch (this.schema) {
+                    case Schemes.green:
+                        return 'btn-secondary';
+
+                    case Schemes.magenta:
+                        return 'btn-primary';
+
+                    case Schemes.white:
+                        return 'btn-outline-secondary';
+                }
+            },
+
+            inputClass() {
+                return this.schema === Schemes.magenta ? 'magenta' : 'green';
+            },
         },
 
         mounted() {
+            this.text = this.initialText;
             this.draw('create');
             this.loadFonts().then(() => this.draw('font'));
         },
@@ -100,6 +151,18 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    .magenta {
+        color: $primary;
+    }
 
+    .green {
+        $lightGreen: rgba($secondary, .25);
+        color: darken($secondary, 5);
+
+        &:focus {
+            border-color: $secondary;
+            box-shadow: 0 0 0 0.2rem $lightGreen;
+        }
+    }
 </style>

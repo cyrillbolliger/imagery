@@ -24,6 +24,12 @@ export const BarSchemes = {
     }
 };
 
+export const ColorSchemes = {
+    white: 'white',
+    green: 'green',
+    greengreen: 'green-green',
+};
+
 export const BarTypes = {
     headline: 'SanukFat',
     subline: 'SanukBold'
