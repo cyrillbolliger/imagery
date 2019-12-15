@@ -38,8 +38,8 @@ export default class extends Background {
             this._context.drawImage(this._image, 0, 0, width, height);
 
             // if we just draw the image, we dont get an error if the uploaded
-            // given document isn't a processable image. if we, however repaint
-            // it using the following line, an error is thrown as expected.
+            // document isn't a processable image. if we, however repaint it
+            // using the following line, an error is thrown as expected.
             this._context.drawImage(this._canvas, 0, 0);
         }
     }
@@ -55,7 +55,7 @@ export default class extends Background {
 
         let width, height;
 
-        if (dW < dH) {
+        if (dW > dH) {
             width = this._containerWidth + this._zoom * dW;
             height = width / aspectRatioImage;
         } else {
