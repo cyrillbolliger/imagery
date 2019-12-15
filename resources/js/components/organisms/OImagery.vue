@@ -145,7 +145,9 @@
 
                 const hRatio = imgHeight / maxHeight;
                 const wRatio = imgWidth / maxWidth;
-                const ratio = Math.max(hRatio, wRatio);
+
+                let ratio = Math.max(hRatio, wRatio);
+                ratio = ratio < 1 ? 1 : ratio;
 
                 const height = imgHeight / ratio;
                 const width = imgWidth / ratio;

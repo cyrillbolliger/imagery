@@ -105,7 +105,10 @@
             },
 
             emitSizeChanged() {
-                this.$emit('sizeChanged', {width: this.width, height: this.height});
+                const width = this.width > 10 ? this.width : 10;
+                const height = this.height > 10 ? this.height : 10;
+
+                this.$emit('sizeChanged', {width, height});
             }
         },
 
