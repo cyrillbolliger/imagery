@@ -1,6 +1,7 @@
 import UserIndex from './components/pages/UserIndex.vue';
 import ImageCreate from './components/pages/ImageCreate.vue';
 import GroupIndex from "./components/pages/GroupIndex";
+import LogoIndex from "./components/pages/LogoIndex";
 
 export const routes = [
     {
@@ -40,6 +41,23 @@ export const routes = [
         path: '/admin/groups',
         component: GroupIndex,
         name: 'groupsAll'
+    },
+    {
+        path: '/admin/logos/create',
+        component: LogoIndex,
+        props: {create: true},
+        name: 'logosCreate'
+    },
+    {
+        path: '/admin/logos/:logoId',
+        component: LogoIndex,
+        props: true,
+        name: 'logosEdit'
+    },
+    {
+        path: '/admin/logos',
+        component: LogoIndex,
+        name: 'logosAll'
     },
     // {path: '*', component: NotFound}
 ];

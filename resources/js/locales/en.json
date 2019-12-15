@@ -161,7 +161,7 @@
             "greengreen": "Green - Green",
             "greengreenWarning": "You should only use this option, if your background is white.",
             "generate": "Generate Image",
-            "save": "Save",
+            "save": "Save Image",
             "sizes": {
                 "square": "Square",
                 "fbTimeline": "Facebook Timeline Image",
@@ -173,5 +173,28 @@
                 "custom": "Custom size"
             }
         }
+    },
+    "logos": {
+        "index": {
+            "title": "Logos",
+            "create": "New Logo"
+        }
+    },
+    "logo": {
+        "navEdit": "Edit",
+        "navDetails": "Details",
+        "name": "Name",
+        "subline": "Subline",
+        "baseLogo": "Base logo",
+        "save": "Save Logo",
+        "saving": "Saving...",
+        "saved": "Logo saved.",
+        "saving_failed": "Failed to save logo. Try again.",
+        "remove": "Delete Logo",
+        "removing": "Deleting logo",
+        "removed": "Logo deleted.",
+        "remove_confirmation": "Do you really want to delete {logo}?",
+        "groups": "Groups",
+        "groupsHelptext": "The selected groups can use this logo"
     }
 }
