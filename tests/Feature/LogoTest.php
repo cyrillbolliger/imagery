@@ -164,14 +164,13 @@ class LogoTest extends TestCase
         $logo = factory(Logo::class)->create();
         $group->logos()->attach($logo);
 
-        /**
-         * Above was precondition, the real test starts here
-         */
         $logo->name = 'gruene-zh.ch';
         $data       = $logo->toArray();
 
         $response = $this->actingAs($manager)
                          ->putJson("/api/1/logos/$logo->id", $data);
+
+        dd($response);
 
         $response->assertStatus(200);
         $response->assertJsonFragment(['name' => $logo->name]);
@@ -249,6 +248,8 @@ class LogoTest extends TestCase
 
         $response = $this->actingAs($manager)
                          ->postJson("/api/1/logos", $data);
+
+        dd($response);
 
         $response->assertStatus(201);
         $response->assertJsonFragment(['name' => $logo->name]);
