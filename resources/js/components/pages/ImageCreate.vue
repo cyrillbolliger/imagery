@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>{{$t('images.create.title')}}</h1>
+        <MHeader>{{$t('images.create.title')}}</MHeader>
         <OImagery
             @save="imageData = $event"
         ></OImagery>
@@ -15,10 +15,11 @@
 <script>
     import OImagery from "../organisms/OImagery";
     import OImageDialog from "../organisms/OImageDialog";
+    import MHeader from "../molecules/MHeader";
 
     export default {
         name: "ImageCreate",
-        components: {OImageDialog, OImagery},
+        components: {OImageDialog, OImagery, MHeader},
 
         data() {
             return {

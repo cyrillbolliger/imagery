@@ -47,7 +47,6 @@
                 type="range"
                 v-model.number="zoom"
             >
-            <small>{{$t('images.create.imageDragHelp')}}</small>
         </div>
 
         <input

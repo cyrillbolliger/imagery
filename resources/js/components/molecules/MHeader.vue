@@ -1,9 +1,9 @@
 <template>
-    <header class="m-header row justify-content-between">
+    <header class="m-header row justify-content-between align-items-start">
         <h1 class="m-header__title col">
             <slot></slot>
         </h1>
-        <MMenuButtonShow class="m-header__menu-show-button"></MMenuButtonShow>
+        <MMenuButtonShow class="m-header__menu-show-button pt-1 pr-2"></MMenuButtonShow>
     </header>
 </template>
 

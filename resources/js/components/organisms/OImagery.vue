@@ -1,70 +1,75 @@
 <template>
-    <div ref="container">
-        <MSizeBlock
-            @sizeChanged="setSize($event)"
-        ></MSizeBlock>
+    <div class="o-imagery" ref="container">
+        <div class="o-imagery__controls-1">
+            <MSizeBlock
+                @sizeChanged="setSize($event)"
+            ></MSizeBlock>
 
-        <!-- todo: logo -->
+            <!-- todo: logo -->
 
-        <MBackgroundBlock
-            :image-height="height"
-            :image-width="width"
-            @drawn="updateBackgroundLayer($event)"
-            @imageChanged="rawImage = $event"
-            @typeChanged="backgroundType = $event"
-        ></MBackgroundBlock>
-
-        <label class="mb-0 d-block" for="canvas">{{$t('images.create.preview')}}</label>
-        <small>{{$t('images.create.barDragHelp')}}</small>
-        <div class="o-imagery__canvas-zone">
-            <canvas
-                :class="canvasClasses"
-                :style="canvasStyleSize"
-                @mousedown.stop="mouseDragStart($event)"
-                @mousemove.stop="mouseMove($event)"
-                @mouseout.stop="mouseLeave($event)"
-                @mouseup.stop="mouseDragStop($event)"
-                @touchcancel.stop="touchDragStop($event)"
-                @touchend.stop="touchDragStop($event)"
-                @touchmove.stop.prevent="touchDragMove($event)"
-                @touchstart.stop="touchDragStart($event)"
-                class="o-imagery__canvas"
-                id="canvas"
-                ref="canvas"
-            ></canvas>
+            <MBackgroundBlock
+                :image-height="height"
+                :image-width="width"
+                @drawn="updateBackgroundLayer($event)"
+                @imageChanged="rawImage = $event"
+                @typeChanged="backgroundType = $event"
+            ></MBackgroundBlock>
         </div>
 
-        <MBarBlock
-            class="mt-2"
-            :alignment="alignment"
-            :image-width="width"
-            :image-height="height"
-            :color-schema="schema"
-            @drawn="updateBarLayer($event)"
-        ></MBarBlock>
+        <div class="o-imagery__preview">
+            <h3 class="d-block">{{$t('images.create.preview')}}</h3>
+            <div class="o-imagery__canvas-zone" ref="canvasZone">
+                <canvas
+                    :class="canvasClasses"
+                    :style="canvasStyleSize"
+                    @mousedown.stop="mouseDragStart($event)"
+                    @mousemove.stop="mouseMove($event)"
+                    @mouseout.stop="mouseLeave($event)"
+                    @mouseup.stop="mouseDragStop($event)"
+                    @touchcancel.stop="touchDragStop($event)"
+                    @touchend.stop="touchDragStop($event)"
+                    @touchmove.stop.prevent="touchDragMove($event)"
+                    @touchstart.stop="touchDragStart($event)"
+                    class="o-imagery__canvas"
+                    id="canvas"
+                    ref="canvas"
+                ></canvas>
+            </div>
+            <small v-if="hasImageBackground">{{$t('images.create.dragHelp')}}</small>
+            <small v-else>{{$t('images.create.dragHelpBar')}}</small>
+        </div>
 
-        <MAlignment
-            v-model="alignment"
-        ></MAlignment>
+        <div class="o-imagery__controls-2">
+            <MBarBlock
+                :alignment="alignment"
+                :color-schema="schema"
+                :image-height="height"
+                :image-width="width"
+                @drawn="updateBarLayer($event)"
+                class="mt-2"
+            ></MBarBlock>
 
-        <MColorScheme
-            v-if="this.backgroundType !== backgroundTypes.gradient"
-            v-model="schema"
-        ></MColorScheme>
+            <MAlignment
+                v-model="alignment"
+            ></MAlignment>
 
-        <MBorderBlock
-            :image-height="height"
-            :image-width="width"
-            @drawn="updateBorderLayer($event)"
-            @widthChanged="borderWidth = $event"
-        ></MBorderBlock>
+            <MColorScheme
+                v-if="this.backgroundType !== backgroundTypes.gradient"
+                v-model="schema"
+            ></MColorScheme>
 
-        <button
-            id="save"
-            @click="save()"
-            class="btn btn-primary">{{$t('images.create.generate')}}
-        </button>
-    </div>
+            <MBorderBlock
+                :image-height="height"
+                :image-width="width"
+                @drawn="updateBorderLayer($event)"
+                @widthChanged="borderWidth = $event"
+            ></MBorderBlock>
+
+            <button
+                @click="save()"
+                class="btn btn-primary">{{$t('images.create.generate')}}
+            </button>
+        </div>
     </div>
 </template>
 
@@ -95,6 +100,10 @@
                 backgroundTypes: BackgroundTypes,
                 rawImage: null,
                 borderWidth: 0,
+
+                viewHeight: document.documentElement.clientHeight,
+                viewWidth: document.documentElement.clientWidth,
+                canvasZoneLeft: 0,
                 canvasPos: {
                     x: 0,
                     y: 0,
@@ -123,12 +132,13 @@
             },
 
             canvasStyleSize() {
-                const padding = 30;
-                const vh = document.documentElement.clientHeight;
-                const vw = document.documentElement.clientWidth;
+                const paddingX = 30;
+                const paddingY = 160;
+                const vh = this.viewHeight;
+                const vw = this.viewWidth;
 
-                const maxHeight = vh < 768 ? 250 : 400;
-                const maxWidth = vw - padding > 400 ? 400 : vw - padding;
+                const maxHeight = vw < 768 ? 250 : vh - paddingY;
+                const maxWidth = vw < 768 ? vw - paddingX : vw - this.canvasZoneLeft - paddingX;
 
                 const imgHeight = this.height / 2;
                 const imgWidth = this.width / 2;
@@ -142,13 +152,23 @@
 
                 return `height: ${height}px; width: ${width}px;`;
             },
+
+            hasImageBackground() {
+                return this.backgroundType === BackgroundTypes.image && this.rawImage;
+            }
+        },
+
+        created() {
+            window.addEventListener('resize', this.setViewDims);
+            window.addEventListener('resize', this.setCanvasZoneLeft);
+            window.addEventListener('resize', this.setCanvasPos);
         },
 
         mounted() {
             this.canvas = this.$refs.canvas;
 
             this.setCanvasPos();
-            window.addEventListener('resize', this.setCanvasPos());
+            this.setCanvasZoneLeft();
 
             this.$nextTick(() => {
                 this.canvas.width = this.width;
@@ -165,7 +185,9 @@
         },
 
         destroyed() {
-            window.removeEventListener('resize', this.setCanvasPos());
+            window.removeEventListener('resize', this.setViewDims);
+            window.removeEventListener('resize', this.setCanvasZoneLeft);
+            window.removeEventListener('resize', this.setCanvasPos);
         },
 
         methods: {
@@ -215,7 +237,13 @@
                 this.height = dims.height;
             },
 
-            setCanvasPos() {
+            setCanvasZoneLeft: _.debounce(function () {
+                this.canvasZoneLeft = this.$refs.canvasZone
+                    ? this.$refs.canvasZone.getBoundingClientRect().left
+                    : 0;
+            }, 100),
+
+            setCanvasPos: _.debounce(function () {
                 this.$nextTick(() => {
                     const pos = this.canvas.getBoundingClientRect();
                     this.canvasPos.x = pos.x + window.scrollX;
@@ -223,7 +251,12 @@
                     this.canvasPos.width = pos.width;
                     this.canvasPos.height = pos.height;
                 });
-            },
+            }, 100),
+
+            setViewDims: _.debounce(function () {
+                this.viewHeight = document.documentElement.clientHeight;
+                this.viewWidth = document.documentElement.clientWidth;
+            }, 100),
 
             mouseDragStart() {
                 this.dragStart();
@@ -313,13 +346,33 @@
 
 <style lang="scss" scoped>
     .o-imagery {
+        @include media-breakpoint-up(lg) {
+            width: 550px;
+        }
+
+        &__preview {
+            background-color: $gray-600;
+            padding: 0.25em 0.5em 0.125em;
+            color: $white;
+
+            @include media-breakpoint-up(lg) {
+                position: fixed;
+                top: 82px;
+                left: 600px;
+                padding: 0.5em 1em 0.25em;
+            }
+
+            @include media-breakpoint-up(xl) {
+                left: calc(25vw + 600px);
+                top: 3.5em;
+            }
+        }
+
         &__canvas-zone {
             width: 100%;
-            background-color: $gray-500;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 1vw;
         }
 
         &__canvas {

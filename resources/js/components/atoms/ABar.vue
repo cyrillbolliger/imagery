@@ -1,5 +1,5 @@
 <template>
-    <div class="container mb-1">
+    <div class="container-fluid mb-1">
         <div class="row">
             <input
                 :class="inputClass"

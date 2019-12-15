@@ -1,6 +1,6 @@
 <template>
     <div class="form-group">
-        <div class="row" id="image-size">
+        <div class="row no-gutters" id="image-size">
             <div class="col-12 col-sm-6">
                 <label
                     class="mt-2 mb-0"
@@ -16,7 +16,7 @@
                         required="true"></ModelSelect>
                 </div>
             </div>
-            <div class="col-6 col-sm-3">
+            <div class="col-6 col-sm-3 pr-1 pr-sm-0 pl-sm-2">
                 <div class="input number">
                     <label
                         class="mt-2 mb-0"
@@ -32,7 +32,7 @@
                            v-model.number="width">
                 </div>
             </div>
-            <div class="col-6 col-sm-3">
+            <div class="col-6 col-sm-3 pl-1 pl-sm-2">
                 <div class="input number">
                     <label
                         class="mt-2 mb-0"

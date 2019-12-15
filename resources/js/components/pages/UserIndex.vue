@@ -1,5 +1,5 @@
 <template>
-    <div class="col">
+    <div>
         <MHeader>{{$t('users.index.title')}}</MHeader>
         <ODataTable
             :headers="headers"

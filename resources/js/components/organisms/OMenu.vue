@@ -5,6 +5,7 @@
             class="o-menu__close mt-2 mr-3"
             icon="close"
             modifier="light"
+            v-if="!this.isXl"
         >{{$t('nav.hide')}}
         </AIconNamed>
         <h3 class="o-menu__title mt-3">{{$t('nav.title')}}</h3>
@@ -28,11 +29,12 @@
 <script>
     import MMenuItem from "../molecules/MMenuItem";
     import {mapActions, mapGetters} from "vuex";
-    import {isXl} from "../../service/Window";
+    import WindowMixin from "../../mixins/WindowMixin";
 
     export default {
         name: "OMenu",
         components: {MMenuItem},
+        mixins: [WindowMixin],
         methods: {
             ...mapActions('menu', ['close']),
         },
@@ -41,7 +43,7 @@
         },
         watch: {
             '$route'() {
-                if (!isXl()) {
+                if (!this.isXl) {
                     this.$store.dispatch('menu/close');
                 }
             }

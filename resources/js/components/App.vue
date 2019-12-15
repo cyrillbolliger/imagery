@@ -14,13 +14,24 @@
     import OMenu from "./organisms/OMenu";
     import {mapGetters} from "vuex";
     import OSnackbars from "./organisms/OSnackbars";
+    import WindowMixin from "../mixins/WindowMixin";
 
     export default {
         name: "App",
         components: {OSnackbars, OMenu},
+        mixins: [WindowMixin],
         computed: {
             ...mapGetters('menu', ['isOpen']),
-        }
+        },
+        watch: {
+            isXl(isXl) {
+                if (isXl) {
+                    this.$store.dispatch('menu/open');
+                } else {
+                    this.$store.dispatch('menu/close');
+                }
+            }
+        },
     }
 </script>
 
