@@ -7,10 +7,10 @@ mix.disableSuccessNotifications();
 mix.browserSync('imagery.test:8888');
 
 // compile js
-mix.js('resources/js/app.js', 'public/js').sourceMaps();
+mix.js('resources/js/app.js', 'public/js').sourceMaps().version();
 
 // compile scss
-mix.sass('resources/sass/app.scss', 'public/css');
+mix.sass('resources/sass/app.scss', 'public/css').version();
 
 // webpack stuff
 mix.webpackConfig({
