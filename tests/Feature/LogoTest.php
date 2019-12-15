@@ -170,8 +170,6 @@ class LogoTest extends TestCase
         $response = $this->actingAs($manager)
                          ->putJson("/api/1/logos/$logo->id", $data);
 
-        dd($response);
-
         $response->assertStatus(200);
         $response->assertJsonFragment(['name' => $logo->name]);
         $this->assertDatabaseHas('logos', [
@@ -248,8 +246,6 @@ class LogoTest extends TestCase
 
         $response = $this->actingAs($manager)
                          ->postJson("/api/1/logos", $data);
-
-        dd($response);
 
         $response->assertStatus(201);
         $response->assertJsonFragment(['name' => $logo->name]);
