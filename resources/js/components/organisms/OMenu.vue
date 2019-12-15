@@ -20,7 +20,7 @@
                     <MMenuItem icon="chevron-right" to="/admin/logos">{{$t('route.logos')}}</MMenuItem>
                 </ul>
             </li>
-            <MMenuItem icon="account-box" to="/admin/users/:id">{{$t('route.account')}}</MMenuItem>
+            <MMenuItem :to="`/admin/users/${id}`" icon="account-box">{{$t('route.profile')}}</MMenuItem>
             <MMenuItem icon="power-settings-new" to="/logout">{{$t('route.logout')}}</MMenuItem>
         </ul>
     </nav>
@@ -39,7 +39,7 @@
             ...mapActions('menu', ['close']),
         },
         computed: {
-            ...mapGetters('user', ['isAdmin']),
+            ...mapGetters('user', ['isAdmin', 'id']),
         },
         watch: {
             '$route'() {
