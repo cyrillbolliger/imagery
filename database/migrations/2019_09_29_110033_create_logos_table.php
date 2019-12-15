@@ -16,7 +16,7 @@ class CreateLogosTable extends Migration
         Schema::create('logos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('added_by');
-            $table->string('filename');
+            $table->string('type');
             $table->string('name');
             $table->timestamps();
             $table->softDeletes();

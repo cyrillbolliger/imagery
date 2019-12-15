@@ -13,8 +13,9 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $added_by
  * @property User|null $addedBy
- * @property-write string $filename
- * @property-read string $src
+ * @property-write string $type
+ * @property-read string $src_white
+ * @property-read string $src_green
  * @property string $name
  * @property Group[] $groups
  * @property Carbon|null $created_at
@@ -26,21 +27,13 @@ class Logo extends Model implements FileModel
     use SoftDeletes;
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'filename',
-    ];
-
-    /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
     protected $appends = [
-        'src',
+        'src_white',
+        'src_green',
     ];
 
     /**
@@ -65,14 +58,19 @@ class Logo extends Model implements FileModel
         return $this->belongsTo(User::class, 'added_by');
     }
 
-    public function getSrcAttribute()
+    public function getSrcWhiteAttribute()
     {
-        return route('logo', ['logo' => $this->id]);
+        return route('logo', ['logo' => $this->id, 'color' => 'white']);
     }
 
-    public function getRelPath()
+    public function getSrcGreenAttribute()
     {
-        return self::getStorageDir().DIRECTORY_SEPARATOR.$this->filename;
+        return route('logo', ['logo' => $this->id, 'color' => 'green']);
+    }
+
+    public function getRelPath($color = null)
+    {
+        return self::getStorageDir().DIRECTORY_SEPARATOR.$this->type.'-'.$color.'.svg';
     }
 
     public static function getStorageDir()

@@ -17,7 +17,7 @@ class FontController extends Controller
                 $this->font = $font;
             }
 
-            public function getRelPath()
+            public function getRelPath($arg = null)
             {
                 return 'fonts'.DIRECTORY_SEPARATOR.$this->font;
             }

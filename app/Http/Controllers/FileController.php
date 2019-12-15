@@ -29,12 +29,13 @@ class FileController extends Controller
      * Display the specified resource file.
      *
      * @param  FileModel  $model
+     * @param  mixed  $arg
      *
      * @return Response
      */
-    public function show(FileModel $model)
+    public function show(FileModel $model, $arg = null)
     {
-        return $this->fileResponse($model->getRelPath());
+        return $this->fileResponse($model->getRelPath($arg));
     }
 
     /**

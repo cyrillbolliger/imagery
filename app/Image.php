@@ -196,7 +196,7 @@ class Image extends Model implements FileModel
         return route('thumbnail', ['image' => $this->id]);
     }
 
-    public function getRelPath()
+    public function getRelPath($arg = null)
     {
         return self::getImageStorageDir().DIRECTORY_SEPARATOR.$this->filename;
     }

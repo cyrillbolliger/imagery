@@ -109,13 +109,11 @@ Route::prefix('api/1')->group(function () {
     /**
      * Logo Files
      */
-    Route::get('/files/logos/{logo}', 'FileController@show')
+    Route::get('/files/logos/{logo}/{color}', 'FileController@show')
          ->where('logo', '\d+')
+         ->where('color', '(white)|(green)')
          ->middleware('can:view,logo')
          ->name('logo');
-
-    Route::post('/files/logos', 'FileController@storeChunk')
-         ->middleware('can:create,App\Logo');
 
     /**
      * Images

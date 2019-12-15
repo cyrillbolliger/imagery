@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Group;
-use App\Http\Controllers\Upload\RegularUploadStrategy;
 use App\Logo;
 use App\Rules\CanManageGroupRule;
-use App\Rules\FileExtensionRule;
 use App\Rules\ImmutableRule;
+use App\Rules\LogoTypeRule;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,9 +14,6 @@ use Illuminate\Support\Facades\Validator;
 
 class LogoController extends Controller
 {
-    private const ALLOWED_EXT = ['png', 'svg'];
-    private const ALLOWED_SIZE = 1.0; // Logos must not exceed 1 MB
-
     /**
      * Display a listing of the resource.
      *
@@ -44,7 +40,7 @@ class LogoController extends Controller
         $data = $request->validate([
             'id'         => ['sometimes', new ImmutableRule($logo)],
             'added_by'   => ['sometimes', new ImmutableRule($logo)],
-            'filename'   => ['required', 'string', 'max:255', new FileExtensionRule(self::ALLOWED_EXT)],
+            'type'       => ['required', 'string', new LogoTypeRule($logo)],
             'name'       => ['required', 'max:80'],
             'created_at' => ['sometimes', new ImmutableRule($logo)],
             'updated_at' => ['sometimes', new ImmutableRule($logo)],
@@ -53,9 +49,6 @@ class LogoController extends Controller
         ]);
 
         unset($data['groups']);
-
-        $handler          = $this->makeUploadHandler($data['filename']);
-        $data['filename'] = $handler->storeFinal(Logo::getStorageDir());
 
         $logo->fill($data);
 
@@ -69,22 +62,6 @@ class LogoController extends Controller
         unset($logo->groups); // do not return associations
 
         return $logo;
-    }
-
-    /**
-     * UploadHandler factory
-     *
-     * @param  string  $filename
-     *
-     * @return RegularUploadStrategy
-     */
-    private function makeUploadHandler(string $filename)
-    {
-        return new RegularUploadStrategy(
-            self::ALLOWED_EXT,
-            $filename,
-            self::ALLOWED_SIZE
-        );
     }
 
     /**
@@ -124,13 +101,7 @@ class LogoController extends Controller
         $data = $request->validate([
             'id'         => ['sometimes', new ImmutableRule($logo)],
             'added_by'   => ['sometimes', new ImmutableRule($logo)],
-            'filename'   => [
-                'sometimes',
-                'required',
-                'string',
-                'max:255',
-                new FileExtensionRule(self::ALLOWED_EXT)
-            ],
+            'type'       => ['sometimes', 'required', 'string', new LogoTypeRule($logo)],
             'name'       => ['sometimes', 'required', 'max:80'],
             'created_at' => ['sometimes', new ImmutableRule($logo)],
             'updated_at' => ['sometimes', new ImmutableRule($logo)],
@@ -141,11 +112,6 @@ class LogoController extends Controller
         if ($request->has('groups')) {
             $this->syncGroups($data['groups'], $logo);
             unset($data['groups']);
-        }
-
-        if ($request->has('filename')) {
-            $handler          = $this->makeUploadHandler($data['filename']);
-            $data['filename'] = $handler->storeFinal(Logo::getStorageDir());
         }
 
         if ( ! $logo->update($data)) {
