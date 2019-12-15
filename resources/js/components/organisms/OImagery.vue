@@ -164,6 +164,7 @@
             window.addEventListener('resize', this.setViewDims);
             window.addEventListener('resize', this.setCanvasZoneLeft);
             window.addEventListener('resize', this.setCanvasPos);
+            window.addEventListener('scroll', this.setCanvasPos);
         },
 
         mounted() {
@@ -190,6 +191,7 @@
             window.removeEventListener('resize', this.setViewDims);
             window.removeEventListener('resize', this.setCanvasZoneLeft);
             window.removeEventListener('resize', this.setCanvasPos);
+            window.removeEventListener('scroll', this.setCanvasPos);
         },
 
         methods: {
