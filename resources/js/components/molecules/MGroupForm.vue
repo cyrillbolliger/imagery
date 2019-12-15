@@ -39,18 +39,17 @@
     import AInput from "../atoms/AInput";
     import AFormGroup from "../atoms/AFormGroup";
     import ASelect from "../atoms/ASelect";
-    import AMultiSelect from "../atoms/AMultiSelect";
     import ResourceLoadMixin from "../../mixins/ResourceLoadMixin";
     import {mapGetters} from "vuex";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
     import MGroupTree from "./MGroupTree";
     import PrepareSelectMixin from "../../mixins/PrepareSelectMixin";
-    import {required, email, maxLength} from 'vuelidate/lib/validators';
+    import {required, maxLength} from 'vuelidate/lib/validators';
     import AButtonWait from "../atoms/AButtonWait";
 
     export default {
         name: "MGroupForm",
-        components: {AButtonWait, MGroupTree, ASelect, AFormGroup, AInput, AMultiSelect},
+        components: {AButtonWait, MGroupTree, ASelect, AFormGroup, AInput},
         mixins: [ResourceLoadMixin, SnackbarMixin, PrepareSelectMixin],
 
 
