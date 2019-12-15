@@ -61,7 +61,7 @@ export default class BarLayer extends Layer {
     }
 
     _drawBlock() {
-        if (!this._block) {
+        if (!this._block || 0 === this._block.width || 0 === this._block.height) {
             return;
         }
 

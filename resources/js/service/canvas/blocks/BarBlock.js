@@ -39,7 +39,7 @@ export default class BarBlock {
         if (this._bars.length) {
             width = this._bars
                 .map(bar => bar.width)
-                .reduce((a, b) => Math.max(a, b));
+                .reduce((a, b) => Math.max(a, b), 0);
         }
 
         this._canvas.width = width;
@@ -51,7 +51,7 @@ export default class BarBlock {
         if (this._bars.length) {
             height = this._bars
                 .map(bar => bar.height)
-                .reduce((a, b) => a + b);
+                .reduce((a, b) => a + b, 0);
         }
 
         this._canvas.height = height;
