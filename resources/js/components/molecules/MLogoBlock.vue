@@ -1,0 +1,145 @@
+<template>
+    <div class="form-group">
+        <label for="logo" class="mb-0 d-flex align-items-center">
+            {{$t('images.create.logo')}}
+            <div
+                v-if="loadingLogos || loadingLogoImage"
+                class="spinner-border spinner-border-sm text-primary ml-2"
+                role="status">
+            </div>
+        </label>
+
+        <ModelSelect
+            :options="logoChoices"
+            :value="logoIdSelected"
+            :isDisabled="loadingLogos"
+            @input="setLogo($event)"
+            class="form-control"
+            id="logo"
+            required="false"/>
+    </div>
+</template>
+
+<script>
+    import SnackbarMixin from "../../mixins/SnackbarMixin";
+    import {ModelSelect} from 'vue-search-select'
+    import {Logo} from "../../service/canvas/elements/Logo";
+    import ResourceLoadMixin from "../../mixins/ResourceLoadMixin";
+    import {mapGetters} from "vuex";
+    import PrepareSelectMixin from "../../mixins/PrepareSelectMixin";
+
+    export default {
+        name: "MLogoBlock",
+        components: {ModelSelect},
+        mixins: [ResourceLoadMixin, SnackbarMixin, PrepareSelectMixin],
+
+        data() {
+            return {
+                block: new Logo(),
+                logoIdSelected: null,
+                logoObjSelected: null,
+                logoImage: null,
+                logoChoices: [],
+                loadingLogoImage: false,
+            }
+        },
+
+        props: {
+            imageWidth: {
+                required: true,
+                type: Number,
+            },
+            imageHeight: {
+                required: true,
+                type: Number
+            },
+            colorSchema: {
+                required: true,
+            }
+        },
+
+        computed: {
+            ...mapGetters({
+                logos: 'logos/getAll',
+                getLogoById: 'logos/getById',
+                loadingLogos: 'logos/loading',
+            }),
+            color() {
+                return 'white' === this.colorSchema ? 'white' : 'green';
+            }
+        },
+
+        created() {
+            this.resourceLoad('logos')
+                .then(() => this.populateLogosSelect());
+        },
+
+        mounted() {
+            this.$nextTick(() => {
+                // we don't know the user before $nextTick
+                const logo = this.$store.getters['user/object'].default_logo;
+
+                this.setLogo(logo);
+            });
+        },
+
+        methods: {
+            draw() {
+                this.block.width = this.imageWidth;
+                this.block.height = this.imageHeight;
+                this.block.logo = this.logoImage;
+                this.block.type = this.logoObjSelected.type;
+
+                this.$emit('drawn', this.block.draw());
+            },
+
+            setLogo(logo) {
+                this.logoIdSelected = logo;
+
+                if (!logo) {
+                    this.logoImage = null;
+                    this.logoObjSelected = null;
+                    return;
+                }
+
+                this.logoObjSelected = this.getLogoById(logo);
+                this.loadingLogoImage = true;
+
+                const img = new Image();
+                img.onload = () => {
+                    this.logoImage = img;
+                    this.draw();
+                    this.loadingLogoImage = false;
+                };
+
+                img.src = this.logoObjSelected[`src_${this.color}`];
+            },
+
+            populateLogosSelect() {
+                this.logoChoices = this.prepareSelectData(
+                    this.logos,
+                    'id',
+                    'name'
+                );
+            },
+        },
+
+        watch: {
+            imageWidth() {
+                this.draw();
+            },
+            imageHeight() {
+                this.draw();
+            },
+            colorSchema() {
+                this.setLogo(this.logoIdSelected);
+            },
+        },
+    }
+</script>
+
+<style lang="scss" scoped>
+    .custom-file-input {
+        display: none;
+    }
+</style>

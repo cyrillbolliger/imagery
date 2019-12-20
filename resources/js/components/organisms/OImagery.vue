@@ -1,11 +1,17 @@
 <template>
     <div class="o-imagery" ref="container">
         <div class="o-imagery__controls-1">
+            <MLogoBlock
+                :image-height="height"
+                :image-width="width"
+                :alignment="alignment"
+                :color-schema="schema"
+                @drawn="updateLogoLayer($event)"
+            ></MLogoBlock>
+
             <MSizeBlock
                 @sizeChanged="setSize($event)"
             ></MSizeBlock>
-
-            <!-- todo: logo -->
 
             <MBackgroundBlock
                 :image-height="height"
@@ -81,13 +87,24 @@
     import MBackgroundBlock from "../molecules/MBackgroundBlock";
     import MBorderBlock from "../molecules/MBorderBlock";
     import BorderLayer from "../../service/canvas/layers/BorderLayer";
+    import MLogoBlock from "../molecules/MLogoBlock";
+    import LogoLayer from "../../service/canvas/layers/LogoLayer";
     import MSizeBlock from "../molecules/MSizeBlock";
     import MAlignment from "../molecules/MAlignment";
     import MColorScheme from "../molecules/MColorScheme";
 
     export default {
         name: "OImagery",
-        components: {MAlignment, MSizeBlock, MBorderBlock, MBackgroundBlock, MBarBlock, MColorScheme},
+        components: {
+            MAlignment,
+            MSizeBlock,
+            MBorderBlock,
+            MBackgroundBlock,
+            MBarBlock,
+            MColorScheme,
+            MLogoBlock,
+        },
+
         data() {
             return {
                 canvas: null,
@@ -114,9 +131,11 @@
                 barBlock: null,
                 backgroundBlock: null,
                 borderBlock: null,
+                logoBlock: null,
                 borderLayer: null,
                 barLayer: null,
                 backgroundLayer: null,
+                logoLayer: null,
 
                 dragObj: null,
             }
@@ -180,10 +199,12 @@
                 this.backgroundLayer = new BackgroundLayer(this.canvas);
                 this.borderLayer = new BorderLayer(this.canvas);
                 this.barLayer = new BarLayer(this.canvas);
+                this.logoLayer = new LogoLayer(this.canvas);
 
                 this.updateBackgroundLayer(this.backgroundBlock);
                 this.updateBorderLayer(this.borderBlock);
                 this.updateBarLayer(this.barBlock);
+                this.updateLogoLayer(this.logoBlock);
             });
         },
 
@@ -205,6 +226,7 @@
                 this.barLayer.alignment = this.alignment;
                 this.barLayer.block = this.barBlock;
                 this.barLayer.borderWidth = this.borderWidth;
+
                 this.draw();
             },
 
@@ -230,10 +252,25 @@
                 this.draw();
             },
 
+            updateLogoLayer(logoBlock) {
+                this.logoBlock = logoBlock;
+
+                if (!this.logoLayer) {
+                    return;
+                }
+
+                this.logoLayer.block = this.logoBlock;
+                this.draw();
+            },
+
             draw() {
                 this.backgroundLayer.draw();
                 this.borderLayer.draw();
                 this.barLayer.draw();
+
+                this.logoLayer.alignment = this.alignment;
+                this.logoLayer.barPos = this.barLayer.boundingRect;
+                this.logoLayer.draw();
             },
 
             setSize(dims) {

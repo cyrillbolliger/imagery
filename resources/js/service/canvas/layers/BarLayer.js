@@ -43,6 +43,19 @@ export default class BarLayer extends Layer {
         return this._touching;
     }
 
+    get boundingRect() {
+        if (! this._hasBlock()) {
+            return null;
+        }
+
+        return {
+            x0: this._getXstart(),
+            y0: this._getYstart(),
+            x1: this._getXend(),
+            y1: this._getYend(),
+        };
+    }
+
     drag(pos) {
         const deltaY = pos.y - this._mousePos.y;
         const y = this._y + deltaY;
@@ -61,14 +74,14 @@ export default class BarLayer extends Layer {
     }
 
     _drawBlock() {
-        if (!this._block || 0 === this._block.width || 0 === this._block.height) {
+        if (! this._hasBlock()) {
             return;
         }
 
         this._setTouchEffect();
 
         // move the origin to the desired position, then rotate. apply the
-        // image to the origin afterwards. this way we the offsets are measured
+        // image to the origin afterwards. this way the offsets are measured
         // horizontal and vertical respectively (unrotated). reset the origin
         // and rotation afterwards.
         this._context.translate(this._getBlockXpos(), this._getBlockYpos());
@@ -76,6 +89,10 @@ export default class BarLayer extends Layer {
         this._context.drawImage(this._block, 0, 0);
         this._context.setTransform(1, 0, 0, 1, 0, 0);
         this._context.filter = 'none';
+    }
+
+    _hasBlock() {
+        return this._block && 0 < this._block.width && 0 < this._block.height;
     }
 
     _setTouchEffect() {
@@ -173,18 +190,35 @@ export default class BarLayer extends Layer {
     _isHover() {
         const mouseX = this._mousePos.x;
         const mouseY = this._mousePos.y;
-        const posXstart = this._getBlockXpos();
-        const posXend = posXstart + this._getRotatedFullWidth();
 
-        const posYstart = this._alignment === Alignments.left ?
-            this._getBlockYpos() - this._getFullHorizontalRotationTriangleHeight() :
-            this._getBlockYpos() - this._getVisibleHorizontalRotationTriangleHeight();
-        const posYend = posYstart + this._getRotatedVisibleHeight();
+        const posXstart = this._getXstart();
+        const posXend = this._getXend();
+
+        const posYstart = this._getYstart();
+        const posYend = this._getYend();
 
         const xTouch = mouseX >= posXstart && mouseX <= posXend;
         const yTouch = mouseY >= posYstart && mouseY <= posYend;
 
         return xTouch && yTouch;
+    }
+
+    _getXstart() {
+        return this._getBlockXpos();
+    }
+
+    _getXend() {
+        return this._getBlockXpos() + this._getRotatedFullWidth();
+    }
+
+    _getYstart() {
+        return this._alignment === Alignments.left ?
+            this._getBlockYpos() - this._getFullHorizontalRotationTriangleHeight() :
+            this._getBlockYpos() - this._getVisibleHorizontalRotationTriangleHeight();
+    }
+
+    _getYend() {
+        return this._getYstart() + this._getRotatedVisibleHeight();
     }
 
     _getRotatedVisibleHeight() {

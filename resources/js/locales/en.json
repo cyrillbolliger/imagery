@@ -121,6 +121,7 @@
     "images": {
         "create": {
             "title": "Create Image",
+            "logo": "Logo",
             "fontSize": "Font size",
             "tooMuchText": "Your bars contain too much text. Shorten it!",
             "sublineAdd": "Add Subline",
