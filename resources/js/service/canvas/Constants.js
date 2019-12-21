@@ -57,9 +57,9 @@ export const LogoSublineRatios = {
         fontSize: 0.14225
     },
     [LogoTypes["gruene-verts"]]: {
-        topMargin: 0.0255, // todo
-        left: 0.3375,
-        fontSize: 0.1425
+        topMargin: 0.0255,
+        left: 0.25375,
+        fontSize: 0.1
     },
     [LogoTypes.verda]: {
         topMargin: 0.0255,
@@ -67,13 +67,13 @@ export const LogoSublineRatios = {
         fontSize: 0.1425
     },
     [LogoTypes.verdi]: {
-        topMargin: 0.0255, // todo
-        left: 0.3375,
+        topMargin: 0.028,
+        left: 0.32,
         fontSize: 0.1425
     },
     [LogoTypes.verts]: {
-        topMargin: 0.0255, // todo
-        left: 0.3375,
+        topMargin: 0.031,
+        left: 0.25375,
         fontSize: 0.1425
     },
 };
