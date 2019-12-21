@@ -1,10 +1,12 @@
+import {LogoTypes} from "../Constants";
+
 const LogoTypeRatios = {
-    alternative: 4,
-    gruene: 4,
-    'gruene-verts': 4,
-    verda: 4,
-    verdi: 4,
-    verts: 4,
+    [LogoTypes.alternative]: 4,
+    [LogoTypes.gruene]: 4,
+    [LogoTypes["gruene-verts"]]: 4,
+    [LogoTypes.verda]: 4,
+    [LogoTypes.verdi]: 4,
+    [LogoTypes.verts]: 4,
 };
 
 class Logo {
@@ -29,6 +31,10 @@ class Logo {
 
     set height(height) {
         this._imageHeight = height;
+    }
+
+    get height() {
+        return this._canvas.height;
     }
 
     set type(type) {

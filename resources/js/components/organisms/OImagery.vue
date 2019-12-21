@@ -117,6 +117,7 @@
                 backgroundTypes: BackgroundTypes,
                 rawImage: null,
                 borderWidth: 0,
+                logoId: null,
 
                 viewHeight: document.documentElement.clientHeight,
                 viewWidth: document.documentElement.clientWidth,
@@ -252,12 +253,15 @@
                 this.draw();
             },
 
-            updateLogoLayer(logoBlock) {
-                this.logoBlock = logoBlock;
-
-                if (!this.logoLayer) {
+            updateLogoLayer(data) {
+                if (!data) {
+                    this.logoBlock = null;
+                    this.logoId = null;
                     return;
                 }
+
+                this.logoBlock = data.block;
+                this.logoId = data.id;
 
                 this.logoLayer.block = this.logoBlock;
                 this.draw();
@@ -358,7 +362,7 @@
                     canvas: this.canvas,
                     backgroundType: this.backgroundType,
                     rawImage: this.rawImage,
-                    logoId: null, // todo
+                    logoId: this.logoId,
                 });
             },
         },

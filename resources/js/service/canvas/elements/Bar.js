@@ -1,4 +1,4 @@
-import {Alignments, BarSchemes as Schemes, BarSizeFactor} from "./../Constants";
+import {Alignments, BarSchemes as Schemes, BarSizeFactor, BarTypes as Types} from "./../Constants";
 
 
 /**
@@ -36,6 +36,7 @@ export default class Bar {
         this._alignment = Alignments.left;
         this._fontSize = 16;
         this._text = '';
+        this._font = Types.headline;
 
         this._imageWidth = 0;
         this._barOversize = 0;
@@ -72,8 +73,8 @@ export default class Bar {
 
     draw() {
         this._setFont();
-        this._setBarOversize();
         this._setTextDims();
+        this._setBarOversize();
         this._setCanvasWidth();
         this._setCanvasHeight();
         this._setFont(); // the resizing kills the font settings
@@ -89,7 +90,11 @@ export default class Bar {
     }
 
     _setBarOversize() {
-        this._barOversize = this._imageWidth * BarSizeFactor;
+        if (Alignments.center === this._alignment) {
+            this._barOversize = this._textDims.padding;
+        } else {
+            this._barOversize = this._imageWidth * BarSizeFactor;
+        }
     }
 
     _setTextDims() {
