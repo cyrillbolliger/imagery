@@ -118,7 +118,7 @@
                     .then(() => this.uploadRawImageMeta())
                     .catch(error => {
                         this.snackErrorRetry(error, this.$t('images.create.uploadFailed'))
-                            .then(this.uploadRawImage());
+                            .then(this.uploadRawImage);
                     });
             },
 
@@ -137,7 +137,7 @@
                     .then(() => this.uploadFinalImageMeta())
                     .catch(error => {
                         this.snackErrorRetry(error, this.$t('images.create.uploadFailed'))
-                            .then(this.uploadFinalImage());
+                            .then(this.uploadFinalImage);
                     });
             },
 
