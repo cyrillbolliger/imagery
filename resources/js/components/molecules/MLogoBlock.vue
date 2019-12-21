@@ -90,6 +90,11 @@
 
         methods: {
             draw() {
+                if (!this.logoObjSelected) {
+                    this.$emit('drawn', null);
+                    return;
+                }
+
                 this.block.logo = this.drawLogo();
                 this.block.type = this.logoObjSelected.type;
 

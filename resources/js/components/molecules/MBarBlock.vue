@@ -39,7 +39,7 @@
                 @remove="headlinesPrimaryCount--"
                 @removed="remove(headlinesPrimary, n)"
                 v-for="n in headlinesPrimaryCount"
-            ></ABar>
+            />
 
             <ABar
                 :alignment="alignment"
@@ -56,7 +56,7 @@
                 @remove="headlinesSecondaryCount--"
                 @removed="remove(headlinesSecondary, n)"
                 v-for="n in headlinesSecondaryCount"
-            ></ABar>
+            />
 
             <ABar
                 :alignment="alignment"
@@ -73,7 +73,7 @@
                 @remove="sublinesCount--"
                 @removed="remove(sublines, n)"
                 v-for="n in sublinesCount"
-            ></ABar>
+            />
 
             <button
                 :class="buttonClassSubline"
@@ -297,6 +297,15 @@
                 this.sublinesCount++;
             }
         },
+
+        watch: {
+            imageWidth() {
+                this.draw();
+            },
+            imageHeight() {
+                this.draw();
+            }
+        }
     }
 </script>
 
