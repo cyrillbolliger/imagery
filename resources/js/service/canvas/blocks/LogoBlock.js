@@ -61,9 +61,16 @@ class LogoBlock {
     }
 
     _setSize() {
-        const sublineWidth = this._subline.width + this._left();
+        let sublineWidth = 0;
+        let sublineHeight = 0;
+
+        if (this._hasSubline()) {
+            sublineWidth = this._subline.width + this._left();
+            sublineHeight = this._subline.height;
+        }
+
         this._canvas.width = Math.max(this._logo.width, sublineWidth);
-        this._canvas.height = this._logo.height + this._subline.height + this._marginTop();
+        this._canvas.height = this._logo.height + sublineHeight + this._marginTop();
     }
 
     _marginTop() {
