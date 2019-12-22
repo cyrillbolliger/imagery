@@ -237,11 +237,13 @@ class LogoTest extends TestCase
             ])
         );
 
-        $logo             = factory(Logo::class)->make([
+        $logo           = factory(Logo::class)->make([
             'name' => Str::random(),
         ]);
-        $data             = $logo->toArray();
-        $data['groups']   = [$group->id];
+        $logo->id       = 1; // needed for route creation of logo url
+        $data           = $logo->toArray();
+        $data['groups'] = [$group->id];
+        unset($data['id']); // but must not be present in post data
         unset($data['added_by']); // not mutable
 
         $response = $this->actingAs($manager)
