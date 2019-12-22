@@ -4,7 +4,7 @@
         <MSearch
             @search="search($event)"
             :initial-term="initialTerm"
-            class="image-gallery__search mb-3"
+            class="image-gallery__search mb-3 mt-3"
         />
         <OImages
             :endpoint="this.endpoint"
@@ -28,13 +28,28 @@
         computed: {
             endpoint() {
                 const terms = this.$route.query.q;
+                const page = this.$route.query.page;
+                let termsArg = '';
+                let pageArg = '';
+
+                if (terms) {
+                    termsArg = encodeURIComponent(terms);
+                }
+
+                if (page) {
+                    pageArg = `?page=${page}`;
+                }
 
                 return terms ?
-                    `/images/final/search/${encodeURIComponent(terms)}` :
-                    '/images/final';
+                    `/images/final/search/${termsArg}${pageArg}` :
+                    `/images/final${pageArg}`;
             },
 
             initialTerm() {
+                if (!this.$route.query.q) {
+                    return '';
+                }
+
                 return decodeURIComponent(this.$route.query.q);
             }
         },

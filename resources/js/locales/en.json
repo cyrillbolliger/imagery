@@ -14,6 +14,11 @@
         "hide": "Hide",
         "show": "Menu"
     },
+    "pagination": {
+        "title": "Pagination",
+        "previous": "Previous",
+        "next": "Next"
+    },
     "table": {
         "loading": "Loading... Please wait",
         "total": "Showing {displayed} out of {total} records.",
@@ -181,7 +186,11 @@
             "loading": "Loading...",
             "download": "Download",
             "delete": "Delete",
-            "deleteError": "Failed to delete image. Please try again."
+            "deleteError": "Failed to delete image. Please try again.",
+            "loadingFailed": "Could not load images. Please try again.",
+            "loadingImages": "Loading images...",
+            "searchTitle": "We searched really hard, but there was nothing, I promise. | One image found | {number} Images found",
+            "imageCount": "One image | {number} Images"
         }
     },
     "logos": {

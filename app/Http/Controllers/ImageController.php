@@ -44,7 +44,7 @@ class ImageController extends Controller
     {
         return Image::final()
                     ->latest()
-                    ->paginate(50);
+                    ->paginate(3);
     }
 
     /**
