@@ -1,0 +1,3 @@
+files:
+  - source: /resources/js/locales/en.json
+    translation: /resources/js/locales/%two_letters_code%.json
