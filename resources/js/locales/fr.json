@@ -1,0 +1,219 @@
+{
+    "route": {
+        "gallery": "Gallery",
+        "create_image": "Create Image",
+        "settings": "Settings",
+        "users": "Users",
+        "groups": "Groups",
+        "logos": "Logos",
+        "profile": "Profile",
+        "logout": "Logout"
+    },
+    "nav": {
+        "title": "Menu",
+        "hide": "Hide",
+        "show": "Menu"
+    },
+    "pagination": {
+        "title": "Pagination",
+        "previous": "Previous",
+        "next": "Next"
+    },
+    "table": {
+        "loading": "Loading... Please wait",
+        "total": "Showing {displayed} out of {total} records.",
+        "filtered": "Filtered list.",
+        "add": "Add New",
+        "details": "Details"
+    },
+    "search": {
+        "search": "Search"
+    },
+    "languages": {
+        "de": "German",
+        "fr": "French",
+        "en": "English"
+    },
+    "snackbar": {
+        "retry": "Retry",
+        "reload": "Reload",
+        "dismiss": "Dismiss",
+        "server_error": "Uuups, there was a server error."
+    },
+    "validation": {
+        "required": "This field is required.",
+        "email": "Please enter a valid email address.",
+        "max_length": "Input too long. The max length is {max} characters.",
+        "double_check_form": "There are some errors in your form data. Please double check your input."
+    },
+    "users": {
+        "index": {
+            "title": "Users",
+            "create": "Create User"
+        }
+    },
+    "user": {
+        "nav_edit": "Edit",
+        "nav_stats": "Stats",
+        "name": "Name",
+        "login": "Login Data",
+        "privileges": "Privileges",
+        "group_privileges": "Group Privileges",
+        "misc_fields": "Miscellaneous",
+        "first_name": "First name",
+        "last_name": "Last name",
+        "email": "Email",
+        "email_exists": "There is already an account with this email address.",
+        "password": "Password",
+        "password_placeholder": "Unchanged",
+        "password_empty_info": "Leave empty to keep password unchanged.",
+        "super_admin": "Super Admin",
+        "super_admin_desc": "This user can do everything.",
+        "language": "Language",
+        "not_found": "We were unable to retrieve this user. Try to reload.",
+        "managed_by": "Managed by",
+        "managed_by_helptext": "This group is responsible for managing this user.",
+        "admin_of": "Admin of",
+        "admin_of_helptext": "This user can use the logo of and manage the specified groups, its child groups and its users.",
+        "roles_loading_failed": "Failed to get 'Admin of' and 'User of' info.",
+        "user_of": "User of",
+        "user_of_helptext": "This user can use the logos of the specified groups, but can't change anything.",
+        "save": "Save User",
+        "saving": "Saving...",
+        "saved": "User saved.",
+        "saving_failed": "Failed to save user. Try again.",
+        "remove": "Delete User",
+        "removing": "Deleting user",
+        "removed": "User deleted.",
+        "remove_confirmation": "Do you really want to delete {user}?",
+        "removing_failed": "Failed to delete user. Try again.",
+        "password_insecure": "This password is insecure. Make it longer or ensure it contains numbers and special characters (and lower and uppercase characters of course)."
+    },
+    "role": {
+        "use": "Use Logos",
+        "manage": "Manage Group"
+    },
+    "groups": {
+        "index": {
+            "title": "Groups",
+            "create": "Create Group"
+        }
+    },
+    "group": {
+        "name": "Name",
+        "nav_edit": "Edit",
+        "nav_details": "Details",
+        "parent": "Parent Group",
+        "logos": "Logos",
+        "users": "Users",
+        "logos_helptext": "Members of this group can use the logos listed below.",
+        "users_helptext": "The following users are member of this group.",
+        "not_found": "We were unable to retrieve this group. Try to reload.",
+        "save": "Save Group",
+        "saving": "Saving...",
+        "saved": "Group saved.",
+        "saving_failed": "Failed to save group. Try again.",
+        "remove": "Delete Group",
+        "removing": "Deleting group",
+        "removed": "Group deleted.",
+        "remove_confirmation": "Do you really want to delete {group}?",
+        "removing_failed": "Failed to delete group. Try again.",
+        "no_logos": "No logos are associated with this group.",
+        "no_users": "No users are directly associated with this group. But the admins of the parent groups inherit this group.",
+        "logos_loading_failed": "Failed to get logos. Try again.",
+        "users_loading_failed": "Failed to get users. Try again."
+    },
+    "images": {
+        "create": {
+            "title": "Create Image",
+            "logo": "Logo",
+            "fontSize": "Font size",
+            "tooMuchText": "Your bars contain too much text. Shorten it!",
+            "sublineAdd": "Add Subline",
+            "barAdd": "Add Bar",
+            "barRemove": "Remove Bar",
+            "headlineSecondaryAdd": "Two magenta headlines are only allowed, if the message requires it and would make less sense otherwise. Click Cancel to insert a second magenta bar. (You have to Click Cancel, because people never read the message but just click OK.)",
+            "bars": "Bars",
+            "barInitialText": "Climate",
+            "background": "Background",
+            "backgroundGreen": "Green",
+            "backgroundTransparent": "Transparent",
+            "backgroundImage": "Image",
+            "selectImage": "Click to select image to upload",
+            "browse": "Browse",
+            "imageTooSmall": "The selected image is too small to fill the canvas. Use a bigger one.",
+            "uploadedImageNotProcessable": "The uploaded image could not be read.",
+            "mimeInvalid": "Only JPEG, PNG and SVG images are supported. Convert the image in one of those formats.",
+            "border": "Border",
+            "borderShow": "Show borders",
+            "borderNone": "The border is part of the corporate design. You may omit the border if you use the image in a context where a border looks ugly, but this should be an exception.",
+            "imageZoom": "Image Zoom",
+            "uploadFailed": "Failed to store image. Please try again.",
+            "generating": "Generating image",
+            "imageDownload": "Download image",
+            "waitPlease": "I'm busy generating your image, please hang on a few ticks. I'll be right there.",
+            "format": "Format",
+            "width": "Width (px)",
+            "height": "Height (px)",
+            "oversizeWarning": "Large images may slow down your browsers performance.",
+            "preview": "Preview",
+            "dragHelpBar": "Drag the bars into the position of your desire.",
+            "dragHelp": "Drag the bars and the image into the position of your desire.",
+            "layout": "Layout",
+            "barsLeft": "Bars left",
+            "barsRight": "Bars right",
+            "white": "White",
+            "green": "Green",
+            "greengreen": "Green - Green",
+            "greengreenWarning": "You should only use this option, if your background is white.",
+            "generate": "Generate Image",
+            "save": "Save Image",
+            "sizes": {
+                "square": "Square",
+                "fbTimeline": "Facebook Timeline Image",
+                "fbEvent": "Facebook Event Image",
+                "fbWebsite": "Facebook Featured Website",
+                "video": "Video (Full HD)",
+                "twFeed": "Twitter Feed Image",
+                "instaStory": "Instagram Story",
+                "custom": "Custom size"
+            }
+        },
+        "gallery": {
+            "title": "Gallery",
+            "createdAtBy": "Created {timeAgo} by {user}.",
+            "userUnknown": "deleted user",
+            "loading": "Loading...",
+            "download": "Download",
+            "delete": "Delete",
+            "deleteError": "Failed to delete image. Please try again.",
+            "loadingFailed": "Could not load images. Please try again.",
+            "loadingImages": "Loading images...",
+            "searchTitle": "We searched really hard, but there was nothing, I promise. | One image found | {number} Images found",
+            "imageCount": "One image | {number} Images"
+        }
+    },
+    "logos": {
+        "index": {
+            "title": "Logos",
+            "create": "New Logo"
+        }
+    },
+    "logo": {
+        "navEdit": "Edit",
+        "navDetails": "Details",
+        "name": "Name",
+        "subline": "Subline",
+        "baseLogo": "Base logo",
+        "save": "Save Logo",
+        "saving": "Saving...",
+        "saved": "Logo saved.",
+        "saving_failed": "Failed to save logo. Try again.",
+        "remove": "Delete Logo",
+        "removing": "Deleting logo",
+        "removed": "Logo deleted.",
+        "remove_confirmation": "Do you really want to delete {logo}?",
+        "groups": "Groups",
+        "groupsHelptext": "The selected groups can use this logo"
+    }
+}
