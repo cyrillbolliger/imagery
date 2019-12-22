@@ -16,13 +16,25 @@
         name: "MSearch",
         data() {
             return {
-                term: ''
+                term: this.initialTerm,
             }
         },
+
+        props: {
+            debounceDelay: {
+                type: Number,
+                default: 250,
+            },
+            initialTerm: {
+                type: String,
+                default: '',
+            },
+        },
+
         methods: {
             search() {
                 const action = () => this.$emit('search', this.term);
-                _.debounce(action, 250)();
+                _.debounce(action, this.debounceDelay)();
             }
         }
     }

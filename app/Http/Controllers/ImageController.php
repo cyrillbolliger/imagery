@@ -31,7 +31,7 @@ class ImageController extends Controller
     {
         return Image::raw()
                     ->shareable()
-                    ->orderBy('created_at')
+                    ->latest()
                     ->paginate(50);
     }
 
@@ -43,7 +43,34 @@ class ImageController extends Controller
     public function indexFinal()
     {
         return Image::final()
-                    ->orderBy('created_at')
+                    ->latest()
+                    ->paginate(50);
+    }
+
+    /**
+     * Return paginated list of matching final images.
+     *
+     * Search for final images with the given string using MySQL's full text
+     * search. All text in the images keyword field is searched. The results
+     * are primarily ordered by the best match, secondarily by creation date.
+     *
+     * @param  string  $terms
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function searchFinal(string $terms)
+    {
+        $terms = $this->prepareTerms(urldecode($terms));
+
+        if ( ! $terms ) {
+            return $this->indexFinal();
+        }
+
+        return Image::final()
+                    ->selectRaw('*, MATCH (keywords) AGAINST (? IN BOOLEAN MODE) as score', [$terms])
+                    ->whereRaw('MATCH (keywords) AGAINST (? IN BOOLEAN MODE)', [$terms])
+                    ->orderBy( 'score', 'desc' )
+                    ->orderBy( 'created_at', 'desc' )
                     ->paginate(50);
     }
 
@@ -56,8 +83,6 @@ class ImageController extends Controller
      */
     public function show(Image $image)
     {
-        $image->user; // load relation
-
         return $image;
     }
 
@@ -66,7 +91,7 @@ class ImageController extends Controller
      *
      * @param  Image  $image
      *
-     * @return Response
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      * @throws \Exception
      */
     public function destroy(Image $image)
@@ -216,7 +241,7 @@ class ImageController extends Controller
      *
      * @param  Image  $image
      *
-     * @return Response|void
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
     private function generateThumbnail(Image $image)
     {
@@ -242,5 +267,41 @@ class ImageController extends Controller
             self::ALLOWED_EXT,
             $filename
         );
+    }
+
+    /**
+     * Do only search word characters and allow partial matches (word start)
+     *
+     * @param string $string
+     *
+     * @return string|null
+     */
+    private function prepareTerms( string $string ): ?string {
+        $query = '';
+
+        // quoted strings must be treated differently
+        // so extract them first
+        if ( preg_match_all( '/([\+\-]?".+")/U', $string, $quoted ) ) {
+            $query  .= implode( ' ', $quoted[0] ) . ' ';
+            $string = trim( str_replace( $quoted[0], '', $string ) );
+        }
+
+        // terms with quantifiers can't have a wildcard either (innoDB 5.7)
+        // so treat them separately as well
+        if ( preg_match_all( '/([\+\-][\w\.]+)/u', $string, $quantified ) ) {
+            $query  .= implode( ' ', $quantified[0] ) . ' ';
+            $string = trim( str_replace( $quantified[0], '', $string ) );
+        }
+
+        // if there are unquoted parts left, process them for partial matches
+        if ( $string ) {
+            $terms = preg_split( "/[^\w\+\-\.]+/Uu", $string, 0, PREG_SPLIT_NO_EMPTY );
+            if ( ! $terms ) {
+                return $query;
+            }
+            $query .= implode( '* ', $terms ) . '*';
+        }
+
+        return $query;
     }
 }

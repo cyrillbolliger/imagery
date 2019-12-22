@@ -128,6 +128,9 @@ Route::prefix('api/1')->group(function () {
     Route::get('/images/final', 'ImageController@indexFinal')
          ->middleware('can:viewAny,App\Image');
 
+    Route::get('/images/final/search/{terms}', 'ImageController@searchFinal')
+         ->middleware('can:viewAny,App\Image');
+
     Route::put('/images/{image}', 'ImageController@update')
          ->where('image', '\d+')
          ->middleware('can:update,image');

@@ -1,5 +1,5 @@
 <template>
-    <figure class="m-image">
+    <figure class="m-image mb-0">
         <img
             class="m-image__image"
             @click="detailsShow = !detailsShow"
@@ -121,6 +121,7 @@
         }
 
         &__caption {
+            animation-duration: 0.4s;
             cursor: default;
             position: absolute;
             bottom: 0;

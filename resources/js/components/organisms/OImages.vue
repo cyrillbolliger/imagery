@@ -33,6 +33,7 @@
         },
         methods: {
             loadImages() {
+                console.log(this.endpoint);
                 Api().get(this.endpoint)
                     .then(resp => resp.data)
                     .then(data => this.images = data.data);

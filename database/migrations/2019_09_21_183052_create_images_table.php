@@ -52,9 +52,9 @@ class CreateImagesTable extends Migration
                   ->on('logos')
                   ->onUpdate('cascade')
                   ->onDelete('no action');
-
-            $table->index('keywords');
         });
+
+        DB::statement('ALTER TABLE images ADD FULLTEXT fulltext_index (keywords)');
 
         Schema::enableForeignKeyConstraints();
     }
