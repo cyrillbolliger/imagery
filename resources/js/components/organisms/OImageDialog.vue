@@ -148,11 +148,12 @@
 
             uploadFinalImageMeta() {
                 const payload = {
-                    logo_id: null, // todo
+                    logo_id: this.imageData.logoId,
                     background: this.imageData.backgroundType,
                     type: 'final',
                     original_id: this.imageData.originalId,
-                    filename: this.imageData.filenameFinal
+                    filename: this.imageData.filenameFinal,
+                    keywords: this.imageData.keywords,
                 };
 
                 return this.uploadImageMeta(payload);
@@ -162,7 +163,8 @@
                 const payload = {
                     background: this.imageData.backgroundType,
                     type: 'raw',
-                    filename: this.imageData.filenameRaw
+                    filename: this.imageData.filenameRaw,
+                    keywords: this.imageData.keywords,
                 };
 
                 const cb = resp => this.imageData.originalId = resp.data.id;

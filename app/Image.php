@@ -24,6 +24,7 @@ use Imagick;
  * @property Legal|null $legal
  * @property string $type
  * @property string $background
+ * @property string $keywords
  * @property string $filename
  * @property int $width
  * @property int $height
@@ -88,7 +89,7 @@ class Image extends Model implements FileModel
 
     public function logo()
     {
-        return $this->belongsTo(Legal::class);
+        return $this->belongsTo(Logo::class);
     }
 
     public function isFinal()

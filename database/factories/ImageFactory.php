@@ -25,6 +25,7 @@ $factory->define(Image::class, function (Faker $faker) {
         'user_id'  => function () {
             return factory(User::class)->create()->id;
         },
+        'keywords' => $faker->words(5, true),
         'filename' => $filename,
         'width'    => $imageWidth,
         'height'   => $imageHeight

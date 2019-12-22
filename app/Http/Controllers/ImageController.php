@@ -119,6 +119,8 @@ class ImageController extends Controller
                 'sometimes',
                 new ImageOriginalRule($image),
             ],
+            // if mutable, we have to deduplicate the logo and the author text
+            'keywords'    => ['sometimes', 'nullable', new ImmutableRule($image)],
             'filename'    => [
                 'sometimes',
                 'required',
@@ -180,6 +182,7 @@ class ImageController extends Controller
             'original_id' => [
                 new ImageOriginalRule($image),
             ],
+            'keywords'    => ['string', 'nullable'],
             'filename'    => [
                 'required',
                 'string',

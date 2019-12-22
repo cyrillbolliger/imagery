@@ -6,6 +6,7 @@
                 class="form-control col"
                 type="text"
                 v-model="text"
+                @input="$emit('textChanged', text)"
             >
             <button
                 :class="buttonClass"

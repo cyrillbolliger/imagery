@@ -7,11 +7,11 @@
                 :alignment="alignment"
                 :color-schema="schema"
                 @drawn="updateLogoLayer($event)"
-            ></MLogoBlock>
+            />
 
             <MSizeBlock
                 @sizeChanged="setSize($event)"
-            ></MSizeBlock>
+            />
 
             <MBackgroundBlock
                 :image-height="height"
@@ -19,7 +19,7 @@
                 @drawn="updateBackgroundLayer($event)"
                 @imageChanged="rawImage = $event"
                 @typeChanged="backgroundType = $event"
-            ></MBackgroundBlock>
+            />
         </div>
 
         <div class="o-imagery__preview">
@@ -39,7 +39,7 @@
                     class="o-imagery__canvas"
                     id="canvas"
                     ref="canvas"
-                ></canvas>
+                >You definitely need a newer browser!</canvas>
             </div>
             <small v-if="hasImageBackground">{{$t('images.create.dragHelp')}}</small>
             <small v-else>{{$t('images.create.dragHelpBar')}}</small>
@@ -52,24 +52,25 @@
                 :image-height="height"
                 :image-width="width"
                 @drawn="updateBarLayer($event)"
+                @textChanged="keywords = $event"
                 class="mt-2"
-            ></MBarBlock>
+            />
 
             <MAlignment
                 v-model="alignment"
-            ></MAlignment>
+            />
 
             <MColorScheme
                 v-if="this.backgroundType !== backgroundTypes.gradient"
                 v-model="schema"
-            ></MColorScheme>
+            />
 
             <MBorderBlock
                 :image-height="height"
                 :image-width="width"
                 @drawn="updateBorderLayer($event)"
                 @widthChanged="borderWidth = $event"
-            ></MBorderBlock>
+            />
 
             <button
                 @click="save()"
@@ -118,6 +119,7 @@
                 rawImage: null,
                 borderWidth: 0,
                 logoId: null,
+                keywords: '',
 
                 viewHeight: document.documentElement.clientHeight,
                 viewWidth: document.documentElement.clientWidth,
@@ -363,6 +365,7 @@
                     backgroundType: this.backgroundType,
                     rawImage: this.rawImage,
                     logoId: this.logoId,
+                    keywords: this.keywords,
                 });
             },
         },

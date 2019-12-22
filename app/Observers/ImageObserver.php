@@ -22,6 +22,7 @@ class ImageObserver
         }
 
         $this->setImageDims($image);
+        $this->extendKeywords($image);
     }
 
     /**
@@ -34,6 +35,20 @@ class ImageObserver
         list($width, $height) = getimagesize(disk_path($image->getRelPath()));
         $image->width  = $width;
         $image->height = $height;
+    }
+
+    /**
+     * Append the logo name and the username to the image
+     *
+     * @param  Image  $image
+     */
+    private function extendKeywords(Image $image)
+    {
+        if (Image::TYPE_FINAL === $image->type && $image->logo_id) {
+            $image->keywords .= ' '.$image->logo->name;
+        }
+
+        $image->keywords .= ' '.$image->user->first_name.' '.$image->user->last_name;
     }
 
     /**

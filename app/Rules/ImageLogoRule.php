@@ -39,6 +39,8 @@ class ImageLogoRule implements Rule
         if ($this->model->type === Image::TYPE_RAW && ! is_null($value)) {
             return false;
         }
+
+        return true;
     }
 
     /**

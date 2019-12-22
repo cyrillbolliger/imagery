@@ -37,7 +37,8 @@
                 @clone="headlinesPrimaryAdd($event)"
                 @drawn="update(headlinesPrimary, n, ...arguments)"
                 @remove="headlinesPrimaryCount--"
-                @removed="remove(headlinesPrimary, n)"
+                @removed="remove('headlinesPrimary', n)"
+                @textChanged="updateText(`headlinesPrimary-${n}`, $event)"
                 v-for="n in headlinesPrimaryCount"
             />
 
@@ -54,7 +55,8 @@
                 @clone="headlinesSecondaryAdd($event)"
                 @drawn="update(headlinesSecondary, n, ...arguments)"
                 @remove="headlinesSecondaryCount--"
-                @removed="remove(headlinesSecondary, n)"
+                @removed="remove('headlinesSecondary', n)"
+                @textChanged="updateText(`headlinesSecondary-${n}`, $event)"
                 v-for="n in headlinesSecondaryCount"
             />
 
@@ -71,7 +73,8 @@
                 @clone="sublinesAdd($event)"
                 @drawn="update(sublines, n, ...arguments)"
                 @remove="sublinesCount--"
-                @removed="remove(sublines, n)"
+                @removed="remove('sublines', n)"
+                @textChanged="updateText(`sublines-${n}`, $event)"
                 v-for="n in sublinesCount"
             />
 
@@ -118,6 +121,7 @@
                 block: null,
                 eventCounter: {},
                 initialText: null,
+                texts: {},
             }
         },
 
@@ -225,9 +229,19 @@
                 }
             },
 
-            remove(array, index) {
+            remove(type, index) {
+                this.removeBar(this[type], index);
+                this.removeText(`${type}-${index}`);
+            },
+
+            removeBar(array, index) {
                 this.$delete(array, index);
                 this.draw();
+            },
+
+            removeText(index) {
+                this.$delete(this.texts, index);
+                this.updateText();
             },
 
             draw() {
@@ -295,6 +309,19 @@
             sublinesAdd(text) {
                 this.initialText = text;
                 this.sublinesCount++;
+            },
+
+            updateText(key = null, text = null) {
+                if (key && text) {
+                    this.texts[key] = text;
+                }
+
+                let flatText = '';
+                Object.keys(this.texts)
+                    .sort()
+                    .forEach(key => flatText += ` ${this.texts[key]}`);
+
+                this.$emit('textChanged', flatText.trim());
             }
         },
 

@@ -30,6 +30,7 @@ class CreateImagesTable extends Migration
                 Image::BG_TRANSPARENT,
                 Image::BG_CUSTOM
             ]);
+            $table->text('keywords');
             $table->string('filename');
             $table->integer('width');
             $table->integer('height');
@@ -51,6 +52,8 @@ class CreateImagesTable extends Migration
                   ->on('logos')
                   ->onUpdate('cascade')
                   ->onDelete('no action');
+
+            $table->index('keywords');
         });
 
         Schema::enableForeignKeyConstraints();
