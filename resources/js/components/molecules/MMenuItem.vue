@@ -1,6 +1,6 @@
 <template>
     <li class="m-menu-item pb-2 pb-md-3">
-        <router-link :active-class="active" :to="to" class="m-menu-item__link" exact>
+        <router-link :active-class="active" :to="to" class="m-menu-item__link" :exact="exact">
             <div class="d-flex">
                 <i :class="iconClass" class="m-menu-item__icon" v-if="icon !== ''"></i>
                 <span class="m-menu-item__label pl-2 align-self-center">
@@ -18,6 +18,7 @@
             to: {String, required: true},
             active: {String, default: 'active'},
             icon: {String, default: ''},
+            exact: {Boolean, default: true},
         },
         computed: {
             iconClass() {

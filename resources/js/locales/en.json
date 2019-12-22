@@ -173,6 +173,15 @@
                 "instaStory": "Instagram Story",
                 "custom": "Custom size"
             }
+        },
+        "gallery": {
+            "title": "Gallery",
+            "createdAtBy": "Created {timeAgo} by {user}.",
+            "userUnknown": "deleted user",
+            "loading": "Loading...",
+            "download": "Download",
+            "delete": "Delete",
+            "deleteError": "Failed to delete image. Please try again."
         }
     },
     "logos": {

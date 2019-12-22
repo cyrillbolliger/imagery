@@ -2,11 +2,18 @@ import UserIndex from './components/pages/UserIndex.vue';
 import ImageCreate from './components/pages/ImageCreate.vue';
 import GroupIndex from "./components/pages/GroupIndex";
 import LogoIndex from "./components/pages/LogoIndex";
+import ImageGallery from "./components/pages/ImageGallery";
 
 export const routes = [
     {
         path: '',
         component: ImageCreate
+    },
+    {
+        path: '/images/gallery',
+        component: ImageGallery,
+        props: (route) => ({ query: route.query.q }),
+        name: 'gallery'
     },
     {
         path: '/admin/users/create',

@@ -14,6 +14,7 @@ import VueRouter from 'vue-router';
 import App from './components/App';
 import i18n from './i18n'
 import Vuelidate from 'vuelidate'
+import {VueMasonryPlugin} from 'vue-masonry';
 import {store} from './store/store';
 import {routes} from './routes';
 
@@ -38,6 +39,7 @@ const router = new VueRouter({
  * Other Plugins
  */
 window.Vue.use(Vuelidate);
+window.Vue.use(VueMasonryPlugin);
 
 /**
  * Initialize Vue

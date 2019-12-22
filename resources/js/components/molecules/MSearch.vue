@@ -21,7 +21,8 @@
         },
         methods: {
             search() {
-                this.$emit('search', this.term);
+                const action = () => this.$emit('search', this.term);
+                _.debounce(action, 250)();
             }
         }
     }

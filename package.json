@@ -33,6 +33,8 @@
     },
     "dependencies": {
         "fontfaceobserver": "^2.1.0",
+        "javascript-time-ago": "^2.0.4",
+        "vue-masonry": "^0.11.8",
         "vuelidate": "^0.7.4"
     }
 }

@@ -11,13 +11,13 @@
         <h3 class="o-menu__title mt-3">{{$t('nav.title')}}</h3>
         <ul class="o-menu__item-list list-unstyled mt-3">
             <MMenuItem icon="image" to="/">{{$t('route.create_image')}}</MMenuItem>
-            <MMenuItem icon="collections" to="/images/gallery">{{$t('route.gallery')}}</MMenuItem>
+            <MMenuItem icon="collections" to="/images/gallery" :exact="false">{{$t('route.gallery')}}</MMenuItem>
             <li v-if="isAdmin">
                 <MMenuItem active="" icon="settings" to="/admin/users">{{$t('route.settings')}}</MMenuItem>
                 <ul class="list-unstyled ml-4">
-                    <MMenuItem icon="chevron-right" to="/admin/groups">{{$t('route.groups')}}</MMenuItem>
-                    <MMenuItem icon="chevron-right" to="/admin/logos">{{$t('route.logos')}}</MMenuItem>
-                    <MMenuItem icon="chevron-right" to="/admin/users">{{$t('route.users')}}</MMenuItem>
+                    <MMenuItem icon="chevron-right" to="/admin/groups" :exact="false">{{$t('route.groups')}}</MMenuItem>
+                    <MMenuItem icon="chevron-right" to="/admin/logos" :exact="false">{{$t('route.logos')}}</MMenuItem>
+                    <MMenuItem icon="chevron-right" to="/admin/users" :exact="false">{{$t('route.users')}}</MMenuItem>
                 </ul>
             </li>
             <MMenuItem :to="`/admin/users/${id}`" icon="account-box">{{$t('route.profile')}}</MMenuItem>
