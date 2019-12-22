@@ -1,0 +1,219 @@
+{
+    "route": {
+        "gallery": "crwdns1:0crwdne1:0",
+        "create_image": "crwdns3:0crwdne3:0",
+        "settings": "crwdns5:0crwdne5:0",
+        "users": "crwdns7:0crwdne7:0",
+        "groups": "crwdns9:0crwdne9:0",
+        "logos": "crwdns11:0crwdne11:0",
+        "profile": "crwdns13:0crwdne13:0",
+        "logout": "crwdns15:0crwdne15:0"
+    },
+    "nav": {
+        "title": "crwdns17:0crwdne17:0",
+        "hide": "crwdns19:0crwdne19:0",
+        "show": "crwdns21:0crwdne21:0"
+    },
+    "pagination": {
+        "title": "crwdns23:0crwdne23:0",
+        "previous": "crwdns25:0crwdne25:0",
+        "next": "crwdns27:0crwdne27:0"
+    },
+    "table": {
+        "loading": "crwdns29:0crwdne29:0",
+        "total": "crwdns31:0{displayed}crwdnd31:0{total}crwdne31:0",
+        "filtered": "crwdns33:0crwdne33:0",
+        "add": "crwdns35:0crwdne35:0",
+        "details": "crwdns37:0crwdne37:0"
+    },
+    "search": {
+        "search": "crwdns39:0crwdne39:0"
+    },
+    "languages": {
+        "de": "crwdns41:0crwdne41:0",
+        "fr": "crwdns43:0crwdne43:0",
+        "en": "crwdns45:0crwdne45:0"
+    },
+    "snackbar": {
+        "retry": "crwdns47:0crwdne47:0",
+        "reload": "crwdns49:0crwdne49:0",
+        "dismiss": "crwdns51:0crwdne51:0",
+        "server_error": "crwdns53:0crwdne53:0"
+    },
+    "validation": {
+        "required": "crwdns55:0crwdne55:0",
+        "email": "crwdns57:0crwdne57:0",
+        "max_length": "crwdns59:0{max}crwdne59:0",
+        "double_check_form": "crwdns61:0crwdne61:0"
+    },
+    "users": {
+        "index": {
+            "title": "crwdns63:0crwdne63:0",
+            "create": "crwdns65:0crwdne65:0"
+        }
+    },
+    "user": {
+        "nav_edit": "crwdns67:0crwdne67:0",
+        "nav_stats": "crwdns69:0crwdne69:0",
+        "name": "crwdns71:0crwdne71:0",
+        "login": "crwdns73:0crwdne73:0",
+        "privileges": "crwdns75:0crwdne75:0",
+        "group_privileges": "crwdns77:0crwdne77:0",
+        "misc_fields": "crwdns79:0crwdne79:0",
+        "first_name": "crwdns81:0crwdne81:0",
+        "last_name": "crwdns83:0crwdne83:0",
+        "email": "crwdns85:0crwdne85:0",
+        "email_exists": "crwdns87:0crwdne87:0",
+        "password": "crwdns89:0crwdne89:0",
+        "password_placeholder": "crwdns91:0crwdne91:0",
+        "password_empty_info": "crwdns93:0crwdne93:0",
+        "super_admin": "crwdns95:0crwdne95:0",
+        "super_admin_desc": "crwdns97:0crwdne97:0",
+        "language": "crwdns99:0crwdne99:0",
+        "not_found": "crwdns101:0crwdne101:0",
+        "managed_by": "crwdns103:0crwdne103:0",
+        "managed_by_helptext": "crwdns105:0crwdne105:0",
+        "admin_of": "crwdns107:0crwdne107:0",
+        "admin_of_helptext": "crwdns109:0crwdne109:0",
+        "roles_loading_failed": "crwdns111:0crwdne111:0",
+        "user_of": "crwdns113:0crwdne113:0",
+        "user_of_helptext": "crwdns115:0crwdne115:0",
+        "save": "crwdns117:0crwdne117:0",
+        "saving": "crwdns119:0crwdne119:0",
+        "saved": "crwdns121:0crwdne121:0",
+        "saving_failed": "crwdns123:0crwdne123:0",
+        "remove": "crwdns125:0crwdne125:0",
+        "removing": "crwdns127:0crwdne127:0",
+        "removed": "crwdns129:0crwdne129:0",
+        "remove_confirmation": "crwdns131:0{user}crwdne131:0",
+        "removing_failed": "crwdns133:0crwdne133:0",
+        "password_insecure": "crwdns135:0crwdne135:0"
+    },
+    "role": {
+        "use": "crwdns137:0crwdne137:0",
+        "manage": "crwdns139:0crwdne139:0"
+    },
+    "groups": {
+        "index": {
+            "title": "crwdns141:0crwdne141:0",
+            "create": "crwdns143:0crwdne143:0"
+        }
+    },
+    "group": {
+        "name": "crwdns145:0crwdne145:0",
+        "nav_edit": "crwdns147:0crwdne147:0",
+        "nav_details": "crwdns149:0crwdne149:0",
+        "parent": "crwdns151:0crwdne151:0",
+        "logos": "crwdns153:0crwdne153:0",
+        "users": "crwdns155:0crwdne155:0",
+        "logos_helptext": "crwdns157:0crwdne157:0",
+        "users_helptext": "crwdns159:0crwdne159:0",
+        "not_found": "crwdns161:0crwdne161:0",
+        "save": "crwdns163:0crwdne163:0",
+        "saving": "crwdns165:0crwdne165:0",
+        "saved": "crwdns167:0crwdne167:0",
+        "saving_failed": "crwdns169:0crwdne169:0",
+        "remove": "crwdns171:0crwdne171:0",
+        "removing": "crwdns173:0crwdne173:0",
+        "removed": "crwdns175:0crwdne175:0",
+        "remove_confirmation": "crwdns177:0{group}crwdne177:0",
+        "removing_failed": "crwdns179:0crwdne179:0",
+        "no_logos": "crwdns181:0crwdne181:0",
+        "no_users": "crwdns183:0crwdne183:0",
+        "logos_loading_failed": "crwdns185:0crwdne185:0",
+        "users_loading_failed": "crwdns187:0crwdne187:0"
+    },
+    "images": {
+        "create": {
+            "title": "crwdns189:0crwdne189:0",
+            "logo": "crwdns191:0crwdne191:0",
+            "fontSize": "crwdns193:0crwdne193:0",
+            "tooMuchText": "crwdns195:0crwdne195:0",
+            "sublineAdd": "crwdns197:0crwdne197:0",
+            "barAdd": "crwdns199:0crwdne199:0",
+            "barRemove": "crwdns201:0crwdne201:0",
+            "headlineSecondaryAdd": "crwdns203:0crwdne203:0",
+            "bars": "crwdns205:0crwdne205:0",
+            "barInitialText": "crwdns207:0crwdne207:0",
+            "background": "crwdns209:0crwdne209:0",
+            "backgroundGreen": "crwdns211:0crwdne211:0",
+            "backgroundTransparent": "crwdns213:0crwdne213:0",
+            "backgroundImage": "crwdns215:0crwdne215:0",
+            "selectImage": "crwdns217:0crwdne217:0",
+            "browse": "crwdns219:0crwdne219:0",
+            "imageTooSmall": "crwdns221:0crwdne221:0",
+            "uploadedImageNotProcessable": "crwdns223:0crwdne223:0",
+            "mimeInvalid": "crwdns225:0crwdne225:0",
+            "border": "crwdns227:0crwdne227:0",
+            "borderShow": "crwdns229:0crwdne229:0",
+            "borderNone": "crwdns231:0crwdne231:0",
+            "imageZoom": "crwdns233:0crwdne233:0",
+            "uploadFailed": "crwdns235:0crwdne235:0",
+            "generating": "crwdns237:0crwdne237:0",
+            "imageDownload": "crwdns239:0crwdne239:0",
+            "waitPlease": "crwdns241:0crwdne241:0",
+            "format": "crwdns243:0crwdne243:0",
+            "width": "crwdns245:0crwdne245:0",
+            "height": "crwdns247:0crwdne247:0",
+            "oversizeWarning": "crwdns249:0crwdne249:0",
+            "preview": "crwdns251:0crwdne251:0",
+            "dragHelpBar": "crwdns253:0crwdne253:0",
+            "dragHelp": "crwdns255:0crwdne255:0",
+            "layout": "crwdns257:0crwdne257:0",
+            "barsLeft": "crwdns259:0crwdne259:0",
+            "barsRight": "crwdns261:0crwdne261:0",
+            "white": "crwdns263:0crwdne263:0",
+            "green": "crwdns265:0crwdne265:0",
+            "greengreen": "crwdns267:0crwdne267:0",
+            "greengreenWarning": "crwdns269:0crwdne269:0",
+            "generate": "crwdns271:0crwdne271:0",
+            "save": "crwdns273:0crwdne273:0",
+            "sizes": {
+                "square": "crwdns275:0crwdne275:0",
+                "fbTimeline": "crwdns277:0crwdne277:0",
+                "fbEvent": "crwdns279:0crwdne279:0",
+                "fbWebsite": "crwdns281:0crwdne281:0",
+                "video": "crwdns283:0crwdne283:0",
+                "twFeed": "crwdns285:0crwdne285:0",
+                "instaStory": "crwdns287:0crwdne287:0",
+                "custom": "crwdns289:0crwdne289:0"
+            }
+        },
+        "gallery": {
+            "title": "crwdns291:0crwdne291:0",
+            "createdAtBy": "crwdns293:0{timeAgo}crwdnd293:0{user}crwdne293:0",
+            "userUnknown": "crwdns295:0crwdne295:0",
+            "loading": "crwdns297:0crwdne297:0",
+            "download": "crwdns299:0crwdne299:0",
+            "delete": "crwdns301:0crwdne301:0",
+            "deleteError": "crwdns303:0crwdne303:0",
+            "loadingFailed": "crwdns305:0crwdne305:0",
+            "loadingImages": "crwdns307:0crwdne307:0",
+            "searchTitle": "crwdns309:0{number}crwdne309:0",
+            "imageCount": "crwdns311:0{number}crwdne311:0"
+        }
+    },
+    "logos": {
+        "index": {
+            "title": "crwdns313:0crwdne313:0",
+            "create": "crwdns315:0crwdne315:0"
+        }
+    },
+    "logo": {
+        "navEdit": "crwdns317:0crwdne317:0",
+        "navDetails": "crwdns319:0crwdne319:0",
+        "name": "crwdns321:0crwdne321:0",
+        "subline": "crwdns323:0crwdne323:0",
+        "baseLogo": "crwdns325:0crwdne325:0",
+        "save": "crwdns327:0crwdne327:0",
+        "saving": "crwdns329:0crwdne329:0",
+        "saved": "crwdns331:0crwdne331:0",
+        "saving_failed": "crwdns333:0crwdne333:0",
+        "remove": "crwdns335:0crwdne335:0",
+        "removing": "crwdns337:0crwdne337:0",
+        "removed": "crwdns339:0crwdne339:0",
+        "remove_confirmation": "crwdns341:0{logo}crwdne341:0",
+        "groups": "crwdns343:0crwdne343:0",
+        "groupsHelptext": "crwdns345:0crwdne345:0"
+    }
+}
