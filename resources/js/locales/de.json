@@ -15,14 +15,14 @@
         "show": "Menu"
     },
     "pagination": {
-        "title": "Pagination",
-        "previous": "Previous",
-        "next": "Next"
+        "title": "Paginierung",
+        "previous": "Vorherige",
+        "next": "Nächste"
     },
     "table": {
-        "loading": "Loading... Please wait",
+        "loading": "Laden... Einen Moment bitte",
         "total": "Es werden {displayed} von {total} Einträgen angezeigt.",
-        "filtered": "Filtered list.",
+        "filtered": "Gefilterte Liste.",
         "add": "Hinzufügen",
         "details": "Details"
     },
@@ -35,21 +35,21 @@
         "en": "Englisch"
     },
     "snackbar": {
-        "retry": "Retry",
-        "reload": "Reload",
-        "dismiss": "Dismiss",
-        "server_error": "Uuups, there was a server error."
+        "retry": "Wiederholen",
+        "reload": "Erneut Laden",
+        "dismiss": "Verwerfen",
+        "server_error": "Uuups, es gab einen Serverfehler."
     },
     "validation": {
-        "required": "This field is required.",
-        "email": "Please enter a valid email address.",
-        "max_length": "Input too long. The max length is {max} characters.",
-        "double_check_form": "There are some errors in your form data. Please double check your input."
+        "required": "Dieses Feld ist erforderlich.",
+        "email": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        "max_length": "Eingabe zu lang. Die maximale Länge beträgt {max} Zeichen.",
+        "double_check_form": "Es gibt ungültige Formulardaten. Bitte Eingabe überprüfen."
     },
     "users": {
         "index": {
             "title": "Benutzer",
-            "create": "Create User"
+            "create": "Benutzer erstellen"
         }
     },
     "user": {
@@ -95,25 +95,25 @@
     },
     "groups": {
         "index": {
-            "title": "Groups",
+            "title": "Gruppen",
             "create": "Create Group"
         }
     },
     "group": {
         "name": "Name",
-        "nav_edit": "Edit",
+        "nav_edit": "Bearbeiten",
         "nav_details": "Details",
         "parent": "Parent Group",
         "logos": "Logos",
-        "users": "Users",
-        "logos_helptext": "Members of this group can use the logos listed below.",
-        "users_helptext": "The following users are member of this group.",
+        "users": "Benutzer",
+        "logos_helptext": "Mitglieder dieser Gruppe können die unten aufgeführten Logos verwenden.",
+        "users_helptext": "Folgende Benutzer sind Mitglied dieser Gruppe.",
         "not_found": "We were unable to retrieve this group. Try to reload.",
-        "save": "Save Group",
+        "save": "Speichern",
         "saving": "Saving...",
         "saved": "Group saved.",
         "saving_failed": "Failed to save group. Try again.",
-        "remove": "Delete Group",
+        "remove": "Gruppe löschen",
         "removing": "Deleting group",
         "removed": "Group deleted.",
         "remove_confirmation": "Do you really want to delete {group}?",
@@ -180,10 +180,10 @@
             }
         },
         "gallery": {
-            "title": "Gallery",
+            "title": "Galerie",
             "createdAtBy": "Created {timeAgo} by {user}.",
             "userUnknown": "deleted user",
-            "loading": "Loading...",
+            "loading": "Laden...",
             "download": "Download",
             "delete": "Delete",
             "deleteError": "Failed to delete image. Please try again.",
@@ -200,20 +200,20 @@
         }
     },
     "logo": {
-        "navEdit": "Edit",
+        "navEdit": "Bearbeiten",
         "navDetails": "Details",
         "name": "Name",
-        "subline": "Subline",
-        "baseLogo": "Base logo",
-        "save": "Save Logo",
+        "subline": "Unterzeile",
+        "baseLogo": "Basis-Logo",
+        "save": "Speichern",
         "saving": "Saving...",
         "saved": "Logo saved.",
         "saving_failed": "Failed to save logo. Try again.",
-        "remove": "Delete Logo",
+        "remove": "Logo löschen",
         "removing": "Deleting logo",
         "removed": "Logo deleted.",
         "remove_confirmation": "Do you really want to delete {logo}?",
-        "groups": "Groups",
-        "groupsHelptext": "The selected groups can use this logo"
+        "groups": "Gruppen",
+        "groupsHelptext": "Die ausgewählten Gruppen können dieses Logo verwenden"
     }
 }
