@@ -1,0 +1,219 @@
+{
+    "route": {
+        "gallery": "Galerie",
+        "create_image": "Bild erstellen",
+        "settings": "Einstellungen",
+        "users": "Benutzer",
+        "groups": "Gruppen",
+        "logos": "Logos",
+        "profile": "Profil",
+        "logout": "Abmelden"
+    },
+    "nav": {
+        "title": "Menü",
+        "hide": "Schliessen",
+        "show": "Menü"
+    },
+    "pagination": {
+        "title": "Paginierung",
+        "previous": "Vorherige",
+        "next": "Nächste"
+    },
+    "table": {
+        "loading": "Laden... Einen Moment bitte",
+        "total": "Es werden {displayed} von {total} Einträgen angezeigt.",
+        "filtered": "Gefilterte Liste.",
+        "add": "Hinzufügen",
+        "details": "Details"
+    },
+    "search": {
+        "search": "Suchen"
+    },
+    "languages": {
+        "de": "Deutsch",
+        "fr": "Französisch",
+        "en": "Englisch"
+    },
+    "snackbar": {
+        "retry": "Wiederholen",
+        "reload": "Erneut Laden",
+        "dismiss": "Verwerfen",
+        "server_error": "Uuups, es gab einen Serverfehler."
+    },
+    "validation": {
+        "required": "Dieses Feld ist erforderlich.",
+        "email": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        "max_length": "Eingabe zu lang. Die maximale Länge beträgt {max} Zeichen.",
+        "double_check_form": "Es gibt ungültige Formulardaten. Bitte Eingabe überprüfen."
+    },
+    "users": {
+        "index": {
+            "title": "Benutzer",
+            "create": "Benutzer erstellen"
+        }
+    },
+    "user": {
+        "nav_edit": "Bearbeiten",
+        "nav_stats": "Statistik",
+        "name": "Name",
+        "login": "Login-Daten",
+        "privileges": "Rechte",
+        "group_privileges": "Rechte für Gruppen",
+        "misc_fields": "Verschiedenes",
+        "first_name": "Vorname",
+        "last_name": "Nachname",
+        "email": "Email",
+        "email_exists": "Es gibt schon ein Benutzerkonto mit dieser Emailadresse.",
+        "password": "Passwort",
+        "password_placeholder": "Unverändert",
+        "password_empty_info": "Wenn du das Passwortfeld leer lässt, bleibt das Passwort wie es ist.",
+        "super_admin": "Super-Admin",
+        "super_admin_desc": "Dieser Benutzer kann alles tun.",
+        "language": "Sprache",
+        "not_found": "Benutzer konnte nicht gefunden werden. Versuche die Benutzer neu zu laden.",
+        "managed_by": "Verwaltet von",
+        "managed_by_helptext": "Diese Gruppe is verantwortlich für die Verwaltung dieses Benutzers.",
+        "admin_of": "Admin von",
+        "admin_of_helptext": "Dieser Benutzer kann die angegebenen Gruppen, deren Untergruppen und deren Benutzer verwalten sowie deren Logos nutzen.",
+        "roles_loading_failed": "'Admin von' und 'Benutzer von' Info konnte nicht geladen werden.",
+        "user_of": "Benutzer von",
+        "user_of_helptext": "Dieser Nutzer kann die Logos der angegebenen Gruppen nutzen, aber er kann nichts ändern.",
+        "save": "Speichern",
+        "saving": "Speichern...",
+        "saved": "Benutzer gespeichert.",
+        "saving_failed": "Benutzer konnte nicht gespeichert werden. Bitte erneut versuchen.",
+        "remove": "Benutzer löschen",
+        "removing": "Lösche Benutzer",
+        "removed": "Benutzer gelöscht.",
+        "remove_confirmation": "Möchtest du {user} wirklich löschen?",
+        "removing_failed": "Benutzer konnte nicht gelöscht werden. Versuche es erneut.",
+        "password_insecure": "Dieses Passwort ist unsicher. Mache es länger oder füge Zahlen und Sonderzeichen hinzu (und natürlich Klein- und Grossbuchstaben)."
+    },
+    "role": {
+        "use": "Logo benutzen",
+        "manage": "Gruppe Verwalten"
+    },
+    "groups": {
+        "index": {
+            "title": "Gruppen",
+            "create": "Gruppe erstellen"
+        }
+    },
+    "group": {
+        "name": "Name",
+        "nav_edit": "Bearbeiten",
+        "nav_details": "Details",
+        "parent": "Übergeordnete Gruppe",
+        "logos": "Logos",
+        "users": "Benutzer",
+        "logos_helptext": "Mitglieder dieser Gruppe können die unten aufgeführten Logos verwenden.",
+        "users_helptext": "Folgende Benutzer sind Mitglied dieser Gruppe.",
+        "not_found": "Die Gruppe konnte nicht gefunden werden. Versuche sie neu zu laden.",
+        "save": "Speichern",
+        "saving": "Speichern...",
+        "saved": "Gruppe gespeichert.",
+        "saving_failed": "Gruppe konnte nicht gespeichert werden. Versuche es erneut.",
+        "remove": "Gruppe löschen",
+        "removing": "Lösche Gruppe",
+        "removed": "Gruppe gelöscht.",
+        "remove_confirmation": "Möchtest du {group} wirklich löschen?",
+        "removing_failed": "Gruppe konnte nicht gelöscht werden. Versuche es erneut.",
+        "no_logos": "Mit dieser Gruppe sind keine Logos verknüpft.",
+        "no_users": "Keine Benutzer sind direkt mit dieser Gruppe verknüpft. Aber die Admins übergeordneter Gruppen erben diese Gruppe.",
+        "logos_loading_failed": "Logos konnten nicht geladen werden. Versuche es erneut.",
+        "users_loading_failed": "Benutzer konnten nicht geladen werden. Versuche es erneut."
+    },
+    "images": {
+        "create": {
+            "title": "Bild erstellen",
+            "logo": "Logo",
+            "fontSize": "Schriftgrösse",
+            "tooMuchText": "Deine Balken enthalten zu viel Text. Kürze ihn!",
+            "sublineAdd": "Subline hinzufügen",
+            "barAdd": "Balken hinzufügen",
+            "barRemove": "Balken entfernen",
+            "headlineSecondaryAdd": "Zwei Magenta-Balken sind nur zulässig, wenn die Nachricht dies erfordert und sonst weniger Sinn ergäbe. Klicke auf Abbrechen, um einen zweiten Magenta-Balken einzufügen. (Du musst auf Abbrechen klicken, da die Leute die Nachricht nie lesen, sondern einfach auf OK klicken.)",
+            "bars": "Balken",
+            "barInitialText": "Klima",
+            "background": "Hintergrund",
+            "backgroundGreen": "Grün",
+            "backgroundTransparent": "Transparent",
+            "backgroundImage": "Bild",
+            "selectImage": "Klicken um Bild hochzuladen",
+            "browse": "Durchsuchen",
+            "imageTooSmall": "Das ausgewählte Bild ist zu klein um die Leinwand auszufüllen. Nimm ein grösseres.",
+            "uploadedImageNotProcessable": "Das hochgeladene Bild konnte nicht gelesen werden.",
+            "mimeInvalid": "Nur JPEG, PNG und SVG Bilder werden unterstützt. Konvertiere das Bild in eines dieser Formate.",
+            "border": "Rahmen",
+            "borderShow": "Rahmen anzeigen",
+            "borderNone": "Der Rahmen ist Teil des Corporate Designs. Du kannst ihn jedoch weglassen, wenn du das Bild in einem Kontext benutzt, in welchem der Rahmen hässlich aussieht. Dies sollte aber die Ausnahme sein.",
+            "imageZoom": "Bildzoom",
+            "uploadFailed": "Bild konnte nicht gespeichert werden. Versuche es erneut.",
+            "generating": "Generiere Bild",
+            "imageDownload": "Bild herunterladen",
+            "waitPlease": "Dein Bild wird gerade erstellt, bitte habe einen Augenblick Geduld. Es ist gleich so weit.",
+            "format": "Format",
+            "width": "Breite (px)",
+            "height": "Höhe (px)",
+            "oversizeWarning": "Grosse Bilder können deinen Browser verlangsamen.",
+            "preview": "Vorschau",
+            "dragHelpBar": "Ziehe die Balken in die gewünschte Position.",
+            "dragHelp": "Ziehe die Balken und das Bild in die Position deiner Wahl.",
+            "layout": "Layout",
+            "barsLeft": "Balken links",
+            "barsRight": "Balken rechts",
+            "white": "Weiss",
+            "green": "Grün",
+            "greengreen": "Grün - Grün",
+            "greengreenWarning": "Diese Option solltest du nur verwenden, wenn der Hintergrund weiss ist.",
+            "generate": "Bild generieren",
+            "save": "Bild speichern",
+            "sizes": {
+                "square": "Quadratisch",
+                "fbTimeline": "Facebook Timeline Bild",
+                "fbEvent": "Facebook Event Bild",
+                "fbWebsite": "Facebook Website Vorschaubild",
+                "video": "Video (Full HD)",
+                "twFeed": "Twitter Feed Bild",
+                "instaStory": "Instagram Story",
+                "custom": "Eigene Grösse"
+            }
+        },
+        "gallery": {
+            "title": "Galerie",
+            "createdAtBy": "Erstellt {timeAgo} von {user}.",
+            "userUnknown": "gelöschter Benutzer",
+            "loading": "Laden...",
+            "download": "Herunterladen",
+            "delete": "Löschen",
+            "deleteError": "Bild konnte nicht gelöscht werden. Bitte versuche es erneut.",
+            "loadingFailed": "Bilder konnten nicht geladen werden. Bitte versuche es erneut.",
+            "loadingImages": "Bilder laden...",
+            "searchTitle": "Wir haben gründlich gesucht, aber da war nichts, wirklich. | Ein Bild gefunden | {number} Bilder gefunden",
+            "imageCount": "Ein Bild | {number} Bilder"
+        }
+    },
+    "logos": {
+        "index": {
+            "title": "Logos",
+            "create": "Neues Logo"
+        }
+    },
+    "logo": {
+        "navEdit": "Bearbeiten",
+        "navDetails": "Details",
+        "name": "Name",
+        "subline": "Unterzeile",
+        "baseLogo": "Basis-Logo",
+        "save": "Speichern",
+        "saving": "Speichern...",
+        "saved": "Logo gespeichert.",
+        "saving_failed": "Logo konnte nicht gespeichert werden. Bitte erneut versuchen.",
+        "remove": "Logo löschen",
+        "removing": "Lösche Logo",
+        "removed": "Logo gelöscht.",
+        "remove_confirmation": "Möchtest du {logo} wirklich löschen?",
+        "groups": "Gruppen",
+        "groupsHelptext": "Die ausgewählten Gruppen können dieses Logo verwenden"
+    }
+}
