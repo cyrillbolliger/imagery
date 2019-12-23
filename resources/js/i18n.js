@@ -20,8 +20,20 @@ function loadLocaleMessages() {
     return messages;
 }
 
+function detectLocal() {
+    if (window.crowdin_lang) {
+        return window.crowdin_lang;
+    }
+
+    if (window.user) {
+        return window.user.lang;
+    }
+
+    return navigator.language;
+}
+
 export default new VueI18n({
-    locale: 'en', // todo: change to autodetect with en as default
+    locale: detectLocal(),
     fallbackLocale: 'en',
     messages: loadLocaleMessages()
 })

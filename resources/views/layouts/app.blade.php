@@ -9,6 +9,16 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <!-- Crowdin in context translation -->
+    @if ( app('request')->input('translate') )
+        <script type="text/javascript">
+            var _jipt = [];
+            _jipt.push(['project', 'imagery']);
+        </script>
+        <script type="text/javascript" src="//cdn.crowdin.com/jipt/jipt.js"></script>
+        <script>var crowdin_lang = 'zu';</script>
+    @endif
+
     <!-- Scripts -->
     <script src="{{ mix('js/app.js') }}" defer></script>
 
@@ -27,7 +37,7 @@
                 src: url('{{ route('fonts', 'SanukOT-Bold.otf') }}');
             }
         </style>
-@endauth
+    @endauth
 
     <!-- Styles -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
