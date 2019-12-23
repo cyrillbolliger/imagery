@@ -21,18 +21,18 @@
     },
     "table": {
         "loading": "Loading... Please wait",
-        "total": "Showing {displayed} out of {total} records.",
+        "total": "Es werden {displayed} von {total} Einträgen angezeigt.",
         "filtered": "Filtered list.",
-        "add": "Add New",
+        "add": "Hinzufügen",
         "details": "Details"
     },
     "search": {
-        "search": "Search"
+        "search": "Suchen"
     },
     "languages": {
-        "de": "German",
-        "fr": "French",
-        "en": "English"
+        "de": "Deutsch",
+        "fr": "Französisch",
+        "en": "Englisch"
     },
     "snackbar": {
         "retry": "Retry",
@@ -48,41 +48,41 @@
     },
     "users": {
         "index": {
-            "title": "Users",
+            "title": "Benutzer",
             "create": "Create User"
         }
     },
     "user": {
-        "nav_edit": "Edit",
-        "nav_stats": "Stats",
+        "nav_edit": "Bearbeiten",
+        "nav_stats": "Statistik",
         "name": "Name",
-        "login": "Login Data",
-        "privileges": "Privileges",
-        "group_privileges": "Group Privileges",
-        "misc_fields": "Miscellaneous",
-        "first_name": "First name",
-        "last_name": "Last name",
+        "login": "Login-Daten",
+        "privileges": "Rechte",
+        "group_privileges": "Rechte für Gruppen",
+        "misc_fields": "Verschiedenes",
+        "first_name": "Vorname",
+        "last_name": "Nachname",
         "email": "Email",
         "email_exists": "There is already an account with this email address.",
-        "password": "Password",
-        "password_placeholder": "Unchanged",
-        "password_empty_info": "Leave empty to keep password unchanged.",
-        "super_admin": "Super Admin",
-        "super_admin_desc": "This user can do everything.",
-        "language": "Language",
+        "password": "Passwort",
+        "password_placeholder": "Unverändert",
+        "password_empty_info": "Wenn du das Passwortfeld leer lässt, bleibt das Passwort wie es ist.",
+        "super_admin": "Super-Admin",
+        "super_admin_desc": "Dieser Benutzer kann alles tun.",
+        "language": "Sprache",
         "not_found": "We were unable to retrieve this user. Try to reload.",
-        "managed_by": "Managed by",
-        "managed_by_helptext": "This group is responsible for managing this user.",
+        "managed_by": "Verwaltet von",
+        "managed_by_helptext": "Diese Gruppe is verantwortlich für die Verwaltung dieses Benutzers.",
         "admin_of": "Admin of",
         "admin_of_helptext": "This user can use the logo of and manage the specified groups, its child groups and its users.",
         "roles_loading_failed": "Failed to get 'Admin of' and 'User of' info.",
         "user_of": "User of",
         "user_of_helptext": "This user can use the logos of the specified groups, but can't change anything.",
-        "save": "Save User",
+        "save": "Speichern",
         "saving": "Saving...",
         "saved": "User saved.",
         "saving_failed": "Failed to save user. Try again.",
-        "remove": "Delete User",
+        "remove": "Benutzer löschen",
         "removing": "Deleting user",
         "removed": "User deleted.",
         "remove_confirmation": "Do you really want to delete {user}?",
@@ -90,8 +90,8 @@
         "password_insecure": "This password is insecure. Make it longer or ensure it contains numbers and special characters (and lower and uppercase characters of course)."
     },
     "role": {
-        "use": "Use Logos",
-        "manage": "Manage Group"
+        "use": "Logo benutzen",
+        "manage": "Gruppe Verwalten"
     },
     "groups": {
         "index": {
