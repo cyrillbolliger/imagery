@@ -11,8 +11,8 @@
     },
     "nav": {
         "title": "Menü",
-        "hide": "Hide",
-        "show": "Menu"
+        "hide": "Schliessen",
+        "show": "Menü"
     },
     "pagination": {
         "title": "Paginierung",
@@ -63,17 +63,17 @@
         "first_name": "Vorname",
         "last_name": "Nachname",
         "email": "Email",
-        "email_exists": "There is already an account with this email address.",
+        "email_exists": "Es gibt schon ein Benutzerkonto mit dieser Emailadresse.",
         "password": "Passwort",
         "password_placeholder": "Unverändert",
         "password_empty_info": "Wenn du das Passwortfeld leer lässt, bleibt das Passwort wie es ist.",
         "super_admin": "Super-Admin",
         "super_admin_desc": "Dieser Benutzer kann alles tun.",
         "language": "Sprache",
-        "not_found": "We were unable to retrieve this user. Try to reload.",
+        "not_found": "Benutzer konnte nicht gefunden werden. Versuche die Benutzer neu zu laden.",
         "managed_by": "Verwaltet von",
         "managed_by_helptext": "Diese Gruppe is verantwortlich für die Verwaltung dieses Benutzers.",
-        "admin_of": "Admin of",
+        "admin_of": "Admin von",
         "admin_of_helptext": "This user can use the logo of and manage the specified groups, its child groups and its users.",
         "roles_loading_failed": "Failed to get 'Admin of' and 'User of' info.",
         "user_of": "User of",
@@ -149,9 +149,9 @@
             "borderNone": "Der Rahmen ist Teil des Corporate Designs. Du kannst ihn jedoch weglassen, wenn du das Bild in einem Kontext benutzt, in welchem der Rahmen hässlich aussieht. Dies sollte aber die Ausnahme sein.",
             "imageZoom": "Image Zoom",
             "uploadFailed": "Failed to store image. Please try again.",
-            "generating": "Generating image",
-            "imageDownload": "Download image",
-            "waitPlease": "I'm busy generating your image, please hang on a few ticks. I'll be right there.",
+            "generating": "Generiere Bild",
+            "imageDownload": "Bild herunterladen",
+            "waitPlease": "Dein Bild wird gerade erstellt, bitte habe einen Augenblick Geduld. Es ist gleich so weit.",
             "format": "Format",
             "width": "Breite (px)",
             "height": "Höhe (px)",
@@ -181,22 +181,22 @@
         },
         "gallery": {
             "title": "Galerie",
-            "createdAtBy": "Created {timeAgo} by {user}.",
+            "createdAtBy": "Erstellt {timeAgo} von {user}.",
             "userUnknown": "deleted user",
             "loading": "Laden...",
-            "download": "Download",
-            "delete": "Delete",
-            "deleteError": "Failed to delete image. Please try again.",
-            "loadingFailed": "Could not load images. Please try again.",
-            "loadingImages": "Loading images...",
-            "searchTitle": "We searched really hard, but there was nothing, I promise. | One image found | {number} Images found",
-            "imageCount": "One image | {number} Images"
+            "download": "Herunterladen",
+            "delete": "Löschen",
+            "deleteError": "Bild konnte nicht gelöscht werden. Bitte versuche es erneut.",
+            "loadingFailed": "Bilder konnten nicht geladen werden. Bitte versuche es erneut.",
+            "loadingImages": "Bilder laden...",
+            "searchTitle": "Wir haben gründlich gesucht, aber da war nichts, wirklich. | Ein Bild gefunden | {number} Bilder gefunden",
+            "imageCount": "Ein Bild | {number} Bilder"
         }
     },
     "logos": {
         "index": {
             "title": "Logos",
-            "create": "New Logo"
+            "create": "Neues Logo"
         }
     },
     "logo": {
@@ -206,13 +206,13 @@
         "subline": "Unterzeile",
         "baseLogo": "Basis-Logo",
         "save": "Speichern",
-        "saving": "Saving...",
-        "saved": "Logo saved.",
-        "saving_failed": "Failed to save logo. Try again.",
+        "saving": "Speichern...",
+        "saved": "Logo gespeichert.",
+        "saving_failed": "Logo konnte nicht gespeichert werden. Bitte erneut versuchen.",
         "remove": "Logo löschen",
-        "removing": "Deleting logo",
-        "removed": "Logo deleted.",
-        "remove_confirmation": "Do you really want to delete {logo}?",
+        "removing": "Lösche Logo",
+        "removed": "Logo gelöscht.",
+        "remove_confirmation": "Möchtest du {logo} wirklich löschen?",
         "groups": "Gruppen",
         "groupsHelptext": "Die ausgewählten Gruppen können dieses Logo verwenden"
     }
