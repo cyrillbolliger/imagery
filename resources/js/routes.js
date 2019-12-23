@@ -12,7 +12,7 @@ export const routes = [
     {
         path: '/images/gallery',
         component: ImageGallery,
-        props: (route) => ({ query: route.query.q }),
+        props: (route) => ({query: route.query.q}),
         name: 'gallery'
     },
     {
@@ -66,5 +66,9 @@ export const routes = [
         component: LogoIndex,
         name: 'logosAll'
     },
+    {
+        path: '/home',
+        redirect: '/'
+    }
     // {path: '*', component: NotFound}
 ];

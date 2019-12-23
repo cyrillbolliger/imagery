@@ -251,9 +251,11 @@ class ImageTest extends TestCase
             'type'       => Image::TYPE_RAW
         ]);
 
+        $image->id        = 1; // needed for route creation of image url
         $data             = $image->toArray();
         $data['filename'] = $filename; // excluded from toArray method
 
+        unset($data['id']); // but must not be present in post data
         unset($data['user_id']);
         unset($data['width']);
         unset($data['height']);
