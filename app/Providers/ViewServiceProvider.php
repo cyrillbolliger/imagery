@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 class ViewServiceProvider extends ServiceProvider
 {
     const ACCEPTED_LANGS = ['fr', 'de', 'en'];
+    const FALLBACK_LANG = 'en';
 
     /**
      * Bootstrap services.
@@ -32,10 +33,14 @@ class ViewServiceProvider extends ServiceProvider
 
     private function detectBrowserLang()
     {
-        $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+        if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+        } else {
+            $lang = self::FALLBACK_LANG;
+        }
 
         if ($lang) {
-            $lang = in_array($lang, self::ACCEPTED_LANGS) ? $lang : 'en';
+            $lang = in_array($lang, self::ACCEPTED_LANGS) ? $lang : self::FALLBACK_LANG;
         }
 
         return $lang;
