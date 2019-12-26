@@ -50,6 +50,11 @@
         "index": {
             "title": "Benutzer",
             "create": "Benutzer erstellen"
+        },
+        "logout": {
+            "loggingOut": "Logging out...",
+            "redirecting": "Redirecting...",
+            "logoutError": "Failed to log out. Try again."
         }
     },
     "user": {
