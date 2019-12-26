@@ -13,3 +13,18 @@ $factory->define(GroupLogo::class, function (Faker $faker) {
         'group_id' => Group::first() ? Group::first()->id : 1,
     ];
 });
+
+$factory->state(GroupLogo::class, 'country', [
+    'logo_id'  => factory(Logo::class)->state('country')->create()->id,
+    'group_id' => factory(Group::class)->state('country')->create()->id,
+]);
+
+$factory->state(GroupLogo::class, 'canton', [
+    'logo_id'  => factory(Logo::class)->state('canton')->create()->id,
+    'group_id' => factory(Group::class)->state('canton')->create()->id,
+]);
+
+$factory->state(GroupLogo::class, 'local', [
+    'logo_id'  => factory(Logo::class)->state('local')->create()->id,
+    'group_id' => factory(Group::class)->state('local')->create()->id,
+]);

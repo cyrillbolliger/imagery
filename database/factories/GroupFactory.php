@@ -17,3 +17,15 @@ $factory->define(Group::class, function (Faker $faker) {
 $factory->state(Group::class, 'root', [
     'name'      => 'Root Group'
 ]);
+
+$factory->state(Group::class, 'country', [
+    'name'      => 'Country'
+]);
+
+$factory->state(Group::class, 'canton', [
+    'name'      => 'Canton'
+]);
+
+$factory->state(Group::class, 'local', [
+    'name'      => 'Local'
+]);

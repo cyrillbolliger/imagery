@@ -33,7 +33,7 @@ $factory->define(User::class, function (Faker $faker) {
         'lang'              => $faker->randomElement([
             User::LANG_EN,
             User::LANG_DE,
-            User::LANG_FR
+//            User::LANG_FR
         ]),
     ];
 });
@@ -44,4 +44,29 @@ $factory->state(User::class, 'root', [
     'email'       => 'user@root.login',
     'super_admin' => true,
     'lang'        => User::LANG_EN
+]);
+
+$factory->state(User::class, 'superAdmin', [
+    'first_name'  => 'Super',
+    'last_name'   => 'Admin',
+    'email'       => 'superadmin@user.login',
+    'super_admin' => true,
+]);
+
+$factory->state(User::class, 'countryAdmin', [
+    'first_name'  => 'Country',
+    'last_name'   => 'Admin',
+    'email'       => 'countryadmin@user.login',
+]);
+
+$factory->state(User::class, 'cantonAdmin', [
+    'first_name'  => 'Canton',
+    'last_name'   => 'Admin',
+    'email'       => 'cantonadmin@user.login',
+]);
+
+$factory->state(User::class, 'localUser', [
+    'first_name'  => 'Local',
+    'last_name'   => 'User',
+    'email'       => 'localuser@user.login',
 ]);

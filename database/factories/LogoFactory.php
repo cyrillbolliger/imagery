@@ -21,3 +21,18 @@ $factory->define(Logo::class, function (Faker $faker) {
         ]),
     ];
 });
+
+$factory->state(Logo::class, 'country', [
+    'name' => 'Country',
+    'type' => 'gruene',
+]);
+
+$factory->state(Logo::class, 'canton', [
+    'name' => 'Canton',
+    'type' => 'verts',
+]);
+
+$factory->state(Logo::class, 'local', [
+    'name' => 'Local',
+    'type' => 'verdi',
+]);

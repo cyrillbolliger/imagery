@@ -6,9 +6,7 @@ use App\Image;
 use App\Legal;
 use App\Logo;
 use App\Role;
-use App\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
