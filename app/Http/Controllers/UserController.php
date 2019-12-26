@@ -152,4 +152,16 @@ class UserController extends Controller
 
         return response(null, 204);
     }
+
+    /**
+     * Logout the current user
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|Response
+     */
+    public function logout()
+    {
+        Auth::logout();
+
+        return response(null, 204);
+    }
 }

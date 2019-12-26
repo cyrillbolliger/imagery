@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
 
 class UserPolicy
 {
@@ -69,5 +70,16 @@ class UserPolicy
     public function list(User $user): bool
     {
         return $user->isAdmin();
+    }
+
+    /**
+     * Determine if there is a logged in user so it can log out
+     *
+     * @return bool
+     */
+    public function logout(): bool
+    {
+        dd(Auth::check());
+        return Auth::check();
     }
 }

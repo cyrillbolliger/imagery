@@ -3,6 +3,7 @@ import ImageCreate from './components/pages/ImageCreate.vue';
 import GroupIndex from "./components/pages/GroupIndex";
 import LogoIndex from "./components/pages/LogoIndex";
 import ImageGallery from "./components/pages/ImageGallery";
+import UserLogout from "./components/pages/UserLogout";
 
 export const routes = [
     {
@@ -65,6 +66,10 @@ export const routes = [
         path: '/admin/logos',
         component: LogoIndex,
         name: 'logosAll'
+    },
+    {
+        path: '/logout',
+        component: UserLogout,
     },
     {
         path: '/home',

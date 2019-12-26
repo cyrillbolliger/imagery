@@ -33,6 +33,9 @@ Route::prefix('api/1')->group(function () {
     Route::post('/users', 'UserController@store')
          ->middleware('can:create,App\User');
 
+    Route::post('/users/logout', 'UserController@logout')
+         ->middleware('can:logout,App\User');
+
     /**
      * Roles
      */
