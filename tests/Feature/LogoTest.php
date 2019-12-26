@@ -74,7 +74,7 @@ class LogoTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function testGetLogos__user__403()
+    public function testGetLogos__user__200()
     {
         $group = factory(Group::class)->create();
 
@@ -92,7 +92,8 @@ class LogoTest extends TestCase
         $response = $this->actingAs($manager)
                          ->getJson("/api/1/logos");
 
-        $response->assertStatus(403);
+        $response->assertStatus(200);
+        $response->assertExactJson([]);
     }
 
     public function testGetLogos__admin__200()

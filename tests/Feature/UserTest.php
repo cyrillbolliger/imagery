@@ -107,14 +107,16 @@ class UserTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testGetUsers__nonAdmin_403()
+    public function testGetUsers__nonAdmin_200()
     {
         $user = factory(User::class)->create(['super_admin' => false]);
 
         $response = $this->actingAs($user)
                          ->getJson('/api/1/users/');
 
-        $response->assertStatus(403);
+        $response->assertStatus(200);
+        $response->assertJsonCount(1);
+        $response->assertJsonPath('0.id', $user->id, true);
     }
 
     public function testGetUsers__superAdmin_200()
