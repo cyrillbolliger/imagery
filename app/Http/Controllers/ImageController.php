@@ -241,7 +241,7 @@ class ImageController extends Controller
      *
      * @param  Image  $image
      *
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return void
      */
     private function generateThumbnail(Image $image)
     {
@@ -250,7 +250,7 @@ class ImageController extends Controller
         } catch (\ImagickException | ThumbnailException $e) {
             Log::error('Failed to generate thumbnail. File: '.$image->filename);
 
-            return response('Internal Server Error.', 500);
+            return abort(500,'Failed to generate thumbnail.');
         }
     }
 

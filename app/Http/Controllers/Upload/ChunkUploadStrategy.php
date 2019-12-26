@@ -144,22 +144,19 @@ class ChunkUploadStrategy extends UploadStrategy
      */
     private function saveChunk()
     {
-        $base64  = $this->extractData($this->data);
-        $newData = $this->base64decode($base64);
+        $data  = $this->extractData($this->data);
 
         $relFilePath = $this->getRelTmpPath($this->filename);
 
         // don't use laravel's Storage::append() function because it adds a
         // newline character in between.
-        if (0 === $this->part) {
-            $data = $newData;
-        } else {
+        if (0 !== $this->part) {
             if ( ! Storage::exists($relFilePath)) {
                 $this->validationErrorAbort(self::KEY_PART, 'Invalid part number.');
             }
 
             $existingData = Storage::get($relFilePath);
-            $data         = $existingData.$newData;
+            $data         = $existingData.$data;
         }
 
         $written = Storage::put($relFilePath, $data, 'private');
@@ -167,24 +164,5 @@ class ChunkUploadStrategy extends UploadStrategy
         if (false === $written) {
             throw new UploadException('Unable to store file.');
         }
-    }
-
-    /**
-     * Binary string with the base64 decoded data
-     *
-     * @param  string  $base64
-     *
-     * @return string
-     */
-    private function base64decode(string $base64): string
-    {
-        $base64 = str_replace(' ', '+', $base64); // https://www.php.net/manual/de/function.base64-decode.php#102113
-        $data   = base64_decode($base64, false);
-
-        if (false === $data) {
-            $this->validationErrorAbort(self::KEY_DATA, 'Unable to decode base64 encoded data.');
-        }
-
-        return $data;
     }
 }

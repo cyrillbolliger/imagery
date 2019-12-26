@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 abstract class UploadStrategy
 {
     protected const KEY_FILENAME = 'filename';
+    private const BIN_EXTENSION = '.bin';
 
     /**
      * The filename of the uploaded file (differs from tmp and final filename)
@@ -150,6 +151,7 @@ abstract class UploadStrategy
      */
     public function storeFinal(string $relDirPath): string
     {
+        $this->decodeFile();
         $this->validateFile();
 
         $extension     = pathinfo($this->filename, PATHINFO_EXTENSION);
@@ -157,7 +159,7 @@ abstract class UploadStrategy
         $relDirPath    = trim($relDirPath, '/').DIRECTORY_SEPARATOR;
         $relFinalPath  = $relDirPath.$finalFilename.'.'.$extension;
 
-        $relTmpPath = $this->getRelTmpPath($this->filename);
+        $relTmpPath = $this->getRelTmpPath($this->filename).self::BIN_EXTENSION;
 
         // Since the final file name is based on the file hash
         // we do only have to move the file, if a file with the same
@@ -177,10 +179,10 @@ abstract class UploadStrategy
      */
     private function validateFile()
     {
-        $relTmpPath = $this->getRelTmpPath($this->filename);
+        $relTmpPath = $this->getRelTmpPath($this->filename).self::BIN_EXTENSION;
 
         if ( ! Storage::exists($relTmpPath)) {
-            $this->validationErrorAbort(self::KEY_FILENAME, 'Uploaded file not found.');
+            $this->validationErrorAbort(self::KEY_FILENAME, 'Decoded file not found.');
         }
 
         $mimeType  = Storage::mimeType($relTmpPath);
@@ -223,5 +225,25 @@ abstract class UploadStrategy
         $path = disk_path($this->getRelTmpPath($this->filename));
 
         return self::shortHash(File::hash($path).config('app.hash_secret'));
+    }
+
+    /**
+     * Decode the base64 decoded file and save it on the same spot but as .bin
+     *
+     * @return void
+     */
+    private function decodeFile(): void
+    {
+        $relTmpPath = $this->getRelTmpPath($this->filename);
+
+        if ( ! Storage::exists($relTmpPath)) {
+            $this->validationErrorAbort(self::KEY_FILENAME, 'Uploaded file not found.');
+        }
+
+        $fileContents = Storage::get($relTmpPath);
+        $base64       = str_replace(' ', '+', $fileContents); // https://www.php.net/manual/de/function.base64-decode.php#102113
+        $data         = base64_decode($base64, true);
+
+        Storage::put($relTmpPath.self::BIN_EXTENSION, $data, 'private');
     }
 }
