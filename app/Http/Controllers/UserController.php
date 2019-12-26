@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
@@ -59,6 +60,10 @@ class UserController extends Controller
             'deleted_at'     => ['sometimes', new ImmutableRule($managed)],
         ]);
         $managed->fill($data);
+
+        if ($data['password']) {
+            $managed->password = Hash::make($data['password']);
+        }
 
         if ( ! $managed->save()) {
             return response('Could not save user.', 500);
@@ -119,6 +124,10 @@ class UserController extends Controller
             'updated_at'     => ['sometimes', new ImmutableRule($managed)],
             'deleted_at'     => ['sometimes', new ImmutableRule($managed)],
         ]);
+
+        if ($data['password']) {
+            $data['password'] = Hash::make($data['password']);
+        }
 
         if ( ! $managed->update($data)) {
             return response('Could not save user.', 500);
