@@ -53,19 +53,19 @@ $factory->state(User::class, 'superAdmin', [
     'super_admin' => true,
 ]);
 
-$factory->state(User::class, 'countryAdmin', [
+$factory->state(User::class, 'country', [
     'first_name'  => 'Country',
     'last_name'   => 'Admin',
     'email'       => 'countryadmin@user.login',
 ]);
 
-$factory->state(User::class, 'cantonAdmin', [
+$factory->state(User::class, 'canton', [
     'first_name'  => 'Canton',
     'last_name'   => 'Admin',
     'email'       => 'cantonadmin@user.login',
 ]);
 
-$factory->state(User::class, 'localUser', [
+$factory->state(User::class, 'local', [
     'first_name'  => 'Local',
     'last_name'   => 'User',
     'email'       => 'localuser@user.login',

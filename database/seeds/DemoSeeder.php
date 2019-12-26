@@ -1,5 +1,8 @@
 <?php
 
+use App\Group;
+use App\GroupLogo;
+use App\Logo;
 use App\Role;
 use App\User;
 use Illuminate\Database\Seeder;
@@ -17,9 +20,27 @@ class DemoSeeder extends Seeder
         Schema::disableForeignKeyConstraints();
         factory(User::class)->state('superAdmin')->create();
 
-        factory(Role::class)->state('countryAdmin')->create();
-        factory(Role::class)->state('cantonAdmin')->create();
-        factory(Role::class)->state('localUser')->create();
+        $this->seed('country');
+        $this->seed('canton');
+        $this->seed('local');
         Schema::enableForeignKeyConstraints();
+    }
+
+    private function seed(string $state)
+    {
+        $logoId  = factory(Logo::class)->state($state)->create()->id;
+        $groupId = factory(Group::class)->state($state)->create()->id;
+
+        factory(GroupLogo::class)->create([
+            'logo_id'  => $logoId,
+            'group_id' => $groupId,
+        ]);
+
+        $userId = factory(User::class)->state($state)->create()->id;
+
+        factory(Role::class)->state($state)->create([
+            'group_id' => $groupId,
+            'user_id'  => $userId,
+        ]);
     }
 }
