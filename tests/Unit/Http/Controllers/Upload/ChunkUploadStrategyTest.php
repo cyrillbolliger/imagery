@@ -18,8 +18,8 @@ class ChunkUploadStrategyTest extends TestCase
     {
         $filename = 'test.txt';
 
-        $chunk1 = 'data:application/octet-stream;base64,MTIzNA=='; // 1234
-        $chunk2 = 'data:application/octet-stream;base64,YXNkZg=='; // asdf
+        $chunk1 = 'data:application/octet-stream;base64,MTIzNA'; // 1234
+        $chunk2 = 'YXNkZg=='; // asdf
 
         $request1 = new \Illuminate\Http\Request([
             'filename'   => $filename,
@@ -40,7 +40,7 @@ class ChunkUploadStrategyTest extends TestCase
         $relFilePath = $this->getTmpFilePath($uploader, $filename);
         $content     = Storage::get($relFilePath);
 
-        $this->assertEquals('1234asdf', $content);
+        $this->assertEquals('MTIzNAYXNkZg==', $content);
     }
 
     private function getTmpFilePath(UploadStrategy $uploader, string $filename)
