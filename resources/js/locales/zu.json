@@ -50,6 +50,11 @@
         "index": {
             "title": "crwdns63:0crwdne63:0",
             "create": "crwdns65:0crwdne65:0"
+        },
+        "logout": {
+            "loggingOut": "crwdns347:0crwdne347:0",
+            "redirecting": "crwdns349:0crwdne349:0",
+            "logoutError": "crwdns351:0crwdne351:0"
         }
     },
     "user": {
