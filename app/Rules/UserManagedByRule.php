@@ -45,11 +45,11 @@ class UserManagedByRule implements Rule
     /**
      * Indicate if the given value has changed
      *
-     * @param  bool  $value
+     * @param  int  $value
      *
      * @return bool
      */
-    private function isChanged(bool $value): bool
+    private function isChanged(int $value): bool
     {
         if ($this->isNew()) {
             return true;

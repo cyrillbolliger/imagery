@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class User
@@ -186,6 +187,8 @@ class User extends Authenticatable
         foreach ($this->adminRoles()->get() as $role) {
             $users->push($role->usersBelow());
         }
+
+        $users->push(Auth::user());
 
         return $users->flatten();
     }

@@ -69,7 +69,7 @@ class UserPolicy
      */
     public function list(User $user): bool
     {
-        return $user->isAdmin();
+        return true;
     }
 
     /**
@@ -79,7 +79,6 @@ class UserPolicy
      */
     public function logout(): bool
     {
-        dd(Auth::check());
         return Auth::check();
     }
 }

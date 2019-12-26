@@ -19,7 +19,7 @@ class LogoPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->isAdmin();
+        return true;
     }
 
     /**

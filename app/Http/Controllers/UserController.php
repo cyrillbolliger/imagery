@@ -125,7 +125,7 @@ class UserController extends Controller
             'deleted_at'     => ['sometimes', new ImmutableRule($managed)],
         ]);
 
-        if ($data['password']) {
+        if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
 

@@ -6,13 +6,13 @@
             :required="true"
             :validation="validations.first_name"
             v-model.trim="currentUser.first_name"
-        ></AInput>
+        />
         <AInput
             :label="$t('user.last_name')"
             :required="true"
             :validation="validations.last_name"
             v-model.trim="currentUser.last_name"
-        ></AInput>
+        />
         <h5 class="pt-3">{{$t('user.login')}}</h5>
         <AInput
             :label="$t('user.email')"
@@ -20,11 +20,11 @@
             type="email"
             :validation="validations.email"
             v-model.trim="currentUser.email"
-        ></AInput>
+        />
         <APasswordSet
             v-model.trim="currentUser.password"
             :required="newUser"
-        ></APasswordSet>
+        />
 
         <h5 class="pt-3">{{$t('user.misc_fields')}}</h5>
         <ASelect
@@ -33,55 +33,58 @@
             :required="true"
             :validation="validations.language"
             v-model="currentUser.lang"
-        ></ASelect>
+        />
         <ASelect
+            v-if="currentUser.admin"
             :helptext="$t('user.managed_by_helptext')"
             :label="$t('user.managed_by')"
             :options="groupsSelect"
             :required="true"
             :validation="validations.managed_by"
             v-model="currentUser.managed_by"
-        ></ASelect>
+        />
 
-        <h5 class="pt-3">{{$t('user.privileges')}}</h5>
-        <AFormGroup v-if="amISuperAdmin">
-            <template #label>
-                {{ $t('user.super_admin') }}
-            </template>
-            <template #input>
-                <ACheckbox
-                    :label="$t('user.super_admin_desc')"
-                    v-model="currentUser.super_admin"
-                ></ACheckbox>
-            </template>
-        </AFormGroup>
-        <AFormGroup v-if="!currentUser.super_admin">
-            <template #label>
-                {{ $t('user.group_privileges') }}
-            </template>
-            <template #input>
-                <MGroupTree
-                    :groups="groups"
-                    :roles="detachedRoles"
-                    :user="currentUser"
-                    @change="updateRoles"
-                    v-if="!rolesLoading"
-                ></MGroupTree>
-                <div class="d-flex justify-content-center"
-                     v-if="rolesLoading">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="sr-only">Loading...</span>
+        <div v-if="currentUser.admin">
+            <h5 class="pt-3">{{$t('user.privileges')}}</h5>
+            <AFormGroup v-if="amISuperAdmin">
+                <template #label>
+                    {{ $t('user.super_admin') }}
+                </template>
+                <template #input>
+                    <ACheckbox
+                        :label="$t('user.super_admin_desc')"
+                        v-model="currentUser.super_admin"
+                    />
+                </template>
+            </AFormGroup>
+            <AFormGroup v-if="!currentUser.super_admin">
+                <template #label>
+                    {{ $t('user.group_privileges') }}
+                </template>
+                <template #input>
+                    <MGroupTree
+                        :groups="groups"
+                        :roles="detachedRoles"
+                        :user="currentUser"
+                        @change="updateRoles"
+                        v-if="!rolesLoading"
+                    />
+                    <div class="d-flex justify-content-center"
+                         v-if="rolesLoading">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
                     </div>
-                </div>
-            </template>
-        </AFormGroup>
+                </template>
+            </AFormGroup>
+        </div>
 
         <AButtonWait
             :button-text="$t('user.save')"
             :working="saving"
             :working-text="$t('user.saving')"
             @buttonClicked="save"
-        ></AButtonWait>
+        />
 
         <AButtonWait
             :button-text="$t('user.remove')"
@@ -90,7 +93,7 @@
             @buttonClicked="remove"
             button-class="btn btn-sm btn-link text-danger pl-0 mt-2"
             v-if="currentUser.id"
-        ></AButtonWait>
+        />
 
     </form>
 </template>
@@ -211,8 +214,10 @@
 
 
         created() {
-            this.groupsLoadingPromise = this.resourceLoad('groups');
-            this.rolesLoadingPromise = this.rolesLoad();
+            if (this.currentUser.admin) {
+                this.groupsLoadingPromise = this.resourceLoad('groups');
+                this.rolesLoadingPromise = this.rolesLoad();
+            }
         },
 
 
@@ -271,8 +276,8 @@
                 this.saving = true;
 
                 this.saveUser()
-                // saving roles must come after saving the user,
-                // else we don't have a user id on creation
+                    // saving roles must come after saving the user,
+                    // else we don't have a user id on creation
                     .then(() => this.saveRoles())
                     .finally(() => this.saving = false)
                     .then(() => {
