@@ -427,8 +427,13 @@ class UserTest extends TestCase
 
     public function testPostUser__managedByUnauthorizedGroup_422()
     {
+        $adminGroup = factory(Group::class)->create();
+
         $manager = factory(User::class)->create(['super_admin' => false]);
-        $manager->roles()->save(factory(Role::class)->make(['admin' => true]));
+        $manager->roles()->save(factory(Role::class)->make([
+            'admin'    => true,
+            'group_id' => $adminGroup->id
+        ]));
 
         $group = factory(Group::class)->create();
 
@@ -437,6 +442,7 @@ class UserTest extends TestCase
 
         $data             = $managed->toArray();
         $data['password'] = 'oq/7Ea5$'; // we can't set this using the toArray method
+        unset($data['added_by']);
 
         $response = $this->actingAs($manager)
                          ->postJson('/api/1/users', $data);
