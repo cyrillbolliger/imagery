@@ -20,7 +20,9 @@
     @endif
 
     <!-- Scripts -->
-    <script src="{{ mix('js/app.js') }}" defer></script>
+    @auth
+        <script src="{{ mix('js/app.js') }}" defer></script>
+    @endauth
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
