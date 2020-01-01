@@ -30,17 +30,28 @@
                             <label for="email"
                                    class="col-form-label">{{ __('E-Mail Address') }}</label>
 
-                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
-                                   name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                            <input id="email"
+                                   type="email"
+                                   class="form-control @error('email') is-invalid @enderror"
+                                   name="email"
+                                   value="{{ old('email') }}"
+                                   placeholder="user@example.com"
+                                   required
+                                   autocomplete="email"
+                                   autofocus>
                         </div>
 
                         <div class="form-group">
                             <label for="password"
                                    class="col-form-label">{{ __('Password') }}</label>
 
-                            <input id="password" type="password"
-                                   class="form-control @error('email') is-invalid @enderror" name="password"
-                                   required autocomplete="current-password">
+                            <input id="password"
+                                   type="password"
+                                   class="form-control @error('email') is-invalid @enderror"
+                                   name="password"
+                                   placeholder="Password"
+                                   required
+                                   autocomplete="current-password">
 
                             <small id="passwordHelpBlock" class="form-text text-muted">
                                 {{ __('Forgot password?') }}
@@ -61,7 +72,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group mb-0">
+                        <div class="form-group mb-0 mt-4">
                             <button type="submit" class="btn btn-primary">
                                 {{ __('Login') }}
                             </button>
