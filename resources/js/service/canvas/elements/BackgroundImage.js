@@ -47,6 +47,9 @@ export default class extends Background {
     _setCanvasSize() {
         const aspectRatioImage = this._image.width / this._image.height;
 
+        const wRatio = this._image.width / this._containerWidth;
+        const hRatio = this._image.height / this._containerHeight;
+
         let dW = this._image.width - this._containerWidth;
         let dH = this._image.height - this._containerHeight;
 
@@ -55,7 +58,7 @@ export default class extends Background {
 
         let width, height;
 
-        if (dW > dH) {
+        if (wRatio < hRatio) {
             width = this._containerWidth + this._zoom * dW;
             height = width / aspectRatioImage;
         } else {
