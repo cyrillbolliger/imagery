@@ -35,7 +35,7 @@
             v-model="currentUser.lang"
         />
         <ASelect
-            v-if="currentUser.admin"
+            v-if="amIadmin"
             :helptext="$t('user.managed_by_helptext')"
             :label="$t('user.managed_by')"
             :options="groupsSelect"
@@ -44,7 +44,7 @@
             v-model="currentUser.managed_by"
         />
 
-        <div v-if="currentUser.admin">
+        <div v-if="amIadmin">
             <h5 class="pt-3">{{$t('user.privileges')}}</h5>
             <AFormGroup v-if="amISuperAdmin">
                 <template #label>
@@ -198,6 +198,9 @@
             amISuperAdmin() {
                 return this.$store.getters['user/object'].super_admin;
             },
+            amIadmin() {
+                return this.$store.getters['user/isAdmin'];
+            },
             groupsSelect() {
                 return this.prepareSelectData(this.groups, 'id', 'tree_name');
             },
@@ -214,7 +217,7 @@
 
 
         created() {
-            if (this.currentUser.admin) {
+            if (this.amIadmin) {
                 this.groupsLoadingPromise = this.resourceLoad('groups');
                 this.rolesLoadingPromise = this.rolesLoad();
             }
