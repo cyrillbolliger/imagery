@@ -19,13 +19,15 @@ $factory->state(Group::class, 'root', [
 ]);
 
 $factory->state(Group::class, 'country', [
-    'name'      => 'Country'
+    'name'      => 'Country',
 ]);
 
 $factory->state(Group::class, 'canton', [
-    'name'      => 'Canton'
+    'name'      => 'Canton',
+    'parent_id' => Group::where('name', 'Country')->first() ? Group::where('name', 'Country')->first()->id : 1,
 ]);
 
 $factory->state(Group::class, 'local', [
-    'name'      => 'Local'
+    'name'      => 'Local',
+    'parent_id' => Group::where('name', 'Canton')->first() ? Group::where('name', 'Canton')->first()->id : 2,
 ]);

@@ -9,7 +9,7 @@ use Faker\Generator as Faker;
 
 $factory->define(GroupLogo::class, function (Faker $faker) {
     return [
-        'logo_id'  => factory(Logo::class)->create()->id,
-        'group_id' => factory(Group::class)->create()->id,
+        'logo_id'  => Logo::first() ? Logo::first()->id : factory(Logo::class)->create()->id,
+        'group_id' => Group::first() ? Group::first()->id : factory(Group::class)->create()->id,
     ];
 });
