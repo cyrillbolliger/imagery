@@ -43,8 +43,8 @@ class UserController extends Controller
     {
         $data = $request->validate([
             'id'             => ['sometimes', new ImmutableRule($managed)],
-            'first_name'     => 'required',
-            'last_name'      => 'required',
+            'first_name'     => ['required', 'string', 'max:255'],
+            'last_name'      => ['required', 'string', 'max:255'],
             'email'          => ['required', 'max:170', 'email', 'unique:users'],
             'password'       => ['required', new PasswordRule()],
             'added_by'       => ['sometimes', 'in:'.Auth::id()],
@@ -108,8 +108,8 @@ class UserController extends Controller
     {
         $data = $request->validate([
             'id'             => ['sometimes', new ImmutableRule($managed)],
-            'first_name'     => 'sometimes|required',
-            'last_name'      => 'sometimes|required',
+            'first_name'     => ['sometimes', 'required', 'string', 'max:255'],
+            'last_name'      => ['sometimes', 'required', 'string', 'max:255'],
             'email'          => ['sometimes', 'required', 'max:170', 'email', 'unique:users,email,'.$managed->id],
             'password'       => ['sometimes', 'required', new PasswordRule()],
             'added_by'       => ['sometimes', new ImmutableRule($managed)],

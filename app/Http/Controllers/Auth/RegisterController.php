@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\RegistrationReceivedNotification;
+use App\Notifications\UserRegisteredNotification;
 use App\User;
+use App\UserRegistration;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -28,7 +33,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -38,35 +43,53 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+        $this->middleware('throttle:6,1')->only('register');
     }
 
     /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
+     *
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name'  => ['required', 'string', 'max:255'],
+            'city'       => ['required', 'string', 'max:255'],
+            'email'      => ['required', 'max:170', 'email', 'unique:users,email'],
+            'comment'    => ['sometimes', 'string', 'max:1000'],
         ]);
     }
 
     /**
-     * Create a new user instance after a valid registration.
+     * Handle a registration request for the application.
      *
-     * @param  array  $data
-     * @return \App\User
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Http\Response
      */
-    protected function create(array $data)
+    public function register(Request $request)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        $this->validator($request->all())->validate();
+
+        $data = new UserRegistration($request->all());
+
+        $this->notifyAdmin($data);
+
+        return view('auth.approval');
+    }
+
+    /**
+     * Inform the site admin about the login application.
+     *
+     * @param  UserRegistration  $data
+     */
+    private function notifyAdmin(UserRegistration $data)
+    {
+        Notification::route('mail', config('app.admin_email'))
+                    ->notify(new UserRegisteredNotification($data));
     }
 }

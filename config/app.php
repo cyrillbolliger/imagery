@@ -310,4 +310,16 @@ return [
 
     'hash_secret' => env('APP_HASH_SECRET'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Hash secret
+    |--------------------------------------------------------------------------
+    |
+    | Secret value to make hashes hard to guess, even if the original input is
+    | known. Treat this as a sensitive value.
+    |
+    */
+
+    'admin_email' => env('APP_ADMIN_EMAIL'),
+
 ];
