@@ -11,7 +11,7 @@
 |
 */
 
-Route::prefix('api/1')->group(function () {
+Route::prefix('api/1')->middleware('auth')->group(function () {
     /**
      * Users
      */
@@ -198,6 +198,6 @@ Route::get('/', 'HomeController@index');
 /**
  * "Catch all" route
  *
- * This route is necessary for the view router to work
+ * This route is necessary for the vuejs router to work
  */
 Route::fallback('HomeController@index');
