@@ -72,6 +72,7 @@
         "password": "crwdns89:0crwdne89:0",
         "password_placeholder": "crwdns91:0crwdne91:0",
         "password_empty_info": "crwdns93:0crwdne93:0",
+        "password_notification": "crwdns353:0crwdne353:0",
         "super_admin": "crwdns95:0crwdne95:0",
         "super_admin_desc": "crwdns97:0crwdne97:0",
         "language": "crwdns99:0crwdne99:0",
@@ -92,7 +93,10 @@
         "removed": "crwdns129:0crwdne129:0",
         "remove_confirmation": "crwdns131:0{user}crwdne131:0",
         "removing_failed": "crwdns133:0crwdne133:0",
-        "password_insecure": "crwdns135:0crwdne135:0"
+        "password_insecure": "crwdns135:0crwdne135:0",
+        "notification": "crwdns355:0crwdne355:0",
+        "welcome_mail": "crwdns357:0crwdne357:0",
+        "send_notification": "crwdns359:0crwdne359:0"
     },
     "role": {
         "use": "crwdns137:0crwdne137:0",
