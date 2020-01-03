@@ -50,6 +50,11 @@
         "index": {
             "title": "Benutzer",
             "create": "Benutzer erstellen"
+        },
+        "logout": {
+            "loggingOut": "Abmelden...",
+            "redirecting": "Weiterleiten...",
+            "logoutError": "Abmelden fehlgeschlagen. Versuche es erneut."
         }
     },
     "user": {
@@ -67,6 +72,7 @@
         "password": "Passwort",
         "password_placeholder": "Unverändert",
         "password_empty_info": "Wenn du das Passwortfeld leer lässt, bleibt das Passwort wie es ist.",
+        "password_notification": "Der Benutzer muss das Passwort selbst festlegen (siehe unten 'Willkommens-E-Mail').",
         "super_admin": "Super-Admin",
         "super_admin_desc": "Dieser Benutzer kann alles tun.",
         "language": "Sprache",
@@ -87,7 +93,10 @@
         "removed": "Benutzer gelöscht.",
         "remove_confirmation": "Möchtest du {user} wirklich löschen?",
         "removing_failed": "Benutzer konnte nicht gelöscht werden. Versuche es erneut.",
-        "password_insecure": "Dieses Passwort ist unsicher. Mache es länger oder füge Zahlen und Sonderzeichen hinzu (und natürlich Klein- und Grossbuchstaben)."
+        "password_insecure": "Dieses Passwort ist unsicher. Mache es länger oder füge Zahlen und Sonderzeichen hinzu (und natürlich Klein- und Grossbuchstaben).",
+        "notification": "Benachrichtigung",
+        "welcome_mail": "Willkommens-E-Mail",
+        "send_notification": "Sende diesem Benutzer eine E-Mail, um ihn über seinen Zugang zu informieren. Die E-Mail enthält einen Link zum Festlegen des Passworts."
     },
     "role": {
         "use": "Logo benutzen",
