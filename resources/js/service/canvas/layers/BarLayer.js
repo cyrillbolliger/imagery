@@ -12,7 +12,7 @@ export default class BarLayer extends Layer {
         super(canvas);
 
         this._borderWidth = null;
-        this._y = 0;
+        this._y = this._canvas.height;
 
         this._touching = false;
         this._dragging = true;
@@ -44,7 +44,7 @@ export default class BarLayer extends Layer {
     }
 
     get boundingRect() {
-        if (! this._hasBlock()) {
+        if (!this._hasBlock()) {
             return null;
         }
 
@@ -74,7 +74,7 @@ export default class BarLayer extends Layer {
     }
 
     _drawBlock() {
-        if (! this._hasBlock()) {
+        if (!this._hasBlock()) {
             return;
         }
 
