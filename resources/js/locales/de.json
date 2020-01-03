@@ -95,8 +95,8 @@
         "removing_failed": "Benutzer konnte nicht gelöscht werden. Versuche es erneut.",
         "password_insecure": "Dieses Passwort ist unsicher. Mache es länger oder füge Zahlen und Sonderzeichen hinzu (und natürlich Klein- und Grossbuchstaben).",
         "notification": "Benachrichtigung",
-        "welcome_mail": "Welcome Email",
-        "send_notification": "Send this user an email to inform him about his account. The email contains a link to set the password."
+        "welcome_mail": "Willkommens-E-Mail",
+        "send_notification": "Sende diesem Benutzer eine E-Mail, um ihn über seinen Zugang zu informieren. Die E-Mail enthält einen Link zum Festlegen des Passworts."
     },
     "role": {
         "use": "Logo benutzen",
