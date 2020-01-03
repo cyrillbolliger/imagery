@@ -50,6 +50,11 @@
         "index": {
             "title": "Users",
             "create": "Create User"
+        },
+        "logout": {
+            "loggingOut": "Logging out...",
+            "redirecting": "Redirecting...",
+            "logoutError": "Failed to log out. Try again."
         }
     },
     "user": {
@@ -67,6 +72,7 @@
         "password": "Password",
         "password_placeholder": "Unchanged",
         "password_empty_info": "Leave empty to keep password unchanged.",
+        "password_notification": "The user must set the password himself (see 'welcome email' on the bottom).",
         "super_admin": "Super Admin",
         "super_admin_desc": "This user can do everything.",
         "language": "Language",
@@ -87,7 +93,10 @@
         "removed": "User deleted.",
         "remove_confirmation": "Do you really want to delete {user}?",
         "removing_failed": "Failed to delete user. Try again.",
-        "password_insecure": "This password is insecure. Make it longer or ensure it contains numbers and special characters (and lower and uppercase characters of course)."
+        "password_insecure": "This password is insecure. Make it longer or ensure it contains numbers and special characters (and lower and uppercase characters of course).",
+        "notification": "Notification",
+        "welcome_mail": "Welcome Email",
+        "send_notification": "Send this user an email to inform him about his account. The email contains a link to set the password."
     },
     "role": {
         "use": "Use Logos",
