@@ -2,13 +2,14 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\AccountCreatedNotification;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use \Spatie\WelcomeNotification\ReceivesWelcomeNotification;
 
 /**
  * Class User
@@ -40,6 +41,7 @@ class User extends Authenticatable
 {
     use Notifiable;
     use SoftDeletes;
+    use ReceivesWelcomeNotification;
 
     public const LANG_EN = 'en';
     public const LANG_DE = 'de';
@@ -334,5 +336,15 @@ class User extends Authenticatable
         }
 
         return $logos;
+    }
+
+    /**
+     * Send the onboarding email
+     *
+     * @param  \Carbon\Carbon  $validUntil
+     */
+    public function sendWelcomeNotification(\Carbon\Carbon $validUntil)
+    {
+        $this->notify(new AccountCreatedNotification($validUntil));
     }
 }

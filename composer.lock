@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "53df651983bea23a989f9dc7ea8348ad",
+    "content-hash": "1fbb3a2655375f0512d1fa465f2cc95e",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1469,6 +1469,64 @@
                 "uuid"
             ],
             "time": "2019-12-17T08:18:51+00:00"
+        },
+        {
+            "name": "spatie/laravel-welcome-notification",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-welcome-notification.git",
+                "reference": "5a4c3267dc45ddcfd5fdb051f6208f5ed9ed374c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-welcome-notification/zipball/5a4c3267dc45ddcfd5fdb051f6208f5ed9ed374c",
+                "reference": "5a4c3267dc45ddcfd5fdb051f6208f5ed9ed374c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/auth": "^6.5",
+                "illuminate/notifications": "^6.5",
+                "illuminate/queue": "^6.5",
+                "php": "^7.3"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^4.3",
+                "phpunit/phpunit": "^8.2",
+                "spatie/test-time": "^1.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\WelcomeNotification\\WelcomeNotificationServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\WelcomeNotification\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Send a welcome notification to new users",
+            "homepage": "https://github.com/spatie/laravel-welcome-notification",
+            "keywords": [
+                "laravel-welcome-mail",
+                "spatie"
+            ],
+            "time": "2019-11-20T14:34:26+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

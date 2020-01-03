@@ -1,5 +1,7 @@
 <?php
 
+use Spatie\WelcomeNotification\WelcomesNewUsers;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,6 +37,10 @@ Route::prefix('api/1')->middleware('auth')->group(function () {
 
     Route::post('/users/logout', 'UserController@logout')
          ->middleware('can:logout,App\User');
+
+    Route::post('/users/{user}/invite', 'UserController@invite')
+         ->where('user', '\d+')
+         ->middleware('can:manage,user');
 
     /**
      * Roles
@@ -192,7 +198,17 @@ Route::prefix('api/1')->middleware('auth')->group(function () {
 /**
  * The Frontend
  */
+Route::middleware(WelcomesNewUsers::class)->group(function () {
+    Route::get('welcome/{user}', 'Auth\WelcomeController@showWelcomeForm')
+         ->where('user', '\d+')
+         ->name('welcome');
+
+    Route::post('welcome/{user}', 'Auth\WelcomeController@savePassword')
+         ->where('user', '\d+');
+});
+
 Auth::routes();
+
 Route::get('/', 'HomeController@index');
 
 /**

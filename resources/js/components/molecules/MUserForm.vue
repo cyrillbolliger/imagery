@@ -22,9 +22,21 @@
             v-model.trim="currentUser.email"
         />
         <APasswordSet
+            v-if="!newUser"
             v-model.trim="currentUser.password"
-            :required="newUser"
+            :required="false"
         />
+        <AFormGroup>
+            <template #label>
+                {{ $t('user.password') }}
+            </template>
+            <template #input>
+                <p class="alert alert-warning" role="alert">
+                    {{$t('user.password_notification')}}
+                </p>
+            </template>
+        </AFormGroup>
+
 
         <h5 class="pt-3">{{$t('user.misc_fields')}}</h5>
         <ASelect
@@ -79,6 +91,21 @@
             </AFormGroup>
         </div>
 
+        <div v-if="amIadmin">
+            <h5 class="pt-3">{{$t('user.notification')}}</h5>
+            <AFormGroup>
+                <template #label>
+                    {{ $t('user.welcome_mail') }}
+                </template>
+                <template #input>
+                    <ACheckbox
+                        :label="$t('user.send_notification')"
+                        v-model="notifyUser"
+                    />
+                </template>
+            </AFormGroup>
+        </div>
+
         <AButtonWait
             :button-text="$t('user.save')"
             :working="saving"
@@ -92,7 +119,7 @@
             :working-text="$t('user.removing')"
             @buttonClicked="remove"
             button-class="btn btn-sm btn-link text-danger pl-0 mt-2"
-            v-if="currentUser.id"
+            v-if="!newUser"
         />
 
     </form>
@@ -136,6 +163,7 @@
                 saving: false,
                 removing: false,
                 savedUser: null,
+                notifyUser: false,
                 validations: {
                     first_name: {
                         rules: {
@@ -221,6 +249,8 @@
                 this.groupsLoadingPromise = this.resourceLoad('groups');
                 this.rolesLoadingPromise = this.rolesLoad();
             }
+
+            this.notifyUser = this.newUser;
         },
 
 
@@ -282,6 +312,7 @@
                     // saving roles must come after saving the user,
                     // else we don't have a user id on creation
                     .then(() => this.saveRoles())
+                    .then(() => this.sendNotification())
                     .finally(() => this.saving = false)
                     .then(() => {
                         this.$emit('saved', true);
@@ -353,6 +384,14 @@
                 );
 
                 return Promise.all(promises);
+            },
+
+            async sendNotification() {
+                if (!this.notifyUser) {
+                    return true;
+                }
+
+                return await Api().post(`/users/${this.currentUser.id}/invite`);
             },
 
             getById(id, objects) {

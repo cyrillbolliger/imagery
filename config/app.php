@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Europe/Zurich',
 
     /*
     |--------------------------------------------------------------------------
@@ -312,14 +312,24 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Hash secret
+    | Admin email
     |--------------------------------------------------------------------------
     |
-    | Secret value to make hashes hard to guess, even if the original input is
-    | known. Treat this as a sensitive value.
+    | Notifications for login requests will be sent to this email.
     |
     */
 
     'admin_email' => env('APP_ADMIN_EMAIL'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Onboarding expiration
+    |--------------------------------------------------------------------------
+    |
+    | Days until the password set link in the onboarding email expires.
+    |
+    */
+
+    'onboarding_expiration' => 30, // days
 
 ];

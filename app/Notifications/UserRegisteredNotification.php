@@ -49,7 +49,7 @@ class UserRegisteredNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $actionUrl = url(config('app.url').'/admin/users/create');
+        $actionUrl = url('/admin/users/create');
 
         return (new MailMessage)
             ->greeting(__('Hello Admin'))

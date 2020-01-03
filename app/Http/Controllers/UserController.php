@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Group;
+use App\Notifications\AccountCreatedNotification;
 use App\Rules\ImmutableRule;
 use App\Rules\PasswordRule;
 use App\Rules\SuperAdminRule;
@@ -15,6 +16,8 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
@@ -46,7 +49,7 @@ class UserController extends Controller
             'first_name'     => ['required', 'string', 'max:255'],
             'last_name'      => ['required', 'string', 'max:255'],
             'email'          => ['required', 'max:170', 'email', 'unique:users'],
-            'password'       => ['required', new PasswordRule()],
+            'password'       => ['sometimes', new PasswordRule()],
             'added_by'       => ['sometimes', 'in:'.Auth::id()],
             'managed_by'     => ['required', 'exists:groups,id', new UserManagedByRule(null)],
             'default_logo'   => ['nullable', 'exists:logos,id', new UserLogoRule(null)],
@@ -61,9 +64,11 @@ class UserController extends Controller
         ]);
         $managed->fill($data);
 
-        if ($data['password']) {
-            $managed->password = Hash::make($data['password']);
+        if (!isset($data['password'])) {
+            $data['password'] = Str::random(32);
         }
+
+        $managed->password = Hash::make($data['password']);
 
         if ( ! $managed->save()) {
             return response('Could not save user.', 500);
@@ -161,6 +166,22 @@ class UserController extends Controller
     public function logout()
     {
         Auth::logout();
+
+        return response(null, 204);
+    }
+
+    /**
+     * Send an invitation email to the user
+     *
+     * @param  Request  $request
+     * @param  User  $managed
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|Response
+     */
+    public function invite(Request $request, User $managed)
+    {
+        $expiresAt = now()->addDays(config('app.onboarding_expiration'));
+        $managed->sendWelcomeNotification($expiresAt);
 
         return response(null, 204);
     }

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="row justify-content-center align-items-center min-vh-100 pt-5 pb-5">
             <div class="col-md-6 col-lg-5">
                 <h1>{{ __('Register') }}</h1>
                 <p>{{ __('Please fill out this form to apply for a login. As we will review your application manually, it may take some time.') }}</p>
@@ -11,7 +11,7 @@
                     @csrf
 
                     <div class="form-group">
-                        <label for="first_name" class="col-form-label">{{ __('Frist Name') }}</label>
+                        <label for="first_name" class="col-form-label">{{ __('First Name') }}</label>
 
                         <input id="first_name"
                                type="text"
