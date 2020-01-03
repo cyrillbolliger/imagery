@@ -191,7 +191,7 @@ Route::prefix('api/1')->middleware('auth')->group(function () {
      * to use but not to distribute the fonts.
      */
     Route::get('/files/fonts/{font}', 'FontController@show')
-         ->where('font', '[\w-\.]+')
+         ->where('font', '[\w\-\.]+')
          ->name('fonts');
 });
 
