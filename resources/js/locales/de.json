@@ -52,9 +52,9 @@
             "create": "Benutzer erstellen"
         },
         "logout": {
-            "loggingOut": "Logging out...",
-            "redirecting": "Redirecting...",
-            "logoutError": "Failed to log out. Try again."
+            "loggingOut": "Abmelden...",
+            "redirecting": "Weiterleiten...",
+            "logoutError": "Abmelden fehlgeschlagen. Versuche es erneut."
         }
     },
     "user": {
@@ -72,7 +72,7 @@
         "password": "Passwort",
         "password_placeholder": "Unverändert",
         "password_empty_info": "Wenn du das Passwortfeld leer lässt, bleibt das Passwort wie es ist.",
-        "password_notification": "The user must set the password himself (see 'welcome email' on the bottom).",
+        "password_notification": "Der Benutzer muss das Passwort selbst festlegen (siehe unten 'Willkommens-E-Mail').",
         "super_admin": "Super-Admin",
         "super_admin_desc": "Dieser Benutzer kann alles tun.",
         "language": "Sprache",
@@ -94,7 +94,7 @@
         "remove_confirmation": "Möchtest du {user} wirklich löschen?",
         "removing_failed": "Benutzer konnte nicht gelöscht werden. Versuche es erneut.",
         "password_insecure": "Dieses Passwort ist unsicher. Mache es länger oder füge Zahlen und Sonderzeichen hinzu (und natürlich Klein- und Grossbuchstaben).",
-        "notification": "Notification",
+        "notification": "Benachrichtigung",
         "welcome_mail": "Welcome Email",
         "send_notification": "Send this user an email to inform him about his account. The email contains a link to set the password."
     },
