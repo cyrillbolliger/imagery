@@ -26,7 +26,7 @@
             v-model.trim="currentUser.password"
             :required="false"
         />
-        <AFormGroup>
+        <AFormGroup v-else>
             <template #label>
                 {{ $t('user.password') }}
             </template>
