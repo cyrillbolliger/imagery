@@ -44,6 +44,7 @@ class LogoBlock {
     _hasSubline() {
         return this._subline && this._typeHasSubline();
     }
+
     _typeHasSubline() {
         return LogoTypes.alternative !== this._type;
     }
