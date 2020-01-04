@@ -1,5 +1,13 @@
 const mix = require('laravel-mix');
 
+// analyze bundle size
+require('laravel-mix-bundle-analyzer');
+if (!mix.inProduction()) {
+    mix.bundleAnalyzer({
+        analyzerPort: 9999
+    });
+}
+
 // disable the os notifications if everything went well
 mix.disableSuccessNotifications();
 
