@@ -1,7 +1,7 @@
 dist: bionic
 language: php
 php:
-  - 7.3.8
+  - 7.3
 
 addons:
   ssh_known_hosts: imagery.bolliger.tech
@@ -26,6 +26,9 @@ before_script:
 script:
   - vendor/bin/phpunit
   - yarn prod
+
+after_failure:
+  - cat storage/logs/laravel-*.log
 
 before_deploy:
   - openssl aes-256-cbc -K $encrypted_339d88bdb736_key -iv $encrypted_339d88bdb736_iv -in deploy_rsa.enc -out /tmp/deploy_rsa -d
