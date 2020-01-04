@@ -1,5 +1,5 @@
 files:
   - source: /resources/js/locales/en.json
     translation: /resources/js/locales/%two_letters_code%.json
-  - source: resources/lang/en.json
-    translation: resources/lang/%two_letters_code%.json
+  - source: /resources/lang/en.json
+    translation: /resources/lang/%two_letters_code%.json
