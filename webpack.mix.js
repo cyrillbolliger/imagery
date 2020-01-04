@@ -1,5 +1,23 @@
 const mix = require('laravel-mix');
 
+// webpack stuff
+mix.webpackConfig({
+    module: {
+        rules: [{
+            test: /\.scss$/,
+            use: [{
+                loader: "sass-loader",
+                options: {
+                    data: '@import "variables"; @import "~bootstrap/scss/functions"; @import "~bootstrap/scss/variables"; @import "~bootstrap/scss/mixins";',
+                    includePaths: [
+                        path.resolve(__dirname, 'resources/sass')
+                    ]
+                }
+            }]
+        }]
+    }
+});
+
 // analyze bundle size
 require('laravel-mix-bundle-analyzer');
 if (!mix.inProduction()) {
@@ -19,21 +37,3 @@ mix.js('resources/js/app.js', 'public/js').sourceMaps().version();
 
 // compile scss
 mix.sass('resources/sass/app.scss', 'public/css').version();
-
-// webpack stuff
-mix.webpackConfig({
-    module: {
-        rules: [{
-            test: /\.scss$/,
-            use: [{
-                loader: "sass-loader",
-                options: {
-                    data: '@import "app";',
-                    includePaths: [
-                        path.resolve(__dirname, 'resources/sass')
-                    ]
-                }
-            }]
-        }]
-    }
-});
