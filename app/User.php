@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use \Spatie\WelcomeNotification\ReceivesWelcomeNotification;
 
@@ -345,6 +346,11 @@ class User extends Authenticatable
      */
     public function sendWelcomeNotification(\Carbon\Carbon $validUntil)
     {
+        $lang = App::getLocale();
+        App::setLocale($this->lang);
+
         $this->notify(new AccountCreatedNotification($validUntil));
+
+        App::setLocale($lang);
     }
 }
