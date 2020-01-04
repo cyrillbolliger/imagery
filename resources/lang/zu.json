@@ -26,10 +26,18 @@
     "Save password and login": "crwdns409:0crwdne409:0",
     "Send Password Reset Link": "crwdns411:0crwdne411:0",
     "Set yourself a password and your ready to go!": "crwdns413:0crwdne413:0",
+    "Set yourself a password, and off you go.": "crwdns427:0crwdne427:0",
     "Stay logged in": "crwdns415:0crwdne415:0",
     "Thank you!": "crwdns417:0crwdne417:0",
     "We'll just verify it's really you. For that, we'll email you a secret link to reset your password. Make sure you enter the same email address as you use for signing in.": "crwdns419:0crwdne419:0",
     "We've received your registration and we'll approve it as soon as possible. Since this is done manually, it may take a little while. We'll send you an email, as soon as your account is ready.": "crwdns421:0crwdne421:0",
     "Welcome :firstName!": "crwdns423:0crwdne423:0",
-    "Would you like to reset your password?": "crwdns425:0crwdne425:0"
+    "Would you like to reset your password?": "crwdns425:0crwdne425:0",
+    "Welcome to :app": "crwdns429:0crwdne429:0",
+    "Hello :firstName": "crwdns431:0crwdne431:0",
+    "We've just created you an account for :app. It's a super simple tool to create images in the corporate design of the GREENS.": "crwdns433:0crwdne433:0",
+    "Hello Admin": "crwdns435:0crwdne435:0",
+    ":firstName :lastName (:email) from :city just applied for a login.": "crwdns437:0crwdne437:0",
+    "Verify, that this person is permitted to have an account, before creating it.": "crwdns439:0crwdne439:0",
+    ":firstName left the following comment: :comment": "crwdns441:0crwdne441:0"
 }

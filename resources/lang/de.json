@@ -26,10 +26,18 @@
     "Save password and login": "Passwort speichern und anmelden",
     "Send Password Reset Link": "Link zum Zurücksetzen des Passworts senden",
     "Set yourself a password and your ready to go!": "Setze dir ein Passwort und los geht's!",
+    "Set yourself a password, and off you go.": "Setze dir ein Passwort und los geht's.",
     "Stay logged in": "Eingeloggt bleiben",
     "Thank you!": "Vielen Dank!",
     "We'll just verify it's really you. For that, we'll email you a secret link to reset your password. Make sure you enter the same email address as you use for signing in.": "Wir möchten sichergehen, dass du wirklich du bist. Dazu senden wir die den Link, um dein Passwort zurückzusetzen, per Mail. Gib darum die gleiche E-Mailadresse an, die du benutzt um dich anzumelden.",
     "We've received your registration and we'll approve it as soon as possible. Since this is done manually, it may take a little while. We'll send you an email, as soon as your account is ready.": "Wir haben deinen Antrag erhalten und wir werden ihn so bald wie möglich genehmigen. Da dies von einem Menschen erledigt wird, kann es eine Weile dauern. Wir senden dir eine E-Mail, sobald dein Zugang bereit ist.",
     "Welcome :firstName!": "Willkommen :firstName!",
-    "Would you like to reset your password?": "Möchtest du dein Passwort zurücksetzen?"
+    "Would you like to reset your password?": "Möchtest du dein Passwort zurücksetzen?",
+    "Welcome to :app": "Willkommen bei :app",
+    "Hello :firstName": "Hallo :firstName",
+    "We've just created you an account for :app. It's a super simple tool to create images in the corporate design of the GREENS.": "Wir haben dir gerade ein Konto für :app erstellt. Dies ist ein super einfaches Werkzeug, um Bilder im Corporate Design der GRÜNEN zu erstellen.",
+    "Hello Admin": "Hallo Admin",
+    ":firstName :lastName (:email) from :city just applied for a login.": ":firstName :lastName (:email) von :city hat soeben ein Login beantragt.",
+    "Verify, that this person is permitted to have an account, before creating it.": "Überprüfe, dass diese Person einen Zugang haben darf, bevor du ihn erstellst.",
+    ":firstName left the following comment: :comment": ":firstName hat folgenden Kommentar hinterlassen: :comment"
 }
