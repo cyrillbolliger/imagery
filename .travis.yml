@@ -24,8 +24,8 @@ before_script:
   - php artisan migrate --seed
 
 script:
-  - vendor/bin/phpunit
   - yarn prod
+  - vendor/bin/phpunit
 
 after_failure:
   - cat storage/logs/laravel-*.log
