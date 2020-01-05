@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Rules\PasswordRule;
 use Spatie\WelcomeNotification\WelcomeController as BaseWelcomeController;
 
 class WelcomeController extends BaseWelcomeController
@@ -13,5 +14,12 @@ class WelcomeController extends BaseWelcomeController
      * @var string
      */
     protected $redirectTo = '/';
+
+    public function rules()
+    {
+        return [
+            'password' => ['required', 'confirmed', new PasswordRule()],
+        ];
+    }
 }
 
