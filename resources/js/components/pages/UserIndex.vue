@@ -33,6 +33,7 @@
     import ResourceLoadMixin from "../../mixins/ResourceLoadMixin";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
     import OUser from "../organisms/OUser";
+    import cloneDeep from 'lodash/cloneDeep';
 
     export default {
         name: "UserIndex",
@@ -118,7 +119,7 @@
 
                 // clone user so changes are only pushed back
                 // into the store when saving
-                this.dialogUser = _.cloneDeep(this.getUserById(id));
+                this.dialogUser = cloneDeep(this.getUserById(id));
 
                 if (null === this.dialogUser) {
                     this.snackErrorRetry(

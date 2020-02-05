@@ -33,6 +33,7 @@
     import ResourceLoadMixin from "../../mixins/ResourceLoadMixin";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
     import OLogo from "../organisms/OLogo";
+    import cloneDeep from 'lodash/cloneDeep';
 
     export default {
         name: "LogoIndex",
@@ -116,7 +117,7 @@
 
                 // clone logo so changes are only pushed back
                 // into the store when saving
-                this.dialogLogo = _.cloneDeep(this.getLogoById(id));
+                this.dialogLogo = cloneDeep(this.getLogoById(id));
 
                 if (null === this.dialogLogo) {
                     this.snackErrorRetry(

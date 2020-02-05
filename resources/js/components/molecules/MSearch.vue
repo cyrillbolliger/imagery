@@ -12,6 +12,8 @@
 </template>
 
 <script>
+    import debounce from 'lodash/debounce';
+
     export default {
         name: "MSearch",
         data() {
@@ -34,7 +36,7 @@
         methods: {
             search() {
                 const action = () => this.$emit('search', this.term);
-                _.debounce(action, this.debounceDelay)();
+                debounce(action, this.debounceDelay)();
             }
         }
     }

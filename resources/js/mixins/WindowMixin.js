@@ -1,4 +1,5 @@
 import {isXl} from "../service/Window";
+import debounce from 'lodash/debounce';
 
 export default {
     data() {
@@ -7,7 +8,7 @@ export default {
         }
     },
     methods: {
-        setIsXl: _.debounce(function () {
+        setIsXl: debounce(function () {
             this.isXl = isXl();
         }, 100),
     },

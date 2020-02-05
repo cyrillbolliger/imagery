@@ -53,6 +53,7 @@
     import PrepareSelectMixin from "../../mixins/PrepareSelectMixin";
     import {required, maxLength} from 'vuelidate/lib/validators';
     import AButtonWait from "../atoms/AButtonWait";
+    import isEqual from 'lodash/isEqual';
 
     export default {
         name: "MLogoForm",
@@ -188,7 +189,7 @@
             },
 
             saveLogo() {
-                if (_.isEqual(this.currentLogo, this.getLogoById(this.currentLogo.id))) {
+                if (isEqual(this.currentLogo, this.getLogoById(this.currentLogo.id))) {
                     return new Promise(resolve => resolve());
                 }
 

@@ -93,6 +93,7 @@
     import MSizeBlock from "../molecules/MSizeBlock";
     import MAlignment from "../molecules/MAlignment";
     import MColorScheme from "../molecules/MColorScheme";
+    import debounce from 'lodash/debounce';
 
     export default {
         name: "OImagery",
@@ -285,13 +286,13 @@
                 this.height = dims.height;
             },
 
-            setCanvasZoneLeft: _.debounce(function () {
+            setCanvasZoneLeft: debounce(function () {
                 this.canvasZoneLeft = this.$refs.canvasZone
                     ? this.$refs.canvasZone.getBoundingClientRect().left
                     : 0;
             }, 100),
 
-            setCanvasPos: _.debounce(function () {
+            setCanvasPos: debounce(function () {
                 this.$nextTick(() => {
                     const pos = this.canvas.getBoundingClientRect();
                     this.canvasPos.x = pos.x + window.scrollX;
@@ -301,7 +302,7 @@
                 });
             }, 100),
 
-            setViewDims: _.debounce(function () {
+            setViewDims: debounce(function () {
                 this.viewHeight = document.documentElement.clientHeight;
                 this.viewWidth = document.documentElement.clientWidth;
             }, 100),

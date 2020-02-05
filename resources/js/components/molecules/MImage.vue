@@ -32,12 +32,21 @@
 
 <script>
     import TimeAgo from 'javascript-time-ago';
+    import english from 'javascript-time-ago/locale/en';
+    import french from 'javascript-time-ago/locale/fr';
+    import german from 'javascript-time-ago/locale/de';
     import {mapGetters} from "vuex";
     import Api from "../../service/Api";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
+    import escape from 'lodash/escape';
 
-    const lang = require(`javascript-time-ago/locale/${user.lang}`);
-    TimeAgo.addLocale(lang);
+    const lang = {
+        en: english,
+        fr: french,
+        de: german
+    };
+
+    TimeAgo.addLocale(lang[user.lang]);
     const timeAgo = new TimeAgo(`${user.lang}-CH`);
 
     export default {
@@ -74,8 +83,8 @@
                     return this.$t('images.gallery.userUnknown');
                 }
 
-                const name = _.escape(`${user.first_name} ${user.last_name}`); // XSS: OK
-                const email = encodeURIComponent(_.escape(user.email)); // XSS: OK
+                const name = escape(`${user.first_name} ${user.last_name}`); // XSS: OK
+                const email = encodeURIComponent(escape(user.email)); // XSS: OK
 
                 return `<a href="mailto:${email}">${name}</a>`;
             },

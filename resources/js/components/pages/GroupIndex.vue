@@ -33,6 +33,7 @@
     import ResourceLoadMixin from "../../mixins/ResourceLoadMixin";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
     import OGroup from "../organisms/OGroup";
+    import cloneDeep from 'lodash/cloneDeep';
 
     export default {
         name: "GroupIndex",
@@ -116,7 +117,7 @@
 
                 // clone group so changes are only pushed back
                 // into the store when saving
-                this.dialogGroup = _.cloneDeep(this.getGroupById(id));
+                this.dialogGroup = cloneDeep(this.getGroupById(id));
 
                 if (null === this.dialogGroup) {
                     this.snackErrorRetry(

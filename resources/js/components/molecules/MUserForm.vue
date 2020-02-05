@@ -139,6 +139,8 @@
     import PrepareSelectMixin from "../../mixins/PrepareSelectMixin";
     import {required, email, maxLength} from 'vuelidate/lib/validators';
     import AButtonWait from "../atoms/AButtonWait";
+    import isEqual from 'lodash/isEqual';
+    import cloneDeep from 'lodash/cloneDeep';
 
     export default {
         name: "MUserForm",
@@ -233,7 +235,7 @@
                 return this.prepareSelectData(this.groups, 'id', 'tree_name');
             },
             detachedRoles() {
-                return _.cloneDeep(this.roles);
+                return cloneDeep(this.roles);
             },
             currentUser() {
                 return this.savedUser ? this.savedUser : this.user;
@@ -267,7 +269,7 @@
                     .then(response => response.data)
                     .then(roles => {
                         this.roles = roles;
-                        this.editedRoles = _.cloneDeep(roles);
+                        this.editedRoles = cloneDeep(roles);
                     })
                     .then(() => this.setRolesReady())
                     .catch(reason => {
@@ -339,7 +341,7 @@
             },
 
             saveUser() {
-                if (_.isEqual(this.currentUser, this.getUserById(this.currentUser.id))) {
+                if (isEqual(this.currentUser, this.getUserById(this.currentUser.id))) {
                     return new Promise(resolve => resolve());
                 }
 

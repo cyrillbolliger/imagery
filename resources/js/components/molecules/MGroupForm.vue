@@ -46,6 +46,7 @@
     import PrepareSelectMixin from "../../mixins/PrepareSelectMixin";
     import {required, maxLength} from 'vuelidate/lib/validators';
     import AButtonWait from "../atoms/AButtonWait";
+    import isEqual from 'lodash/isEqual';
 
     export default {
         name: "MGroupForm",
@@ -157,7 +158,7 @@
             },
 
             saveGroup() {
-                if (_.isEqual(this.currentGroup, this.getGroupById(this.currentGroup.id))) {
+                if (isEqual(this.currentGroup, this.getGroupById(this.currentGroup.id))) {
                     return new Promise(resolve => resolve());
                 }
 
