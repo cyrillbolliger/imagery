@@ -1,21 +1,10 @@
 const mix = require('laravel-mix');
 
-// webpack stuff
-mix.webpackConfig({
-    module: {
-        rules: [{
-            test: /\.scss$/,
-            use: [{
-                loader: "sass-loader",
-                options: {
-                    data: '@import "variables"; @import "~bootstrap/scss/functions"; @import "~bootstrap/scss/variables"; @import "~bootstrap/scss/mixins";',
-                    includePaths: [
-                        path.resolve(__dirname, 'resources/sass')
-                    ]
-                }
-            }]
-        }]
-    }
+mix.options({
+    // extract styles into css file
+    extractVueStyles: true,
+    // load these styles for every component
+    globalVueStyles: 'resources/sass/_global.scss'
 });
 
 // analyze bundle size
@@ -36,4 +25,4 @@ mix.browserSync('imagery.test:8888');
 mix.js('resources/js/app.js', 'public/js').sourceMaps().version();
 
 // compile scss
-mix.sass('resources/sass/app.scss', 'public/css').version();
+mix.sass('resources/sass/app.scss', 'public/css').sourceMaps().version();
