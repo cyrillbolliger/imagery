@@ -4,12 +4,11 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import './bootstrap';
 import 'bootstrap-material-design-icons/scss/material-icons.scss';
 import 'vue2-animate/src/sass/vue2-animate.scss'
 import 'vue-search-select/dist/VueSearchSelect.css'
 
-window.Vue = require('vue');
+import Vue from 'vue';
 import VueRouter from 'vue-router';
 import App from './components/App';
 import i18n from './i18n'
@@ -23,12 +22,12 @@ import {routes} from './routes';
  */
 import AIconNamed from "./components/atoms/AIconNamed";
 
-window.Vue.component('AIconNamed', AIconNamed);
+Vue.component('AIconNamed', AIconNamed);
 
 /**
  *  Routing
  */
-window.Vue.use(VueRouter);
+Vue.use(VueRouter);
 
 const router = new VueRouter({
     routes,
@@ -38,8 +37,8 @@ const router = new VueRouter({
 /**
  * Other Plugins
  */
-window.Vue.use(Vuelidate);
-window.Vue.use(VueMasonryPlugin);
+Vue.use(Vuelidate);
+Vue.use(VueMasonryPlugin);
 
 /**
  * Initialize Vue
