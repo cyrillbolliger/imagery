@@ -8,13 +8,6 @@
                 >{{$t('logo.navEdit')}}
                 </button>
             </li>
-            <li class="nav-item">
-                <button
-                    :class="tabStatsClasses"
-                    @click="currentTab = 'details'"
-                >{{$t('logo.navDetails')}}
-                </button>
-            </li>
         </ul>
         <MLogoForm
             :logo="logo"
@@ -22,19 +15,12 @@
             @saved="$emit('close', $event)"
             class="mt-3"
             v-show="'edit' === currentTab"
-        ></MLogoForm>
-        <!--        <MLogoDetails-->
-        <!--            :logo="logo"-->
-        <!--            class="mt-3"-->
-        <!--            v-show="'details' === currentTab"-->
-        <!--        ></MLogoDetails>-->
+        />
     </div>
 </template>
 
 <script>
     import MLogoForm from "../molecules/MLogoForm";
-    // import MLogoDetails from "../molecules/MLogoDetails";
-
 
     export default {
         name: "OLogo",
@@ -50,9 +36,6 @@
             tabEditClasses() {
                 return this.tabClasses('edit');
             },
-            tabStatsClasses() {
-                return this.tabClasses('stats');
-            }
         },
 
         props: {
