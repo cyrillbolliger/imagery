@@ -8,8 +8,8 @@ use Illuminate\Support\Carbon;
 
 /**
  * Class Logo
- * @package App
  *
+ * @package App
  * @property int $id
  * @property int $added_by
  * @property User|null $addedBy
@@ -21,6 +21,25 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property-read int|null $groups_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Image[] $images
+ * @property-read int|null $images_count
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Logo newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Logo newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\App\Logo onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Logo query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Logo whereAddedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Logo whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Logo whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Logo whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Logo whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Logo whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Logo whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Logo withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Logo withoutTrashed()
+ * @mixin \Eloquent
  */
 class Logo extends Model implements FileModel
 {

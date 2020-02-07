@@ -10,8 +10,8 @@ use Kalnoy\Nestedset\NodeTrait;
 
 /**
  * Class Group
- * @package App
  *
+ * @package App
  * @property int $id
  * @property int $added_by
  * @property User|null $addedBy
@@ -19,8 +19,35 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- *
- * @see https://github.com/lazychaser/laravel-nestedset for tree stuff
+ * @property int $_lft
+ * @property int $_rgt
+ * @property int|null $parent_id
+ * @property-read \Kalnoy\Nestedset\Collection|\App\Group[] $children
+ * @property-read int|null $children_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Logo[] $logos
+ * @property-read int|null $logos_count
+ * @property-read \App\Group|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\User[] $users
+ * @property-read int|null $users_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Group d()
+ * @method static bool|null forceDelete()
+ * @method static \Kalnoy\Nestedset\QueryBuilder|\App\Group newModelQuery()
+ * @method static \Kalnoy\Nestedset\QueryBuilder|\App\Group newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\App\Group onlyTrashed()
+ * @method static \Kalnoy\Nestedset\QueryBuilder|\App\Group query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Group whereAddedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Group whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Group whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Group whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Group whereLft($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Group whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Group whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Group whereRgt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Group whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Group withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Group withoutTrashed()
+ * @mixin \Eloquent
  */
 class Group extends Model
 {
@@ -74,7 +101,7 @@ class Group extends Model
      */
     public function usersBelow()
     {
-        return $this->recursiveProperty($this, collect(), 'users');
+        return $this->getBelow('users');
     }
 
     /**
@@ -84,30 +111,46 @@ class Group extends Model
      */
     public function logosBelow()
     {
-        return $this->recursiveProperty($this, collect(), 'logos');
+        return $this->getBelow('logos');
     }
 
     /**
-     * The property of this group and any descendant groups
+     * Return a flat list of the given property of this instance and all its
+     * descendants
      *
-     * @param  Group  $group
+     * @param  string  $propertyName
+     *
+     * @return Collection
+     */
+    private function getBelow(string $propertyName)
+    {
+
+        $groups     = Group::descendantsAndSelf($this->id);
+        $collection = collect();
+
+        foreach ($groups as $group) {
+            $collection = $group->getPropertyFlat($collection, $propertyName);
+        }
+
+        return $collection;
+    }
+
+    /**
+     * The property of this group in a flat collection
+     *
      * @param  Collection  $properties
      * @param  string  $propertyName
      *
      * @return Collection
      */
-    private function recursiveProperty(Group $group, Collection $properties, string $propertyName)
+    private function getPropertyFlat(Collection $properties, string $propertyName)
     {
-        if (is_iterable($group->$propertyName)) {
-            foreach ($group->$propertyName as $property) {
+        if (is_iterable($this->$propertyName)) {
+            foreach ($this->$propertyName as $property) {
                 $properties->add($property);
             }
         } else {
-            $properties->add($group->$propertyName);
-        }
-
-        foreach ($group->children as $child) {
-            $this->recursiveProperty($child, $properties, $propertyName);
+            $properties->add($this->$propertyName);
         }
 
         return $properties;

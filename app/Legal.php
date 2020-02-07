@@ -8,8 +8,8 @@ use Illuminate\Support\Carbon;
 
 /**
  * Class Legal
- * @package App
  *
+ * @package App
  * @property int $id
  * @property int $image_id
  * @property Image $image
@@ -22,6 +22,26 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Legal newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Legal newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\App\Legal onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Legal query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Legal whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Legal whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Legal whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Legal whereImageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Legal whereLicence($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Legal whereOriginator($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Legal whereOriginatorType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Legal whereRightOfPersonality($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Legal whereShared($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Legal whereStockUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Legal whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Legal withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Legal withoutTrashed()
+ * @mixin \Eloquent
  */
 class Legal extends Model
 {

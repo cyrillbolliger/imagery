@@ -12,8 +12,8 @@ use Imagick;
 
 /**
  * Class Image
- * @package App
  *
+ * @package App
  * @property int $id
  * @property int $user_id
  * @property User|null $user
@@ -33,6 +33,31 @@ use Imagick;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image final()
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\App\Image onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image raw()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image shareable()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image whereBackground($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image whereFilename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image whereHeight($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image whereKeywords($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image whereLogoId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image whereOriginalId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image whereWidth($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Image withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Image withoutTrashed()
+ * @mixin \Eloquent
  */
 class Image extends Model implements FileModel
 {
