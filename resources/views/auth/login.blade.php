@@ -84,16 +84,4 @@
             </div>
         </div>
     </div>
-
-    <!-- todo: remove this after february 20, 2020 -->
-    <script>
-        (function () {
-            var email = document.getElementById('email');
-            email.addEventListener('blur', function () {
-                if ('admin' === email.value) {
-                    email.value = 'superadmin@user.login';
-                }
-            });
-        })();
-    </script>
 @endsection
