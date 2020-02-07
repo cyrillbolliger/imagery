@@ -101,7 +101,8 @@
         "last_login": "crwdns445:0crwdne445:0",
         "login_count": "crwdns447:0crwdne447:0",
         "image_count": "crwdns449:0crwdne449:0",
-        "stats_loading_failed": "crwdns451:0crwdne451:0"
+        "stats_loading_failed": "crwdns451:0crwdne451:0",
+        "never_logged_in": "crwdns455:0crwdne455:0"
     },
     "role": {
         "use": "crwdns137:0crwdne137:0",
