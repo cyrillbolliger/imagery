@@ -77,18 +77,6 @@ class LogoController extends Controller
     }
 
     /**
-     * Display a listing of the logos associated with the given group.
-     *
-     * @param  Group  $group
-     *
-     * @return Logo[]
-     */
-    public function listByGroup(Group $group)
-    {
-        return $group->logos;
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  Request  $request

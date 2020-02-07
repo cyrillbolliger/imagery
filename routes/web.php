@@ -86,11 +86,11 @@ Route::prefix('api/1')->middleware('auth')->group(function () {
     Route::post('/groups', 'GroupController@store')
          ->middleware('can:create,App\Group');
 
-    Route::get('/groups/{group}/logos', 'LogoController@listByGroup')
+    Route::get('/groups/{group}/logos', 'GroupController@logos')
          ->where('group', '\d+')
          ->middleware('can:view,group');
 
-    Route::get('/groups/{group}/users', 'UserController@listByGroup')
+    Route::get('/groups/{group}/users', 'GroupController@users')
          ->where('group', '\d+')
          ->middleware('can:view,group');
 

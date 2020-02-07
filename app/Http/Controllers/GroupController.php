@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Group;
+use App\Logo;
 use App\Rules\CanManageGroupRule;
 use App\Rules\ImmutableRule;
 use App\User;
@@ -28,6 +29,35 @@ class GroupController extends Controller
         }
 
         return $user->manageableGroups();
+    }
+
+    /**
+     * Display a listing of the users associated with the given group.
+     *
+     * @param  Group  $group
+     *
+     * @return Collection
+     */
+    public function users(Group $group)
+    {
+        $users = collect();
+        foreach ($group->roles as $role) {
+            $users->push($role->user);
+        }
+
+        return $users->unique('id');
+    }
+
+    /**
+     * Display a listing of the logos associated with the given group.
+     *
+     * @param  Group  $group
+     *
+     * @return Logo[]
+     */
+    public function logos(Group $group)
+    {
+        return $group->logos;
     }
 
     /**

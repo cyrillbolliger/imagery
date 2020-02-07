@@ -64,7 +64,7 @@ class UserController extends Controller
         ]);
         $managed->fill($data);
 
-        if (!isset($data['password'])) {
+        if ( ! isset($data['password'])) {
             $data['password'] = Str::random(32);
         }
 
@@ -87,18 +87,6 @@ class UserController extends Controller
     public function show(User $managed)
     {
         return $managed;
-    }
-
-    /**
-     * Display a listing of the users associated with the given group.
-     *
-     * @param  Group  $group
-     *
-     * @return User[]
-     */
-    public function listByGroup(Group $group)
-    {
-        return $group->users;
     }
 
     /**

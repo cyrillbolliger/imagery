@@ -29,6 +29,7 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property-read \App\Group|null $parent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\User[] $users
  * @property-read int|null $users_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Role[] $roles
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Group d()
  * @method static bool|null forceDelete()
  * @method static \Kalnoy\Nestedset\QueryBuilder|\App\Group newModelQuery()
@@ -103,6 +104,16 @@ class Group extends Model
     public function usersBelow()
     {
         return $this->getBelow('users');
+    }
+
+    /**
+     * The roles associated with this group
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function roles()
+    {
+        return $this->hasMany(Role::class);
     }
 
     /**

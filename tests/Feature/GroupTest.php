@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Group;
+use App\Logo;
 use App\Role;
 use App\User;
 use RootSeeder;
@@ -437,5 +438,61 @@ class GroupTest extends TestCase
         $this->assertDatabaseMissing('groups', [
             'name' => $group->name
         ]);
+    }
+
+    public function testGetGroupsUsers__admin_200()
+    {
+        $root1 = factory(Group::class)->create();
+        $root2 = factory(Group::class)->create();
+        $child = factory(Group::class)->create(['parent_id' => $root1->id]);
+
+        $user0 = factory(User::class)->create();
+        $user1 = factory(User::class)->create();
+        $user2 = factory(User::class)->create();
+        $user3 = factory(User::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => true]);
+
+        $user0->roles()->save(factory(Role::class)->make(['admin' => false, 'group_id' => $root1->id]));
+        $user1->roles()->save(factory(Role::class)->make(['admin' => false, 'group_id' => $root1->id]));
+        $user2->roles()->save(factory(Role::class)->make(['admin' => false, 'group_id' => $root2->id]));
+        $user3->roles()->save(factory(Role::class)->make(['admin' => false, 'group_id' => $child->id]));
+
+        $response = $this->actingAs($manager)
+                         ->getJson("/api/1/groups/{$root1->id}/users/");
+
+        $response->assertStatus(200);
+
+        $response->assertJsonFragment($user0->toArray());
+        $response->assertJsonFragment($user1->toArray());
+        $response->assertJsonMissing(['id' => $user2->id]);
+        $response->assertJsonMissing(['id' => $user3->id]);
+    }
+
+    public function testGetGroupsLogos__200()
+    {
+        $group = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $group->id
+            ])
+        );
+
+        $logo1 = factory(Logo::class)->create();
+        $logo2 = factory(Logo::class)->create();
+        $logo3 = factory(Logo::class)->create();
+        $group->logos()->attach($logo1);
+        $group->logos()->attach($logo2);
+
+        $response = $this->actingAs($manager)
+                         ->getJson("/api/1/groups/{$group->id}/logos");
+
+        $response->assertStatus(200);
+        $response->assertJsonFragment(['id' => $logo1->id]);
+        $response->assertJsonFragment(['id' => $logo2->id]);
+        $response->assertJsonMissing(['id' => $logo3->id]);
     }
 }
