@@ -51,7 +51,7 @@
                 return this.tabClasses('edit');
             },
             tabStatsClasses() {
-                return this.tabClasses('stats');
+                return this.tabClasses('details');
             }
         },
 

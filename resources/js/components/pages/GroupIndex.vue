@@ -9,7 +9,7 @@
             @details="navigateToGroupsEdit($event)"
             sortBy="tree_name"
             @newEntry="navigateToGroupsCreate()"
-        ></ODataTable>
+        />
         <ODialog
             :title="dialogTitle"
             @close="navigateToList"
@@ -19,7 +19,7 @@
                 <OGroup
                     :group="dialogGroup"
                     @close="navigateToList"
-                ></OGroup>
+                />
             </template>
         </ODialog>
     </div>
