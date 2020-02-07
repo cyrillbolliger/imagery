@@ -22,17 +22,23 @@
             v-show="'edit' === currentTab"
             @saved="$emit('close', $event)"
             @removed="$emit('close', $event)"
-        ></MUserForm>
+        />
+        <MUserStats
+            :user="user"
+            class="mt-3"
+            v-show="'stats' === currentTab"
+        />
     </div>
 </template>
 
 <script>
     import MUserForm from "../molecules/MUserForm";
+    import MUserStats from "../molecules/MUserStats";
 
 
     export default {
         name: "OUser",
-        components: {MUserForm},
+        components: {MUserStats, MUserForm},
 
         data() {
             return {
