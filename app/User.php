@@ -227,7 +227,7 @@ class User extends Authenticatable
 
         $users->push(Auth::user());
 
-        return $users->flatten();
+        return $users->flatten()->unique('id');
     }
 
     /**
@@ -346,7 +346,7 @@ class User extends Authenticatable
             });
         }
 
-        return $groups;
+        return $groups->unique('id');
     }
 
     /**
@@ -371,7 +371,7 @@ class User extends Authenticatable
             }
         }
 
-        return $logos;
+        return $logos->unique('id');
     }
 
     /**
