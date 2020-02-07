@@ -10,16 +10,16 @@
             </div>
         </div>
 
-        <div v-else>
-            <div class="d-flex justify-content-between">
+        <div class="m-user-stats__table" v-else>
+            <div class="m-user-stats__row d-flex justify-content-between">
                 <div>{{$t('user.last_login')}}</div>
                 <div>{{last_login}}</div>
             </div>
-            <div class="d-flex justify-content-between">
+            <div class="m-user-stats__row d-flex justify-content-between">
                 <div>{{$t('user.login_count')}}</div>
                 <div>{{stats.login_count}}</div>
             </div>
-            <div class="d-flex justify-content-between">
+            <div class="m-user-stats__row d-flex justify-content-between">
                 <div>{{$t('user.image_count')}}</div>
                 <div>{{stats.image_count}}</div>
             </div>
@@ -91,6 +91,14 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    .m-user-stats {
+        &__row {
+            padding: 0.5em 0;
 
+            &:not(:last-of-type) {
+                border-bottom: solid 1px $gray-300;
+            }
+        }
+    }
 </style>
