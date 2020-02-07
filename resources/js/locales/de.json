@@ -101,7 +101,8 @@
         "last_login": "Last login",
         "login_count": "Total logins",
         "image_count": "Images created",
-        "stats_loading_failed": "Failed to load statistics. Try again."
+        "stats_loading_failed": "Failed to load statistics. Try again.",
+        "never_logged_in": "never logged in"
     },
     "role": {
         "use": "Logo benutzen",
