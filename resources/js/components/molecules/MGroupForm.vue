@@ -5,23 +5,23 @@
             :required="true"
             :validation="validations.name"
             v-model.trim="currentGroup.name"
-        ></AInput>
+        />
 
         <ASelect
-            v-if="!isRootGroup"
+            v-if="!isRootGroup && canEditGroup(currentGroup.parent_id)"
             :label="$t('group.parent')"
             :options="groupsSelect"
             :required="true"
             :validation="validations.parent_id"
             v-model.number="currentGroup.parent_id"
-        ></ASelect>
+        />
 
         <AButtonWait
             :button-text="$t('group.save')"
             :working="saving"
             :working-text="$t('group.saving')"
             @buttonClicked="save"
-        ></AButtonWait>
+        />
 
         <AButtonWait
             :button-text="$t('group.remove')"
@@ -30,7 +30,7 @@
             @buttonClicked="remove"
             button-class="btn btn-sm btn-link text-danger pl-0 mt-2"
             v-if="currentGroup.id"
-        ></AButtonWait>
+        />
 
     </form>
 </template>
@@ -169,6 +169,10 @@
 
                 return this.$store.dispatch('groups/update', this.currentGroup);
             },
+
+            canEditGroup(id) {
+                return Boolean(this.getGroupById(id));
+            }
         },
     }
 </script>

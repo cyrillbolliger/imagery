@@ -22,12 +22,12 @@
             @saved="$emit('close', $event)"
             class="mt-3"
             v-show="'edit' === currentTab"
-        ></MGroupForm>
+        />
         <MGroupDetails
             :group="group"
             class="mt-3"
             v-show="'details' === currentTab"
-        ></MGroupDetails>
+        />
     </div>
 </template>
 
