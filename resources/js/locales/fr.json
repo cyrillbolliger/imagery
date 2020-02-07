@@ -96,7 +96,13 @@
         "password_insecure": "This password is insecure. Make it longer or ensure it contains numbers and special characters (and lower and uppercase characters of course).",
         "notification": "Notification",
         "welcome_mail": "Welcome Email",
-        "send_notification": "Send this user an email to inform him about his account. The email contains a link to set the password."
+        "send_notification": "Send this user an email to inform him about his account. The email contains a link to set the password.",
+        "stats": "Statistics",
+        "last_login": "Last login",
+        "login_count": "Total logins",
+        "image_count": "Images created",
+        "stats_loading_failed": "Failed to load statistics. Try again.",
+        "never_logged_in": "never logged in"
     },
     "role": {
         "use": "Use Logos",
@@ -127,6 +133,7 @@
         "removed": "Group deleted.",
         "remove_confirmation": "Do you really want to delete {group}?",
         "removing_failed": "Failed to delete group. Try again.",
+        "remove_children_first": "Can't delete group, that has subgroups. Delete subgroups first.",
         "no_logos": "No logos are associated with this group.",
         "no_users": "No users are directly associated with this group. But the admins of the parent groups inherit this group.",
         "logos_loading_failed": "Failed to get logos. Try again.",
