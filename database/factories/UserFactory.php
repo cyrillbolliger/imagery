@@ -33,7 +33,7 @@ $factory->define(User::class, function (Faker $faker) {
         'lang'              => $faker->randomElement([
             User::LANG_EN,
             User::LANG_DE,
-//            User::LANG_FR
+            User::LANG_FR
         ]),
     ];
 });

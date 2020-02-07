@@ -41,7 +41,9 @@
             getTree() {
                 // inspired by https://stackoverflow.com/a/18018037
                 const list = this.sortGroups(this.addRolesToGroups(this.groups));
-                let map = {}, node, root, i;
+                let map = {};
+                let roots = [];
+                let node, i;
 
                 for (i = 0; i < list.length; i++) {
                     map[list[i].id] = i; // initialize the map
@@ -50,14 +52,14 @@
 
                 for (i = 0; i < list.length; i++) {
                     node = list[i];
-                    if (node.parent_id !== null) {
+                    if (node.parent_id in map) {
                         list[map[node.parent_id]].children.push(node);
                     } else {
-                        root = node;
+                        roots.push(node);
                     }
                 }
 
-                return [root];
+                return roots;
             },
 
             getRoleByGroupId(groupId) {
