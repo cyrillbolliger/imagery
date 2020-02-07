@@ -47,6 +47,7 @@ use Kalnoy\Nestedset\NodeTrait;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Group whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Group withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Group withoutTrashed()
+ * @method static descendantsAndSelf(int $id)
  * @mixin \Eloquent
  */
 class Group extends Model
@@ -124,7 +125,7 @@ class Group extends Model
      */
     private function getBelow(string $propertyName)
     {
-
+        /** @var Group[] $groups */
         $groups     = Group::descendantsAndSelf($this->id);
         $collection = collect();
 

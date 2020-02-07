@@ -338,14 +338,15 @@ class User extends Authenticatable
      */
     public function manageableGroups()
     {
-        $groups = [];
+        $groups = collect();
         foreach ($this->adminRoles as $role) {
-            $groups[] = Group::with('descendants')
-                             ->where('id', $role->group_id)
-                             ->first();
+            $roleGroups = Group::descendantsAndSelf($role->group_id);
+            $roleGroups->each(function ($item) use ($groups) {
+                $groups->add($item);
+            });
         }
 
-        return collect($groups);
+        return $groups;
     }
 
     /**
