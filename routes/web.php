@@ -21,6 +21,10 @@ Route::prefix('api/1')->middleware('auth')->group(function () {
          ->where('user', '\d+')
          ->middleware('can:manage,user');
 
+    Route::get('/users/{user}/stats', 'UserController@stats')
+         ->where('user', '\d+')
+         ->middleware('can:manage,user');
+
     Route::get('/users', 'UserController@index')
          ->middleware('can:list,App\User');
 

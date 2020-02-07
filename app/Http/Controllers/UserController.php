@@ -90,6 +90,22 @@ class UserController extends Controller
     }
 
     /**
+     * Display the statistics of the given user.
+     *
+     * @param  User  $managed
+     *
+     * @return array
+     */
+    public function stats(User $managed)
+    {
+        return [
+            'login_count' => $managed->login_count,
+            'last_login'  => $managed->last_login,
+            'image_count' => $managed->image_count,
+        ];
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  Request  $request

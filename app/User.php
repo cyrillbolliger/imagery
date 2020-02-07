@@ -44,6 +44,7 @@ use \Spatie\WelcomeNotification\ReceivesWelcomeNotification;
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Role[] $roles
  * @property-read int|null $roles_count
+ * @property-read int $image_count
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User newQuery()
@@ -387,5 +388,15 @@ class User extends Authenticatable
         $this->notify(new AccountCreatedNotification($validUntil));
 
         App::setLocale($lang);
+    }
+
+    /**
+     * The number of images created by this user
+     *
+     * @return int
+     */
+    public function getImageCountAttribute()
+    {
+        return Image::final()->where('user_id', $this->id)->count();
     }
 }
