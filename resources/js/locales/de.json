@@ -96,7 +96,12 @@
         "password_insecure": "Dieses Passwort ist unsicher. Mache es länger oder füge Zahlen und Sonderzeichen hinzu (und natürlich Klein- und Grossbuchstaben).",
         "notification": "Benachrichtigung",
         "welcome_mail": "Willkommens-E-Mail",
-        "send_notification": "Sende diesem Benutzer eine E-Mail, um ihn über seinen Zugang zu informieren. Die E-Mail enthält einen Link zum Festlegen des Passworts."
+        "send_notification": "Sende diesem Benutzer eine E-Mail, um ihn über seinen Zugang zu informieren. Die E-Mail enthält einen Link zum Festlegen des Passworts.",
+        "stats": "Statistics",
+        "last_login": "Last login",
+        "login_count": "Total logins",
+        "image_count": "Images created",
+        "stats_loading_failed": "Failed to load statistics. Try again."
     },
     "role": {
         "use": "Logo benutzen",
@@ -127,6 +132,7 @@
         "removed": "Gruppe gelöscht.",
         "remove_confirmation": "Möchtest du {group} wirklich löschen?",
         "removing_failed": "Gruppe konnte nicht gelöscht werden. Versuche es erneut.",
+        "remove_children_first": "Can't delete group, that has subgroups. Delete subgroups first.",
         "no_logos": "Mit dieser Gruppe sind keine Logos verknüpft.",
         "no_users": "Keine Benutzer sind direkt mit dieser Gruppe verknüpft. Aber die Admins übergeordneter Gruppen erben diese Gruppe.",
         "logos_loading_failed": "Logos konnten nicht geladen werden. Versuche es erneut.",
