@@ -5,7 +5,6 @@
 use App\Image;
 use App\User;
 use Faker\Generator as Faker;
-use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 
 $factory->define(Image::class, function (Faker $faker) {
@@ -16,9 +15,11 @@ $factory->define(Image::class, function (Faker $faker) {
 
     Storage::makeDirectory($relDir);
 
-    $absDir = disk_path($relDir);
+    $absDir   = disk_path($relDir);
+    $filename = \Illuminate\Support\Str::random().'.jpg';
 
-    $filename = $faker->image($absDir, $imageWidth, $imageHeight, 'cats', false);
+    copy(__DIR__.DIRECTORY_SEPARATOR.'Image.jpg', $absDir.DIRECTORY_SEPARATOR.$filename);
+
     Storage::setVisibility($relDir.DIRECTORY_SEPARATOR.$filename, 'private');
 
     return [
