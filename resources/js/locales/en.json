@@ -127,6 +127,7 @@
         "removed": "Group deleted.",
         "remove_confirmation": "Do you really want to delete {group}?",
         "removing_failed": "Failed to delete group. Try again.",
+        "remove_children_first": "Can't delete group, that has subgroups. Delete subgroups first.",
         "no_logos": "No logos are associated with this group.",
         "no_users": "No users are directly associated with this group. But the admins of the parent groups inherit this group.",
         "logos_loading_failed": "Failed to get logos. Try again.",

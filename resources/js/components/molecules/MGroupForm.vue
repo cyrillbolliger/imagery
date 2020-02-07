@@ -127,8 +127,12 @@
                         this.snackSuccessDismiss(this.$t('group.removed'))
                     })
                     .catch(error => {
-                        this.snackErrorRetry(error, this.$t('group.removing_failed'))
-                            .then(() => this.remove());
+                        if (422 === error.response.status) {
+                            this.snackErrorDismiss(error, this.$t('group.remove_children_first'))
+                        } else {
+                            this.snackErrorRetry(error, this.$t('group.removing_failed'))
+                                .then(() => this.remove());
+                        }
                     });
             },
 
@@ -136,8 +140,8 @@
                 this.saving = true;
 
                 this.saveGroup()
-                // saving logos must come after saving the group,
-                // else we don't have a group id on creation
+                    // saving logos must come after saving the group,
+                    // else we don't have a group id on creation
                     .finally(() => this.saving = false)
                     .then(() => {
                         this.$emit('saved', true);
