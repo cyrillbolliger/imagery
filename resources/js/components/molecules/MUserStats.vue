@@ -55,7 +55,13 @@
 
         computed: {
             last_login() {
-                return timeAgo.format(new Date(this.stats.last_login));
+                const time = this.stats.last_login;
+
+                if (time) {
+                    return timeAgo.format(new Date(time));
+                } else {
+                    return this.$t('user.never_logged_in');
+                }
             },
         },
 
