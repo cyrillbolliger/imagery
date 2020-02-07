@@ -125,7 +125,7 @@
                     this.snackErrorRetry(
                         `No user with id ${id} in store.`,
                         this.$t('user.not_found')
-                    ).then(() => this.resourceLoad('users'))
+                    ).then(() => this.resourceLoad('users', true))
                         .then(() => this.dialogShowEdit(id));
                 }
             },

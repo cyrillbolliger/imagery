@@ -123,7 +123,7 @@
                     this.snackErrorRetry(
                         `No group with id ${id} in store.`,
                         this.$t('group.not_found')
-                    ).then(() => this.resourceLoad('groups'))
+                    ).then(() => this.resourceLoad('groups', true))
                         .then(() => this.dialogShowEdit(id));
                 }
             },

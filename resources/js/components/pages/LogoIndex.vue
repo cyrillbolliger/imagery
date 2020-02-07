@@ -123,7 +123,7 @@
                     this.snackErrorRetry(
                         `No logo with id ${id} in store.`,
                         this.$t('logo.not_found')
-                    ).then(() => this.resourceLoad('logos'))
+                    ).then(() => this.resourceLoad('logos', true))
                         .then(() => this.dialogShowEdit(id));
                 }
             },
