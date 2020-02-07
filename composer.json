@@ -11,6 +11,7 @@
         "php": "^7.3",
         "ext-imagick": "*",
         "fideloper/proxy": "^4.0",
+        "kalnoy/nestedset": "^5.0",
         "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
         "ralouphie/mimey": "^2.1",

@@ -15,7 +15,7 @@ class CreateGroupsTable extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->nestedSet();
             $table->unsignedBigInteger('added_by');
             $table->string('name');
             $table->timestamps();
@@ -26,11 +26,6 @@ class CreateGroupsTable extends Migration
                   ->on('users')
                   ->onUpdate('cascade')
                   ->onDelete('no action');
-            $table->foreign('parent_id')
-                  ->references('id')
-                  ->on('groups')
-                  ->onDelete('cascade')
-                  ->onUpdate('cascade');
         });
     }
 
