@@ -96,7 +96,12 @@
         "password_insecure": "crwdns135:0crwdne135:0",
         "notification": "crwdns355:0crwdne355:0",
         "welcome_mail": "crwdns357:0crwdne357:0",
-        "send_notification": "crwdns359:0crwdne359:0"
+        "send_notification": "crwdns359:0crwdne359:0",
+        "stats": "crwdns443:0crwdne443:0",
+        "last_login": "crwdns445:0crwdne445:0",
+        "login_count": "crwdns447:0crwdne447:0",
+        "image_count": "crwdns449:0crwdne449:0",
+        "stats_loading_failed": "crwdns451:0crwdne451:0"
     },
     "role": {
         "use": "crwdns137:0crwdne137:0",
@@ -127,6 +132,7 @@
         "removed": "crwdns175:0crwdne175:0",
         "remove_confirmation": "crwdns177:0{group}crwdne177:0",
         "removing_failed": "crwdns179:0crwdne179:0",
+        "remove_children_first": "crwdns453:0crwdne453:0",
         "no_logos": "crwdns181:0crwdne181:0",
         "no_users": "crwdns183:0crwdne183:0",
         "logos_loading_failed": "crwdns185:0crwdne185:0",
