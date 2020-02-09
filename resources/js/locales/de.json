@@ -143,6 +143,10 @@
         "create": {
             "title": "Bild erstellen",
             "logo": "Logo",
+            "logoDefault": "Select this logo by default",
+            "logoDefaultSelected": "default",
+            "logoRemove": "Remove logo",
+            "logoDefaultSaveFailed": "Failed to save default logo. Try again.",
             "fontSize": "Schriftgrösse",
             "tooMuchText": "Deine Balken enthalten zu viel Text. Kürze ihn!",
             "sublineAdd": "Subline hinzufügen",
