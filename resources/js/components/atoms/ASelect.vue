@@ -17,7 +17,7 @@
                 :class="validClass"
                 :disabled="disabled"
                 @input="onInput"
-                class="a-select__select form-control"></ModelSelect>
+                class="a-select__select form-control"/>
         </template>
         <template #helptext v-if="helptext.length || (validation && $v.value.$error)">
             {{helptext}}

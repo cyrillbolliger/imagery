@@ -143,6 +143,7 @@
         "create": {
             "title": "Create Image",
             "logo": "Logo",
+            "removeLogo": "Remove logo",
             "fontSize": "Font size",
             "tooMuchText": "Your bars contain too much text. Shorten it!",
             "sublineAdd": "Add Subline",

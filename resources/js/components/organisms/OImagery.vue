@@ -39,7 +39,8 @@
                     class="o-imagery__canvas"
                     id="canvas"
                     ref="canvas"
-                >You definitely need a newer browser!</canvas>
+                >You definitely need a newer browser!
+                </canvas>
             </div>
             <small v-if="hasImageBackground">{{$t('images.create.dragHelp')}}</small>
             <small v-else>{{$t('images.create.dragHelpBar')}}</small>
@@ -261,11 +262,14 @@
                 if (!data) {
                     this.logoBlock = null;
                     this.logoId = null;
-                    return;
+                } else {
+                    this.logoBlock = data.block;
+                    this.logoId = data.id;
                 }
 
-                this.logoBlock = data.block;
-                this.logoId = data.id;
+                if (!this.logoLayer) {
+                    return;
+                }
 
                 this.logoLayer.block = this.logoBlock;
                 this.draw();

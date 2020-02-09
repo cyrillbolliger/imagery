@@ -9,14 +9,23 @@
             </div>
         </label>
 
-        <ModelSelect
-            :options="logoChoices"
-            :value="logoIdSelected"
-            :isDisabled="loadingLogos"
-            @input="setLogo($event)"
-            class="form-control"
-            id="logo"
-            required="false"/>
+        <div class="d-flex">
+            <ModelSelect
+                :isDisabled="loadingLogos"
+                :options="logoChoices"
+                :value="logoIdSelected"
+                @input="setLogo($event)"
+                class="form-control flex-grow-1"
+                id="logo"
+                required="false"/>
+            <button
+                :title="$t('images.create.removeLogo')"
+                @click="setLogo(null)"
+                class="btn btn-outline-secondary ml-2"
+                v-if="logoIdSelected"
+            >&times;
+            </button>
+        </div>
     </div>
 </template>
 
@@ -138,6 +147,7 @@
                 if (!logo) {
                     this.logoImage = null;
                     this.logoObjSelected = null;
+                    this.draw();
                     return;
                 }
 
