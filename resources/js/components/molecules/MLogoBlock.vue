@@ -12,12 +12,12 @@
             <button
                 @click="setDefaultLogo"
                 class="btn btn-link btn-sm pt-0 pb-0"
-                v-show="logosReady && !logoDefaultSelected && !logoDefaultSaving"
+                v-show="logosReady && !logoDefaultSelected && logoIdSelected && !logoDefaultSaving"
             >{{$t('images.create.logoDefault')}}
             </button>
             <small
                 class="text-muted pl-2"
-                v-if="logosReady && logoDefaultSelected && !logoDefaultSaving"
+                v-if="logosReady && logoDefaultSelected && logoIdSelected && !logoDefaultSaving"
             >{{$t('images.create.logoDefaultSelected')}}</small>
         </label>
 
@@ -107,7 +107,7 @@
             },
 
             logoDefaultSelected() {
-                return this.logoIdSelected && this.logoIdSelected === this.logoIdDefault;
+                return this.logoIdSelected === this.logoIdDefault;
             }
         },
 
