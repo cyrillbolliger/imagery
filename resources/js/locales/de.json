@@ -143,7 +143,7 @@
         "create": {
             "title": "Bild erstellen",
             "logo": "Logo",
-            "logoDefault": "Select this logo by default",
+            "logoDefault": "Make this my default logo",
             "logoDefaultSelected": "default",
             "logoRemove": "Remove logo",
             "logoDefaultSaveFailed": "Failed to save default logo. Try again.",
