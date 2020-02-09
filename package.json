@@ -34,6 +34,7 @@
         "vuex": "^3.1.1"
     },
     "dependencies": {
+        "blueimp-load-image": "^2.26.0",
         "fontfaceobserver": "^2.1.0",
         "javascript-time-ago": "^2.0.4",
         "vue-masonry": "^0.11.8",

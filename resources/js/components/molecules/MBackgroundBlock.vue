@@ -71,6 +71,7 @@
     import BackgroundGradient from "../../service/canvas/elements/BackgroundGradient";
     import BackgroundTransparent from "../../service/canvas/elements/BackgroundTransparent";
     import BackgroundImage from "../../service/canvas/elements/BackgroundImage";
+    import loadImage from "blueimp-load-image";
 
     const mimeTypesAllowed = [
         'image/jpeg',
@@ -200,22 +201,27 @@
                 }
 
                 const blob = event.target.files[0];
-                const image = new Image();
                 const reader = new FileReader();
 
                 reader.onload = (e) => {
                     if (this.mimeValidate(blob.type)) {
                         image.src = e.target.result;
 
-                        image.onload = () => {
-                            this.image = image;
-                            this.$emit('typeChanged', Types.image);
-                            this.$emit('imageChanged', image);
-                        }
+                        loadImage(
+                            blob,
+                            this.onImageLoaded,
+                            {orientation: true, canvas: true}
+                        );
                     }
                 };
 
                 reader.readAsDataURL(blob);
+            },
+
+            onImageLoaded(image) {
+                this.image = image;
+                this.$emit('typeChanged', Types.image);
+                this.$emit('imageChanged', image);
             },
 
             mimeValidate(type) {
