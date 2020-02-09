@@ -143,6 +143,10 @@
         "create": {
             "title": "crwdns189:0crwdne189:0",
             "logo": "crwdns191:0crwdne191:0",
+            "logoDefault": "crwdns457:0crwdne457:0",
+            "logoDefaultSelected": "crwdns459:0crwdne459:0",
+            "logoRemove": "crwdns461:0crwdne461:0",
+            "logoDefaultSaveFailed": "crwdns463:0crwdne463:0",
             "fontSize": "crwdns193:0crwdne193:0",
             "tooMuchText": "crwdns195:0crwdne195:0",
             "sublineAdd": "crwdns197:0crwdne197:0",
