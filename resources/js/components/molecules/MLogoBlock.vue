@@ -3,10 +3,22 @@
         <label for="logo" class="mb-0 d-flex align-items-center">
             {{$t('images.create.logo')}}
             <div
-                v-if="loadingLogos || loadingLogoImage"
+                v-if="!logosReady || logoDefaultSaving"
                 class="spinner-border spinner-border-sm text-primary ml-2"
                 role="status">
             </div>
+            <!-- don't use v-if because the browser then sets the focus on the
+            next element if this is hidden -->
+            <button
+                @click="setDefaultLogo"
+                class="btn btn-link btn-sm pt-0 pb-0"
+                v-show="logosReady && !logoDefaultSelected && !logoDefaultSaving"
+            >{{$t('images.create.logoDefault')}}
+            </button>
+            <small
+                class="text-muted pl-2"
+                v-if="logosReady && logoDefaultSelected && !logoDefaultSaving"
+            >{{$t('images.create.logoDefaultSelected')}}</small>
         </label>
 
         <div class="d-flex">
@@ -17,9 +29,10 @@
                 @input="setLogo($event)"
                 class="form-control flex-grow-1"
                 id="logo"
-                required="false"/>
+                required="false"
+            />
             <button
-                :title="$t('images.create.removeLogo')"
+                :title="$t('images.create.logoRemove')"
                 @click="setLogo(null)"
                 class="btn btn-outline-secondary ml-2"
                 v-if="logoIdSelected"
@@ -39,6 +52,7 @@
     import Bar from "../../service/canvas/elements/Bar";
     import {LogoBlock} from "../../service/canvas/blocks/LogoBlock";
     import {Alignments, BarSchemes, BarTypes, LogoSublineRatios, LogoTypes} from "../../service/canvas/Constants";
+    import Api from "../../service/Api";
 
     export default {
         name: "MLogoBlock",
@@ -55,6 +69,7 @@
                 logoImage: null,
                 logoChoices: [],
                 loadingLogoImage: false,
+                logoDefaultSaving: false,
             }
         },
 
@@ -78,23 +93,28 @@
                 getLogoById: 'logos/getById',
                 loadingLogos: 'logos/loading',
             }),
+
+            logoIdDefault() {
+                return this.$store.getters['user/object'].default_logo;
+            },
+
             color() {
                 return 'white' === this.colorSchema ? 'white' : 'green';
+            },
+
+            logosReady() {
+                return !(this.loadingLogos || this.loadingLogoImage);
+            },
+
+            logoDefaultSelected() {
+                return this.logoIdSelected && this.logoIdSelected === this.logoIdDefault;
             }
         },
 
         created() {
             this.resourceLoad('logos')
-                .then(() => this.populateLogosSelect());
-        },
-
-        mounted() {
-            this.$nextTick(() => {
-                // we don't know the user before $nextTick
-                const logo = this.$store.getters['user/object'].default_logo;
-
-                this.setLogo(logo);
-            });
+                .then(() => this.populateLogosSelect())
+                .then(() => this.setLogo(this.logoIdDefault));
         },
 
         methods: {
@@ -170,6 +190,21 @@
                     'id',
                     'name'
                 );
+            },
+
+            setDefaultLogo() {
+                this.logoDefaultSaving = true;
+
+                const userId = this.$store.getters['user/id'];
+                const payload = {default_logo: this.logoIdSelected};
+
+                Api().put(`users/${userId}`, payload)
+                    .then(resp => this.$store.dispatch('user/set', resp.data))
+                    .then(() => this.logoDefaultSaving = false)
+                    .catch(reason => {
+                        this.snackErrorRetry(reason, this.$t('images.create.logoDefaultSaveFailed'))
+                            .then(() => this.setDefaultLogo());
+                    });
             },
         },
 
