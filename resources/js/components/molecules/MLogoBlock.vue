@@ -7,18 +7,13 @@
                 class="spinner-border spinner-border-sm text-primary ml-2"
                 role="status">
             </div>
-            <!-- don't use v-if because the browser then sets the focus on the
-            next element if this is hidden -->
-            <button
-                @click="setDefaultLogo"
-                class="btn btn-link btn-sm pt-0 pb-0"
-                v-show="logosReady && !logoDefaultSelected && logoIdSelected && !logoDefaultSaving"
-            >{{$t('images.create.logoDefault')}}
-            </button>
-            <small
-                class="text-muted pl-2"
-                v-if="logosReady && logoDefaultSelected && logoIdSelected && !logoDefaultSaving"
-            >{{$t('images.create.logoDefaultSelected')}}</small>
+            <ADefaultLogo
+                :ready="logosReady"
+                :selectedId="logoIdSelected"
+                @saved="logoDefaultSaving = false"
+                @saveing="logoDefaultSaving = true"
+                v-if="logoIdSelected"
+            />
         </label>
 
         <div class="d-flex">
@@ -52,11 +47,11 @@
     import Bar from "../../service/canvas/elements/Bar";
     import {LogoBlock} from "../../service/canvas/blocks/LogoBlock";
     import {Alignments, BarSchemes, BarTypes, LogoSublineRatios, LogoTypes} from "../../service/canvas/Constants";
-    import Api from "../../service/Api";
+    import ADefaultLogo from "../atoms/ADefaultLogo";
 
     export default {
         name: "MLogoBlock",
-        components: {ModelSelect},
+        components: {ADefaultLogo, ModelSelect},
         mixins: [ResourceLoadMixin, SnackbarMixin, PrepareSelectMixin],
 
         data() {
@@ -105,10 +100,6 @@
             logosReady() {
                 return !(this.loadingLogos || this.loadingLogoImage);
             },
-
-            logoDefaultSelected() {
-                return this.logoIdSelected === this.logoIdDefault;
-            }
         },
 
         created() {
@@ -190,21 +181,6 @@
                     'id',
                     'name'
                 );
-            },
-
-            setDefaultLogo() {
-                this.logoDefaultSaving = true;
-
-                const userId = this.$store.getters['user/id'];
-                const payload = {default_logo: this.logoIdSelected};
-
-                Api().put(`users/${userId}`, payload)
-                    .then(resp => this.$store.dispatch('user/set', resp.data))
-                    .then(() => this.logoDefaultSaving = false)
-                    .catch(reason => {
-                        this.snackErrorRetry(reason, this.$t('images.create.logoDefaultSaveFailed'))
-                            .then(() => this.setDefaultLogo());
-                    });
             },
         },
 
