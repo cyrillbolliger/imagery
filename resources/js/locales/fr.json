@@ -143,6 +143,10 @@
         "create": {
             "title": "Create Image",
             "logo": "Logo",
+            "logoDefault": "Select this logo by default",
+            "logoDefaultSelected": "default",
+            "logoRemove": "Remove logo",
+            "logoDefaultSaveFailed": "Failed to save default logo. Try again.",
             "fontSize": "Font size",
             "tooMuchText": "Your bars contain too much text. Shorten it!",
             "sublineAdd": "Add Subline",
