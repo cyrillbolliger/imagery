@@ -1,0 +1,43 @@
+.ui.selection.dropdown {
+    min-height: calc(1.6em + 0.75rem + 2px);
+    font-size: 1rem;
+    padding: 0.7rem 0.75rem;
+    color: $input-color;
+}
+
+.ui.dropdown .menu {
+    border-color: $input-border-color;
+    border-top: none;
+    top: calc(100% + 0.5rem - 1px);
+}
+
+.ui.selection.dropdown.visible::after {
+    content: "";
+    width: calc(100% + 2px);
+    height: 0.5rem;
+    z-index: 20;
+    position: absolute;
+    bottom: -0.5rem;
+    left: -1px;
+    display: block;
+    background-color: $white;
+    border-bottom: 1px solid $input-border-color;
+    border-left: 1px solid $input-focus-border-color;
+    border-right: 1px solid $input-focus-border-color;
+}
+
+.ui.selection.dropdown,
+.ui.selection.dropdown:hover {
+    border-color: $input-border-color;
+    box-shadow: none;
+}
+
+.ui.selection.active.dropdown,
+.ui.selection.active.dropdown .menu,
+.ui.selection.dropdown:focus,
+.ui.selection.dropdown:focus .menu,
+.ui.selection.active.dropdown:hover,
+.ui.selection.active.dropdown:hover .menu {
+    border-color: $input-focus-border-color;
+    box-shadow: $input-focus-box-shadow;
+}
