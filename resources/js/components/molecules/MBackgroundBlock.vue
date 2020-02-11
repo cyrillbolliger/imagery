@@ -201,21 +201,14 @@
                 }
 
                 const blob = event.target.files[0];
-                const reader = new FileReader();
 
-                reader.onload = (e) => {
-                    if (this.mimeValidate(blob.type)) {
-                        image.src = e.target.result;
-
-                        loadImage(
-                            blob,
-                            this.onImageLoaded,
-                            {orientation: true, canvas: true}
-                        );
-                    }
-                };
-
-                reader.readAsDataURL(blob);
+                if (this.mimeValidate(blob.type)) {
+                    loadImage(
+                        blob,
+                        this.onImageLoaded,
+                        {orientation: true, canvas: true}
+                    );
+                }
             },
 
             onImageLoaded(image) {
