@@ -193,8 +193,6 @@
 
         data() {
             return {
-                personality: 'unknown',
-                people: true,
                 originatorChoices: [
                     {value: 'user', text: this.$t('images.create.legal.copyright.me')},
                     {value: 'stock', text: this.$t('images.create.legal.copyright.stock')},
@@ -202,12 +200,6 @@
                     {value: 'friend', text: this.$t('images.create.legal.copyright.friend')},
                     {value: 'unknown', text: this.$t('images.create.legal.copyright.unknown')},
                 ],
-                originatorType: null,
-                stockUrl: '',
-                licence: null,
-                originator: '',
-                rightToUse: false,
-                rightToShare: false,
                 isValid: true,
                 saving: false
             }
@@ -249,7 +241,79 @@
                 }
 
                 return payload;
-            }
+            },
+
+            personality: {
+                get() {
+                    return this.$store.getters['legal/get']('personality');
+                },
+                set(value) {
+                    return this.$store.commit('legal/update', {key: 'personality', value: value});
+                },
+            },
+
+            people: {
+                get() {
+                    return this.$store.getters['legal/get']('people');
+                },
+                set(value) {
+                    return this.$store.commit('legal/update', {key: 'people', value: value});
+                },
+            },
+
+            originatorType: {
+                get() {
+                    return this.$store.getters['legal/get']('originatorType');
+                },
+                set(value) {
+                    return this.$store.commit('legal/update', {key: 'originatorType', value: value});
+                },
+            },
+
+            stockUrl: {
+                get() {
+                    return this.$store.getters['legal/get']('stockUrl');
+                },
+                set(value) {
+                    return this.$store.commit('legal/update', {key: 'stockUrl', value: value});
+                },
+            },
+
+            licence: {
+                get() {
+                    return this.$store.getters['legal/get']('licence');
+                },
+                set(value) {
+                    return this.$store.commit('legal/update', {key: 'licence', value: value});
+                },
+            },
+
+            originator: {
+                get() {
+                    return this.$store.getters['legal/get']('originator');
+                },
+                set(value) {
+                    return this.$store.commit('legal/update', {key: 'originator', value: value});
+                },
+            },
+
+            rightToUse: {
+                get() {
+                    return this.$store.getters['legal/get']('rightToUse');
+                },
+                set(value) {
+                    return this.$store.commit('legal/update', {key: 'rightToUse', value: value});
+                },
+            },
+
+            rightToShare: {
+                get() {
+                    return this.$store.getters['legal/get']('rightToShare');
+                },
+                set(value) {
+                    return this.$store.commit('legal/update', {key: 'rightToShare', value: value});
+                },
+            },
         },
 
         validations() {

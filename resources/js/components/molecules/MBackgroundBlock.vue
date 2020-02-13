@@ -216,6 +216,7 @@
 
             onImageLoaded(image) {
                 this.image = image;
+                this.$store.commit('legal/reset');
                 this.$emit('typeChanged', Types.image);
                 this.$emit('imageChanged', {image: image, mimeType: this.mimeType});
             },
