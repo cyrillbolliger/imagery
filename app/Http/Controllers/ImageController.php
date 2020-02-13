@@ -63,15 +63,15 @@ class ImageController extends Controller
     {
         $terms = $this->prepareTerms(urldecode($terms));
 
-        if ( ! $terms ) {
+        if ( ! $terms) {
             return $this->indexFinal();
         }
 
         return Image::final()
                     ->selectRaw('*, MATCH (keywords) AGAINST (? IN BOOLEAN MODE) as score', [$terms])
                     ->whereRaw('MATCH (keywords) AGAINST (? IN BOOLEAN MODE)', [$terms])
-                    ->orderBy( 'score', 'desc' )
-                    ->orderBy( 'created_at', 'desc' )
+                    ->orderBy('score', 'desc')
+                    ->orderBy('created_at', 'desc')
                     ->paginate(50);
     }
 
@@ -251,7 +251,7 @@ class ImageController extends Controller
         } catch (\ImagickException | ThumbnailException $e) {
             Log::error('Failed to generate thumbnail. File: '.$image->filename);
 
-            return abort(500,'Failed to generate thumbnail.');
+            return abort(500, 'Failed to generate thumbnail.');
         }
     }
 
@@ -273,34 +273,35 @@ class ImageController extends Controller
     /**
      * Do only search word characters and allow partial matches (word start)
      *
-     * @param string $string
+     * @param  string  $string
      *
      * @return string|null
      */
-    private function prepareTerms( string $string ): ?string {
+    private function prepareTerms(string $string): ?string
+    {
         $query = '';
 
         // quoted strings must be treated differently
         // so extract them first
-        if ( preg_match_all( '/([\+\-]?".+")/U', $string, $quoted ) ) {
-            $query  .= implode( ' ', $quoted[0] ) . ' ';
-            $string = trim( str_replace( $quoted[0], '', $string ) );
+        if (preg_match_all('/([\+\-]?".+")/U', $string, $quoted)) {
+            $query  .= implode(' ', $quoted[0]).' ';
+            $string = trim(str_replace($quoted[0], '', $string));
         }
 
         // terms with quantifiers can't have a wildcard either (innoDB 5.7)
         // so treat them separately as well
-        if ( preg_match_all( '/([\+\-][\w\.]+)/u', $string, $quantified ) ) {
-            $query  .= implode( ' ', $quantified[0] ) . ' ';
-            $string = trim( str_replace( $quantified[0], '', $string ) );
+        if (preg_match_all('/([\+\-][\w\.]+)/u', $string, $quantified)) {
+            $query  .= implode(' ', $quantified[0]).' ';
+            $string = trim(str_replace($quantified[0], '', $string));
         }
 
         // if there are unquoted parts left, process them for partial matches
-        if ( $string ) {
-            $terms = preg_split( "/[^\w\+\-\.]+/Uu", $string, 0, PREG_SPLIT_NO_EMPTY );
-            if ( ! $terms ) {
+        if ($string) {
+            $terms = preg_split("/[^\w\+\-\.]+/Uu", $string, 0, PREG_SPLIT_NO_EMPTY);
+            if ( ! $terms) {
                 return $query;
             }
-            $query .= implode( '* ', $terms ) . '*';
+            $query .= implode('* ', $terms).'*';
         }
 
         return $query;
