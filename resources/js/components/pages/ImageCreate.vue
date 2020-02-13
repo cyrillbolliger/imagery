@@ -3,12 +3,13 @@
         <MHeader>{{$t('images.create.title')}}</MHeader>
         <OImagery
             @save="imageData = $event"
-        ></OImagery>
+        />
+
         <OImageDialog
             :image-data="imageData"
             @close="imageData = null"
             v-if="imageData"
-        ></OImageDialog>
+        />
     </div>
 </template>
 

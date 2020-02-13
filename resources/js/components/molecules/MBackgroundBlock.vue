@@ -92,6 +92,7 @@
                 block: null,
                 background: Types.gradient,
                 image: null,
+                mimeType: null,
                 types: Types,
                 zoom: 0,
             }
@@ -203,6 +204,8 @@
                 const blob = event.target.files[0];
 
                 if (this.mimeValidate(blob.type)) {
+                    this.mimeType = blob.type;
+
                     loadImage(
                         blob,
                         this.onImageLoaded,
@@ -214,7 +217,7 @@
             onImageLoaded(image) {
                 this.image = image;
                 this.$emit('typeChanged', Types.image);
-                this.$emit('imageChanged', image);
+                this.$emit('imageChanged', {image: image, mimeType: this.mimeType});
             },
 
             mimeValidate(type) {

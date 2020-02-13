@@ -65,7 +65,7 @@
                     return 0;
                 }
 
-                const raw = this.imageData.rawImage.src.length;
+                const raw = this.rawImageDataUrl.length;
                 const final = this.imageData.canvas.toDataURL().length;
 
                 return 100 * raw / (raw + final);
@@ -73,6 +73,18 @@
 
             uploadFinalWeight() {
                 return 100 - this.uploadRawWeight;
+            },
+
+            rawImageExportType() {
+                return 'image/jpeg' === this.imageData.rawImage.mimeType ? 'image/jpeg' : 'image/png';
+            },
+
+            rawImageExtension() {
+                return 'image/jpeg' === this.rawImageExportType ? 'jpeg' : 'png';
+            },
+
+            rawImageDataUrl() {
+                return this.imageData.rawImage.image.toDataURL(this.rawImageExportType);
             },
         },
 
@@ -104,9 +116,9 @@
             },
 
             uploadRawImage() {
-                this.imageData.filenameRaw = `raw-${this.imageData.filename}`;
+                this.imageData.filenameRaw = `raw-${this.imageData.filename}.${this.rawImageExtension}`;
 
-                const image = this.imageData.rawImage.src;
+                const image = this.rawImageDataUrl;
                 const filename = this.imageData.filenameRaw;
                 const uploader = new ImageUpload(image, filename);
 
@@ -123,7 +135,7 @@
             },
 
             uploadFinalImage() {
-                this.imageData.filenameFinal = `final-${this.imageData.filename}`;
+                this.imageData.filenameFinal = `final-${this.imageData.filename}.png`;
 
                 const image = this.imageData.canvas.toDataURL();
                 const filename = this.imageData.filenameFinal;
@@ -143,7 +155,7 @@
 
             uniqueFilename() {
                 this.$store.dispatch('counter/increment');
-                return this.$store.getters['counter/get'] + '.png';
+                return this.$store.getters['counter/get'];
             },
 
             uploadFinalImageMeta() {
