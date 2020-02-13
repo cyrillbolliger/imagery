@@ -52,13 +52,13 @@ class LegalController extends Controller
                 'max:192'
             ],
             'licence'              => [
-                'required_if:originator_type,'.Legal::ORIGINATOR_AGENCY,
+                'required_if:originator_type,'.Legal::ORIGINATOR_STOCK,
                 'in:'.Legal::LICENCE_CC.','
                 .Legal::LICENCE_CC_ATTRIBUTION.','
                 .Legal::LICENCE_OTHER
             ],
             'stock_url'            => [
-                'required_if:originator_type,'.Legal::ORIGINATOR_AGENCY,
+                'required_if:originator_type,'.Legal::ORIGINATOR_STOCK,
                 'max:2048',
                 'url'
             ],

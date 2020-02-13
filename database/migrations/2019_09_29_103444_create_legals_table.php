@@ -36,7 +36,7 @@ class CreateLegalsTable extends Migration
                 Legal::LICENCE_CC_ATTRIBUTION,
                 Legal::LICENCE_OTHER,
             ])->nullable();
-            $table->string('originator');
+            $table->string('originator')->nullable();
             $table->text('stock_url')->nullable(); // up to 2048 chars
             $table->boolean('shared');
             $table->timestamps();

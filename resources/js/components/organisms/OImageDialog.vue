@@ -3,8 +3,12 @@
         :title="$t('images.create.generating')"
         @close="$emit('close', $event)"
     >
-        <p>{{$t('images.create.waitPlease')}}</p>
-        <div class="progress" v-if="!downloadReady">
+        <p v-if="uploadStatus < 100">
+            {{$t('images.create.waitPlease')}}
+            <span v-if="showLegalCheck">{{$t('images.create.legal.announce')}}</span>
+        </p>
+
+        <div class="progress" v-if="uploadStatus < 100 && !showLegalCheck">
             <div
                 :aria-valuenow="uploadStatus"
                 aria-valuemax="100"
@@ -16,10 +20,16 @@
             </div>
         </div>
 
+        <MLegalForm
+            :imageUpload="uploadPromise"
+            @completed="onLegalUploadCompleted"
+            v-if="showLegalCheck"
+        />
+
         <button
             @click="downloadAndClose($event)"
             class="btn btn-primary"
-            v-if="downloadReady"
+            v-if="downloadReady && !showLegalCheck"
         >{{$t('images.create.imageDownload')}}
         </button>
     </ODialog>
@@ -31,17 +41,27 @@
     import ImageUpload from "../../service/ImageUpload";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
     import ODialog from "../organisms/ODialog";
+    import MLegalForm from "../molecules/MLegalForm";
+
+    const metaUploadProgress = 5;
+    const legalUploadProgress = 5;
 
     export default {
         name: "OImageDialog",
-        components: {ODialog},
+        components: {MLegalForm, ODialog},
         mixins: [SnackbarMixin],
 
 
         data() {
             return {
-                uploadStatus: 0,
+                uploadRawStatus: 0,
+                uploadFinalStatus: 0,
+                uploadMetaStatus: 0,
+                uploadLegalStatus: 0,
                 downloadReady: false,
+                showLegalCheck: false,
+                uploadPromise: null,
+                resolveUpload: null,
             }
         },
 
@@ -60,6 +80,16 @@
                     && this.imageData.rawImage;
             },
 
+            uploadImagesTotalWeight() {
+                const uploadComplete = 100;
+                const imageCount = this.hasRawImage ? 2 : 1;
+                const nonImageProgress = this.hasRawImage
+                    ? imageCount * metaUploadProgress + legalUploadProgress
+                    : metaUploadProgress;
+
+                return uploadComplete - nonImageProgress;
+            },
+
             uploadRawWeight() {
                 if (!this.hasRawImage) {
                     return 0;
@@ -68,11 +98,11 @@
                 const raw = this.rawImageDataUrl.length;
                 const final = this.imageData.canvas.toDataURL().length;
 
-                return 100 * raw / (raw + final);
+                return this.uploadImagesTotalWeight * raw / (raw + final);
             },
 
             uploadFinalWeight() {
-                return 100 - this.uploadRawWeight;
+                return this.uploadImagesTotalWeight - this.uploadRawWeight;
             },
 
             rawImageExportType() {
@@ -86,8 +116,18 @@
             rawImageDataUrl() {
                 return this.imageData.rawImage.image.toDataURL(this.rawImageExportType);
             },
+
+            uploadStatus() {
+                return this.uploadRawStatus * this.uploadRawWeight
+                    + this.uploadFinalStatus * this.uploadFinalWeight
+                    + this.uploadMetaStatus * metaUploadProgress
+                    + this.uploadLegalStatus * legalUploadProgress;
+            },
         },
 
+        created() {
+            this.uploadPromise = new Promise(res => this.resolveUpload = res);
+        },
 
         mounted() {
             this.save();
@@ -100,19 +140,15 @@
                 let upload;
 
                 if (this.hasRawImage) {
-                    this.showLegalCheck();
+                    this.showLegalCheck = true;
                     upload = this.uploadRawImage()
+                        .then(() => this.resolveUpload(this.imageData.originalId))
                         .then(() => this.uploadFinalImage());
                 } else {
                     upload = this.uploadFinalImage();
-
                 }
 
                 upload.then(() => this.downloadButtonShow());
-            },
-
-            showLegalCheck() {
-                // todo
             },
 
             uploadRawImage() {
@@ -122,9 +158,7 @@
                 const filename = this.imageData.filenameRaw;
                 const uploader = new ImageUpload(image, filename);
 
-                uploader.subscribe(
-                    status => this.uploadStatus = status * this.uploadRawWeight
-                );
+                uploader.subscribe(status => this.uploadRawStatus = status);
 
                 return uploader.upload('files/images')
                     .then(() => this.uploadRawImageMeta())
@@ -141,9 +175,7 @@
                 const filename = this.imageData.filenameFinal;
                 const uploader = new ImageUpload(image, filename);
 
-                uploader.subscribe(
-                    status => this.uploadStatus = this.uploadRawWeight + status * this.uploadFinalWeight
-                );
+                uploader.subscribe(status => this.uploadFinalStatus = status);
 
                 return uploader.upload('files/images')
                     .then(() => this.uploadFinalImageMeta())
@@ -193,6 +225,7 @@
                             return resp;
                         }
                     })
+                    .then(() => this.uploadMetaStatus++)
                     .catch(error => {
                         this.snackErrorRetry(error, this.$t('images.create.uploadFailed'))
                             .then(() => this.uploadImageMeta(payload));
@@ -235,7 +268,12 @@
             downloadAndClose() {
                 this.executeDownload();
                 this.$emit('close');
-            }
+            },
+
+            onLegalUploadCompleted() {
+                this.uploadLegalStatus = 1;
+                this.showLegalCheck = false;
+            },
         }
     }
 </script>
