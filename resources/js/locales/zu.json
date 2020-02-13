@@ -44,7 +44,8 @@
         "required": "crwdns55:0crwdne55:0",
         "email": "crwdns57:0crwdne57:0",
         "max_length": "crwdns59:0{max}crwdne59:0",
-        "double_check_form": "crwdns61:0crwdne61:0"
+        "double_check_form": "crwdns61:0crwdne61:0",
+        "url": "crwdns467:0crwdne467:0"
     },
     "users": {
         "index": {
@@ -197,6 +198,46 @@
                 "twFeed": "crwdns285:0crwdne285:0",
                 "instaStory": "crwdns287:0crwdne287:0",
                 "custom": "crwdns289:0crwdne289:0"
+            },
+            "legal": {
+                "announce": "crwdns469:0crwdne469:0",
+                "personality": {
+                    "title": "crwdns471:0crwdne471:0",
+                    "identifiablePeople": "crwdns473:0crwdne473:0",
+                    "yes": "crwdns475:0crwdne475:0",
+                    "no": "crwdns477:0crwdne477:0",
+                    "publicInterest": "crwdns479:0crwdne479:0",
+                    "unclear": "crwdns481:0crwdne481:0",
+                    "warningTitle": "crwdns483:0crwdne483:0",
+                    "warningText": "crwdns485:0crwdne485:0"
+                },
+                "copyright": {
+                    "title": "crwdns487:0crwdne487:0",
+                    "warningTitle": "crwdns489:0crwdne489:0",
+                    "warningText": "crwdns491:0crwdne491:0",
+                    "originatorType": "crwdns493:0crwdne493:0",
+                    "originatorSelect": "crwdns495:0crwdne495:0",
+                    "me": "crwdns497:0crwdne497:0",
+                    "stock": "crwdns499:0crwdne499:0",
+                    "agency": "crwdns501:0crwdne501:0",
+                    "friend": "crwdns503:0crwdne503:0",
+                    "unknown": "crwdns505:0crwdne505:0",
+                    "source": "crwdns507:0crwdne507:0",
+                    "sourcePlaceholder": "crwdns509:0crwdne509:0",
+                    "licence": "crwdns511:0crwdne511:0",
+                    "other": "crwdns513:0crwdne513:0",
+                    "ccby": "crwdns515:0crwdne515:0",
+                    "cc0": "crwdns517:0crwdne517:0",
+                    "originator": "crwdns519:0crwdne519:0",
+                    "originatorPlaceholder": "crwdns521:0crwdne521:0",
+                    "confirmation": "crwdns523:0crwdne523:0",
+                    "rightToUse": "crwdns525:0crwdne525:0",
+                    "rightToShare": "crwdns527:0crwdne527:0"
+                },
+                "confirmation": "crwdns529:0crwdne529:0",
+                "saving": "crwdns531:0crwdne531:0",
+                "invalid": "crwdns533:0crwdne533:0",
+                "savingFailed": "crwdns535:0crwdne535:0"
             }
         },
         "gallery": {
