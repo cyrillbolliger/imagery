@@ -41,6 +41,7 @@ use Imagick;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Image query()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Image raw()
  * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Image completed()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Image shareable()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Image whereBackground($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Image whereCreatedAt($value)
@@ -127,6 +128,19 @@ class Image extends Model implements FileModel
         return $this->legal && $this->legal->shared;
     }
 
+    public function isCompleted()
+    {
+        if ($this->background !== self::BG_CUSTOM) {
+            return true;
+        }
+
+        if ($this->type === self::TYPE_FINAL) {
+            return $this->original && $this->original->legal;
+        } else {
+            return (bool) $this->legal;
+        }
+    }
+
     public static function getImageStorageDir()
     {
         $dir = self::getBaseDir().DIRECTORY_SEPARATOR.self::PATH_FULL;
@@ -210,6 +224,28 @@ class Image extends Model implements FileModel
         return $query->join('legals', 'images.id', '=', 'legals.image_id')
                      ->select('images.*')
                      ->where('legals.shared', true);
+    }
+
+    /**
+     * Scope a query to only include images with custom background
+     * if the legal was submitted.
+     *
+     * @param  Builder  $query
+     *
+     * @return Builder
+     */
+    public function scopeCompleted($query)
+    {
+        return $query
+            ->where(function ($query) {
+                $query->where('type', self::TYPE_FINAL)
+                      ->where('background', self::BG_CUSTOM)
+                      ->whereRaw('EXISTS (SELECT * FROM legals WHERE legals.image_id = images.original_id)');
+            })->orWhere(function ($query) {
+                $query->where('type', self::TYPE_RAW)
+                      ->where('background', self::BG_CUSTOM)
+                      ->whereRaw('EXISTS (SELECT * FROM legals WHERE legals.image_id = images.id)');
+            })->orWhere('background', '<>', self::BG_CUSTOM);
     }
 
     public function getSrcAttribute()

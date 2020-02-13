@@ -43,6 +43,7 @@ class ImageController extends Controller
     public function indexFinal()
     {
         return Image::final()
+                    ->completed()
                     ->latest()
                     ->paginate(50);
     }

@@ -52,12 +52,12 @@ class ImagePolicy
             return true;
         }
 
-        // all final images
-        if ($image->isFinal()) {
+        // all final images (with completed legal, if necessary)
+        if ($image->isFinal() && $image->isCompleted()) {
             return true;
         }
 
-        // only shareable raw images
+        // only shareable raw images (this implies that the legal is completed)
         return $image->isShareable();
     }
 
