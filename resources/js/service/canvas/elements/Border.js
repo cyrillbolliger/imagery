@@ -1,5 +1,5 @@
-const borderWidthFactor = 0.0175;
-const radiusFactor = 3;
+import BorderHelper from "../BorderHelper";
+
 const borderColor = '#ffffff';
 
 class Border {
@@ -8,6 +8,7 @@ class Border {
         this._context = this._canvas.getContext('2d');
 
         this._border = true;
+        this._borderWidth = 0;
     }
 
     set border(enabled) {
@@ -23,7 +24,7 @@ class Border {
     }
 
     get borderWidth() {
-        return this._getBorderWidth();
+        return this._borderWidth;
     }
 
     draw() {
@@ -37,6 +38,8 @@ class Border {
     }
 
     _drawBorder() {
+        this._setBorderWidth();
+
         this._context.fillStyle = borderColor;
         this._context.fillRect(0, 0, this._canvas.width, this._canvas.height);
 
@@ -46,8 +49,8 @@ class Border {
 
     _setClippingArea() {
         const ctx = this._context;
-        const bWidth = this._getBorderWidth();
-        const radius = radiusFactor * bWidth;
+        const bWidth = this._borderWidth;
+        const radius = BorderHelper.radius(bWidth);
         const width = this._canvas.width - 2 * bWidth;
         const height = this._canvas.height - 2 * bWidth;
 
@@ -64,9 +67,8 @@ class Border {
         ctx.fill();
     }
 
-    _getBorderWidth() {
-        const area = this._canvas.width * this._canvas.height;
-        return Math.sqrt(area) * borderWidthFactor;
+    _setBorderWidth() {
+        this._borderWidth = BorderHelper.width(this._canvas.width, this._canvas.height);
     }
 }
 

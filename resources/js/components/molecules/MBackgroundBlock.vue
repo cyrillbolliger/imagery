@@ -246,8 +246,8 @@
                     return;
                 }
 
-                this.draw();
                 this.$emit('typeChanged', value);
+                this.draw();
             },
             image() {
                 this.zoom = 0;

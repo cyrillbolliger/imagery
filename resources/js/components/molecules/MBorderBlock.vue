@@ -73,6 +73,7 @@
             },
             border() {
                 this.draw();
+                this.$emit('borderSettingChanged', this.border);
             }
         },
     }

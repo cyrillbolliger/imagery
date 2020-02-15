@@ -57,6 +57,14 @@
                 class="mt-2"
             />
 
+            <MCopyright
+                :color="hasBorder ? colorCopyrightBorder : colorCopyrightNoBorder"
+                :image-height="height"
+                :image-width="width"
+                @drawn="updateCopyrightLayer($event)"
+                v-if="hasImageBackground"
+            />
+
             <MAlignment
                 v-model="alignment"
             />
@@ -71,6 +79,7 @@
                 :image-width="width"
                 @drawn="updateBorderLayer($event)"
                 @widthChanged="borderWidth = $event"
+                @borderSettingChanged="hasBorder = $event"
             />
 
             <button
@@ -95,10 +104,13 @@
     import MAlignment from "../molecules/MAlignment";
     import MColorScheme from "../molecules/MColorScheme";
     import debounce from 'lodash/debounce';
+    import MCopyright from "../molecules/MCopyright";
+    import CopyrightLayer from "../../service/canvas/layers/CopyrightLayer";
 
     export default {
         name: "OImagery",
         components: {
+            MCopyright,
             MAlignment,
             MSizeBlock,
             MBorderBlock,
@@ -113,13 +125,16 @@
                 canvas: null,
                 alignment: Alignments.left,
                 schema: ColorSchemes.white,
-                width: 800,
-                height: 800,
+                width: 1080,
+                height: 1080,
                 fontSize: 50,
                 backgroundType: BackgroundTypes.gradient,
                 backgroundTypes: BackgroundTypes,
                 rawImage: null,
                 borderWidth: 0,
+                colorCopyrightBorder: '#666666',
+                colorCopyrightNoBorder: '#ffffff',
+                hasBorder: true,
                 logoId: null,
                 keywords: '',
 
@@ -137,10 +152,12 @@
                 backgroundBlock: null,
                 borderBlock: null,
                 logoBlock: null,
+                copyrightBlock: null,
                 borderLayer: null,
                 barLayer: null,
                 backgroundLayer: null,
                 logoLayer: null,
+                copyrightLayer: null,
 
                 dragObj: null,
             }
@@ -206,11 +223,13 @@
                 this.borderLayer = new BorderLayer(this.canvas);
                 this.barLayer = new BarLayer(this.canvas);
                 this.logoLayer = new LogoLayer(this.canvas);
+                this.copyrightLayer = new CopyrightLayer(this.canvas);
 
                 this.updateBackgroundLayer(this.backgroundBlock);
                 this.updateBorderLayer(this.borderBlock);
                 this.updateBarLayer(this.barBlock);
                 this.updateLogoLayer(this.logoBlock);
+                this.updateCopyrightLayer(this.copyrightBlock);
             });
         },
 
@@ -275,6 +294,17 @@
                 this.draw();
             },
 
+            updateCopyrightLayer(copyrightBlock) {
+                this.copyrightBlock = copyrightBlock;
+
+                if (!this.copyrightLayer) {
+                    return;
+                }
+
+                this.copyrightLayer.block = this.copyrightBlock;
+                this.draw();
+            },
+
             draw() {
                 this.backgroundLayer.draw();
                 this.borderLayer.draw();
@@ -283,6 +313,12 @@
                 this.logoLayer.alignment = this.alignment;
                 this.logoLayer.barPos = this.barLayer.boundingRect;
                 this.logoLayer.draw();
+
+                if (BackgroundTypes.image === this.backgroundType) {
+                    this.copyrightLayer.alignment = this.alignment;
+                    this.copyrightLayer.border = this.hasBorder;
+                    this.copyrightLayer.draw();
+                }
             },
 
             setSize(dims) {
