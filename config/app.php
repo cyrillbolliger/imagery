@@ -285,7 +285,7 @@ return [
     |
     */
 
-    'uploads_max_file_size' => env('APP_MAX_UPLOAD_SIZE', 8.0),
+    'uploads_max_file_size' => (float) env('APP_MAX_UPLOAD_SIZE', 8.0),
 
     /*
     |--------------------------------------------------------------------------
@@ -296,7 +296,7 @@ return [
     |
     */
 
-    'uploads_max_chunk_size' => env('APP_MAX_CHUNK_SIZE', 1.0),
+    'uploads_max_chunk_size' => (float) env('APP_MAX_CHUNK_SIZE', 1.0),
 
     /*
     |--------------------------------------------------------------------------

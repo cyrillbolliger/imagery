@@ -53,7 +53,7 @@ abstract class UploadStrategy
 
         $this->allowedFileExt  = $allowedFileExt;
         $this->filename        = $filename;
-        $this->allowedFileSize = (int) ($allowedFileSize * 1024 * 1024);
+        $this->allowedFileSize = $allowedFileSize * 1024 * 1024;
 
         $this->createUploadDir();
         $this->removeOldTmpFiles();
@@ -241,7 +241,8 @@ abstract class UploadStrategy
         }
 
         $fileContents = Storage::get($relTmpPath);
-        $base64       = str_replace(' ', '+', $fileContents); // https://www.php.net/manual/de/function.base64-decode.php#102113
+        $base64       = str_replace(' ', '+',
+            $fileContents); // https://www.php.net/manual/de/function.base64-decode.php#102113
         $data         = base64_decode($base64, true);
 
         Storage::put($relTmpPath.self::BIN_EXTENSION, $data, 'private');

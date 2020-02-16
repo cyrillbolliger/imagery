@@ -11,6 +11,8 @@ RUN apt-get update -y \
     git \
     vim \
     less \
+    libjpeg62-turbo-dev \
+    libpng-dev \
     libmagickwand-dev --no-install-recommends
 
 # install & enable mysql driver
@@ -23,6 +25,10 @@ RUN docker-php-ext-enable xdebug
 # install imagick
 RUN pecl install imagick
 RUN docker-php-ext-enable imagick
+
+# install GD (for laravel tests)
+RUN docker-php-ext-configure gd --enable-gd --with-jpeg
+RUN docker-php-ext-install -j$(nproc) gd
 
 # install bcmath extension
 RUN docker-php-ext-install bcmath
