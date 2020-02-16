@@ -155,6 +155,7 @@
             "barRemove": "crwdns201:0crwdne201:0",
             "headlineSecondaryAdd": "crwdns203:0crwdne203:0",
             "bars": "crwdns205:0crwdne205:0",
+            "fontLoadingFailed": "crwdns540:0crwdne540:0",
             "barInitialText": "crwdns207:0crwdne207:0",
             "background": "crwdns209:0crwdne209:0",
             "backgroundGreen": "crwdns211:0crwdne211:0",
