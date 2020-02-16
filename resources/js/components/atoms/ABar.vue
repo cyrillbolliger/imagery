@@ -25,6 +25,8 @@
 </template>
 
 <script>
+    import SnackbarMixin from "../../mixins/SnackbarMixin";
+
     const sublineHeadlineSizeRatio = 0.4;
 
     import Bar from "../../service/canvas/elements/Bar";
@@ -33,6 +35,7 @@
 
     export default {
         name: "ABar",
+        mixins: [SnackbarMixin],
         data() {
             return {
                 text: '',
@@ -122,10 +125,17 @@
             },
 
             loadFonts() {
+                const timeout = 10000;
                 const fat = new FontFaceObserver('SanukFat');
                 const bold = new FontFaceObserver('SanukBold');
 
-                return Promise.all([fat.load(), bold.load()]);
+                return Promise.all([fat.load(null, timeout), bold.load(null, timeout)])
+                    .catch(
+                        error => this.snackErrorDismiss(
+                            error,
+                            this.$t('images.create.fontLoadingFailed')
+                        )
+                    );
             },
         },
 
