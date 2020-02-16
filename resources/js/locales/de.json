@@ -155,6 +155,7 @@
             "barRemove": "Balken entfernen",
             "headlineSecondaryAdd": "Zwei Magenta-Balken sind nur zulässig, wenn die Nachricht dies erfordert und sonst weniger Sinn ergäbe. Klicke auf Abbrechen, um einen zweiten Magenta-Balken einzufügen. (Du musst auf Abbrechen klicken, da die Leute die Nachricht nie lesen, sondern einfach auf OK klicken.)",
             "bars": "Balken",
+            "fontLoadingFailed": "Failed to load the correct font. Try to reload the page.",
             "barInitialText": "Klima",
             "background": "Hintergrund",
             "backgroundGreen": "Grün",
