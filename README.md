@@ -50,7 +50,7 @@ if you want to dig deeper.
 #### PHPUnit
 All tests are based on PHPUnit. It may be used as follows:
 1. Make sure your containers are up and running.
-1. Run `docker exec --workdir=/var/www/html/ imagery vendor/bin/phpunit`.
+1. Run `docker exec imagery vendor/bin/phpunit`.
 
 #### MySQL
 Use the handy [phpMyAdmin](http://localhost:8010) or access the mysql CLI using
