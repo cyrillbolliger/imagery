@@ -3,7 +3,8 @@
 mkdir -p .docker/mysql/data
 
 # generate .env file
-sed "s/APP_HASH_SECRET=.*/APP_HASH_SECRET=$(openssl rand 128 | openssl sha256)/" .env.example > .env
+SECRET=$(openssl rand 128 | openssl sha256 | sed 's/(stdin)= //')
+sed "s/APP_HASH_SECRET=.*/APP_HASH_SECRET=${SECRET}/" .env.example > .env
 
 # get containers ready
 docker-compose pull
