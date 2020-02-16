@@ -1,31 +1,15 @@
-dist: bionic
-language: php
-php:
-  - 7.3
-
 addons:
   ssh_known_hosts: imagery.bolliger.tech
 
 services:
-  - mysql
+  - docker
 
-before_install:
-  - openssl aes-256-cbc -K $encrypted_339d88bdb736_key -iv $encrypted_339d88bdb736_iv
-    -in deploy_rsa.enc -out deploy_rsa -d
-  - yes | pecl install imagick
-  - yarn install
-  - mysql -u root -e 'CREATE DATABASE IF NOT EXISTS laravel;'
-
-before_script:
-  - composer self-update
-  - composer install --no-interaction
-  - cp .env.example .env
-  - php artisan key:generate
-  - php artisan migrate --seed
+install:
+  - bash install.sh
 
 script:
-  - yarn prod
-  - vendor/bin/phpunit
+  - docker exec imagery_node yarn prod
+  - docker exec imagery vendor/bin/phpunit
 
 after_failure:
   - cat storage/logs/laravel-*.log

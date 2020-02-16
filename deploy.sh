@@ -10,6 +10,7 @@ rsync -vrz --delete-after  \
     --exclude='.env' \
     --exclude='storage' \
     --exclude='vendor' \
+    --exclude='.docker' \
   $TRAVIS_BUILD_DIR/deploy/ $SSH_USER@$SSH_HOST:$DEPLOY_DIR
 
-ssh $SSH_USER@$SSH_HOST "cd $DEPLOY_DIR && ~/bin/composer install --optimize-autoloader --no-dev && php artisan cache:clear && php artisan config:clear && php artisan config:cache"
+ssh $SSH_USER@$SSH_HOST "cd $DEPLOY_DIR && ~/bin/composer install --optimize-autoloader --no-dev && php artisan cache:clear && php artisan config:cache"
