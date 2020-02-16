@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .docker
+    ports:
+      - '8000:80'
+    volumes:
+      - .:/var/www/html
+      - .docker/php.ini:/usr/local/etc/php/php.ini
+    container_name: imagery
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - .docker/mysql/data:/var/lib/mysql
+    restart: always
+    env_file:
+      - .env
+    container_name: imagery_mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - '8010:80'
+    env_file:
+      - .env
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - '8020:8025'
+
+  node:
+    image: node
+    working_dir: /home/node/app
+    volumes:
+      - ./:/home/node/app
+    command: yarn watch
+    container_name: imagery_node

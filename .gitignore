@@ -20,3 +20,4 @@ yarn-error.log
 productionSeeder.sql
 _ide_helper*.php
 .phpstorm.meta.php
+.docker/mysql
