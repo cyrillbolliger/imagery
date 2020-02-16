@@ -155,6 +155,7 @@
             "barRemove": "Remove Bar",
             "headlineSecondaryAdd": "Two magenta headlines are only allowed, if the message requires it and would make less sense otherwise. Click Cancel to insert a second magenta bar. (You have to Click Cancel, because people never read the message but just click OK.)",
             "bars": "Bars",
+            "fontLoadingFailed": "Failed to load the correct font. Try to reload the page.",
             "barInitialText": "Climate",
             "background": "Background",
             "backgroundGreen": "Green",
