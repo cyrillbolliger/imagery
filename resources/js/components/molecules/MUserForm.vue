@@ -111,6 +111,7 @@
             :working="saving"
             :working-text="$t('user.saving')"
             @buttonClicked="save"
+            :class="{'mb-3': newUser}"
         />
 
         <AButtonWait
