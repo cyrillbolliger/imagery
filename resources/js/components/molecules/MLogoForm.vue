@@ -6,14 +6,14 @@
             :required="true"
             :validation="validations.type"
             v-model="currentLogo.type"
-        ></ASelect>
+        />
 
         <AInput
             :label="nameLabel"
             :required="true"
             :validation="validations.name"
             v-model.trim="currentLogo.name"
-        ></AInput>
+        />
 
         <AMultiSelect
             :helptext="$t('logo.groupsHelptext')"
@@ -22,14 +22,14 @@
             :required="true"
             :validation="validations.groups"
             v-model="groupsSelected"
-        ></AMultiSelect>
+        />
 
         <AButtonWait
             :button-text="$t('logo.save')"
             :working="saving"
             :working-text="$t('logo.saving')"
             @buttonClicked="save"
-        ></AButtonWait>
+        />
 
         <AButtonWait
             :button-text="$t('logo.remove')"
@@ -38,7 +38,7 @@
             @buttonClicked="remove"
             button-class="btn btn-sm btn-link text-danger pl-0 mt-2"
             v-if="currentLogo.id"
-        ></AButtonWait>
+        />
 
     </form>
 </template>

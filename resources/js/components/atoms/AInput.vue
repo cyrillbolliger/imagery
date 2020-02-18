@@ -13,6 +13,7 @@
                 :type="type"
                 :value="value"
                 :class="validClass"
+                :autocomplete="autocomplete"
                 @input="onInput"
                 class="form-control">
         </template>
@@ -57,7 +58,11 @@
             validation: {
                 default: null,
                 type: Object
-            }
+            },
+            autocomplete: {
+                default: 'off',
+                type: String,
+            },
         },
         computed: {
             id() {
