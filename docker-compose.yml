@@ -39,7 +39,10 @@ services:
   node:
     image: node
     working_dir: /home/node/app
+    user: node
+    environment:
+      - NODE_ENV=development
     volumes:
-      - ./:/home/node/app
+      - ./:/home/node/app:cached
     command: yarn watch
     container_name: imagery_node
