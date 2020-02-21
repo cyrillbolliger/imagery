@@ -376,6 +376,29 @@ class User extends Authenticatable
     }
 
     /**
+     * The logos this user can use
+     *
+     * @return Collection
+     */
+    public function usableLogos()
+    {
+        if ($this->super_admin) {
+            return Logo::all();
+        }
+
+        $logos = $this->manageableLogos();
+
+        $nonAdminRoles = $this->roles()->where('admin', false)->get();
+        foreach ($nonAdminRoles as $role) {
+            foreach ($role->group->logos as $logo) {
+                $logos->add($logo);
+            }
+        }
+
+        return $logos->unique('id');
+    }
+
+    /**
      * Send the onboarding email
      *
      * @param  \Carbon\Carbon  $validUntil

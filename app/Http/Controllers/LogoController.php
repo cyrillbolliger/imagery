@@ -19,7 +19,20 @@ class LogoController extends Controller
      *
      * @return \Illuminate\Support\Collection
      */
-    public function index()
+    public function indexUsable()
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        return $user->usableLogos();
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function indexManageable()
     {
         /** @var User $user */
         $user = Auth::user();

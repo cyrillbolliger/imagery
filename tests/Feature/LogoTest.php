@@ -74,53 +74,118 @@ class LogoTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function testGetLogos__user__200()
+    public function testGetLogosUsable__user__200()
     {
-        $group = factory(Group::class)->create();
+        $logoUsable          = factory(Logo::class)->create();
+        $logoManageableChild = factory(Logo::class)->create();
+        $logoDetached        = factory(Logo::class)->create();
 
-        $manager = factory(User::class)->create(['super_admin' => false]);
-        $manager->roles()->save(
+        $groupUsable     = factory(Group::class)->create();
+        $groupManageable = factory(Group::class)->create();
+        $manageableChild = factory(Group::class)->create(['parent_id' => $groupManageable->id]);
+
+        $groupUsable->logos()->attach($logoUsable);
+        $manageableChild->logos()->attach($logoManageableChild);
+
+        $user = factory(User::class)->create();
+
+        $user->roles()->save(
             factory(Role::class)->make([
                 'admin'    => false,
-                'group_id' => $group->id
+                'group_id' => $groupUsable->id
             ])
         );
 
-        $logo = factory(Logo::class)->create();
-        $group->logos()->attach($logo);
+        $user->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => false,
+                'group_id' => $groupManageable->id
+            ])
+        );
 
-        $response = $this->actingAs($manager)
-                         ->getJson("/api/1/logos");
+        $response = $this->actingAs($user)
+                         ->getJson("/api/1/logos/usable");
 
         $response->assertStatus(200);
-        $response->assertExactJson([]);
+        $response->assertJsonFragment(['id' => $logoUsable->id]);
+        $response->assertJsonMissing(['id' => $logoManageableChild->id]);
+        $response->assertJsonMissing(['id' => $logoDetached->id]);
     }
 
-    public function testGetLogos__admin__200()
+    public function testGetLogosUsable__admin__200()
     {
-        $group = factory(Group::class)->create();
+        $logoUsable          = factory(Logo::class)->create();
+        $logoManageableChild = factory(Logo::class)->create();
+        $logoDetached        = factory(Logo::class)->create();
 
-        $manager = factory(User::class)->create(['super_admin' => false]);
-        $manager->roles()->save(
+        $groupUsable     = factory(Group::class)->create();
+        $groupManageable = factory(Group::class)->create();
+        $manageableChild = factory(Group::class)->create(['parent_id' => $groupManageable->id]);
+
+        $groupUsable->logos()->attach($logoUsable);
+        $manageableChild->logos()->attach($logoManageableChild);
+
+        $user = factory(User::class)->create();
+
+        $user->roles()->save(
             factory(Role::class)->make([
-                'admin'    => true,
-                'group_id' => $group->id
+                'admin'    => false,
+                'group_id' => $groupUsable->id
             ])
         );
 
-        $logo1 = factory(Logo::class)->create();
-        $logo2 = factory(Logo::class)->create();
-        $logo3 = factory(Logo::class)->create();
-        $group->logos()->attach($logo1);
-        $group->logos()->attach($logo2);
+        $user->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $groupManageable->id
+            ])
+        );
 
-        $response = $this->actingAs($manager)
-                         ->getJson("/api/1/logos");
+        $response = $this->actingAs($user)
+                         ->getJson("/api/1/logos/usable");
 
         $response->assertStatus(200);
-        $response->assertJsonFragment(['id' => $logo1->id]);
-        $response->assertJsonFragment(['id' => $logo2->id]);
-        $response->assertJsonMissing(['id' => $logo3->id]);
+        $response->assertJsonFragment(['id' => $logoUsable->id]);
+        $response->assertJsonFragment(['id' => $logoManageableChild->id]);
+        $response->assertJsonMissing(['id' => $logoDetached->id]);
+    }
+
+    public function testGetLogosManageable__admin__200()
+    {
+        $logoUsable          = factory(Logo::class)->create();
+        $logoManageableChild = factory(Logo::class)->create();
+        $logoDetached        = factory(Logo::class)->create();
+
+        $groupUsable     = factory(Group::class)->create();
+        $groupManageable = factory(Group::class)->create();
+        $manageableChild = factory(Group::class)->create(['parent_id' => $groupManageable->id]);
+
+        $groupUsable->logos()->attach($logoUsable);
+        $manageableChild->logos()->attach($logoManageableChild);
+
+        $user = factory(User::class)->create();
+
+        $user->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => false,
+                'group_id' => $groupUsable->id
+            ])
+        );
+
+        $user->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $groupManageable->id
+            ])
+        );
+
+        $response = $this->actingAs($user)
+                         ->getJson("/api/1/logos/manageable");
+
+        $response->assertStatus(200);
+        $response->assertJsonMissing(['id' => $logoUsable->id]);
+        $response->assertJsonFragment(['id' => $logoManageableChild->id]);
+        $response->assertJsonMissing(['id' => $logoDetached->id]);
     }
 
     public function testPutLogo__admin__200()

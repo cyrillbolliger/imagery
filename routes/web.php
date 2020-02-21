@@ -105,7 +105,10 @@ Route::prefix('api/1')->middleware('auth')->group(function () {
          ->where('logo', '\d+')
          ->middleware('can:view,logo');
 
-    Route::get('/logos', 'LogoController@index')
+    Route::get('/logos/usable', 'LogoController@indexUsable')
+         ->middleware('can:viewAny,App\Logo');
+
+    Route::get('/logos/manageable', 'LogoController@indexManageable')
          ->middleware('can:viewAny,App\Logo');
 
     Route::put('/logos/{logo}', 'LogoController@update')
