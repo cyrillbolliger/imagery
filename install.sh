@@ -35,9 +35,13 @@ done
 echo "Yay, MySQL is up and ready"
 
 # create test database
-docker exec imagery_mysql bash -c 'mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e"CREATE DATABASE imagery_test;"'
-docker exec imagery_mysql bash -c 'mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e"CREATE USER \"imagery_test\"@\"%\" IDENTIFIED BY \"imagery_test\";"'
-docker exec imagery_mysql bash -c 'mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e"GRANT ALL PRIVILEGES ON imagery_test.* TO \"imagery_test\"@\"%\";"'
+TEST_MYSQL_ROOT_PASSWORD=$(grep MYSQL_ROOT_PASSWORD .env.docker | cut -d '=' -f2)
+TEST_MYSQL_USER=$(grep DB_USERNAME .env.testing | cut -d '=' -f2)
+TEST_MYSQL_PASSWORD=$(grep DB_PASSWORD .env.testing | cut -d '=' -f2)
+TEST_MYSQL_DATABASE=$(grep DB_DATABASE .env.testing | cut -d '=' -f2)
+docker exec imagery_mysql mysql -uroot -p${TEST_MYSQL_ROOT_PASSWORD} -e"CREATE DATABASE ${TEST_MYSQL_DATABASE};"
+docker exec imagery_mysql mysql -uroot -p${TEST_MYSQL_ROOT_PASSWORD} -e"CREATE USER '${TEST_MYSQL_USER}'@'%' IDENTIFIED BY '${TEST_MYSQL_PASSWORD}';"
+docker exec imagery_mysql mysql -uroot -p${TEST_MYSQL_ROOT_PASSWORD} -e"GRANT ALL PRIVILEGES ON ${TEST_MYSQL_DATABASE}.* TO '${TEST_MYSQL_USER}'@'%';"
 
 # setup database and seed with demo data
 docker-compose exec app php artisan migrate
