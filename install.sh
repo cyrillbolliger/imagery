@@ -34,6 +34,11 @@ while ! docker exec imagery_mysql bash -c 'mysql -u${MYSQL_USER} -p${MYSQL_PASSW
 done
 echo "Yay, MySQL is up and ready"
 
+# create test database
+docker exec imagery_mysql bash -c 'mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e"CREATE DATABASE imagery_test;"'
+docker exec imagery_mysql bash -c 'mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e"CREATE USER \"imagery_test\"@\"%\" IDENTIFIED BY \"imagery_test\";"'
+docker exec imagery_mysql bash -c 'mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e"GRANT ALL PRIVILEGES ON imagery_test.* TO \"imagery_test\"@\"%\";"'
+
 # setup database and seed with demo data
 docker-compose exec app php artisan migrate
 docker-compose exec app php artisan db:seed --class=DemoSeeder
