@@ -37,7 +37,7 @@ class LogoFileTest extends TestCase
         $group->logos()->attach($logo);
 
         $response = $this->actingAs($manager)
-                         ->get("/api/1/files/logos/$logo->id");
+                         ->get("/api/1/files/logos/{$logo->id}/green");
 
         $response->assertStatus(200);
     }
@@ -58,7 +58,7 @@ class LogoFileTest extends TestCase
         $group->logos()->attach($logo);
 
         $response = $this->actingAs($manager)
-                         ->get("/api/1/files/logos/$logo->id/white");
+                         ->get("/api/1/files/logos/{$logo->id}/white");
 
         $response->assertStatus(404);
     }
@@ -78,7 +78,7 @@ class LogoFileTest extends TestCase
         $logo = factory(Logo::class)->create();
 
         $response = $this->actingAs($manager)
-                         ->get("/api/1/files/logos/$logo->id/white");
+                         ->get("/api/1/files/logos/{$logo->id}/white");
 
         $response->assertStatus(403);
     }
