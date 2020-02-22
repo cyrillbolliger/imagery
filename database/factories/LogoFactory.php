@@ -5,7 +5,6 @@
 use App\Logo;
 use App\User;
 use Faker\Generator as Faker;
-use Illuminate\Support\Facades\Storage;
 
 $factory->define(Logo::class, function (Faker $faker) {
     return [
