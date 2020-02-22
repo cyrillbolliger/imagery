@@ -2,36 +2,36 @@ import Api from '../../service/Api';
 import Vue from 'vue';
 
 /**
- * Helper object to manage the loading state on concurrent requests
- *
- * @type {{add(): *, counter: number, queue: [], remove(*): *}}
- */
-const loadingSet = {
-    counter: 0,
-    queue: [],
-    add() {
-        const ticket = loadingSet.counter++;
-        loadingSet.queue.push(ticket);
-        return ticket;
-    },
-    remove(ticket) {
-        const idx = loadingSet.queue.findIndex(number => number === ticket);
-        if (idx) {
-            loadingSet.queue.splice(idx, 1);
-        }
-
-        return loadingSet.queue.length;
-    }
-};
-
-
-/**
  * Returns namespaced vuex module with CRUD methods of the given resource
  *
  * @param {string} resource
  * @returns {{mutations: *, state: *, getters: *, actions: *, namespaced: boolean}}
  */
 export default function getStore(resource) {
+    /**
+     * Helper object to manage the loading state on concurrent requests
+     */
+    const loadingSet = {
+        counter: 0,
+        queue: [],
+
+        add() {
+            const ticket = loadingSet.counter++;
+            loadingSet.queue.push(ticket);
+            return ticket;
+        },
+
+        remove(ticket) {
+            const idx = loadingSet.queue.findIndex(number => number === ticket);
+            if (idx >= 0) {
+                loadingSet.queue.splice(idx, 1);
+            }
+
+            return loadingSet.queue.length;
+        }
+    };
+
+
     const state = {
         data: [],
         loading: false,
@@ -71,7 +71,6 @@ export default function getStore(resource) {
 
         addLoading(state) {
             state.loading = true;
-            return loadingSet.add();
         },
 
         removeLoading(state, ticket) {
@@ -89,7 +88,8 @@ export default function getStore(resource) {
                 return new Promise(resolve => resolve());
             }
 
-            const ticket = commit('addLoading');
+            commit('addLoading');
+            const ticket = loadingSet.add();
             return Api().get(endpoint)
                 .then(response => response.data)
                 .then(data => commit('setAll', data))
@@ -97,7 +97,8 @@ export default function getStore(resource) {
         },
 
         add({commit, state}, payload) {
-            const ticket = commit('addLoading');
+            commit('addLoading');
+            const ticket = loadingSet.add();
             return Api().post(resource, payload)
                 .then(response => response.data)
                 .then(data => {
@@ -108,7 +109,8 @@ export default function getStore(resource) {
         },
 
         update({commit}, payload) {
-            const ticket = commit('addLoading');
+            commit('addLoading');
+            const ticket = loadingSet.add();
             return Api().put(`${resource}/${payload.id}`, payload)
                 .then(response => response.data)
                 .then(data => {
@@ -119,7 +121,8 @@ export default function getStore(resource) {
         },
 
         delete({commit}, payload) {
-            const ticket = commit('addLoading');
+            commit('addLoading');
+            const ticket = loadingSet.add();
             return Api().delete(`${resource}/${payload.id}`)
                 .then(() => commit('delete', payload.id))
                 .finally(() => commit('removeLoading', ticket));
