@@ -47,6 +47,7 @@ class LogoController extends Controller
      * @param  Logo  $logo
      *
      * @return \Illuminate\Http\Response|Logo
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request, Logo $logo)
     {
@@ -96,6 +97,7 @@ class LogoController extends Controller
      * @param  \App\Logo  $logo
      *
      * @return \Illuminate\Http\Response|Logo
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, Logo $logo)
     {
@@ -132,6 +134,8 @@ class LogoController extends Controller
      *
      * @param  int[]  $groups  the ids of the groups to associate
      * @param  Logo  $logo
+     *
+     * @throws \Illuminate\Validation\ValidationException
      */
     private function syncGroups(array $groups, Logo $logo)
     {
@@ -155,7 +159,7 @@ class LogoController extends Controller
         $user = Auth::user();
         foreach ($logo->groups as $group) {
             if ( ! $user->canManageGroup($group)) {
-                $groups[] = $group->id;
+                $groups[] = $group;
             }
         }
 
