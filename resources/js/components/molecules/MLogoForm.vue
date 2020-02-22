@@ -22,6 +22,7 @@
             :required="true"
             :validation="validations.groups"
             v-model="groupsSelected"
+            :loading="groupsSelectedLoading"
         />
 
         <AButtonWait
@@ -66,6 +67,7 @@
                 saving: false,
                 removing: false,
                 savedLogo: null,
+                groupsSelectedLoading: true,
                 groupsSelected: [],
                 validations: {
                     name: {
@@ -113,6 +115,7 @@
                 logos: 'logosManageable/getAll',
                 getLogoById: 'logosManageable/getById',
                 groups: 'groups/getAll',
+                getGroupById: 'groups/getById',
             }),
 
             nameLabel() {
@@ -138,10 +141,11 @@
 
 
         created() {
-            this.resourceLoad('logosManageable');
-            this.resourceLoad('groups');
+            Promise.all([
+                this.resourceLoad('logosManageable'),
+                this.resourceLoad('groups')
+            ]).then(this.populateGroupsSelected);
         },
-
 
         methods: {
             remove() {
@@ -199,6 +203,18 @@
                 }
 
                 return this.$store.dispatch('logosManageable/update', this.currentLogo);
+            },
+
+            populateGroupsSelected() {
+                const groupIds = this.currentLogo.groups;
+                let selected = [];
+
+                for (const id of groupIds) {
+                    selected.push(this.getGroupById(id));
+                }
+
+                this.groupsSelected = this.prepareSelectData(selected, 'id', 'tree_name');
+                this.groupsSelectedLoading = false;
             },
         },
 

@@ -61,6 +61,7 @@ class LogoTest extends TestCase
         $response->assertJsonFragment(['id' => $logo->id]);
         $response->assertJsonFragment(['src_white' => route('logo', ['logo' => $logo->id, 'color' => 'white'])]);
         $response->assertJsonFragment(['src_green' => route('logo', ['logo' => $logo->id, 'color' => 'green'])]);
+        $response->assertJsonFragment(['groups' => [$group->id]]);
     }
 
     public function testGetLogo__nonAttachedUser__403()

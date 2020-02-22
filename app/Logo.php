@@ -53,6 +53,7 @@ class Logo extends Model implements FileModel
     protected $appends = [
         'src_white',
         'src_green',
+        'groups',
     ];
 
     /**
@@ -85,6 +86,11 @@ class Logo extends Model implements FileModel
     public function getSrcGreenAttribute()
     {
         return route('logo', ['logo' => $this->id, 'color' => 'green']);
+    }
+
+    public function getGroupsAttribute()
+    {
+        return $this->groups()->select('groups.id')->get()->pluck('id');
     }
 
     public function getRelPath($color = null)

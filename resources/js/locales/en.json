@@ -278,6 +278,7 @@
         "removed": "Logo deleted.",
         "remove_confirmation": "Do you really want to delete {logo}?",
         "groups": "Groups",
-        "groupsHelptext": "The selected groups can use this logo"
+        "groupsHelptext": "The selected groups can use this logo",
+        "not_found": "Failed to load logo. Try again."
     }
 }
