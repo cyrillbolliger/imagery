@@ -20,7 +20,7 @@
         data() {
             return {
                 block: new Copyright(),
-                value: 'Peter Müller',
+                value: '',
             }
         },
 
