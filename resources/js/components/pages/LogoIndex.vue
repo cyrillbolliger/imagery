@@ -53,9 +53,9 @@
 
         computed: {
             ...mapGetters({
-                logos: 'logos/getAll',
-                getLogoById: 'logos/getById',
-                loading: 'logos/loading',
+                logos: 'logosManageable/getAll',
+                getLogoById: 'logosManageable/getById',
+                loading: 'logosManageable/loading',
             }),
             dialogTitle() {
                 return this.dialogLogo && !this.createLogo ?
@@ -76,7 +76,7 @@
 
 
         created() {
-            const loading = this.resourceLoad('logos');
+            const loading = this.resourceLoad('logosManageable', true);
 
             // navigate directly to logo, if one is set
             loading.then(() => {
@@ -123,7 +123,7 @@
                     this.snackErrorRetry(
                         `No logo with id ${id} in store.`,
                         this.$t('logo.not_found')
-                    ).then(() => this.resourceLoad('logos', true))
+                    ).then(() => this.resourceLoad('logosManageable', true))
                         .then(() => this.dialogShowEdit(id));
                 }
             },

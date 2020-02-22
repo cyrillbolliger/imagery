@@ -84,9 +84,9 @@
 
         computed: {
             ...mapGetters({
-                logos: 'logos/getAll',
-                getLogoById: 'logos/getById',
-                loadingLogos: 'logos/loading',
+                logos: 'logosUsable/getAll',
+                getLogoById: 'logosUsable/getById',
+                loadingLogos: 'logosUsable/loading',
             }),
 
             logoIdDefault() {
@@ -103,7 +103,7 @@
         },
 
         created() {
-            this.resourceLoad('logos')
+            this.resourceLoad('logosUsable', true)
                 .then(() => this.populateLogosSelect())
                 .then(() => this.setLogo(this.logoIdDefault));
         },

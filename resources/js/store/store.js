@@ -7,7 +7,8 @@ import user from './modules/user';
 import resource from "./modules/resource";
 import groups from "./modules/groups";
 import counter from "./modules/counter";
-import legal from "./modules/legal"
+import legal from "./modules/legal";
+import logos from "./modules/logos";
 
 Vue.use(Vuex);
 
@@ -19,7 +20,8 @@ export const store = new Vuex.Store({
         user,
         users: resource('users'),
         groups,
-        logos: resource('logos'),
+        logosManageable: logos('manageable'),
+        logosUsable: logos('usable'),
         legal,
     }
 });

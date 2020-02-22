@@ -110,8 +110,8 @@
 
         computed: {
             ...mapGetters({
-                logos: 'logos/getAll',
-                getLogoById: 'logos/getById',
+                logos: 'logosManageable/getAll',
+                getLogoById: 'logosManageable/getById',
                 groups: 'groups/getAll',
             }),
 
@@ -138,7 +138,7 @@
 
 
         created() {
-            this.resourceLoad('logos');
+            this.resourceLoad('logosManageable');
             this.resourceLoad('groups');
         },
 
@@ -151,7 +151,7 @@
                 }
 
                 this.removing = true;
-                this.$store.dispatch('logos/delete', this.currentLogo)
+                this.$store.dispatch('logosManageable/delete', this.currentLogo)
                     .finally(() => this.removing = false)
                     .then(() => {
                         this.$emit('removed', true);
@@ -194,11 +194,11 @@
                 }
 
                 if (this.newLogo) {
-                    return this.$store.dispatch('logos/add', this.currentLogo)
+                    return this.$store.dispatch('logosManageable/add', this.currentLogo)
                         .then(logo => this.savedLogo = logo);
                 }
 
-                return this.$store.dispatch('logos/update', this.currentLogo);
+                return this.$store.dispatch('logosManageable/update', this.currentLogo);
             },
         },
 

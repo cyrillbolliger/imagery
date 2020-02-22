@@ -84,13 +84,13 @@ export default function getStore(resource) {
 
 
     const actions = {
-        load({commit, state}, refresh = false) {
+        load({commit, state}, refresh = false, endpoint = resource) {
             if (state.data.length && !refresh) {
                 return new Promise(resolve => resolve());
             }
 
             const ticket = commit('addLoading');
-            return Api().get(resource)
+            return Api().get(endpoint)
                 .then(response => response.data)
                 .then(data => commit('setAll', data))
                 .finally(() => commit('removeLoading', ticket));
