@@ -17,7 +17,7 @@
         <p>{{$t('group.users_helptext')}}</p>
         <ul v-if="!usersLoading">
             <li v-for="user of users">{{`${user.first_name} ${user.last_name}`}}</li>
-            <li class="text-info" v-if="!logos.length">{{$t('group.no_users')}}</li>
+            <li class="text-info" v-if="!users.length">{{$t('group.no_users')}}</li>
         </ul>
         <div class="d-flex justify-content-center"
              v-if="usersLoading">
