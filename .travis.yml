@@ -6,6 +6,7 @@ services:
 
 install:
   - bash install.sh
+  - sleep 10 # wait until node is up and ready
 
 script:
   - docker exec imagery_node yarn prod
