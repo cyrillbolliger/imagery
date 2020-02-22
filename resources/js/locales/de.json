@@ -278,6 +278,7 @@
         "removed": "Logo gelöscht.",
         "remove_confirmation": "Möchtest du {logo} wirklich löschen?",
         "groups": "Gruppen",
-        "groupsHelptext": "Die ausgewählten Gruppen können dieses Logo verwenden"
+        "groupsHelptext": "Die ausgewählten Gruppen können dieses Logo verwenden",
+        "not_found": "Failed to load logo. Try again."
     }
 }
