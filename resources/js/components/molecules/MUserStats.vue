@@ -2,13 +2,7 @@
     <div class="m-user-stats">
         <h4>{{$t('user.stats')}}</h4>
 
-        <div class="d-flex justify-content-center"
-             v-if="loading"
-        >
-            <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
+        <ALoader v-if="loading"/>
 
         <div class="m-user-stats__table" v-else>
             <div class="m-user-stats__row d-flex justify-content-between">
@@ -33,6 +27,7 @@
     import french from "javascript-time-ago/locale/fr";
     import german from "javascript-time-ago/locale/de";
     import TimeAgo from "javascript-time-ago";
+    import ALoader from "../atoms/ALoader";
 
     const lang = {
         en: english,
@@ -45,7 +40,7 @@
 
     export default {
         name: "MUserStats",
-
+        components: {ALoader},
         data() {
             return {
                 loading: true,

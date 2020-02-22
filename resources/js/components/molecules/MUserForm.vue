@@ -81,12 +81,7 @@
                         @change="updateRoles"
                         v-if="!rolesLoading"
                     />
-                    <div class="d-flex justify-content-center"
-                         v-if="rolesLoading">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </div>
+                    <ALoader v-else/>
                 </template>
             </AFormGroup>
         </div>
@@ -142,10 +137,11 @@
     import AButtonWait from "../atoms/AButtonWait";
     import isEqual from 'lodash/isEqual';
     import cloneDeep from 'lodash/cloneDeep';
+    import ALoader from "../atoms/ALoader";
 
     export default {
         name: "MUserForm",
-        components: {AButtonWait, MGroupTree, ASelect, AFormGroup, ACheckbox, AInput, APasswordSet},
+        components: {ALoader, AButtonWait, MGroupTree, ASelect, AFormGroup, ACheckbox, AInput, APasswordSet},
         mixins: [ResourceLoadMixin, SnackbarMixin, PrepareSelectMixin],
 
 

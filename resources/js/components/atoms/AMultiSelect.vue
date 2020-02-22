@@ -18,12 +18,7 @@
                     @select="onInput"
                     v-if="!loading"
             />
-            <div class="d-flex justify-content-center"
-                 v-if="loading">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </div>
+            <ALoader v-else/>
         </template>
         <template #helptext v-if="helptext.length || (validation && $v.value.$error)">
             {{helptext}}
@@ -45,10 +40,11 @@
     import SlugifyMixin from "../../mixins/SlugifyMixin";
     import AFormGroup from "../atoms/AFormGroup";
     import {MultiSelect} from 'vue-search-select'
+    import ALoader from "./ALoader";
 
     export default {
         name: "AMultiSelect",
-        components: {AFormGroup, MultiSelect},
+        components: {ALoader, AFormGroup, MultiSelect},
         mixins: [SlugifyMixin],
         props: {
             label: {
@@ -102,6 +98,3 @@
     }
 </script>
 
-<style scoped>
-
-</style>

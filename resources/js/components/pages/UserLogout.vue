@@ -1,10 +1,7 @@
 <template>
     <div>
         <MHeader>{{title}}</MHeader>
-        <div class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-
+        <ALoader/>
     </div>
 </template>
 
@@ -12,10 +9,11 @@
     import MHeader from "../molecules/MHeader";
     import Api from "../../service/Api";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
+    import ALoader from "../atoms/ALoader";
 
     export default {
         name: "UserLogout",
-        components: {MHeader},
+        components: {ALoader, MHeader},
         mixins: [SnackbarMixin],
 
         data() {

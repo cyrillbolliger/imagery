@@ -6,12 +6,7 @@
             <li v-for="logo of logos">{{logo.name}}</li>
             <li class="text-info" v-if="!logos.length">{{$t('group.no_logos')}}</li>
         </ul>
-        <div class="d-flex justify-content-center"
-             v-if="logosLoading">
-            <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
+        <ALoader v-else/>
 
         <h4>{{$t('group.users')}}</h4>
         <p>{{$t('group.users_helptext')}}</p>
@@ -19,20 +14,17 @@
             <li v-for="user of users">{{`${user.first_name} ${user.last_name}`}}</li>
             <li class="text-info" v-if="!users.length">{{$t('group.no_users')}}</li>
         </ul>
-        <div class="d-flex justify-content-center"
-             v-if="usersLoading">
-            <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
+        <ALoader v-else/>
     </div>
 </template>
 
 <script>
     import Api from "../../service/Api";
+    import ALoader from "../atoms/ALoader";
 
     export default {
         name: "MGroupDetails",
+        components: {ALoader},
         data() {
             return {
                 logos: [],
