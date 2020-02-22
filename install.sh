@@ -52,7 +52,7 @@ docker-compose down
 docker-compose up -d
 
 # copy logos into test folder
-cp -Rv storage/app/logos storage/test
+cp -Rv storage/app/logos/* storage/test/logos/
 
 # just some user info
 GREEN='\033[0;32m'
