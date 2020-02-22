@@ -278,6 +278,7 @@
         "removed": "crwdns339:0crwdne339:0",
         "remove_confirmation": "crwdns341:0{logo}crwdne341:0",
         "groups": "crwdns343:0crwdne343:0",
-        "groupsHelptext": "crwdns345:0crwdne345:0"
+        "groupsHelptext": "crwdns345:0crwdne345:0",
+        "not_found": "crwdns542:0crwdne542:0"
     }
 }
