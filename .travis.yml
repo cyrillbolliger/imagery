@@ -7,11 +7,8 @@ services:
 install:
   - bash install.sh
 
-before_script:
-  - docker-compose up -d
-
 script:
-  - docker exec imagery_node yarn prod
+  - docker-compose run node yarn prod
   - docker exec imagery vendor/bin/phpunit
 
 after_failure:
