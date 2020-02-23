@@ -1,10 +1,8 @@
-addons:
-  ssh_known_hosts: imagery.bolliger.tech
-
 services:
   - docker
 
 install:
+  - echo "$SSH_HOST_PUBKEY" >> $HOME/.ssh/known_hosts
   - bash install.sh
 
 script:
@@ -22,7 +20,6 @@ before_deploy:
 
 deploy:
   provider: script
-  skip_cleanup: true
   script: bash deploy.sh
   on:
     branch: master
