@@ -5,10 +5,10 @@
     >
         <p v-if="uploadStatus < 100">
             {{$t('images.create.waitPlease')}}
-            <span v-if="showLegalCheck">{{$t('images.create.legal.announce')}}</span>
+            <span v-if="showLegalCheck && !legalFormHidden">{{$t('images.create.legal.announce')}}</span>
         </p>
 
-        <div class="progress" v-if="uploadStatus < 100 && !showLegalCheck">
+        <div class="progress" v-if="uploadStatus < 100 && (!showLegalCheck || legalFormHidden)">
             <div
                 :aria-valuenow="uploadStatus"
                 aria-valuemax="100"
@@ -23,7 +23,9 @@
         <MLegalForm
             :imageUpload="uploadPromise"
             @completed="onLegalUploadCompleted"
+            @saving="legalFormHidden = true"
             v-if="showLegalCheck"
+            v-show="!legalFormHidden"
         />
 
         <button
@@ -62,6 +64,7 @@
                 showLegalCheck: false,
                 uploadPromise: null,
                 resolveUpload: null,
+                legalFormHidden: false,
             }
         },
 
@@ -274,6 +277,7 @@
             onLegalUploadCompleted() {
                 this.uploadLegalStatus = 1;
                 this.showLegalCheck = false;
+                this.legalFormHidden = false;
             },
         }
     }

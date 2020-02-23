@@ -346,6 +346,8 @@
                     return;
                 }
 
+                this.saving = true;
+                this.$emit('saving');
                 this.imageUpload.then(this.save);
             },
 
@@ -356,8 +358,6 @@
             },
 
             save(imageId) {
-                this.saving = true;
-
                 Api().post(`images/${imageId}/legal`, this.payload)
                     .then(() => this.$emit('completed'))
                     .catch(error => {
