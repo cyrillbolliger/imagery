@@ -358,9 +358,12 @@
             },
             mouseLeave() {
                 this.dragStop();
-                this.move({pageX: -1, pageY: -1});
             },
-            touchDragStart() {
+            touchDragStart(event) {
+                const touch = event.touches[0];
+                const pos = this.relImagePos(touch.pageX, touch.pageY);
+                this.propagateMousePos(pos);
+
                 this.dragStart();
             },
             touchDragMove(event) {
@@ -384,21 +387,31 @@
                     this.dragObj.dragging = false;
                     this.dragObj = null;
                 }
+
+                this.propagateMousePos({x: -1, y: -1});
+
+                this.draw();
             },
             move(event) {
-                const pos = {
-                    x: (event.pageX - this.canvasPos.x) * this.width / this.canvasPos.width,
-                    y: (event.pageY - this.canvasPos.y) * this.height / this.canvasPos.height,
-                };
+                const pos = this.relImagePos(event.pageX, event.pageY);
 
                 if (this.dragObj) {
                     this.dragObj.drag(pos);
                 }
 
-                this.backgroundLayer.mousePos = pos;
-                this.barLayer.mousePos = pos;
+                this.propagateMousePos(pos);
 
                 this.draw();
+            },
+            relImagePos(absX, absY) {
+                return {
+                    x: (absX - this.canvasPos.x) * this.width / this.canvasPos.width,
+                    y: (absY - this.canvasPos.y) * this.height / this.canvasPos.height,
+                };
+            },
+            propagateMousePos(pos) {
+                this.backgroundLayer.mousePos = pos;
+                this.barLayer.mousePos = pos;
             },
 
             save() {
