@@ -252,15 +252,16 @@
 
                     document.body.appendChild(link);
 
-                    link.onclick = () => {
-                        requestAnimationFrame(() => {
-                            URL.revokeObjectURL(link.href);
-                            link.removeAttribute('href');
-                            document.body.removeChild(link);
-                        });
-                    };
-
                     link.click();
+
+                    window.setTimeout(() => {
+                        // do this delayed, so the browser has time to navigate
+                        // to the URL (chrome) and doesn't release the memory
+                        // to early (safari on iOS).
+                        URL.revokeObjectURL(link.href);
+                        link.removeAttribute('href');
+                        document.body.removeChild(link);
+                    }, 1000);
                 });
 
             },

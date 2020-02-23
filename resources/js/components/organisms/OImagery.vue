@@ -84,7 +84,7 @@
 
             <button
                 @click="save()"
-                class="btn btn-primary">{{$t('images.create.generate')}}
+                class="btn btn-primary mb-3">{{$t('images.create.generate')}}
             </button>
         </div>
     </div>
