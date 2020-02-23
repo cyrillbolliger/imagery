@@ -9,3 +9,7 @@
 
 // Custom select and multiselect styles
 @import 'select';
+
+.noscroll {
+    overflow: hidden;
+}

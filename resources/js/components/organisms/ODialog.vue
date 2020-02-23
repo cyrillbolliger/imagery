@@ -19,15 +19,18 @@
 <script>
     export default {
         name: "ODialog",
-        data() {
-            return {}
-        },
         props: {
             title: {
                 required: true,
                 type: String
             }
         },
+        created() {
+            document.body.classList.add('noscroll');
+        },
+        destroyed() {
+            document.body.classList.remove('noscroll');
+        }
     }
 </script>
 
