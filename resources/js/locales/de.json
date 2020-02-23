@@ -188,7 +188,7 @@
             "green": "Grün",
             "greengreen": "Grün - Grün",
             "greengreenWarning": "Diese Option solltest du nur verwenden, wenn der Hintergrund weiss ist.",
-            "copyright": "Copyright info",
+            "copyright": "Copyright Info",
             "copyOptional": "(optional)",
             "imageCopyInfo": "© Foto: {photographer}",
             "generate": "Bild generieren",
@@ -227,7 +227,7 @@
                     "friend": "Freund*in / Parteimitglied",
                     "unknown": "Ich weiss es nicht / Ich bin mir nicht sicher",
                     "source": "Where is the raw image from?",
-                    "sourcePlaceholder": "Url zum Rohbild der Bilddatenbank.",
+                    "sourcePlaceholder": "URL zum Rohbild der Bilddatenbank.",
                     "licence": "Select the raw images licence",
                     "other": "Sonstige",
                     "ccby": "Creative Commons mit Namensnennung",
@@ -236,7 +236,7 @@
                     "originatorPlaceholder": "Name des Fotografen, der Agentur oder der Person, die dieses Bild gemacht hat",
                     "confirmation": "Hiermit bestätige ich, dass:",
                     "rightToUse": "ich das Recht habe, dieses Bild zu veröffentlichen",
-                    "rightToShare": "Others can use this raw image without limitation"
+                    "rightToShare": "andere dieses Bild ohne Einschränkung nutzen können"
                 },
                 "confirmation": "Richtigkeit der Angaben bestätigen",
                 "saving": "Speichern...",
