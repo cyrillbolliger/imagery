@@ -7,6 +7,7 @@
             maxlength="192"
             type="text"
             v-model="value"
+            :placeholder="$t('images.create.copyOptional')"
         >
     </div>
 </template>
