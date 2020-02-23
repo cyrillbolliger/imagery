@@ -55,7 +55,7 @@
 
                             <small id="passwordHelpBlock" class="form-text text-muted">
                                 {{ __('Forgot password?') }}
-                                <a href="{{ route('password.request') }}">
+                                <a href="{{ route('password.request') }}" tabindex="1">
                                     {{ __('Reset it!')  }}
                                 </a>
                             </small>
