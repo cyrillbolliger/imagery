@@ -54,7 +54,7 @@
 <style lang="scss" scoped>
     .o-menu {
         background: $dark;
-        height: 100vh;
+        min-height: 100vh;
         max-width: 350px;
         box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.5);
         position: fixed;
@@ -62,7 +62,7 @@
         @include media-breakpoint-up(xl) {
             max-width: none;
             box-shadow: none;
-            position: static;
+            position: sticky;
         }
 
         &__close {
