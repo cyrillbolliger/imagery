@@ -8,7 +8,10 @@
                 </button>
             </header>
             <section class="row">
-                <div class="o-dialog__content col pt-3 pb-3 border-bottom">
+                <div
+                    :style="maxHeight"
+                    class="o-dialog__content col pt-3 pb-3 border-bottom"
+                >
                     <slot></slot>
                 </div>
             </section>
@@ -17,8 +20,20 @@
 </template>
 
 <script>
+    import WindowMixin from "../../mixins/WindowMixin";
+
     export default {
         name: "ODialog",
+        mixins: [WindowMixin],
+        computed: {
+            maxHeight() {
+                if (this.isMd) {
+                    return `max-height: calc(${this.viewHeight}px - 2 * 24px - 3.5em);`;
+                } else {
+                    return `max-height: calc(${this.viewHeight}px - 3.5em);`;
+                }
+            }
+        },
         props: {
             title: {
                 required: true,
@@ -76,7 +91,6 @@
 
             @include media-breakpoint-up(md) {
                 height: auto;
-                max-height: calc(100vh - 2 * 24px - 3.5rem);
             }
         }
     }
