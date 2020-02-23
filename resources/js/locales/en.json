@@ -188,7 +188,7 @@
             "green": "Green",
             "greengreen": "Green - Green",
             "greengreenWarning": "You should only use this option, if your background is white.",
-            "copyright": "Copyright info",
+            "copyright": "Copyright info (optional)",
             "imageCopyInfo": "© Photo: {photographer}",
             "generate": "Generate Image",
             "save": "Save Image",
