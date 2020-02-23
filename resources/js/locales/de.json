@@ -44,7 +44,8 @@
         "required": "Dieses Feld ist erforderlich.",
         "email": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
         "max_length": "Eingabe zu lang. Die maximale Länge beträgt {max} Zeichen.",
-        "double_check_form": "Es gibt ungültige Formulardaten. Bitte Eingabe überprüfen."
+        "double_check_form": "Es gibt ungültige Formulardaten. Bitte Eingabe überprüfen.",
+        "url": "Please enter a valid url."
     },
     "users": {
         "index": {
@@ -143,6 +144,10 @@
         "create": {
             "title": "Bild erstellen",
             "logo": "Logo",
+            "logoDefault": "Make this my default logo",
+            "logoDefaultSelected": "default",
+            "logoRemove": "Remove logo",
+            "logoDefaultSaveFailed": "Failed to save default logo. Try again.",
             "fontSize": "Schriftgrösse",
             "tooMuchText": "Deine Balken enthalten zu viel Text. Kürze ihn!",
             "sublineAdd": "Subline hinzufügen",
@@ -150,6 +155,7 @@
             "barRemove": "Balken entfernen",
             "headlineSecondaryAdd": "Zwei Magenta-Balken sind nur zulässig, wenn die Nachricht dies erfordert und sonst weniger Sinn ergäbe. Klicke auf Abbrechen, um einen zweiten Magenta-Balken einzufügen. (Du musst auf Abbrechen klicken, da die Leute die Nachricht nie lesen, sondern einfach auf OK klicken.)",
             "bars": "Balken",
+            "fontLoadingFailed": "Failed to load the correct font. Try to reload the page.",
             "barInitialText": "Klima",
             "background": "Hintergrund",
             "backgroundGreen": "Grün",
@@ -182,6 +188,8 @@
             "green": "Grün",
             "greengreen": "Grün - Grün",
             "greengreenWarning": "Diese Option solltest du nur verwenden, wenn der Hintergrund weiss ist.",
+            "copyright": "Copyright info (optional)",
+            "imageCopyInfo": "© Photo: {photographer}",
             "generate": "Bild generieren",
             "save": "Bild speichern",
             "sizes": {
@@ -193,6 +201,46 @@
                 "twFeed": "Twitter Feed Bild",
                 "instaStory": "Instagram Story",
                 "custom": "Eigene Grösse"
+            },
+            "legal": {
+                "announce": "Meanwhile, please answer the legal questions below.",
+                "personality": {
+                    "title": "Right of personality",
+                    "identifiablePeople": "Are there any identifiably people in the image?",
+                    "yes": "Yes",
+                    "no": "No",
+                    "publicInterest": "Are they either people of public interest or have they agreed to the publication of this image?",
+                    "unclear": "Unclear",
+                    "warningTitle": "Right of personality:",
+                    "warningText": "By law, people have to agree on the publication of photos, where they are identifiably."
+                },
+                "copyright": {
+                    "title": "Copyright",
+                    "warningTitle": "Copyright:",
+                    "warningText": "Publishing this image may violate the intellectual property right.",
+                    "originatorType": "Who is the originator of the raw image?",
+                    "originatorSelect": "Please select",
+                    "me": "Me",
+                    "stock": "Stock image",
+                    "agency": "Agency / Photographer",
+                    "friend": "Friend / Member of the party",
+                    "unknown": "I don't know / I'm not sure",
+                    "source": "Where is the raw image from?",
+                    "sourcePlaceholder": "Url to the raw image on the stock image platform.",
+                    "licence": "Select the raw images licence",
+                    "other": "Other",
+                    "ccby": "Creative Commons with Attribution",
+                    "cc0": "Creative Commons without Limitation",
+                    "originator": "Who is the originator of the raw image?",
+                    "originatorPlaceholder": "Name of the photographer, agency or person who did this artwork",
+                    "confirmation": "I hereby confirm that:",
+                    "rightToUse": "I have the right to use this raw image",
+                    "rightToShare": " Others can use this raw image without limitation"
+                },
+                "confirmation": "Confirm legal declarations",
+                "saving": "Saving...",
+                "invalid": "Ai, please double check the form above.",
+                "savingFailed": "Failed to save legal data. Try again."
             }
         },
         "gallery": {
@@ -230,6 +278,7 @@
         "removed": "Logo gelöscht.",
         "remove_confirmation": "Möchtest du {logo} wirklich löschen?",
         "groups": "Gruppen",
-        "groupsHelptext": "Die ausgewählten Gruppen können dieses Logo verwenden"
+        "groupsHelptext": "Die ausgewählten Gruppen können dieses Logo verwenden",
+        "not_found": "Failed to load logo. Try again."
     }
 }
