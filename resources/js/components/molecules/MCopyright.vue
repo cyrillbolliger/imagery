@@ -49,9 +49,13 @@
             },
 
             draw() {
+                const text = this.value
+                    ? this.$t('images.create.imageCopyInfo', {photographer: this.value})
+                    : '';
+
                 this.block.width = this.imageWidth;
                 this.block.height = this.imageHeight;
-                this.block.text = this.$t('images.create.imageCopyInfo', {photographer: this.value});
+                this.block.text = text;
                 this.block.color = this.color;
 
                 this.$emit('drawn', this.block.draw());
