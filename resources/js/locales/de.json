@@ -45,7 +45,7 @@
         "email": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
         "max_length": "Eingabe zu lang. Die maximale Länge beträgt {max} Zeichen.",
         "double_check_form": "Es gibt ungültige Formulardaten. Bitte Eingabe überprüfen.",
-        "url": "Please enter a valid url."
+        "url": "Bitte eine gültige URL eingeben."
     },
     "users": {
         "index": {
@@ -144,10 +144,10 @@
         "create": {
             "title": "Bild erstellen",
             "logo": "Logo",
-            "logoDefault": "Make this my default logo",
-            "logoDefaultSelected": "default",
-            "logoRemove": "Remove logo",
-            "logoDefaultSaveFailed": "Failed to save default logo. Try again.",
+            "logoDefault": "Zu meinem Standardlogo machen",
+            "logoDefaultSelected": "Standard",
+            "logoRemove": "Logo entfernen",
+            "logoDefaultSaveFailed": "Logo konnte nicht gespeichert werden. Bitte erneut versuchen.",
             "fontSize": "Schriftgrösse",
             "tooMuchText": "Deine Balken enthalten zu viel Text. Kürze ihn!",
             "sublineAdd": "Subline hinzufügen",
@@ -155,7 +155,7 @@
             "barRemove": "Balken entfernen",
             "headlineSecondaryAdd": "Zwei Magenta-Balken sind nur zulässig, wenn die Nachricht dies erfordert und sonst weniger Sinn ergäbe. Klicke auf Abbrechen, um einen zweiten Magenta-Balken einzufügen. (Du musst auf Abbrechen klicken, da die Leute die Nachricht nie lesen, sondern einfach auf OK klicken.)",
             "bars": "Balken",
-            "fontLoadingFailed": "Failed to load the correct font. Try to reload the page.",
+            "fontLoadingFailed": "Fehler beim Laden der richtigen Schriftart. Versuche die Seite neu zu laden.",
             "barInitialText": "Klima",
             "background": "Hintergrund",
             "backgroundGreen": "Grün",
@@ -188,8 +188,9 @@
             "green": "Grün",
             "greengreen": "Grün - Grün",
             "greengreenWarning": "Diese Option solltest du nur verwenden, wenn der Hintergrund weiss ist.",
-            "copyright": "Copyright info (optional)",
-            "imageCopyInfo": "© Photo: {photographer}",
+            "copyright": "Copyright info",
+            "copyOptional": "(optional)",
+            "imageCopyInfo": "© Foto: {photographer}",
             "generate": "Bild generieren",
             "save": "Bild speichern",
             "sizes": {
@@ -216,8 +217,8 @@
                 },
                 "copyright": {
                     "title": "Urheberrecht",
-                    "warningTitle": "Copyright:",
-                    "warningText": "Publishing this image may violate the intellectual property right.",
+                    "warningTitle": "Urheberrecht:",
+                    "warningText": "Die Veröffentlichung dieses Bildes kann eine Verletzung des Urheberrechts darstellen.",
                     "originatorType": "Wer ist der Urheber des Rohbildes?",
                     "originatorSelect": "Bitte auswählen",
                     "me": "Ich",
@@ -226,21 +227,21 @@
                     "friend": "Freund*in / Parteimitglied",
                     "unknown": "Ich weiss es nicht / Ich bin mir nicht sicher",
                     "source": "Where is the raw image from?",
-                    "sourcePlaceholder": "Url to the raw image on the stock image platform.",
+                    "sourcePlaceholder": "Url zum Rohbild der Bilddatenbank.",
                     "licence": "Select the raw images licence",
-                    "other": "Other",
-                    "ccby": "Creative Commons with Attribution",
-                    "cc0": "Creative Commons without Limitation",
+                    "other": "Sonstige",
+                    "ccby": "Creative Commons mit Namensnennung",
+                    "cc0": "Creative Commons ohne Einschränkung",
                     "originator": "Wer ist der Urheber des Rohbildes?",
                     "originatorPlaceholder": "Name des Fotografen, der Agentur oder der Person, die dieses Bild gemacht hat",
                     "confirmation": "Hiermit bestätige ich, dass:",
                     "rightToUse": "ich das Recht habe, dieses Bild zu veröffentlichen",
-                    "rightToShare": " Others can use this raw image without limitation"
+                    "rightToShare": "andere dieses Bild ohne Einschränkung nutzen können"
                 },
-                "confirmation": "Confirm legal declarations",
-                "saving": "Saving...",
-                "invalid": "Ai, please double check the form above.",
-                "savingFailed": "Failed to save legal data. Try again."
+                "confirmation": "Richtigkeit der Angaben bestätigen",
+                "saving": "Speichern...",
+                "invalid": "Ui, bitte überprüfe obiges Formular nochmals.",
+                "savingFailed": "Die rechtliche Angaben konnten nicht gespeichert werden. Bitte erneut versuchen."
             }
         },
         "gallery": {
@@ -279,6 +280,6 @@
         "remove_confirmation": "Möchtest du {logo} wirklich löschen?",
         "groups": "Gruppen",
         "groupsHelptext": "Die ausgewählten Gruppen können dieses Logo verwenden",
-        "not_found": "Failed to load logo. Try again."
+        "not_found": "Logo konnte nicht geladen werden. Bitte erneut versuchen."
     }
 }
