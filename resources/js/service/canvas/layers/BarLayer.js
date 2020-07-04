@@ -5,7 +5,7 @@ const shadowColorMouseOver = 'rgba(0,0,0,0.5)';
 const shadowMouseOverSize = 0.01;
 
 const borderMarginFactor = 2;
-const borderMarginFactorRadius = 3;
+const borderMarginFactorRadius = 2;
 
 export default class BarLayer extends Layer {
     constructor(canvas) {

@@ -1,5 +1,5 @@
 const borderWidthFactor = 0.0175;
-const radiusFactor = 3;
+const radiusFactor = 1;
 
 export default {
     width(canvasWidth, canvasHeight) {
