@@ -232,6 +232,10 @@
                 this.updateBarLayer(this.barBlock);
                 this.updateLogoLayer(this.logoBlock);
                 this.updateCopyrightLayer(this.copyrightBlock);
+
+                // this is needed a second time here, so the canvas height gets
+                // set correctly.
+                this.setCanvasPos();
             });
         },
 
