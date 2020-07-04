@@ -71,6 +71,10 @@ export default class Bar {
         this._imageWidth = width;
     }
 
+    get padding() {
+        return this._textDims.padding;
+    }
+
     draw() {
         this._setFont();
         this._setTextDims();

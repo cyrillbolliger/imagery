@@ -54,6 +54,7 @@
                 :image-width="width"
                 @drawn="updateBarLayer($event)"
                 @textChanged="keywords = $event"
+                @paddingChanged="textPadding = $event"
                 class="mt-2"
             />
 
@@ -128,6 +129,7 @@
                 width: 1080,
                 height: 1080,
                 fontSize: 50,
+                textPadding: 0,
                 backgroundType: BackgroundTypes.gradient,
                 backgroundTypes: BackgroundTypes,
                 rawImage: null,
@@ -251,6 +253,7 @@
                 this.barLayer.alignment = this.alignment;
                 this.barLayer.block = this.barBlock;
                 this.barLayer.borderWidth = this.borderWidth;
+                this.barLayer.textPadding = this.textPadding;
 
                 this.draw();
             },

@@ -39,6 +39,7 @@
                 @remove="headlinesPrimaryCount--"
                 @removed="remove('headlinesPrimary', n)"
                 @textChanged="updateText(`headlinesPrimary-${n}`, $event)"
+                @paddingChanged="updatePrimaryPadding($event)"
                 v-for="n in headlinesPrimaryCount"
             />
 
@@ -122,6 +123,7 @@
                 eventCounter: {},
                 initialText: null,
                 texts: {},
+                primaryPadding: 0,
             }
         },
 
@@ -322,6 +324,13 @@
                     .forEach(key => flatText += ` ${this.texts[key]}`);
 
                 this.$emit('textChanged', flatText.trim());
+            },
+
+            updatePrimaryPadding(value) {
+                if (this.primaryPadding !== value) {
+                    this.primaryPadding = value;
+                    this.$emit('paddingChanged', value);
+                }
             }
         },
 
