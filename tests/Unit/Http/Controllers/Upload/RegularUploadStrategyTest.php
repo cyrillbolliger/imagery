@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace App;
 
 use App\Http\Controllers\Upload\RegularUploadStrategy;
 use App\Http\Controllers\Upload\UploadStrategy;
