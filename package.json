@@ -23,7 +23,7 @@
         "popper.js": "^1.12",
         "resolve-url-loader": "^3.1.0",
         "sass": "^1.15.2",
-        "sass-loader": "^8.0.0",
+        "sass-loader": "^9.0.0",
         "sass-resources-loader": "^2.0.1",
         "vue": "^2.5.17",
         "vue-i18n": "^8.15.0",
@@ -34,7 +34,7 @@
         "vuex": "^3.1.1"
     },
     "dependencies": {
-        "blueimp-load-image": "^2.26.0",
+        "blueimp-load-image": "^5.13.0",
         "fontfaceobserver": "^2.1.0",
         "javascript-time-ago": "^2.0.4",
         "vue-masonry": "^0.11.8",
