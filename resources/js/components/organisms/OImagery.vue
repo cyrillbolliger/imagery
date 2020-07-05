@@ -214,7 +214,7 @@
         mounted() {
             this.canvas = this.$refs.canvas;
 
-            this.setCanvasPos();
+            this.initializeCanvasPos();
             this.setCanvasZoneLeft();
 
             this.$nextTick(() => {
@@ -232,10 +232,6 @@
                 this.updateBarLayer(this.barBlock);
                 this.updateLogoLayer(this.logoBlock);
                 this.updateCopyrightLayer(this.copyrightBlock);
-
-                // this is needed a second time here, so the canvas height gets
-                // set correctly.
-                this.setCanvasPos();
             });
         },
 
@@ -247,6 +243,18 @@
         },
 
         methods: {
+            initializeCanvasPos() {
+                // on startup, this is zero. since there is no hook
+                // to catch the fully rendered event, we have to retry
+                // until the browser has positioned the canvas.
+                window.requestAnimationFrame(() => {
+                    this.setCanvasPos();
+                    if (this.canvasPos.y === 0) {
+                        this.initializeCanvasPos();
+                    }
+                });
+            },
+
             updateBarLayer(barBlock) {
                 this.barBlock = barBlock;
 
@@ -347,7 +355,7 @@
                     this.canvasPos.width = pos.width;
                     this.canvasPos.height = pos.height;
                 });
-            }, 100),
+            }, 100, {leading: true, trailing: true}),
 
             setViewDims: debounce(function () {
                 this.viewHeight = document.documentElement.clientHeight;
