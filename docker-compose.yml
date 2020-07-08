@@ -19,7 +19,6 @@ services:
     image: mysql:5.7
     volumes:
       - .docker/mysql/data:/var/lib/mysql
-    restart: always
     env_file:
       - .env.docker
     container_name: imagery_mysql
