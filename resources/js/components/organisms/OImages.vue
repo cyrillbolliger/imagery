@@ -101,14 +101,14 @@
                     return this.$tc(
                         'images.gallery.searchTitle',
                         this.data.total,
-                        {number: this.images.length}
+                        {number: this.data.total}
                     );
                 }
 
                 return this.$tc(
                     'images.gallery.imageCount',
-                    this.images.length,
-                    {number: this.images.length}
+                    this.data.total,
+                    {number: this.data.total}
                 );
             },
 
