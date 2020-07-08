@@ -3,7 +3,7 @@
         <div class="d-flex align-items-center">
             <h3>{{title}}</h3>
             <div
-                v-if="loading"
+                v-if="initialLoading"
                 class="spinner-border text-primary ml-3"
                 role="status">
                 <span class="sr-only">Loading...</span>
@@ -11,7 +11,7 @@
         </div>
 
         <div
-            v-if="!loading"
+            v-if="!initialLoading"
             class="o-images__grid"
             v-masonry
             transition-duration="0.3s"
@@ -29,42 +29,8 @@
 
         <div style="clear:both"></div>
 
-        <nav :aria-label="$t('pagination.title')" class="mt-3">
-            <ul class="pagination justify-content-center">
-                <li class="page-item" :class="{disabled: isFirstPage}">
-                    <router-link class="page-link"
-                                 :to="{name: 'gallery', query: { q: $route.query.q, page: previousPage }}"
-                                 :tabindex="isFirstPage ? -1 : false"
-                                 :aria-disabled="isFirstPage"
-                                 @click.native="scrollToTop()"
-                    >{{$t('pagination.previous')}}
-                    </router-link>
-                </li>
-                <li v-for="n in pageCount"
-                    class="page-item"
-                    :class="{active: currentPageRouter == n}"
-                >
-                    <router-link
-                        class="page-link"
-                        :to="{name: 'gallery', query: { q: $route.query.q, page: n }}"
-                        @click.native="scrollToTop()"
-                    >{{n}}
-                    </router-link>
-                </li>
-                <li class="page-item" :class="{disabled: isLastPage}">
-                    <router-link class="page-link"
-                                 :to="{name: 'gallery', query: {
-                                     q: $route.query.q,
-                                     page: nextPage
-                                 }}"
-                                 :tabindex="isLastPage ? -1 : false"
-                                 :aria-disabled="isLastPage"
-                                 @click.native="scrollToTop()"
-                    >{{$t('pagination.next')}}
-                    </router-link>
-                </li>
-            </ul>
-        </nav>
+        <a-loader v-if="appending"></a-loader>
+
 
     </div>
 </template>
@@ -73,17 +39,21 @@
     import Api from "../../service/Api";
     import MImage from "../molecules/MImage";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
+    import ALoader from "../atoms/ALoader";
+
+    const scrollMargin = 2000;
 
     export default {
         name: "OImages",
-        components: {MImage},
+        components: {ALoader, MImage},
         mixins: [SnackbarMixin],
 
         data() {
             return {
                 images: [],
                 data: null,
-                loading: true,
+                initialLoading: true,
+                appending: false,
             }
         },
 
@@ -93,7 +63,7 @@
 
         computed: {
             title() {
-                if (this.loading) {
+                if (this.initialLoading) {
                     return this.$t('images.gallery.loading');
                 }
 
@@ -120,14 +90,6 @@
                 return this.$route.query.q.length > 0;
             },
 
-            isFirstPage() {
-                if (!this.data) {
-                    return true;
-                }
-
-                return this.data.current_page === 1;
-            },
-
             isLastPage() {
                 if (!this.data) {
                     return true;
@@ -152,30 +114,16 @@
                 return this.data.current_page;
             },
 
-            previousPage() {
-                return 1 < this.currentPage
-                    ? this.currentPage - 1
-                    : this.currentPage;
-            },
-
             nextPage() {
                 return this.pageCount > this.currentPage
                     ? this.currentPage + 1
                     : this.currentPage;
             },
-
-            currentPageRouter() {
-                if (!this.$route.query.page) {
-                    return 1;
-                }
-
-                return this.$route.query.page;
-            }
         },
 
         methods: {
             loadImages() {
-                this.loading = true;
+                this.initialLoading = true;
                 Api().get(this.endpoint)
                     .then(resp => this.data = resp.data)
                     .then(data => this.images = data.data)
@@ -183,23 +131,44 @@
                         this.snackErrorRetry(error, this.$t('images.gallery.loadingFailed'))
                             .then(this.loadImages)
                     )
-                    .finally(() => this.loading = false);
+                    .finally(() => {
+                        this.onScroll();
+                        window.addEventListener('scroll', this.onScroll);
+                        this.initialLoading = false;
+                    });
             },
 
-            scrollToTop() {
-                setTimeout(() =>
-                        window.scroll({
-                            top: 0,
-                            behavior: 'smooth'
-                        }),
-                    200);
+            loadMoreImages() {
+                this.appending = true;
+                Api().get(this.endpoint + "?page=" + this.nextPage)
+                    .then(resp => this.data = resp.data)
+                    .then(data => this.images.push(...data.data))
+                    .catch(error =>
+                        this.snackErrorRetry(error, this.$t('images.gallery.loadingFailed'))
+                            .then(this.loadImages)
+                    )
+                    .finally(() => this.appending = false);
+
             },
 
+            onScroll() {
+                const absWindowBottom = document.documentElement.scrollTop + window.innerHeight;
+                const documentHeight = document.documentElement.offsetHeight;
+                const shouldLoadMore = absWindowBottom + scrollMargin > documentHeight;
+
+                if (shouldLoadMore && !this.isLastPage && !this.appending) {
+                    this.loadMoreImages();
+                }
+            },
         },
 
         created() {
             this.loadImages();
             this.$store.dispatch('users/load');
+        },
+
+        beforeDestroy() {
+            window.removeEventListener('scroll', this.onScroll);
         },
 
         watch: {
