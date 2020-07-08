@@ -28,21 +28,15 @@
         computed: {
             endpoint() {
                 const terms = this.$route.query.q;
-                const page = this.$route.query.page;
                 let termsArg = '';
-                let pageArg = '';
 
                 if (terms) {
                     termsArg = encodeURIComponent(terms);
                 }
 
-                if (page) {
-                    pageArg = `?page=${page}`;
-                }
-
                 return terms ?
-                    `/images/final/search/${termsArg}${pageArg}` :
-                    `/images/final${pageArg}`;
+                    `/images/final/search/${termsArg}` :
+                    `/images/final`;
             },
 
             initialTerm() {
