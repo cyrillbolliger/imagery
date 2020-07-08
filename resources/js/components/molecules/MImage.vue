@@ -2,6 +2,7 @@
     <figure class="m-image mb-0">
         <img
             class="m-image__image"
+            :class="{transparent: data.background === 'transparent'}"
             @click="detailsShow = !detailsShow"
             :src="data.thumb_src"
             :alt="data.keywords">
@@ -127,6 +128,16 @@
 
         &__image {
             width: 100%;
+
+            &.transparent {
+                // https://stackoverflow.com/a/35362074
+                background-image: linear-gradient(45deg, #d7d7d7 25%, transparent 25%),
+                linear-gradient(-45deg, #d7d7d7 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #d7d7d7 75%),
+                linear-gradient(-45deg, transparent 75%, #d7d7d7 75%);
+                background-size: 20px 20px;
+                background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            }
         }
 
         &__caption {
