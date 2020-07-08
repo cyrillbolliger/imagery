@@ -3,7 +3,7 @@
         <div class="d-flex align-items-center">
             <h3>{{title}}</h3>
             <div
-                v-if="initialLoading"
+                v-if="loadingInitial"
                 class="spinner-border text-primary ml-3"
                 role="status">
                 <span class="sr-only">Loading...</span>
@@ -11,7 +11,7 @@
         </div>
 
         <div
-            v-if="!initialLoading"
+            v-if="!loadingInitial"
             class="o-images__grid"
             v-masonry
             transition-duration="0.3s"
@@ -52,7 +52,7 @@
             return {
                 images: [],
                 data: null,
-                initialLoading: true,
+                loadingInitial: true,
                 appending: false,
             }
         },
@@ -63,7 +63,7 @@
 
         computed: {
             title() {
-                if (this.initialLoading) {
+                if (this.loadingInitial) {
                     return this.$t('images.gallery.loading');
                 }
 
@@ -123,7 +123,7 @@
 
         methods: {
             loadImages() {
-                this.initialLoading = true;
+                this.loadingInitial = true;
                 Api().get(this.endpoint)
                     .then(resp => this.data = resp.data)
                     .then(data => this.images = data.data)
@@ -134,7 +134,7 @@
                     .finally(() => {
                         this.onScroll();
                         window.addEventListener('scroll', this.onScroll);
-                        this.initialLoading = false;
+                        this.loadingInitial = false;
                     });
             },
 
