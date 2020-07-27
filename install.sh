@@ -13,6 +13,7 @@ docker-compose build app
 # install dependencies
 docker-compose run app composer install
 docker-compose run -uroot node npm install -g cross-env
+docker-compose run -uroot node chown -R node:node /home/node/app
 docker-compose run node yarn install --frozen-lockfile --production=false
 
 # start up containers
