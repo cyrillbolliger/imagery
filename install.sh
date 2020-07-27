@@ -4,7 +4,7 @@ mkdir -p .docker/mysql/data
 
 # generate .env file
 SECRET=$(openssl rand 128 | openssl sha256 | sed 's/(stdin)= //')
-sed "s/APP_HASH_SECRET=.*/APP_HASH_SECRET=${SECRET}/" .env.example >.env
+sed "s/APP_HASH_SECRET=.*/APP_HASH_SECRET=${SECRET}/" .env.example > .env
 
 # get containers ready
 docker-compose pull
@@ -13,6 +13,7 @@ docker-compose build app
 # install dependencies
 docker-compose run app composer install
 docker-compose run -uroot node npm install -g cross-env
+docker-compose run -uroot node chown -R node:node /home/node/app
 docker-compose run node yarn install --frozen-lockfile --production=false
 
 # start up containers
@@ -24,11 +25,11 @@ docker-compose exec app php artisan key:generate
 # wait until MySQL is really available
 maxcounter=60
 counter=0
-while ! docker exec imagery_mysql bash -c 'mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}' >/dev/null 2>&1; do
+while ! docker exec imagery_mysql bash -c 'mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}' > /dev/null 2>&1; do
     sleep 1
     counter=$(expr $counter + 1)
     if [ $counter -gt $maxcounter ]; then
-        echo >&2 "FAILED: We have been waiting for MySQL too long, but we couldn't reach it."
+        >&2 echo "FAILED: We have been waiting for MySQL too long, but we couldn't reach it."
         exit 1
     fi
     echo "Waiting for MySQL to get ready... ${counter}s"
