@@ -12,7 +12,7 @@ docker-compose build app
 
 # install dependencies
 docker-compose run app composer install
-docker-compose run node yarn global add cross-env
+docker-compose run -uroot node npm install -g cross-env
 docker-compose run node yarn install --frozen-lockfile --production=false
 
 # start up containers
