@@ -22,26 +22,25 @@ docker-compose up -d
 # set application key
 docker-compose exec app php artisan key:generate
 
-# wait until MySQL is really available
-maxcounter=60
-counter=0
-while ! docker exec imagery_mysql bash -c 'mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD}' > /dev/null 2>&1; do
-    sleep 1
-    counter=$(expr $counter + 1)
-    if [ $counter -gt $maxcounter ]; then
-        >&2 echo "FAILED: We have been waiting for MySQL too long, but we couldn't reach it."
-        exit 1
-    fi
-    echo "Waiting for MySQL to get ready... ${counter}s"
-done
-echo "Yay, MySQL is up and ready"
-
-# create test database
+# get params to create test database
 TEST_MYSQL_ROOT_PASSWORD=$(grep MYSQL_ROOT_PASSWORD .env.docker | cut -d '=' -f2)
 TEST_MYSQL_USER=$(grep DB_USERNAME .env.testing | cut -d '=' -f2)
 TEST_MYSQL_PASSWORD=$(grep DB_PASSWORD .env.testing | cut -d '=' -f2)
 TEST_MYSQL_DATABASE=$(grep DB_DATABASE .env.testing | cut -d '=' -f2)
-docker exec imagery_mysql mysql -uroot -p${TEST_MYSQL_ROOT_PASSWORD} -e"CREATE DATABASE ${TEST_MYSQL_DATABASE};"
+
+# wait until MySQL is really available then create database
+maxcounter=60
+counter=0
+while ! docker exec imagery_mysql mysql -uroot -p${TEST_MYSQL_ROOT_PASSWORD} -e"CREATE DATABASE ${TEST_MYSQL_DATABASE};" > /dev/null 2>&1; do
+    sleep 1
+    counter=$(( $counter + 1))
+    if [ $counter -gt $maxcounter ]; then
+        echo >&2 "FAILED: We have been waiting for MySQL too long, but we couldn't reach it."
+        exit 1
+    fi
+    echo "Waiting for MySQL to get ready... ${counter}s"
+done
+echo "Yay, MySQL is up and ready. Database created."
 docker exec imagery_mysql mysql -uroot -p${TEST_MYSQL_ROOT_PASSWORD} -e"CREATE USER '${TEST_MYSQL_USER}'@'%' IDENTIFIED BY '${TEST_MYSQL_PASSWORD}';"
 docker exec imagery_mysql mysql -uroot -p${TEST_MYSQL_ROOT_PASSWORD} -e"GRANT ALL PRIVILEGES ON ${TEST_MYSQL_DATABASE}.* TO '${TEST_MYSQL_USER}'@'%';"
 
