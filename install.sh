@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 echo "PWD: $(pwd)"
 
 MYSQL_DIR="$(dirname "$0")/.docker/mysql/data"
@@ -9,7 +11,7 @@ if [ ! -d "$MYSQL_DIR" ]; then
     exit 1;
 fi
 
-if [ ! -w $MYSQL_DIR || ! -r $MYSQL_DIR ]; then
+if [ (! -w $MYSQL_DIR) -o (! -r $MYSQL_DIR) -o (! -x $MYSQL_DIR)]; then
     echo "Mysql data directory is not writeable."
     exit 1;
 fi
