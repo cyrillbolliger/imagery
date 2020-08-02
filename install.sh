@@ -47,12 +47,17 @@ done
 echo "Yay, MySQL is up and ready."
 
 # create test database
-docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"CREATE DATABASE ${TEST_MYSQL_DATABASE};"
-docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"CREATE USER '${TEST_MYSQL_USER}'@'%' IDENTIFIED BY '${TEST_MYSQL_PASSWORD}';"
-docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"GRANT ALL PRIVILEGES ON ${TEST_MYSQL_DATABASE}.* TO '${TEST_MYSQL_USER}'@'%';"
+if docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" imagery_test > /dev/null 2>&1; then
+    echo "Test database exists."
+else
+    echo "Creating test database."
+    docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"CREATE DATABASE ${TEST_MYSQL_DATABASE};"
+    docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"CREATE USER '${TEST_MYSQL_USER}'@'%' IDENTIFIED BY '${TEST_MYSQL_PASSWORD}';"
+    docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"GRANT ALL PRIVILEGES ON ${TEST_MYSQL_DATABASE}.* TO '${TEST_MYSQL_USER}'@'%';"
+fi
 
 # setup database and seed with demo data
-docker-compose exec app php artisan migrate
+docker-compose exec app php artisan migrate:fresh
 docker-compose exec app php artisan db:seed --class=DemoSeeder
 
 # fully restart all containers (else there is a problem with the application key)
