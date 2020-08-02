@@ -5,12 +5,7 @@ FROM php:7.4-apache
 RUN apt-get update -y \
   && apt-get install -y \
     openssl \
-    zip \
-    unzip \
     libzip-dev \
-    git \
-    vim \
-    less \
     libjpeg62-turbo-dev \
     libpng-dev \
     libmagickwand-dev --no-install-recommends
