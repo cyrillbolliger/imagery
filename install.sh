@@ -23,10 +23,10 @@ docker-compose up -d
 docker-compose exec app php artisan key:generate
 
 # get params to create test database
-TEST_MYSQL_ROOT_PASSWORD=$(grep MYSQL_ROOT_PASSWORD .env.docker | cut -d '=' -f2)
-TEST_MYSQL_USER=$(grep DB_USERNAME .env.testing | cut -d '=' -f2)
-TEST_MYSQL_PASSWORD=$(grep DB_PASSWORD .env.testing | cut -d '=' -f2)
-TEST_MYSQL_DATABASE=$(grep DB_DATABASE .env.testing | cut -d '=' -f2)
+TEST_MYSQL_ROOT_PASSWORD=$(grep MYSQL_ROOT_PASSWORD .env.docker | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
+TEST_MYSQL_USER=$(grep DB_USERNAME .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
+TEST_MYSQL_PASSWORD=$(grep DB_PASSWORD .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
+TEST_MYSQL_DATABASE=$(grep DB_DATABASE .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
 
 # wait until MySQL is really available
 maxcounter=60
@@ -40,7 +40,6 @@ while ! docker exec imagery_mysql mysql -uroot -p${TEST_MYSQL_ROOT_PASSWORD} -e"
     fi
     echo "Waiting for MySQL to get ready... ${counter}s"
 done
-sleep 30
 echo "Yay, MySQL is up and ready."
 
 # create test database
