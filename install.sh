@@ -2,28 +2,46 @@
 
 set -e
 
-echo "PWD: $(pwd)"
+# get containers ready
+docker-compose pull
+docker-compose build app
 
-MYSQL_DIR=".docker/mysql/data"
-mkdir -p "$MYSQL_DIR"
+# prepare test database
+mkdir -p .docker/mysql/data
 
-if [ ! -d "$MYSQL_DIR" ]; then
-    echo "Couldn't create mysql data directory: $MYSQL_DIR"
-    exit 1
-fi
+# get params to create test database
+TEST_MYSQL_ROOT_PASSWORD=$(grep MYSQL_ROOT_PASSWORD .env.docker | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
+TEST_MYSQL_USER=$(grep DB_USERNAME .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
+TEST_MYSQL_PASSWORD=$(grep DB_PASSWORD .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
+TEST_MYSQL_DATABASE=$(grep DB_DATABASE .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
 
-if [ ! -w $MYSQL_DIR -o ! -r $MYSQL_DIR -o ! -x $MYSQL_DIR ]; then
-    echo "Mysql data directory is not writeable: $MYSQL_DIR"
-    exit 1
-fi
+# generate db creation script
+SQL_FILE_NAME="50_create_test_db.sql"
+SQL_FILE_PATH="/tmp/$SQL_FILE_NAME"
+echo "CREATE DATABASE ${TEST_MYSQL_DATABASE};
+CREATE USER '${TEST_MYSQL_USER}'@'%' IDENTIFIED BY '${TEST_MYSQL_PASSWORD}';
+GRANT ALL PRIVILEGES ON ${TEST_MYSQL_DATABASE}.* TO '${TEST_MYSQL_USER}'@'%';" >> "${SQL_FILE_PATH}"
+
+# start mysql with the generation script mapped in
+docker-compose run -v "${SQL_FILE_PATH}:/docker-entrypoint-initdb.d/${SQL_FILE_NAME}" mysql
+
+# wait until MySQL is really available
+maxcounter=60
+counter=0
+while ! docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"SHOW DATABASES;" > /dev/null 2>&1; do
+    sleep 1
+    counter=$(( counter + 1))
+    if [ $counter -gt $maxcounter ]; then
+        echo >&2 "FAILED: We have been waiting for MySQL too long, but we couldn't reach it."
+        exit 1
+    fi
+    echo "Waiting for MySQL to get ready... ${counter}s"
+done
+echo "Yay, MySQL is up and ready."
 
 # generate .env file
 SECRET=$(openssl rand 128 | openssl sha256 | sed 's/(stdin)= //')
 sed "s/APP_HASH_SECRET=.*/APP_HASH_SECRET=${SECRET}/" .env.example > .env
-
-# get containers ready
-docker-compose pull
-docker-compose build app
 
 # install dependencies
 docker-compose run app composer install
@@ -36,33 +54,6 @@ docker-compose up -d
 
 # set application key
 docker-compose exec app php artisan key:generate
-
-# get params to create test database
-TEST_MYSQL_ROOT_PASSWORD=$(grep MYSQL_ROOT_PASSWORD .env.docker | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
-TEST_MYSQL_USER=$(grep DB_USERNAME .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
-TEST_MYSQL_PASSWORD=$(grep DB_PASSWORD .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
-TEST_MYSQL_DATABASE=$(grep DB_DATABASE .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
-
-echo "TEST_MYSQL_ROOT_PASSWORD: $TEST_MYSQL_ROOT_PASSWORD"
-
-# wait until MySQL is really available
-maxcounter=60
-counter=0
-while ! docker exec imagery_mysql mysql -uroot -p${TEST_MYSQL_ROOT_PASSWORD} -e"SHOW DATABASES;" > /dev/null 2>&1; do
-    sleep 1
-    counter=$(( $counter + 1))
-    if [ $counter -gt $maxcounter ]; then
-        echo >&2 "FAILED: We have been waiting for MySQL too long, but we couldn't reach it."
-        exit 1
-    fi
-    echo "Waiting for MySQL to get ready... ${counter}s"
-done
-echo "Yay, MySQL is up and ready."
-
-# create test database
-docker exec imagery_mysql mysql -uroot -p${TEST_MYSQL_ROOT_PASSWORD} -e"CREATE DATABASE ${TEST_MYSQL_DATABASE};"
-docker exec imagery_mysql mysql -uroot -p${TEST_MYSQL_ROOT_PASSWORD} -e"CREATE USER '${TEST_MYSQL_USER}'@'%' IDENTIFIED BY '${TEST_MYSQL_PASSWORD}';"
-docker exec imagery_mysql mysql -uroot -p${TEST_MYSQL_ROOT_PASSWORD} -e"GRANT ALL PRIVILEGES ON ${TEST_MYSQL_DATABASE}.* TO '${TEST_MYSQL_USER}'@'%';"
 
 # setup database and seed with demo data
 docker-compose exec app php artisan migrate
