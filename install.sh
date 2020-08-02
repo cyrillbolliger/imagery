@@ -4,8 +4,9 @@ set -e
 
 echo "PWD: $(pwd)"
 
-MYSQL_DIR="$(dirname "$0")/.docker/mysql/data"
+MYSQL_DIR=".docker/mysql/data"
 mkdir -p "$MYSQL_DIR"
+
 if [ ! -d "$MYSQL_DIR" ]; then
     echo "Couldn't create mysql data directory: $MYSQL_DIR"
     exit 1
@@ -41,6 +42,8 @@ TEST_MYSQL_ROOT_PASSWORD=$(grep MYSQL_ROOT_PASSWORD .env.docker | cut -d '=' -f2
 TEST_MYSQL_USER=$(grep DB_USERNAME .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
 TEST_MYSQL_PASSWORD=$(grep DB_PASSWORD .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
 TEST_MYSQL_DATABASE=$(grep DB_DATABASE .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
+
+echo "TEST_MYSQL_ROOT_PASSWORD: $TEST_MYSQL_ROOT_PASSWORD"
 
 # wait until MySQL is really available
 maxcounter=60
