@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-mkdir -p $(dirname "$0")/.docker/mysql/data
+echo "Create directory for mysql data: $(dirname "$0")/.docker/mysql/data"
+mkdir -p "$(dirname "$0")/.docker/mysql/data"
+echo $?
 
 # generate .env file
 SECRET=$(openssl rand 128 | openssl sha256 | sed 's/(stdin)= //')
