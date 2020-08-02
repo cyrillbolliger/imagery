@@ -40,8 +40,8 @@ while ! docker exec imagery_mysql mysql -uroot -p${TEST_MYSQL_ROOT_PASSWORD} -e"
     fi
     echo "Waiting for MySQL to get ready... ${counter}s"
 done
-sleep 1
-echo "Yay, MySQL is up and ready. Database created."
+sleep 30
+echo "Yay, MySQL is up and ready."
 
 # create test database
 docker exec imagery_mysql mysql -uroot -p${TEST_MYSQL_ROOT_PASSWORD} -e"CREATE DATABASE ${TEST_MYSQL_DATABASE};"
