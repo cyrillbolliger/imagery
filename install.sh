@@ -2,46 +2,17 @@
 
 set -e
 
-# get containers ready
-docker-compose pull
-docker-compose build app
-
-# prepare test database
-mkdir -p .docker/mysql/data
-
-# get params to create test database
-TEST_MYSQL_ROOT_PASSWORD=$(grep MYSQL_ROOT_PASSWORD .env.docker | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
-TEST_MYSQL_USER=$(grep DB_USERNAME .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
-TEST_MYSQL_PASSWORD=$(grep DB_PASSWORD .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
-TEST_MYSQL_DATABASE=$(grep DB_DATABASE .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
-
-# generate db creation script
-SQL_FILE_NAME="50_create_test_db.sql"
-SQL_FILE_PATH="/tmp/$SQL_FILE_NAME"
-echo "CREATE DATABASE ${TEST_MYSQL_DATABASE};
-CREATE USER '${TEST_MYSQL_USER}'@'%' IDENTIFIED BY '${TEST_MYSQL_PASSWORD}';
-GRANT ALL PRIVILEGES ON ${TEST_MYSQL_DATABASE}.* TO '${TEST_MYSQL_USER}'@'%';" >> "${SQL_FILE_PATH}"
-
-# start mysql with the generation script mapped in
-docker-compose run -v "${SQL_FILE_PATH}:/docker-entrypoint-initdb.d/${SQL_FILE_NAME}" mysql
-
-# wait until MySQL is really available
-maxcounter=60
-counter=0
-while ! docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"SHOW DATABASES;" > /dev/null 2>&1; do
-    sleep 1
-    counter=$(( counter + 1))
-    if [ $counter -gt $maxcounter ]; then
-        echo >&2 "FAILED: We have been waiting for MySQL too long, but we couldn't reach it."
-        exit 1
-    fi
-    echo "Waiting for MySQL to get ready... ${counter}s"
-done
-echo "Yay, MySQL is up and ready."
+## generate .env file
+SECRET=$(openssl rand 128 | openssl sha256 | sed 's/(stdin)= //')
+sed "s/APP_HASH_SECRET=.*/APP_HASH_SECRET=${SECRET}/" .env.example > .env
 
 # generate .env file
 SECRET=$(openssl rand 128 | openssl sha256 | sed 's/(stdin)= //')
 sed "s/APP_HASH_SECRET=.*/APP_HASH_SECRET=${SECRET}/" .env.example > .env
+
+# get containers ready
+docker-compose pull
+docker-compose build app
 
 # install dependencies
 docker-compose run app composer install
@@ -54,6 +25,31 @@ docker-compose up -d
 
 # set application key
 docker-compose exec app php artisan key:generate
+
+# get params to create test database
+TEST_MYSQL_ROOT_PASSWORD=$(grep MYSQL_ROOT_PASSWORD .env.docker | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
+TEST_MYSQL_USER=$(grep DB_USERNAME .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
+TEST_MYSQL_PASSWORD=$(grep DB_PASSWORD .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
+TEST_MYSQL_DATABASE=$(grep DB_DATABASE .env.testing | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
+
+# wait until MySQL is really available
+maxcounter=60
+counter=0
+while ! docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" > /dev/null 2>&1; do
+    sleep 1
+    counter=$(( counter + 1))
+    if [ $counter -gt $maxcounter ]; then
+        echo >&2 "FAILED: We have been waiting for MySQL too long, but we couldn't reach it."
+        exit 1
+    fi
+    echo "Waiting for MySQL to get ready... ${counter}s"
+done
+echo "Yay, MySQL is up and ready."
+
+# create test database
+docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"CREATE DATABASE ${TEST_MYSQL_DATABASE};"
+docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"CREATE USER '${TEST_MYSQL_USER}'@'%' IDENTIFIED BY '${TEST_MYSQL_PASSWORD}';"
+docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"GRANT ALL PRIVILEGES ON ${TEST_MYSQL_DATABASE}.* TO '${TEST_MYSQL_USER}'@'%';"
 
 # setup database and seed with demo data
 docker-compose exec app php artisan migrate
@@ -72,7 +68,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 echo -e "\n"
-echo -e "${GREEN}Yupii, installation successfull!${NC}\n"
+echo -e "${GREEN}Yupii, installation successful!${NC}\n"
 echo -e "${YELLOW}NOTE:${NC} You'll need to add the proprietary fonts, to get this working properly."
 echo -e "Ask ${YELLOW}admin at gruene dot ch${NC} for more information.\n"
 echo -e "Now visit ${GREEN}http://localhost:8000${NC}"

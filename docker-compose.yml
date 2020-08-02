@@ -18,7 +18,7 @@ services:
   mysql:
     image: mysql:5.7
     volumes:
-      - .docker/mysql/data:/var/lib/mysql
+      - database:/var/lib/mysql
     env_file:
       - .env.docker
     container_name: imagery_mysql
@@ -45,3 +45,6 @@ services:
       - ./:/home/node/app:cached
     command: yarn watch
     container_name: imagery_node
+
+volumes:
+  database:
