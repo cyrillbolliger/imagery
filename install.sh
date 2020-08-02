@@ -8,12 +8,12 @@ MYSQL_DIR="$(dirname "$0")/.docker/mysql/data"
 mkdir -p "$MYSQL_DIR"
 if [ ! -d "$MYSQL_DIR" ]; then
     echo "Couldn't create mysql data directory: $MYSQL_DIR"
-    exit 1;
+    exit 1
 fi
 
-if [ (! -w $MYSQL_DIR) -o (! -r $MYSQL_DIR) -o (! -x $MYSQL_DIR)]; then
-    echo "Mysql data directory is not writeable."
-    exit 1;
+if [ ! -w $MYSQL_DIR -o ! -r $MYSQL_DIR -o ! -x $MYSQL_DIR ]; then
+    echo "Mysql data directory is not writeable: $MYSQL_DIR"
+    exit 1
 fi
 
 # generate .env file
