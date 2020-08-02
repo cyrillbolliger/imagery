@@ -1,8 +1,18 @@
 #!/usr/bin/env bash
 
-echo "Create directory for mysql data: $(dirname "$0")/.docker/mysql/data"
-mkdir -p "$(dirname "$0")/.docker/mysql/data"
-echo $?
+echo "PWD: $(pwd)"
+
+MYSQL_DIR="$(dirname "$0")/.docker/mysql/data"
+mkdir -p "$MYSQL_DIR"
+if [ ! -d "$MYSQL_DIR" ]; then
+    echo "Couldn't create mysql data directory: $MYSQL_DIR"
+    exit 1;
+fi
+
+if [ ! -w $MYSQL_DIR || ! -r $MYSQL_DIR ]; then
+    echo "Mysql data directory is not writeable."
+    exit 1;
+fi
 
 # generate .env file
 SECRET=$(openssl rand 128 | openssl sha256 | sed 's/(stdin)= //')
