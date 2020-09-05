@@ -13,7 +13,7 @@ use Spatie\WelcomeNotification\WelcomesNewUsers;
 |
 */
 
-Route::prefix('api/1')->middleware('auth')->group(function () {
+Route::prefix('api/1')->middleware('auth.federated')->group(function () {
     /**
      * Users
      */
@@ -214,13 +214,17 @@ Route::middleware(WelcomesNewUsers::class)->group(function () {
          ->where('user', '\d+');
 });
 
+Route::get('users/register/sso', function() {
+    die('todo');
+})->name('register-sso-user');
+
 Auth::routes();
 
-Route::get('/', 'HomeController@index');
+Route::get('/', 'HomeController@index')->middleware('auth.federated');
 
 /**
  * "Catch all" route
  *
  * This route is necessary for the vuejs router to work
  */
-Route::fallback('HomeController@index');
+Route::fallback('HomeController@index')->middleware('auth.federated');

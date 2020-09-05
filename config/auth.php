@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'web-local',
         'passwords' => 'users',
     ],
 
@@ -36,9 +36,14 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        'web-local' => [
             'driver' => 'session',
             'provider' => 'users',
+        ],
+
+        'web-sso' => [
+            'driver' => 'keycloak-web',
+            'provider' => 'keycloak-users',
         ],
 
         'api' => [
@@ -71,10 +76,10 @@ return [
             'model' => App\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'keycloak-users' => [
+            'driver' => 'keycloak-users',
+            'model' => App\KeycloakUser::class,
+        ],
     ],
 
     /*

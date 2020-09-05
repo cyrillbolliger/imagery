@@ -80,6 +80,8 @@
                             <a href="{{ route('register') }}" class="btn btn-link">{{ __('Create account') }}</a>
                         </div>
                     </form>
+                    todo: make sso-login big and hide regular login behind link, if sso cookie was set.<br>
+                    <a href="{{ route('keycloak.login') }}">sso-login</a>
                 </div>
             </div>
         </div>
