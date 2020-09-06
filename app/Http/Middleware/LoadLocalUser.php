@@ -44,7 +44,7 @@ class LoadLocalUser
         if ($user) {
             Auth::shouldUse('web-local');
             Auth::setUser($user);
-            Auth::login($user);
+            Auth::login($user, true);
             KeycloakWeb::forgetToken();
         }
     }
