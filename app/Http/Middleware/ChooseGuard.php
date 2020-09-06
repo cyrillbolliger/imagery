@@ -14,8 +14,6 @@ class ChooseGuard
     /**
      * Make Auth use the web-sso guard, if it's an sso-login attempt.
      *
-     * Uses a cookie to ensure, the first
-     *
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
      * @return mixed
