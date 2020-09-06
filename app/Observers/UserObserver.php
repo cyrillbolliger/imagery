@@ -16,9 +16,13 @@ class UserObserver
      */
     public function creating(User $user)
     {
-        // only fire for authenticated users so we don't kill the seeder
-        if (Auth::user()) {
-            $user->addedBy()->associate(Auth::user());
+        // only fire for authenticated local users
+        // so we don't kill the seeder (authenticated)
+        // and the OIDC registration process
+        $manager = Auth::user();
+
+        if ($manager instanceof \App\User) {
+            $user->addedBy()->associate($manager);
         }
     }
 

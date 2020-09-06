@@ -10,7 +10,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use \Spatie\WelcomeNotification\ReceivesWelcomeNotification;
 
 /**
  * Class User
@@ -34,10 +33,10 @@ use \Spatie\WelcomeNotification\ReceivesWelcomeNotification;
  * @property-read bool $is_admin
  * @property Carbon|null $last_login
  * @property string|null $remember_token
+ * @property Carbon|null $pending_approval
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property string|null $welcome_valid_until
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Role[] $adminRoles
  * @property-read int|null $admin_roles_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
@@ -77,7 +76,6 @@ class User extends Authenticatable
 {
     use Notifiable;
     use SoftDeletes;
-    use ReceivesWelcomeNotification;
 
     public const LANG_EN = 'en';
     public const LANG_DE = 'de';
@@ -96,9 +94,11 @@ class User extends Authenticatable
         'email',
         'password',
         'managed_by',
+        'added_by',
         'default_logo',
         'super_admin',
         'lang',
+        'pending_approval'
     ];
 
     /**
@@ -119,6 +119,7 @@ class User extends Authenticatable
     protected $dates = [
         'email_verified_at',
         'last_login',
+        'pending_approval'
     ];
 
     /**

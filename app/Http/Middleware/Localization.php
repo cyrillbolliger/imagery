@@ -54,7 +54,8 @@ class Localization
 
     private function getUserLang()
     {
-        return Auth::user() ? Auth::user()->lang : false;
+        $user = Auth::user();
+        return $user instanceof \App\User ? $user->lang : false;
     }
 
     private function detectBrowserLang()

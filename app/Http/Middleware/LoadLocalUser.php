@@ -2,12 +2,26 @@
 
 namespace App\Http\Middleware;
 
+use App\Exceptions\UserFederationException;
+use App\Services\UserFederationService;
 use Closure;
-use Illuminate\Support\Facades\Auth;
-use Vizir\KeycloakWebGuard\Facades\KeycloakWeb;
+use Illuminate\Auth\AuthenticationException;
 
 class LoadLocalUser
 {
+    /**
+     * @var UserFederationService
+     */
+    protected $federationService;
+
+    /**
+     * @param UserFederationService $federationService
+     */
+    public function __construct(UserFederationService $federationService)
+    {
+        $this->federationService = $federationService;
+    }
+
     /**
      * Convert any sso authenticated user to its local user object (identified
      * by email). Redirect to the sso user registration if no local user object
@@ -15,42 +29,19 @@ class LoadLocalUser
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
+     * @param UserFederationService $federationService
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-        $user = $request->user();
-
-        if ($this->isKeycloakUser($user)) {
-            $this->loadLocalUser($user);
-        }
-
-        if ($this->isLocalUserLoaded()) {
-            return $next($request);
-        } else {
+        try {
+            $this->federationService->loadLocalUser();
+        } catch (UserFederationException $e) {
             return redirect()->route('register-sso-user');
+        } catch (AuthenticationException $e) {
+            return redirect()->route( 'login' );
         }
-    }
 
-    private function isKeycloakUser($user)
-    {
-        return $user instanceof \App\KeycloakUser;
-    }
-
-    private function loadLocalUser($keycloakUser)
-    {
-        $user = \App\User::whereEmail($keycloakUser->id)->first();
-
-        if ($user) {
-            Auth::shouldUse('web-local');
-            Auth::setUser($user);
-            Auth::login($user, true);
-            KeycloakWeb::forgetToken();
-        }
-    }
-
-    private function isLocalUserLoaded()
-    {
-        return Auth::user() instanceof \App\User;
+        return $next($request);
     }
 }
