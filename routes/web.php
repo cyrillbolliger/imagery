@@ -213,10 +213,16 @@ Route::get('users/register/sso', 'UserController@register')
     ->middleware(['auth'])
     ->name('register-sso-user');
 
-Route::get( 'users/register/error', 'UserController@registrationError')
+Route::get('users/register/error', 'UserController@registrationError')
     ->name('registration-error');
 
-Auth::routes();
+Auth::routes([
+    'logout' => false,
+    'register' => false,
+    'rest' => false,
+    'confirm' => false,
+    'verify' => false
+]);
 
 Route::get('/', 'HomeController@index')
     ->middleware('auth.federated')
