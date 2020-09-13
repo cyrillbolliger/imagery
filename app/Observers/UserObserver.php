@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class UserObserver
 {
@@ -24,6 +25,20 @@ class UserObserver
         if ($manager instanceof \App\User) {
             $user->addedBy()->associate($manager);
         }
+
+        $this->setActivationToken($user);
+    }
+
+    /**
+     * Handle the user "updating" event.
+     *
+     * @param  \App\User  $user
+     *
+     * @return void
+     */
+    public function updating(User $user)
+    {
+        $this->setActivationToken($user);
     }
 
     /**
@@ -89,5 +104,17 @@ class UserObserver
     public function restoring(User $user)
     {
         $user->email = $this->restoreEmail($user->email);
+    }
+
+    /**
+     * Add a random activation token to the user if needed
+     *
+     * @param User $user
+     */
+    private function setActivationToken(User $user)
+    {
+        if (!$user->enabled && !$user->activation_token) {
+            $user->activation_token = Str::random(64);
+        }
     }
 }

@@ -30,7 +30,7 @@
             </template>
             <template #input>
                 <ACheckbox
-                    v-model="currentUser.pending_approval"
+                    v-model="currentUser.enabled"
                     :label="$t('user.enabled_desc')"
                 />
             </template>
@@ -210,7 +210,11 @@
             user: {
                 required: true,
                 type: Object,
-            }
+            },
+            activation: {
+                type: String,
+                default: false,
+            },
         },
 
 
@@ -248,6 +252,11 @@
             }
 
             this.notifyUser = this.newUser;
+
+            if (this.activation && this.activation === this.currentUser.activation_token) {
+                this.currentUser.enabled = true;
+                this.notifyUser = true;
+            }
         },
 
 

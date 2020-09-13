@@ -35,7 +35,8 @@ class CreateUsersTable extends Migration
             $table->integer('login_count')->default(0);
             $table->timestamp('last_login')->nullable();
             $table->rememberToken();
-            $table->timestamp('pending_approval')->nullable();
+            $table->boolean('enabled')->default(false);
+            $table->string('activation_token', 64)->nullable();
             $table->timestamps();
             $table->softDeletes();
 

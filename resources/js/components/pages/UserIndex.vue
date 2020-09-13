@@ -18,6 +18,7 @@
             <template #default>
                 <OUser
                     :user="dialogUser"
+                    :activation="activation"
                     @close="navigateToList"
                 ></OUser>
             </template>
@@ -73,7 +74,10 @@
             },
             create: {
                 default: false
-            }
+            },
+            activation: {
+                default: false
+            },
         },
 
 

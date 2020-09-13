@@ -34,7 +34,8 @@ use Illuminate\Support\Facades\Mail;
  * @property-read bool $is_admin
  * @property Carbon|null $last_login
  * @property string|null $remember_token
- * @property Carbon|null $pending_approval
+ * @property bool $enabled
+ * @property string $activation_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
@@ -99,7 +100,7 @@ class User extends Authenticatable
         'default_logo',
         'super_admin',
         'lang',
-        'pending_approval'
+        'enabled'
     ];
 
     /**
@@ -120,7 +121,6 @@ class User extends Authenticatable
     protected $dates = [
         'email_verified_at',
         'last_login',
-        'pending_approval'
     ];
 
     /**
@@ -129,7 +129,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'super_admin' => 'boolean'
+        'super_admin' => 'boolean',
+        'enabled'     => 'boolean',
     ];
 
     /**

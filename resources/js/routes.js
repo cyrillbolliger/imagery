@@ -25,7 +25,7 @@ export const routes = [
     {
         path: '/admin/users/:userId',
         component: UserIndex,
-        props: true,
+        props: (route) => ({userId: route.params.userId, activation: route.query.activation}),
         name: 'usersEdit'
     },
     {

@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class BlockNonApprovedUsers
+class BlockNonEnabledUsers
 {
     /**
      * Handle an incoming request.
@@ -15,7 +15,7 @@ class BlockNonApprovedUsers
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user()->pending_approval) {
+        if (!$request->user()->enabled) {
             return redirect()->route('pending-approval');
         }
 

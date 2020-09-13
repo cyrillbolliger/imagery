@@ -206,7 +206,7 @@ Route::prefix('api/1')->middleware('auth.federated')->group(function () {
 
 Route::get('users/pending', 'UserController@pending')
     ->middleware('auth.federated')
-    ->withoutMiddleware('pending')
+    ->withoutMiddleware('enabled')
     ->name('pending-approval');
 
 Route::get('users/register/sso', 'UserController@register')

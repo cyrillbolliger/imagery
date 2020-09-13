@@ -48,7 +48,7 @@ class Kernel extends HttpKernel
         'auth.federated' => [
             'auth',
             'user',
-            'pending'
+            'enabled'
         ],
     ];
 
@@ -63,7 +63,7 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'user' => \App\Http\Middleware\LoadLocalUser::class,
-        'pending' => \App\Http\Middleware\BlockNonApprovedUsers::class,
+        'enabled' => \App\Http\Middleware\BlockNonEnabledUsers::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
@@ -86,7 +86,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\ChooseGuard::class,
         \App\Http\Middleware\Authenticate::class,
         \App\Http\Middleware\LoadLocalUser::class,
-        \App\Http\Middleware\BlockNonApprovedUsers::class,
+        \App\Http\Middleware\BlockNonEnabledUsers::class,
         \Illuminate\Routing\Middleware\ThrottleRequests::class,
         \Illuminate\Session\Middleware\AuthenticateSession::class,
         \Illuminate\Routing\Middleware\SubstituteBindings::class,

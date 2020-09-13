@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\UserFederationException;
 use App\Group;
+use App\Mail\PendingApproval;
 use App\Rules\ImmutableRule;
 use App\Rules\PasswordRule;
 use App\Rules\SuperAdminRule;
@@ -18,6 +19,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -60,12 +62,12 @@ class UserController extends Controller
             'login_count' => ['sometimes', new ImmutableRule($managed)],
             'last_login' => ['sometimes', new ImmutableRule($managed)],
             'remember_token' => ['sometimes', new ImmutableRule($managed)],
-            'pending_approval' => ['sometimes', 'required', 'boolean'],
+            'enabled' => ['sometimes', 'required', 'boolean'],
             'created_at' => ['sometimes', new ImmutableRule($managed)],
             'updated_at' => ['sometimes', new ImmutableRule($managed)],
             'deleted_at' => ['sometimes', new ImmutableRule($managed)],
         ]);
-        $managed->fill($this->setApproval($data));
+        $managed->fill($data);
 
         if (!isset($data['password'])) {
             $data['password'] = Str::random(32);
@@ -132,6 +134,7 @@ class UserController extends Controller
             'login_count' => ['sometimes', new ImmutableRule($managed)],
             'last_login' => ['sometimes', new ImmutableRule($managed)],
             'remember_token' => ['sometimes', new ImmutableRule($managed)],
+            'enabled' => ['sometimes', 'required', 'boolean'],
             'created_at' => ['sometimes', new ImmutableRule($managed)],
             'updated_at' => ['sometimes', new ImmutableRule($managed)],
             'deleted_at' => ['sometimes', new ImmutableRule($managed)],
@@ -141,7 +144,7 @@ class UserController extends Controller
             $data['password'] = Hash::make($data['password']);
         }
 
-        if (!$managed->update($this->setApproval($data))) {
+        if (!$managed->update($data)) {
             return response('Could not save user.', 500);
         }
 
@@ -201,7 +204,7 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        if ($user && empty($user->pending_approval)) {
+        if ($user && $user->enabled) {
             return redirect()->route('home');
         }
 
@@ -210,7 +213,7 @@ class UserController extends Controller
 
     /**
      * Create local user from given OIDC ID token and inform admin about the new
-     * user. The new user is set into 'pending_approval' state.
+     * user. The new user is set into disabled state.
      *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
@@ -223,6 +226,8 @@ class UserController extends Controller
             'given_name' => ['required', 'string', 'max:255'],
             'family_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'max:170', 'email', 'unique:users'],
+            'groups' => ['required', 'array'],
+            'groups.*' => ['required', 'string', 'max:50'],
         ]);
 
         if ($validator->fails()) {
@@ -235,13 +240,17 @@ class UserController extends Controller
             'last_name' => $keycloakUser->family_name,
             'email' => $keycloakUser->email,
             'password' => Hash::make(Str::random(32)),
-            'pending_approval' => now(),
+            'enabled' => false,
             'added_by' => User::firstOrFail()->id,
             'managed_by' => Group::firstOrFail()->id,
             'lang' => app()->getLocale()
         ]);
 
-        // todo: send mail to admin
+        Mail::to(config('app.admin_email'))
+            ->send(new PendingApproval(
+                $localUser,
+                $keycloakUser->groups
+            ));
 
         try {
             $federationService->loadLocalUser();
@@ -255,31 +264,5 @@ class UserController extends Controller
     public function registrationError()
     {
         return view('auth.registration-error');
-    }
-
-    /**
-     * Translate the boolean pending_approval from the frontend into a timestamp
-     *
-     * @param array $user
-     * @return array
-     */
-    private function setApproval(array $user)
-    {
-        if (!isset($user['pending_approval'])) {
-            return $user;
-        }
-
-        if (!is_bool($user['pending_approval'])) {
-            unset($user['pending_approval']);
-            return $user;
-        }
-
-        if (true === $user['pending_approval']) {
-            $user['pending_approval'] = now();
-        } else {
-            $user['pending_approval'] = null;
-        }
-
-        return $user;
     }
 }
