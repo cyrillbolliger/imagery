@@ -1,7 +1,5 @@
 <?php
 
-use Spatie\WelcomeNotification\WelcomesNewUsers;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes

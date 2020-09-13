@@ -17,26 +17,24 @@
         <AInput
             :label="$t('user.email')"
             :required="true"
+            :disabled="!amISuperAdmin && !newUser"
             type="email"
             :validation="validations.email"
             v-model.trim="currentUser.email"
-        />
-        <APasswordSet
-            v-if="!newUser"
-            v-model.trim="currentUser.password"
-            :required="false"
-        />
-        <AFormGroup v-else>
+            :helptext="amISuperAdmin && !newUser ? null : $t('user.email_change')"
+        >
+        </AInput>
+        <AFormGroup v-if="amIadmin">
             <template #label>
-                {{ $t('user.password') }}
+                {{ $t('user.enabled') }}
             </template>
             <template #input>
-                <p class="alert alert-warning" role="alert">
-                    {{$t('user.password_notification')}}
-                </p>
+                <ACheckbox
+                    v-model="currentUser.pending_approval"
+                    :label="$t('user.enabled_desc')"
+                />
             </template>
         </AFormGroup>
-
 
         <h5 class="pt-3">{{$t('user.misc_fields')}}</h5>
         <ASelect

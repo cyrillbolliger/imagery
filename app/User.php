@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Notifications\AccountCreatedNotification;
+use App\Mail\AccountCreated;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,6 +10,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Class User
@@ -401,17 +402,12 @@ class User extends Authenticatable
 
     /**
      * Send the onboarding email
-     *
-     * @param  \Carbon\Carbon  $validUntil
      */
-    public function sendWelcomeNotification(\Carbon\Carbon $validUntil)
+    public function sendWelcomeNotification()
     {
-        $lang = App::getLocale();
-        App::setLocale($this->lang);
-
-        $this->notify(new AccountCreatedNotification($validUntil));
-
-        App::setLocale($lang);
+        Mail::to($this)
+            ->locale($this->lang)
+            ->send(new AccountCreated($this));
     }
 
     /**

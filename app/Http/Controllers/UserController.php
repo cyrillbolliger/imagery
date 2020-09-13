@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\UserFederationException;
 use App\Group;
-use App\Notifications\AccountCreatedNotification;
 use App\Rules\ImmutableRule;
 use App\Rules\PasswordRule;
 use App\Rules\SuperAdminRule;
@@ -61,12 +60,12 @@ class UserController extends Controller
             'login_count' => ['sometimes', new ImmutableRule($managed)],
             'last_login' => ['sometimes', new ImmutableRule($managed)],
             'remember_token' => ['sometimes', new ImmutableRule($managed)],
-            'pending_approval' => ['sometimes', new ImmutableRule($managed)],
+            'pending_approval' => ['sometimes', 'required', 'boolean'],
             'created_at' => ['sometimes', new ImmutableRule($managed)],
             'updated_at' => ['sometimes', new ImmutableRule($managed)],
             'deleted_at' => ['sometimes', new ImmutableRule($managed)],
         ]);
-        $managed->fill($data);
+        $managed->fill($this->setApproval($data));
 
         if (!isset($data['password'])) {
             $data['password'] = Str::random(32);
@@ -133,7 +132,6 @@ class UserController extends Controller
             'login_count' => ['sometimes', new ImmutableRule($managed)],
             'last_login' => ['sometimes', new ImmutableRule($managed)],
             'remember_token' => ['sometimes', new ImmutableRule($managed)],
-            'pending_approval' => ['sometimes', new ImmutableRule($managed)],
             'created_at' => ['sometimes', new ImmutableRule($managed)],
             'updated_at' => ['sometimes', new ImmutableRule($managed)],
             'deleted_at' => ['sometimes', new ImmutableRule($managed)],
@@ -143,7 +141,7 @@ class UserController extends Controller
             $data['password'] = Hash::make($data['password']);
         }
 
-        if (!$managed->update($data)) {
+        if (!$managed->update($this->setApproval($data))) {
             return response('Could not save user.', 500);
         }
 
@@ -189,8 +187,7 @@ class UserController extends Controller
      */
     public function invite(Request $request, User $managed)
     {
-        $expiresAt = now()->addDays(config('app.onboarding_expiration'));
-        $managed->sendWelcomeNotification($expiresAt);
+        $managed->sendWelcomeNotification();
 
         return response(null, 204);
     }
@@ -258,5 +255,31 @@ class UserController extends Controller
     public function registrationError()
     {
         return view('auth.registration-error');
+    }
+
+    /**
+     * Translate the boolean pending_approval from the frontend into a timestamp
+     *
+     * @param array $user
+     * @return array
+     */
+    private function setApproval(array $user)
+    {
+        if (!isset($user['pending_approval'])) {
+            return $user;
+        }
+
+        if (!is_bool($user['pending_approval'])) {
+            unset($user['pending_approval']);
+            return $user;
+        }
+
+        if (true === $user['pending_approval']) {
+            $user['pending_approval'] = now();
+        } else {
+            $user['pending_approval'] = null;
+        }
+
+        return $user;
     }
 }

@@ -20,9 +20,9 @@
     @endif
 
     <!-- Scripts -->
-    @auth
+    @if( Auth::user() && ! Auth::user()->pending_approval )
         <script src="{{ mix('js/app.js') }}" defer></script>
-    @endauth
+    @endif
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
