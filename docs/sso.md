@@ -1,5 +1,5 @@
 # About the Single-Sign-On Implementation
-* Based in OIDC with the authorization code flow. All OIDC stuff is handled by 
+* Based on OIDC with the authorization code flow. All OIDC stuff is handled by 
 [vizir/laravel-keycloak-web-guard](https://github.com/Vizir/laravel-keycloak-web-guard).
 * SSO is only used for authentication, any further steps are based on a local
 user table.
