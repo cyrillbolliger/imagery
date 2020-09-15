@@ -210,7 +210,7 @@ Route::get('users/pending', 'UserController@pending')
     ->name('pending-approval');
 
 Route::get('users/register/sso', 'UserController@register')
-    ->middleware(['auth'])
+    ->middleware(['auth:web-sso'])
     ->name('register-sso-user');
 
 Route::get('users/register/error', 'UserController@registrationError')
