@@ -11,7 +11,7 @@
 ]) @lang("You can use it with the GREEN login (same as for the chat).")
 
 
-@component('mail::button', ['url' => url('home')])
+@component('mail::button', ['url' => route('home')])
     @lang('Try the GREEN graphics designer')
 @endcomponent
 
