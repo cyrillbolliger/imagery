@@ -216,6 +216,9 @@ Route::get('users/register/sso', 'UserController@register')
 Route::get('users/register/error', 'UserController@registrationError')
     ->name('registration-error');
 
+Route::get('users/account/error', 'UserController@accountError')
+    ->name('user-account-error');
+
 Auth::routes([
     'logout' => false,
     'register' => false,

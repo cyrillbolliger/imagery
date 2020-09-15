@@ -231,6 +231,11 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
+            if (isset($validator->failed()['email']['Unique'])){
+                \Log::info("Registration for {$keycloakUser->email} failed. The email address is already present in the database. -> Check, if there is a deleted user account with the same email address.");
+                return redirect()->route('user-account-error');
+            }
+
             \Log::info("Invalid data from OIDC ID token for user ({$keycloakUser->email}): " . print_r($validator->errors()->toArray(), true));
             return redirect()->route('registration-error');
         }
@@ -264,5 +269,10 @@ class UserController extends Controller
     public function registrationError()
     {
         return view('auth.registration-error');
+    }
+
+    public function accountError()
+    {
+        return view('auth.account-error');
     }
 }
