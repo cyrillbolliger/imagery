@@ -37,6 +37,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->boolean('enabled')->default(false);
             $table->string('activation_token', 64)->nullable();
+            $table->unsignedBigInteger('activatable_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
@@ -55,6 +56,11 @@ class CreateUsersTable extends Migration
                   ->on('logos')
                   ->onUpdate('cascade')
                   ->onDelete('set null');
+            $table->foreign('activatable_by')
+                  ->references('id')
+                  ->on('users')
+                  ->onUpdate('cascade')
+                  ->onDelete('no action');
         });
 
         Schema::enableForeignKeyConstraints();

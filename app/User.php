@@ -36,6 +36,8 @@ use Illuminate\Support\Facades\Mail;
  * @property string|null $remember_token
  * @property bool $enabled
  * @property string $activation_token
+ * @property int|null $activatable_by
+ * @property User|null $activatableBy
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
@@ -69,7 +71,8 @@ use Illuminate\Support\Facades\Mail;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereSuperAdmin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereWelcomeValidUntil($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereActivationToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereActivatableBy($value)
  * @method static \Illuminate\Database\Query\Builder|\App\User withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\User withoutTrashed()
  * @mixin \Eloquent
@@ -193,6 +196,16 @@ class User extends Authenticatable
     }
 
     /**
+     * The user that created this user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function activatableBy()
+    {
+        return $this->belongsTo(User::class, 'activatable_by');
+    }
+
+    /**
      * Does the user has any admin roles at all?
      *
      * @return bool
@@ -227,6 +240,12 @@ class User extends Authenticatable
         $users = collect();
         foreach ($this->adminRoles()->get() as $role) {
             $users->push($role->usersBelow());
+        }
+
+        if ($this->isAdmin()) {
+            $users->push(
+                self::whereActivatableBy($this->id)->get()
+            );
         }
 
         $users->push(Auth::user());

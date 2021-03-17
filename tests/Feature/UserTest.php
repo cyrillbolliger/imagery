@@ -137,6 +137,36 @@ class UserTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function testGetUser__forActivation_Admin_200()
+    {
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => factory(Group::class)->create()->id,
+            ])
+        );
+
+        $managed = factory(User::class)->create([
+            'enabled' => false
+        ]);
+
+        $forbiddenUserResponse = $this->actingAs($manager)
+                                      ->getJson('/api/1/users/'.$managed->id);
+        $forbiddenUserResponse->assertStatus(403);
+
+        $appResponse = $this->actingAs($manager)
+                            ->get('/admin/users/'.$managed->id.'?activation='.$managed->activation_token);
+        $appResponse->assertStatus(200);
+
+        $userResponse = $this->actingAs($manager)
+                             ->getJson('/api/1/users/'.$managed->id);
+        $userResponse->assertStatus(200);
+    }
+
     public function testGetUsers__nonAdmin_200()
     {
         $user = factory(User::class)->create([
@@ -652,6 +682,41 @@ class UserTest extends TestCase
         $this->assertNotEmpty($response->json('errors.first_name'));
         $this->assertDatabaseMissing('users', [
             'first_name' => 'first name only',
+        ]);
+    }
+
+    public function testPutUser__activate_200()
+    {
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => factory(Group::class)->create()->id,
+            ])
+        );
+
+        $managed = factory(User::class)->create([
+            'enabled' => false
+        ]);
+
+        // call this first so the manager is authorized to update the managed
+        $appResponse = $this->actingAs($manager)
+                            ->get('/admin/users/'.$managed->id.'?activation='.$managed->activation_token);
+        $appResponse->assertStatus(200);
+
+        $managed->enabled = true;
+
+        $response         = $this->actingAs($manager)
+                                 ->putJson('/api/1/users/'.$managed->id, $managed->toArray());
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('users', [
+            'id'             => $managed->id,
+            'enabled'        => true,
+            'activatable_by' => null, // tests UserObserver
         ]);
     }
 }

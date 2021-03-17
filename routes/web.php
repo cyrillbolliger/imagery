@@ -236,4 +236,6 @@ Route::get('/', 'HomeController@index')
  *
  * This route is necessary for the vuejs router to work
  */
-Route::fallback('HomeController@index')->middleware('auth.federated');
+Route::fallback('HomeController@index')
+    ->middleware('auth.federated')
+    ->middleware('user.activatable');

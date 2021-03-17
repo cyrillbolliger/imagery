@@ -63,6 +63,7 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'user' => \App\Http\Middleware\LoadLocalUser::class,
+        'user.activatable' => \App\Http\Middleware\GrantUserAccessForActivation::class,
         'enabled' => \App\Http\Middleware\BlockNonEnabledUsers::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,

@@ -39,6 +39,7 @@ class UserObserver
     public function updating(User $user)
     {
         $this->setActivationToken($user);
+        $this->removeActivatableBy($user);
     }
 
     /**
@@ -109,12 +110,24 @@ class UserObserver
     /**
      * Add a random activation token to the user if needed
      *
-     * @param User $user
+     * @param  User  $user
      */
     private function setActivationToken(User $user)
     {
         if (!$user->enabled && !$user->activation_token) {
             $user->activation_token = Str::random(64);
+        }
+    }
+
+    /**
+     * Remove the activatable by user association if the user is enabled
+     *
+     * @param  User  $user
+     */
+    private function removeActivatableBy(User $user)
+    {
+        if ($user->enabled) {
+            $user->activatable_by = null;
         }
     }
 }

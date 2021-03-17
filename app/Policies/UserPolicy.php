@@ -45,6 +45,10 @@ class UserPolicy
             }
         }
 
+        if ($managed->activatableBy && $managed->activatableBy->is($manager)) {
+            return true;
+        }
+
         return false;
     }
 
