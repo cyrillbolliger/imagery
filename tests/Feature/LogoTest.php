@@ -43,7 +43,10 @@ class LogoTest extends TestCase
     {
         $group = factory(Group::class)->create();
 
-        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $manager->roles()->save(
             factory(Role::class)->make([
                 'admin'    => false,
@@ -66,7 +69,10 @@ class LogoTest extends TestCase
 
     public function testGetLogo__nonAttachedUser__403()
     {
-        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $logo    = factory(Logo::class)->create();
 
         $response = $this->actingAs($manager)
@@ -88,7 +94,7 @@ class LogoTest extends TestCase
         $groupUsable->logos()->attach($logoUsable);
         $manageableChild->logos()->attach($logoManageableChild);
 
-        $user = factory(User::class)->create();
+        $user = factory(User::class)->create(['enabled' => true]);
 
         $user->roles()->save(
             factory(Role::class)->make([
@@ -126,7 +132,7 @@ class LogoTest extends TestCase
         $groupUsable->logos()->attach($logoUsable);
         $manageableChild->logos()->attach($logoManageableChild);
 
-        $user = factory(User::class)->create();
+        $user = factory(User::class)->create(['enabled' => true]);
 
         $user->roles()->save(
             factory(Role::class)->make([
@@ -164,7 +170,7 @@ class LogoTest extends TestCase
         $groupUsable->logos()->attach($logoUsable);
         $manageableChild->logos()->attach($logoManageableChild);
 
-        $user = factory(User::class)->create();
+        $user = factory(User::class)->create(['enabled' => true]);
 
         $user->roles()->save(
             factory(Role::class)->make([
@@ -193,7 +199,10 @@ class LogoTest extends TestCase
     {
         $group = factory(Group::class)->create();
 
-        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $manager->roles()->save(
             factory(Role::class)->make([
                 'admin'    => true,
@@ -222,7 +231,10 @@ class LogoTest extends TestCase
     {
         $group = factory(Group::class)->create();
 
-        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $manager->roles()->save(
             factory(Role::class)->make([
                 'admin'    => true,
@@ -245,7 +257,10 @@ class LogoTest extends TestCase
         $group         = factory(Group::class)->create();
         $nonAdminGroup = factory(Group::class)->create();
 
-        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $manager->roles()->save(
             factory(Role::class)->make([
                 'admin'    => true,
@@ -269,7 +284,10 @@ class LogoTest extends TestCase
     {
         $group = factory(Group::class)->create();
 
-        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $manager->roles()->save(
             factory(Role::class)->make([
                 'admin'    => true,
@@ -302,7 +320,10 @@ class LogoTest extends TestCase
         $child1 = factory(Group::class)->create(['parent_id' => $group->id]);
         $child2 = factory(Group::class)->create(['parent_id' => $group->id]);
 
-        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $manager->roles()->save(
             factory(Role::class)->make([
                 'admin'    => true,
@@ -340,7 +361,10 @@ class LogoTest extends TestCase
         $group      = factory(Group::class)->create();
         $otherGroup = factory(Group::class)->create();
 
-        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $manager->roles()->save(
             factory(Role::class)->make([
                 'admin'    => true,
@@ -366,7 +390,10 @@ class LogoTest extends TestCase
     {
         $group = factory(Group::class)->create();
 
-        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $manager->roles()->save(
             factory(Role::class)->make([
                 'admin'    => true,
@@ -393,7 +420,10 @@ class LogoTest extends TestCase
         $group         = factory(Group::class)->create();
         $nonAdminGroup = factory(Group::class)->create();
 
-        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $manager->roles()->save(
             factory(Role::class)->make([
                 'admin'    => true,
