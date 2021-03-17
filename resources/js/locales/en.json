@@ -70,7 +70,7 @@
         "last_name": "Last name",
         "email": "Email",
         "email_exists": "There is already an account with this email address.",
-        "email_change": "Since the login is linked to other systems, you cannot change the email address yourself at the moment. Please contact admin@gruene.ch.",
+        "email_change": "Since this login is linked to other systems, you cannot change the email address. Please contact admin@gruene.ch to change it.",
         "enabled": "Enabled",
         "enabled_desc": "This user can sign in.",
         "super_admin": "Super Admin",
