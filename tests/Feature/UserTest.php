@@ -22,6 +22,21 @@ class UserTest extends TestCase
         $this->seed(RootSeeder::class);
     }
 
+    public function testGetUser__disabledUser_302()
+    {
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => false,
+        ]);
+        $managed = User::first();
+
+        $response = $this->actingAs($manager)
+                         ->getJson('/api/1/users/'.$managed->id);
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('pending-approval'));
+    }
+
     public function testGetUser__strangerNoAdmin_403()
     {
         $manager = factory(User::class)->create([
