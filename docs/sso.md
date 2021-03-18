@@ -49,6 +49,16 @@ checking the `Welcome Email` field.
 The idea behind the approval field is, that anyone can register, but not 
 everyone should be granted access.
 
+#### In Detail
+1. Any admin with the activation link can edit the user (if an admin opens the
+   activation link, the `GrantUserAccessForActivation` middleware enters the 
+   admin to the user's `activatable_by` field).
+1. As soon as the user is activated by an admin, and the admin sets the 
+   `managed_by` property of the user to a group the admin can manage, the user's
+   `activatable_by` field is cleared, so the admin does not retain access to the 
+   user for ever. The admin may however always regain access if he uses the 
+   activation link (see step 1).
+
 ## Quirks
 We've made the following price-value tradeoffs, that must be known.
 
