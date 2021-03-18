@@ -687,6 +687,7 @@ class UserTest extends TestCase
 
     public function testPutUser__activate_200()
     {
+        $group = factory(Group::class)->create();
         $manager = factory(User::class)->create([
             'super_admin' => false,
             'enabled'     => true,
@@ -694,7 +695,44 @@ class UserTest extends TestCase
         $manager->roles()->save(
             factory(Role::class)->make([
                 'admin'    => true,
-                'group_id' => factory(Group::class)->create()->id,
+                'group_id' => $group->id,
+            ])
+        );
+
+        $managed = factory(User::class)->create([
+            'enabled' => false
+        ]);
+
+        // call this first so the manager is authorized to update the managed
+        $appResponse = $this->actingAs($manager)
+                            ->get('/admin/users/'.$managed->id.'?activation='.$managed->activation_token);
+        $appResponse->assertStatus(200);
+
+        $managed->enabled = true;
+        $managed->managed_by = $group->id;
+
+        $response         = $this->actingAs($manager)
+                                 ->putJson('/api/1/users/'.$managed->id, $managed->toArray());
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('users', [
+            'id'             => $managed->id,
+            'enabled'        => true,
+            'activatable_by' => null, // tests UserObserver
+        ]);
+    }
+
+    public function testPutUser__activate_managedByOthers_200()
+    {
+        $group = factory(Group::class)->create();
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => true,
+                'group_id' => $group->id,
             ])
         );
 
@@ -713,10 +751,14 @@ class UserTest extends TestCase
                                  ->putJson('/api/1/users/'.$managed->id, $managed->toArray());
 
         $response->assertStatus(200);
-        $this->assertDatabaseHas('users', [
+        $this->assertDatabaseMissing('users', [
             'id'             => $managed->id,
             'enabled'        => true,
             'activatable_by' => null, // tests UserObserver
+        ]);
+        $this->assertDatabasehas('users', [
+            'id'             => $managed->id,
+            'enabled'        => true,
         ]);
     }
 }

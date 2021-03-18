@@ -126,7 +126,13 @@ class UserObserver
      */
     private function removeActivatableBy(User $user)
     {
-        if ($user->enabled) {
+        $manager = Auth::user();
+
+        if (!$manager instanceof \App\User) {
+            return;
+        }
+
+        if ($user->enabled && $manager->canManageGroup($user->managed_by)) {
             $user->activatable_by = null;
         }
     }
