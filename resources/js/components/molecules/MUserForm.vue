@@ -52,6 +52,7 @@
             :required="true"
             :validation="validations.managed_by"
             v-model="currentUser.managed_by"
+            ref="managedBy"
         />
 
         <div v-if="amIadmin">
@@ -131,7 +132,7 @@
     import SnackbarMixin from "../../mixins/SnackbarMixin";
     import MGroupTree from "./MGroupTree";
     import PrepareSelectMixin from "../../mixins/PrepareSelectMixin";
-    import {required, email, maxLength} from 'vuelidate/lib/validators';
+    import {required, email, maxLength, integer} from 'vuelidate/lib/validators';
     import AButtonWait from "../atoms/AButtonWait";
     import isEqual from 'lodash/isEqual';
     import cloneDeep from 'lodash/cloneDeep';
@@ -198,6 +199,7 @@
                     managed_by: {
                         rules: {
                             required,
+                            integer
                         },
                         message: this.$t('validation.required')
                     },
@@ -255,6 +257,7 @@
 
             if (this.activation && this.activation === this.currentUser.activation_token) {
                 this.currentUser.enabled = true;
+                this.currentUser.managed_by = null;
                 this.notifyUser = true;
             }
         },
@@ -339,6 +342,10 @@
                     && error.response.data.errors.email[0] === 'The email has already been taken.') {
                     const email = this.user.email;
                     this.$set(this.validations.email.rules, 'unique', (value) => value !== email);
+                }
+                if ('managed_by' in error.response.data.errors
+                    && error.response.data.errors.managed_by[0] === 'The managed by field is required.') {
+                    this.$refs.managedBy.validate();
                 }
 
                 this.snackErrorDismiss(error, this.$t('validation.double_check_form'));
