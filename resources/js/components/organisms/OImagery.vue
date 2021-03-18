@@ -368,8 +368,9 @@
             mouseMove(event) {
                 this.move(event);
             },
-            mouseDragStop() {
+            mouseDragStop(event) {
                 this.dragStop();
+                this.move(event);
             },
             mouseLeave() {
                 this.dragStop();
