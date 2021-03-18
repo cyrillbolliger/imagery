@@ -99,7 +99,7 @@
         "removing_failed": "Failed to delete user. Try again.",
         "notification": "Notification",
         "welcome_mail": "Welcome Email",
-        "send_notification": "Send this user an email to inform him about his account. The email the instructions on how to log in.",
+        "send_notification": "Send this user an email to inform him about his account. The email contains instructions on how to log in.",
         "stats": "Statistics",
         "last_login": "Last login",
         "login_count": "Total logins",
