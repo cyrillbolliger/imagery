@@ -3,7 +3,7 @@
 
 
 @lang(
-"You've been invited by :firstName :lastName to use :app. It's a super simple tool to create images in the corporate design of the GREENS.",
+":firstName :lastName created an account for you for :app. It's a super simple tool to create images in the corporate design of the GREENS.",
 [
     'app' => config('app.name'),
     'firstName' => e($manager->first_name),
@@ -16,7 +16,7 @@
 @endcomponent
 
 
-@lang("If you don't have a login yet, you may register yourself. Just click 'register' on the login screen and subscribe yourself with :email.", ['email' => e($user->email)])
+@lang("If you don't have a login yet, you may register yourself. Just click 'register' on the login screen and subscribe yourself with the following email address: :email.", ['email' => e($user->email)])
 
 
 @lang('Have an excellent day,')
