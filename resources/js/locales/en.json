@@ -50,7 +50,9 @@
     "users": {
         "index": {
             "title": "Users",
-            "create": "Create User"
+            "create": "Create User",
+            "approve": "Approve {user}",
+            "edit": "Edit User"
         },
         "logout": {
             "loggingOut": "Logging out...",
@@ -73,6 +75,7 @@
         "email_change": "Since this login is linked to other systems, you cannot change the email address. Please contact admin@gruene.ch to change it.",
         "enabled": "Enabled",
         "enabled_desc": "This user can sign in.",
+        "disabled_tag": "Disabled",
         "super_admin": "Super Admin",
         "super_admin_desc": "This user can do everything.",
         "language": "Language",
@@ -88,6 +91,7 @@
         "saving": "Saving...",
         "saved": "User saved.",
         "saving_failed": "Failed to save user. Try again.",
+        "approve": "Approve User",
         "remove": "Delete User",
         "removing": "Deleting user",
         "removed": "User deleted.",

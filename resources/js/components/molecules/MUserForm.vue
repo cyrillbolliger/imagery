@@ -102,7 +102,7 @@
         </div>
 
         <AButtonWait
-            :button-text="$t('user.save')"
+            :button-text="isUserActivation ?  $t('user.approve') : $t('user.save')"
             :working="saving"
             :working-text="$t('user.saving')"
             @buttonClicked="save"
@@ -245,6 +245,9 @@
             newUser() {
                 return !('id' in this.currentUser);
             },
+            isUserActivation() {
+                return this.activation && this.activation === this.currentUser.activation_token;
+            },
         },
 
 
@@ -256,7 +259,7 @@
 
             this.notifyUser = this.newUser;
 
-            if (this.activation && this.activation === this.currentUser.activation_token) {
+            if (this.isUserActivation) {
                 this.currentUser.enabled = true;
                 this.currentUser.managed_by = null;
                 this.notifyUser = true;
