@@ -35,7 +35,7 @@
             </button>
         </div>
         <div
-            v-if="! userHasLogos"
+            v-if="! loadingLogos && ! userHasLogos"
             class="alert alert-warning"
             role="alert"
         >{{$t('images.create.userHasNoLogos')}}
@@ -108,7 +108,7 @@
             },
 
             userHasLogos() {
-                return this.logos.size > 0;
+                return this.logoChoices.length > 0;
             }
         },
 
