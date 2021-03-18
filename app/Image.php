@@ -118,6 +118,11 @@ class Image extends Model implements FileModel
         return $this->belongsTo(Logo::class);
     }
 
+    public function original()
+    {
+        return $this->belongsTo(__CLASS__, 'original_id');
+    }
+
     public function isFinal()
     {
         return $this->type === self::TYPE_FINAL;
@@ -135,10 +140,10 @@ class Image extends Model implements FileModel
         }
 
         if ($this->type === self::TYPE_FINAL) {
-            return $this->original && $this->original->legal;
-        } else {
-            return (bool) $this->legal;
+            return (bool) optional($this->original()->first())->legal()->exists();
         }
+
+        return (bool) $this->legal;
     }
 
     public static function getImageStorageDir()

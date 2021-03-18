@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Image;
+use App\Legal;
 use App\User;
 use RootSeeder;
 use Tests\TestCase;
@@ -49,9 +50,11 @@ class ImageFileTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testGetThumbnail__200()
+    public function testGetThumbnail__finalGradient_200()
     {
-        $user = factory(User::class)->create(['enabled' => true]);
+        $user = factory(User::class)->create([
+            'enabled' => true
+        ]);
 
         $image = factory(Image::class)->create([
             'user_id' => $user->id
@@ -63,6 +66,59 @@ class ImageFileTest extends TestCase
                          ->get("/api/1/files/images/$image->id/thumbnail");
 
         $response->assertStatus(200);
+    }
+
+    public function testGetThumbnail__finalCustom_200()
+    {
+        $user = factory(User::class)->create([
+            'enabled' => true
+        ]);
+
+        $original = factory(Image::class)->create([
+            'type'       => Image::TYPE_RAW,
+            'background' => Image::BG_CUSTOM,
+        ]);
+
+        factory(Legal::class)->create([
+            'shared'   => true,
+            'image_id' => $original->id,
+        ]);
+
+        $image = factory(Image::class)->create([
+            'original_id' => $original->id,
+            'background'  => Image::BG_CUSTOM,
+        ]);
+
+        $image->generateThumbnail();
+
+        $response = $this->actingAs($user)
+                         ->get("/api/1/files/images/$image->id/thumbnail");
+
+        $response->assertStatus(200);
+    }
+
+    public function testGetThumbnail__finalCustomMissingLegal_403()
+    {
+        $user = factory(User::class)->create([
+            'enabled' => true
+        ]);
+
+        $original = factory(Image::class)->create([
+            'type'       => Image::TYPE_RAW,
+            'background' => Image::BG_CUSTOM,
+        ]);
+
+        $image = factory(Image::class)->create([
+            'original_id' => $original->id,
+            'background'  => Image::BG_CUSTOM,
+        ]);
+
+        $image->generateThumbnail();
+
+        $response = $this->actingAs($user)
+                         ->get("/api/1/files/images/$image->id/thumbnail");
+
+        $response->assertStatus(403);
     }
 
     public function testPost__adminInvalidFileExtension__422()
