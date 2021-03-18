@@ -21,7 +21,7 @@
             type="email"
             :validation="validations.email"
             v-model.trim="currentUser.email"
-            :helptext="amISuperAdmin && !newUser ? null : $t('user.email_change')"
+            :helptext="newUser || amISuperAdmin ? null : $t('user.email_change')"
         >
         </AInput>
         <AFormGroup v-if="amIadmin">
@@ -43,6 +43,7 @@
             :required="true"
             :validation="validations.language"
             v-model="currentUser.lang"
+            ref="lang"
         />
         <ASelect
             v-if="amIadmin"
@@ -346,6 +347,10 @@
                 if ('managed_by' in error.response.data.errors
                     && error.response.data.errors.managed_by[0] === 'The managed by field is required.') {
                     this.$refs.managedBy.validate();
+                }
+                if ('lang' in error.response.data.errors
+                    && error.response.data.errors.managed_by[0] === 'The lang field is required.') {
+                    this.$refs.lang.validate();
                 }
 
                 this.snackErrorDismiss(error, this.$t('validation.double_check_form'));
