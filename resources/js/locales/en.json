@@ -150,6 +150,7 @@
             "logoDefaultSelected": "default",
             "logoRemove": "Remove logo",
             "logoDefaultSaveFailed": "Failed to save default logo. Try again.",
+            "userHasNoLogos": "Oh là là, you haven't been given access to any logos. Ask your party's secretary to do so.",
             "fontSize": "Font size",
             "tooMuchText": "Your bars contain too much text. Shorten it!",
             "sublineAdd": "Add Subline",
