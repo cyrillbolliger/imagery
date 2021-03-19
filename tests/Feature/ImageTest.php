@@ -49,6 +49,7 @@ class ImageTest extends TestCase
                      ],
                      'src',
                      'thumb_src',
+                     'file_type',
                      'width',
                      'height',
                      'created_at'
@@ -275,7 +276,9 @@ class ImageTest extends TestCase
         $response->assertJsonFragment(['height' => 24]);
         $response->assertJsonFragment(['src' => route('image', ['image' => $imageId])]);
         $response->assertJsonFragment(['thumb_src' => route('thumbnail', ['image' => $imageId])]);
+        $response->assertJsonFragment(['file_type' => 'png']);
         $response->assertJsonMissing(['filename']);
+        $response->assertJsonMissing(['deleted_at']);
         $this->assertDatabaseHas('images', [
             'id' => $imageId
         ]);

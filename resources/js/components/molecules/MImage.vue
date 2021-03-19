@@ -15,7 +15,7 @@
             >
                 <p class="" v-if="loading">{{$t('images.gallery.loading')}}</p>
                 <p v-else v-html="created"/>
-                <a :href="data.src" download="image.png">
+                <a :download="`image.${data.file_type}`" :href="data.src">
                     <button class="btn btn-outline-primary btn-sm">
                         {{$t('images.gallery.download')}}
                     </button>
