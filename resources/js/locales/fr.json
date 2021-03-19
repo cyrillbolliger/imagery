@@ -38,7 +38,9 @@
         "retry": "Retry",
         "reload": "Reload",
         "dismiss": "Dismiss",
-        "server_error": "Uuups, there was a server error."
+        "server_error": "Uuups, there was a server error.",
+        "unauthorized": "Your session has expired. Please log in again.",
+        "login": "Log in"
     },
     "validation": {
         "required": "This field is required.",
@@ -50,7 +52,9 @@
     "users": {
         "index": {
             "title": "Users",
-            "create": "Create User"
+            "create": "Create User",
+            "approve": "Approve {user}",
+            "edit": "Edit User"
         },
         "logout": {
             "loggingOut": "Logging out...",
@@ -70,10 +74,10 @@
         "last_name": "Last name",
         "email": "Email",
         "email_exists": "There is already an account with this email address.",
-        "password": "Password",
-        "password_placeholder": "Unchanged",
-        "password_empty_info": "Leave empty to keep password unchanged.",
-        "password_notification": "The user must set the password himself (see 'welcome email' on the bottom).",
+        "email_change": "Since this login is linked to other systems, you cannot change the email address. Please contact admin@gruene.ch to change it.",
+        "enabled": "Enabled",
+        "enabled_desc": "This user can sign in.",
+        "disabled_tag": "Disabled",
         "super_admin": "Super Admin",
         "super_admin_desc": "This user can do everything.",
         "language": "Language",
@@ -89,15 +93,15 @@
         "saving": "Saving...",
         "saved": "User saved.",
         "saving_failed": "Failed to save user. Try again.",
+        "approve": "Approve User",
         "remove": "Delete User",
         "removing": "Deleting user",
         "removed": "User deleted.",
         "remove_confirmation": "Do you really want to delete {user}?",
         "removing_failed": "Failed to delete user. Try again.",
-        "password_insecure": "This password is insecure. Make it longer or ensure it contains numbers and special characters (and lower and uppercase characters of course).",
         "notification": "Notification",
         "welcome_mail": "Welcome Email",
-        "send_notification": "Send this user an email to inform him about his account. The email contains a link to set the password.",
+        "send_notification": "Send this user an email to inform him about his account. The email contains instructions on how to log in.",
         "stats": "Statistics",
         "last_login": "Last login",
         "login_count": "Total logins",
@@ -148,6 +152,7 @@
             "logoDefaultSelected": "default",
             "logoRemove": "Remove logo",
             "logoDefaultSaveFailed": "Failed to save default logo. Try again.",
+            "userHasNoLogos": "Oh là là, you haven't been given access to any logos. Ask your party's secretary to do so.",
             "fontSize": "Font size",
             "tooMuchText": "Your bars contain too much text. Shorten it!",
             "sublineAdd": "Add Subline",
@@ -247,7 +252,7 @@
         "gallery": {
             "title": "Gallery",
             "createdAtBy": "Created {timeAgo} by {user}.",
-            "userUnknown": "deleted user",
+            "userUnknown": "#deleted user",
             "loading": "Loading...",
             "download": "Download",
             "delete": "Delete",
