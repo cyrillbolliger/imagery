@@ -251,7 +251,8 @@ class ImageTest extends TestCase
          */
         $image = factory(Image::class)->make([
             'background' => Image::BG_CUSTOM,
-            'type'       => Image::TYPE_RAW
+            'type'       => Image::TYPE_RAW,
+            'logo_id'    => null,
         ]);
 
         $image->id        = 1; // needed for route creation of image url
