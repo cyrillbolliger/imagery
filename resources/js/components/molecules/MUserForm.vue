@@ -138,11 +138,12 @@
     import isEqual from 'lodash/isEqual';
     import cloneDeep from 'lodash/cloneDeep';
     import ALoader from "../atoms/ALoader";
+    import UnauthorizedHandlerMixin from "../../mixins/UnauthorizedHandlerMixin";
 
     export default {
         name: "MUserForm",
         components: {ALoader, AButtonWait, MGroupTree, ASelect, AFormGroup, ACheckbox, AInput, APasswordSet},
-        mixins: [ResourceLoadMixin, SnackbarMixin, PrepareSelectMixin],
+        mixins: [ResourceLoadMixin, SnackbarMixin, PrepareSelectMixin, UnauthorizedHandlerMixin],
 
 
         data() {
@@ -283,6 +284,7 @@
                         this.editedRoles = cloneDeep(roles);
                     })
                     .then(() => this.setRolesReady())
+                    .catch(error => this.handleUnauthorized(error))
                     .catch(reason => {
                         this.snackErrorRetry(reason, this.$t('user.roles_loading_failed'))
                             .then(() => this.rolesLoad());

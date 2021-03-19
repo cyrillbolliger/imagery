@@ -183,13 +183,14 @@
     import AButtonWait from "../atoms/AButtonWait";
     import Api from "../../service/Api";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
+    import UnauthorizedHandlerMixin from "../../mixins/UnauthorizedHandlerMixin";
 
     const isTrue = (value) => true === value;
 
     export default {
         name: "MLegalForm",
         components: {AButtonWait},
-        mixins: [SnackbarMixin],
+        mixins: [SnackbarMixin, UnauthorizedHandlerMixin],
 
         data() {
             return {
@@ -360,6 +361,7 @@
             save(imageId) {
                 Api().post(`images/${imageId}/legal`, this.payload)
                     .then(() => this.$emit('completed'))
+                    .catch(error => this.handleUnauthorized(error))
                     .catch(error => {
                         this.snackErrorRetry(error, this.$t('images.create.legal.savingFailed'))
                             .then(() => this.save(imageId));

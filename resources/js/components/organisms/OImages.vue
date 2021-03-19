@@ -40,13 +40,14 @@
     import MImage from "../molecules/MImage";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
     import ALoader from "../atoms/ALoader";
+    import UnauthorizedHandlerMixin from "../../mixins/UnauthorizedHandlerMixin";
 
     const scrollMargin = 2000;
 
     export default {
         name: "OImages",
         components: {ALoader, MImage},
-        mixins: [SnackbarMixin],
+        mixins: [SnackbarMixin, UnauthorizedHandlerMixin],
 
         data() {
             return {
@@ -127,6 +128,7 @@
                 Api().get(this.endpoint)
                     .then(resp => this.data = resp.data)
                     .then(data => this.images = data.data)
+                    .catch(error => this.handleUnauthorized(error))
                     .catch(error =>
                         this.snackErrorRetry(error, this.$t('images.gallery.loadingFailed'))
                             .then(this.loadImages)
@@ -143,6 +145,7 @@
                 Api().get(this.endpoint + "?page=" + this.nextPage)
                     .then(resp => this.data = resp.data)
                     .then(data => this.images.push(...data.data))
+                    .catch(error => this.handleUnauthorized(error))
                     .catch(error =>
                         this.snackErrorRetry(error, this.$t('images.gallery.loadingFailed'))
                             .then(this.loadImages)

@@ -40,6 +40,7 @@
     import Api from "../../service/Api";
     import SnackbarMixin from "../../mixins/SnackbarMixin";
     import escape from 'lodash/escape';
+    import UnauthorizedHandlerMixin from "../../mixins/UnauthorizedHandlerMixin";
 
     const lang = {
         en: english,
@@ -52,7 +53,7 @@
 
     export default {
         name: "MImage",
-        mixins: [SnackbarMixin],
+        mixins: [SnackbarMixin, UnauthorizedHandlerMixin],
 
         data() {
             return {
@@ -102,6 +103,7 @@
             remove() {
                 Api().delete(`/images/${this.data.id}`)
                     .then(() => this.$emit('removed'))
+                    .catch(error => this.handleUnauthorized(error))
                     .catch(error =>
                         this.snackErrorRetry(error, this.$t('images.gallery.deleteError'))
                             .then(this.remove)

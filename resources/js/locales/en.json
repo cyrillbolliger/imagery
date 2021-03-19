@@ -38,7 +38,9 @@
         "retry": "Retry",
         "reload": "Reload",
         "dismiss": "Dismiss",
-        "server_error": "Uuups, there was a server error."
+        "server_error": "Uuups, there was a server error.",
+        "unauthorized": "Your session has expired. Please log in again.",
+        "login": "Log in"
     },
     "validation": {
         "required": "This field is required.",
