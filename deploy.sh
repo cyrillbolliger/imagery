@@ -1,9 +1,11 @@
 #!/bin/bash
 
+set -e
+
 DEPLOY_DIR="~/www/imagery.bolliger.tech/"
 
-mkdir deploy
-mv -t deploy app artisan bootstrap composer* config database public resources routes
+mkdir -p $TRAVIS_BUILD_DIR/deploy
+mv -t $TRAVIS_BUILD_DIR/deploy app artisan bootstrap composer* config database public resources routes
 
 rsync -vrz --delete-after  \
     --exclude='.htaccess' \

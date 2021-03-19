@@ -38,7 +38,9 @@
         "retry": "crwdns47:0crwdne47:0",
         "reload": "crwdns49:0crwdne49:0",
         "dismiss": "crwdns51:0crwdne51:0",
-        "server_error": "crwdns53:0crwdne53:0"
+        "server_error": "crwdns53:0crwdne53:0",
+        "unauthorized": "crwdns552:0crwdne552:0",
+        "login": "crwdns554:0crwdne554:0"
     },
     "validation": {
         "required": "crwdns55:0crwdne55:0",
@@ -50,7 +52,9 @@
     "users": {
         "index": {
             "title": "crwdns63:0crwdne63:0",
-            "create": "crwdns65:0crwdne65:0"
+            "create": "crwdns65:0crwdne65:0",
+            "approve": "crwdns556:0{user}crwdne556:0",
+            "edit": "crwdns558:0crwdne558:0"
         },
         "logout": {
             "loggingOut": "crwdns347:0crwdne347:0",
@@ -70,10 +74,10 @@
         "last_name": "crwdns83:0crwdne83:0",
         "email": "crwdns85:0crwdne85:0",
         "email_exists": "crwdns87:0crwdne87:0",
-        "password": "crwdns89:0crwdne89:0",
-        "password_placeholder": "crwdns91:0crwdne91:0",
-        "password_empty_info": "crwdns93:0crwdne93:0",
-        "password_notification": "crwdns353:0crwdne353:0",
+        "email_change": "crwdns560:0crwdne560:0",
+        "enabled": "crwdns562:0crwdne562:0",
+        "enabled_desc": "crwdns564:0crwdne564:0",
+        "disabled_tag": "crwdns566:0crwdne566:0",
         "super_admin": "crwdns95:0crwdne95:0",
         "super_admin_desc": "crwdns97:0crwdne97:0",
         "language": "crwdns99:0crwdne99:0",
@@ -89,15 +93,15 @@
         "saving": "crwdns119:0crwdne119:0",
         "saved": "crwdns121:0crwdne121:0",
         "saving_failed": "crwdns123:0crwdne123:0",
+        "approve": "crwdns568:0crwdne568:0",
         "remove": "crwdns125:0crwdne125:0",
         "removing": "crwdns127:0crwdne127:0",
         "removed": "crwdns129:0crwdne129:0",
         "remove_confirmation": "crwdns131:0{user}crwdne131:0",
         "removing_failed": "crwdns133:0crwdne133:0",
-        "password_insecure": "crwdns135:0crwdne135:0",
         "notification": "crwdns355:0crwdne355:0",
         "welcome_mail": "crwdns357:0crwdne357:0",
-        "send_notification": "crwdns359:0crwdne359:0",
+        "send_notification": "crwdns570:0crwdne570:0",
         "stats": "crwdns443:0crwdne443:0",
         "last_login": "crwdns445:0crwdne445:0",
         "login_count": "crwdns447:0crwdne447:0",
@@ -148,6 +152,7 @@
             "logoDefaultSelected": "crwdns459:0crwdne459:0",
             "logoRemove": "crwdns461:0crwdne461:0",
             "logoDefaultSaveFailed": "crwdns463:0crwdne463:0",
+            "userHasNoLogos": "crwdns572:0crwdne572:0",
             "fontSize": "crwdns193:0crwdne193:0",
             "tooMuchText": "crwdns195:0crwdne195:0",
             "sublineAdd": "crwdns197:0crwdne197:0",
@@ -247,7 +252,7 @@
         "gallery": {
             "title": "crwdns291:0crwdne291:0",
             "createdAtBy": "crwdns293:0{timeAgo}crwdnd293:0{user}crwdne293:0",
-            "userUnknown": "crwdns295:0crwdne295:0",
+            "userUnknown": "crwdns574:0crwdne574:0",
             "loading": "crwdns297:0crwdne297:0",
             "download": "crwdns299:0crwdne299:0",
             "delete": "crwdns301:0crwdne301:0",
