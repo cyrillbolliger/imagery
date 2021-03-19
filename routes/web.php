@@ -16,8 +16,9 @@ Route::prefix('api/1')->middleware('auth.federated')->group(function () {
      * Users
      */
     Route::get('/users/{user}', 'UserController@show')
-        ->where('user', '\d+')
-        ->middleware('can:manage,user');
+        ->where('user', '\d+');
+        // yes, this must be open to any authenticated user
+        // else the gallery can't show the creators info.
 
     Route::get('/users/{user}/stats', 'UserController@stats')
         ->where('user', '\d+')

@@ -37,7 +37,7 @@ class UserTest extends TestCase
         $response->assertRedirect(route('pending-approval'));
     }
 
-    public function testGetUser__strangerNoAdmin_403()
+    public function testGetUser__strangerNoAdmin_200()
     {
         $manager = factory(User::class)->create([
             'super_admin' => false,
@@ -48,7 +48,7 @@ class UserTest extends TestCase
         $response = $this->actingAs($manager)
                          ->getJson('/api/1/users/'.$managed->id);
 
-        $response->assertStatus(403);
+        $response->assertStatus(200);
     }
 
     public function testGetUser__selfNoAdmin_200()
@@ -153,10 +153,6 @@ class UserTest extends TestCase
         $managed = factory(User::class)->create([
             'enabled' => false
         ]);
-
-        $forbiddenUserResponse = $this->actingAs($manager)
-                                      ->getJson('/api/1/users/'.$managed->id);
-        $forbiddenUserResponse->assertStatus(403);
 
         $appResponse = $this->actingAs($manager)
                             ->get('/admin/users/'.$managed->id.'?activation='.$managed->activation_token);

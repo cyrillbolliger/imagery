@@ -252,7 +252,7 @@
         "gallery": {
             "title": "Gallery",
             "createdAtBy": "Created {timeAgo} by {user}.",
-            "userUnknown": "deleted user",
+            "userUnknown": "#deleted user",
             "loading": "Loading...",
             "download": "Download",
             "delete": "Delete",

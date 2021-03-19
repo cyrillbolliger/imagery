@@ -3,7 +3,7 @@
         <img
             class="m-image__image"
             :class="{transparent: data.background === 'transparent'}"
-            @click="detailsShow = !detailsShow"
+            @click="toggleDetails()"
             :src="data.thumb_src"
             :alt="data.keywords">
         <transition name="fade"
@@ -58,6 +58,7 @@
         data() {
             return {
                 detailsShow: false,
+                creator: null,
             }
         },
 
@@ -74,19 +75,22 @@
 
             created() {
                 const time = timeAgo.format(new Date(this.data.created_at));
-                const user = this.user;
-                return this.$t('images.gallery.createdAtBy', {timeAgo: time, user});
+                return this.$t('images.gallery.createdAtBy', {timeAgo: time, user: this.creatorString});
             },
 
-            user() {
-                const user = this.getUserById(this.data.user_id);
+            creatorString() {
+                // loading
+                if (null === this.creator) {
+                    return '...';
+                }
 
-                if (!user) {
+                // deleted
+                if (false === this.creator) {
                     return this.$t('images.gallery.userUnknown');
                 }
 
-                const name = escape(`${user.first_name} ${user.last_name}`); // XSS: OK
-                const email = encodeURIComponent(escape(user.email)); // XSS: OK
+                const name = escape(`${this.creator.first_name} ${this.creator.last_name}`); // XSS: OK
+                const email = encodeURIComponent(escape(this.creator.email)); // XSS: OK
 
                 return `<a href="mailto:${email}">${name}</a>`;
             },
@@ -100,6 +104,19 @@
         },
 
         methods: {
+            toggleDetails() {
+                this.detailsShow = !this.detailsShow;
+
+                if (null === this.creator){
+                    // do not use users store as non admins can't use the index
+                    // method. however they can query single users by id.
+                    Api().get(`/users/${this.data.user_id}`)
+                        .then(resp => this.creator = resp.data)
+                        .catch(error => this.handleUnauthorized(error))
+                        .catch(() => this.creator = false);
+                }
+            },
+
             remove() {
                 Api().delete(`/images/${this.data.id}`)
                     .then(() => this.$emit('removed'))
