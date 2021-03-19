@@ -54,6 +54,7 @@
                 :image-width="width"
                 @drawn="updateBarLayer($event)"
                 @textChanged="keywords = $event"
+                @paddingChanged="textPadding = $event"
                 class="mt-2"
             />
 
@@ -128,6 +129,7 @@
                 width: 1080,
                 height: 1080,
                 fontSize: 50,
+                textPadding: 0,
                 backgroundType: BackgroundTypes.gradient,
                 backgroundTypes: BackgroundTypes,
                 rawImage: null,
@@ -212,7 +214,7 @@
         mounted() {
             this.canvas = this.$refs.canvas;
 
-            this.setCanvasPos();
+            this.initializeCanvasPos();
             this.setCanvasZoneLeft();
 
             this.$nextTick(() => {
@@ -241,6 +243,18 @@
         },
 
         methods: {
+            initializeCanvasPos() {
+                // on startup, this is zero. since there is no hook
+                // to catch the fully rendered event, we have to retry
+                // until the browser has positioned the canvas.
+                window.requestAnimationFrame(() => {
+                    this.setCanvasPos();
+                    if (this.canvasPos.y === 0) {
+                        this.initializeCanvasPos();
+                    }
+                });
+            },
+
             updateBarLayer(barBlock) {
                 this.barBlock = barBlock;
 
@@ -251,6 +265,7 @@
                 this.barLayer.alignment = this.alignment;
                 this.barLayer.block = this.barBlock;
                 this.barLayer.borderWidth = this.borderWidth;
+                this.barLayer.textPadding = this.textPadding;
 
                 this.draw();
             },
@@ -340,7 +355,7 @@
                     this.canvasPos.width = pos.width;
                     this.canvasPos.height = pos.height;
                 });
-            }, 100),
+            }, 100, {leading: true, trailing: true}),
 
             setViewDims: debounce(function () {
                 this.viewHeight = document.documentElement.clientHeight;

@@ -105,7 +105,10 @@
         mounted() {
             this.text = this.initialText;
             this.draw('create');
-            this.loadFonts().then(() => this.draw('font'));
+            this.loadFonts().then(() => {
+                this.draw('font');
+                this.$emit('paddingChanged', this.bar.padding);
+            });
         },
 
         destroyed() {
@@ -122,6 +125,10 @@
                 this.bar.imageWidth = this.imageWidth;
 
                 this.$emit('drawn', this.bar.draw(), action);
+
+                if ('baseFontSize' === action) {
+                    this.$emit('paddingChanged', this.bar.padding);
+                }
             },
 
             loadFonts() {

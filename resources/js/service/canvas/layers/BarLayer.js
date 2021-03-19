@@ -4,14 +4,35 @@ import Layer from "./Layer";
 const shadowColorMouseOver = 'rgba(0,0,0,0.5)';
 const shadowMouseOverSize = 0.01;
 
+/**
+ * Defines, how close to the border (y-axis) the bar block may be dragged.
+ * Applied, if the closest point is in the middle of the image.
+ *
+ * @type {number}
+ */
 const borderMarginFactor = 2;
-const borderMarginFactorRadius = 3;
+
+/**
+ * Defines, how close to the border (y-axis) the bar block may be dragged.
+ * Applied, if the closest point is in the (rounded) corner of the image.
+ *
+ * @type {number}
+ */
+const borderMarginFactorRadius = 2;
+
+/**
+ * Defines the distance of the text (closest bar) to the border (x-axis).
+ *
+ * @type {number}
+ */
+const textPaddingFactor = 2;
 
 export default class BarLayer extends Layer {
     constructor(canvas) {
         super(canvas);
 
         this._borderWidth = null;
+        this._textPadding = 0;
         this._y = this._canvas.height;
 
         this._touching = false;
@@ -37,6 +58,10 @@ export default class BarLayer extends Layer {
 
     set borderWidth(value) {
         this._borderWidth = value;
+    }
+
+    set textPadding(value) {
+        this._textPadding = value;
     }
 
     get touching() {
@@ -114,14 +139,14 @@ export default class BarLayer extends Layer {
     }
 
     _getBlockOversize() {
-        const border = this._borderWidth;
+        const paddingX = this._textPadding * textPaddingFactor;
 
         if (this._alignment === Alignments.left) {
-            return this._canvas.width * BarSizeFactor - border;
+            return this._canvas.width * BarSizeFactor - paddingX;
         }
 
         const rotationCorr = Math.sin(RotationAngle) * this._block.height;
-        return this._canvas.width * BarSizeFactor + rotationCorr - border;
+        return this._canvas.width * BarSizeFactor + rotationCorr - paddingX;
     }
 
     _getBlockYpos() {
