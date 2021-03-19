@@ -84,15 +84,15 @@ class ImageFileTest extends TestCase
             'image_id' => $original->id,
         ]);
 
-        $image = factory(Image::class)->create([
+        $final = factory(Image::class)->create([
             'original_id' => $original->id,
             'background'  => Image::BG_CUSTOM,
         ]);
 
-        $image->generateThumbnail();
+        $final->generateThumbnail();
 
         $response = $this->actingAs($user)
-                         ->get("/api/1/files/images/$image->id/thumbnail");
+                         ->get("/api/1/files/images/$final->id/thumbnail");
 
         $response->assertStatus(200);
     }
@@ -108,17 +108,42 @@ class ImageFileTest extends TestCase
             'background' => Image::BG_CUSTOM,
         ]);
 
-        $image = factory(Image::class)->create([
+        $final = factory(Image::class)->create([
             'original_id' => $original->id,
             'background'  => Image::BG_CUSTOM,
         ]);
 
-        $image->generateThumbnail();
+        $final->generateThumbnail();
 
         $response = $this->actingAs($user)
-                         ->get("/api/1/files/images/$image->id/thumbnail");
+                         ->get("/api/1/files/images/$final->id/thumbnail");
 
         $response->assertStatus(403);
+    }
+
+    public function testGetThumbnail__finalCustomDeletedUser_200()
+    {
+        $user = factory(User::class)->create([
+            'enabled' => true
+        ]);
+
+        $creator = factory(User::class)->create([
+            'enabled'    => true
+        ]);
+
+        $final = factory(Image::class)->create([
+            'background'  => Image::BG_GRADIENT,
+            'user_id'     => $creator->id,
+        ]);
+
+        $final->generateThumbnail();
+
+        $creator->delete();
+
+        $response = $this->actingAs($user)
+                         ->get("/api/1/files/images/$final->id/thumbnail");
+
+        $response->assertStatus(200);
     }
 
     public function testPost__adminInvalidFileExtension__422()
