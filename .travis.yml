@@ -6,7 +6,7 @@ install:
   - sudo bash install.sh
 
 script:
-  - docker-compose run node yarn prod
+  - docker-compose run node yarn production
   - docker exec imagery vendor/bin/phpunit
 
 after_failure:
