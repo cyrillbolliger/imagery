@@ -38,7 +38,9 @@
         "retry": "Wiederholen",
         "reload": "Erneut Laden",
         "dismiss": "Verwerfen",
-        "server_error": "Uuups, es gab einen Serverfehler."
+        "server_error": "Uuups, es gab einen Serverfehler.",
+        "unauthorized": "Your session has expired. Please log in again.",
+        "login": "Log in"
     },
     "validation": {
         "required": "Dieses Feld ist erforderlich.",
@@ -50,7 +52,9 @@
     "users": {
         "index": {
             "title": "Benutzer",
-            "create": "Benutzer erstellen"
+            "create": "Benutzer erstellen",
+            "approve": "Approve {user}",
+            "edit": "Edit User"
         },
         "logout": {
             "loggingOut": "Abmelden...",
@@ -70,10 +74,10 @@
         "last_name": "Nachname",
         "email": "Email",
         "email_exists": "Es gibt schon ein Benutzerkonto mit dieser Emailadresse.",
-        "password": "Passwort",
-        "password_placeholder": "Unverändert",
-        "password_empty_info": "Wenn du das Passwortfeld leer lässt, bleibt das Passwort wie es ist.",
-        "password_notification": "Der Benutzer muss das Passwort selbst festlegen (siehe unten 'Willkommens-E-Mail').",
+        "email_change": "Since this login is linked to other systems, you cannot change the email address. Please contact admin@gruene.ch to change it.",
+        "enabled": "Enabled",
+        "enabled_desc": "This user can sign in.",
+        "disabled_tag": "Disabled",
         "super_admin": "Super-Admin",
         "super_admin_desc": "Dieser Benutzer kann alles tun.",
         "language": "Sprache",
@@ -89,15 +93,15 @@
         "saving": "Speichern...",
         "saved": "Benutzer gespeichert.",
         "saving_failed": "Benutzer konnte nicht gespeichert werden. Bitte erneut versuchen.",
+        "approve": "Approve User",
         "remove": "Benutzer löschen",
         "removing": "Lösche Benutzer",
         "removed": "Benutzer gelöscht.",
         "remove_confirmation": "Möchtest du {user} wirklich löschen?",
         "removing_failed": "Benutzer konnte nicht gelöscht werden. Versuche es erneut.",
-        "password_insecure": "Dieses Passwort ist unsicher. Mache es länger oder füge Zahlen und Sonderzeichen hinzu (und natürlich Klein- und Grossbuchstaben).",
         "notification": "Benachrichtigung",
         "welcome_mail": "Willkommens-E-Mail",
-        "send_notification": "Sende diesem Benutzer eine E-Mail, um ihn über seinen Zugang zu informieren. Die E-Mail enthält einen Link zum Festlegen des Passworts.",
+        "send_notification": "Send this user an email to inform him about his account. The email contains instructions on how to log in.",
         "stats": "Statistiken",
         "last_login": "Letzte Anmeldung",
         "login_count": "Anzahl Anmeldungen",
@@ -148,6 +152,7 @@
             "logoDefaultSelected": "Standard",
             "logoRemove": "Logo entfernen",
             "logoDefaultSaveFailed": "Logo konnte nicht gespeichert werden. Bitte erneut versuchen.",
+            "userHasNoLogos": "Oh là là, you haven't been given access to any logos. Ask your party's secretary to do so.",
             "fontSize": "Schriftgrösse",
             "tooMuchText": "Deine Balken enthalten zu viel Text. Kürze ihn!",
             "sublineAdd": "Subline hinzufügen",
@@ -247,7 +252,7 @@
         "gallery": {
             "title": "Galerie",
             "createdAtBy": "Erstellt {timeAgo} von {user}.",
-            "userUnknown": "gelöschter Benutzer",
+            "userUnknown": "#deleted user",
             "loading": "Laden...",
             "download": "Herunterladen",
             "delete": "Löschen",
