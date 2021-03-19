@@ -1,5 +1,8 @@
 <?php
 
+namespace Database\Seeders;
+
+
 use App\Group;
 use App\GroupLogo;
 use App\Logo;

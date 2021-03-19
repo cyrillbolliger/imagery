@@ -120,6 +120,7 @@
       <path value="$PROJECT_DIR$/vendor/graham-campbell/result-type" />
       <path value="$PROJECT_DIR$/vendor/fakerphp/faker" />
       <path value="$PROJECT_DIR$/vendor/xantios/mimey" />
+      <path value="$PROJECT_DIR$/vendor/laravel/legacy-factories" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
