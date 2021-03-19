@@ -683,7 +683,7 @@ class UserTest extends TestCase
 
     public function testPutUser__activate_200()
     {
-        $group = factory(Group::class)->create();
+        $group   = factory(Group::class)->create();
         $manager = factory(User::class)->create([
             'super_admin' => false,
             'enabled'     => true,
@@ -704,23 +704,24 @@ class UserTest extends TestCase
                             ->get('/admin/users/'.$managed->id.'?activation='.$managed->activation_token);
         $appResponse->assertStatus(200);
 
-        $managed->enabled = true;
+        $managed->enabled    = true;
         $managed->managed_by = $group->id;
 
-        $response         = $this->actingAs($manager)
-                                 ->putJson('/api/1/users/'.$managed->id, $managed->toArray());
+        $response = $this->actingAs($manager)
+                         ->putJson('/api/1/users/'.$managed->id, $managed->toArray());
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('users', [
             'id'             => $managed->id,
             'enabled'        => true,
             'activatable_by' => null, // tests UserObserver
+            'added_by'       => $manager->id,
         ]);
     }
 
     public function testPutUser__activate_managedByOthers_200()
     {
-        $group = factory(Group::class)->create();
+        $group   = factory(Group::class)->create();
         $manager = factory(User::class)->create([
             'super_admin' => false,
             'enabled'     => true,
@@ -743,8 +744,8 @@ class UserTest extends TestCase
 
         $managed->enabled = true;
 
-        $response         = $this->actingAs($manager)
-                                 ->putJson('/api/1/users/'.$managed->id, $managed->toArray());
+        $response = $this->actingAs($manager)
+                         ->putJson('/api/1/users/'.$managed->id, $managed->toArray());
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('users', [
@@ -752,9 +753,14 @@ class UserTest extends TestCase
             'enabled'        => true,
             'activatable_by' => null, // tests UserObserver
         ]);
+        $this->assertDatabaseMissing('users', [
+            'id'       => $managed->id,
+            'enabled'  => true,
+            'added_by' => $manager->id, // tests UserObserver
+        ]);
         $this->assertDatabasehas('users', [
-            'id'             => $managed->id,
-            'enabled'        => true,
+            'id'      => $managed->id,
+            'enabled' => true,
         ]);
     }
 }
