@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Notifications\AccountCreatedNotification;
+use App\Mail\AccountCreated;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,7 +10,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use \Spatie\WelcomeNotification\ReceivesWelcomeNotification;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Class User
@@ -34,10 +34,13 @@ use \Spatie\WelcomeNotification\ReceivesWelcomeNotification;
  * @property-read bool $is_admin
  * @property Carbon|null $last_login
  * @property string|null $remember_token
+ * @property bool $enabled
+ * @property string $activation_token
+ * @property int|null $activatable_by
+ * @property User|null $activatableBy
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property string|null $welcome_valid_until
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Role[] $adminRoles
  * @property-read int|null $admin_roles_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
@@ -68,7 +71,8 @@ use \Spatie\WelcomeNotification\ReceivesWelcomeNotification;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereSuperAdmin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereWelcomeValidUntil($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereActivationToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereActivatableBy($value)
  * @method static \Illuminate\Database\Query\Builder|\App\User withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\User withoutTrashed()
  * @mixin \Eloquent
@@ -77,7 +81,6 @@ class User extends Authenticatable
 {
     use Notifiable;
     use SoftDeletes;
-    use ReceivesWelcomeNotification;
 
     public const LANG_EN = 'en';
     public const LANG_DE = 'de';
@@ -96,9 +99,11 @@ class User extends Authenticatable
         'email',
         'password',
         'managed_by',
+        'added_by',
         'default_logo',
         'super_admin',
         'lang',
+        'enabled'
     ];
 
     /**
@@ -127,7 +132,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'super_admin' => 'boolean'
+        'super_admin' => 'boolean',
+        'enabled'     => 'boolean',
     ];
 
     /**
@@ -190,6 +196,16 @@ class User extends Authenticatable
     }
 
     /**
+     * The user that created this user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function activatableBy()
+    {
+        return $this->belongsTo(User::class, 'activatable_by');
+    }
+
+    /**
      * Does the user has any admin roles at all?
      *
      * @return bool
@@ -224,6 +240,12 @@ class User extends Authenticatable
         $users = collect();
         foreach ($this->adminRoles()->get() as $role) {
             $users->push($role->usersBelow());
+        }
+
+        if ($this->isAdmin()) {
+            $users->push(
+                self::whereActivatableBy($this->id)->get()
+            );
         }
 
         $users->push(Auth::user());
@@ -400,17 +422,12 @@ class User extends Authenticatable
 
     /**
      * Send the onboarding email
-     *
-     * @param  \Carbon\Carbon  $validUntil
      */
-    public function sendWelcomeNotification(\Carbon\Carbon $validUntil)
+    public function sendWelcomeNotification()
     {
-        $lang = App::getLocale();
-        App::setLocale($this->lang);
-
-        $this->notify(new AccountCreatedNotification($validUntil));
-
-        App::setLocale($lang);
+        Mail::to($this)
+            ->locale($this->lang)
+            ->send(new AccountCreated($this));
     }
 
     /**

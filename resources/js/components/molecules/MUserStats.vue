@@ -28,6 +28,7 @@
     import german from "javascript-time-ago/locale/de";
     import TimeAgo from "javascript-time-ago";
     import ALoader from "../atoms/ALoader";
+    import UnauthorizedHandlerMixin from "../../mixins/UnauthorizedHandlerMixin";
 
     const lang = {
         en: english,
@@ -40,6 +41,7 @@
 
     export default {
         name: "MUserStats",
+        mixins: [UnauthorizedHandlerMixin],
         components: {ALoader},
         data() {
             return {
@@ -77,6 +79,7 @@
                 return Api().get(`users/${this.user.id}/stats`)
                     .then(response => response.data)
                     .then(stats => this.stats = stats)
+                    .catch(error => this.handleUnauthorized(error))
                     .catch(reason => {
                         this.snackErrorRetry(reason, this.$t('user.stats_loading_failed'))
                             .then(() => this.statsLoad());

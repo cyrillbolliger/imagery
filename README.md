@@ -11,6 +11,9 @@ Not everybody has the software and skills to create corporate design images on
 his own. And it's not everybodys hobby to learn all the rules of the corporate 
 design.
 
+## Single-Sign-On
+Read the [dedicated docs](docs/sso.md).
+
 ## Contributing ...
 ... is cool, simple and helps to make the 🌍 a better place 🤩
 

@@ -1,11 +1,15 @@
 <?php
 
+namespace Database\Seeders;
+
+
 use App\Group;
 use App\GroupLogo;
 use App\Logo;
 use App\Role;
 use App\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class DemoSeeder extends Seeder
 {

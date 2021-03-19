@@ -102,7 +102,9 @@
         methods: {
             onInput(event) {
                 this.$emit('input', event);
-
+                this.validate();
+            },
+            validate() {
                 if (this.validation) {
                     this.$v.value.$touch();
                 }

@@ -17,9 +17,11 @@
 
 <script>
     import Api from "../../service/Api";
+    import UnauthorizedHandlerMixin from "../../mixins/UnauthorizedHandlerMixin";
 
     export default {
         name: "ADefaultLogo",
+        mixins: [UnauthorizedHandlerMixin],
 
         data() {
             return {
@@ -56,6 +58,7 @@
 
                 Api().put(`users/${userId}`, payload)
                     .then(resp => this.$store.dispatch('user/set', resp.data))
+                    .catch(error => this.handleUnauthorized(error))
                     .catch(reason => {
                         this.snackErrorRetry(reason, this.$t('images.create.logoDefaultSaveFailed'))
                             .then(() => this.save());

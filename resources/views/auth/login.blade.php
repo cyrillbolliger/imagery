@@ -13,73 +13,28 @@
                 <div>
                     <h2>{{ __('Login') }}</h2>
 
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
+                    <p>{{ __( "This uses the same login as for other services of the GREENS like the chat." ) }}</p>
 
-                        @error('email')
-                        <div class="alert alert-warning" role="alert">
-                            <strong>{{ $message }}</strong>
-                            {{__('Would you like to reset your password?')}}
-                            <a href="{{ route('password.request') }}">{{ __('Reset password.')  }}</a>
-                            {{__("Or haven't you got an account yet?")}}
-                            <a href="{{ route('register') }}">{{ __('Create account.') }}</a>
-                        </div>
-                        @enderror
+                    <a type="button"
+                       class="btn btn-primary btn-lg btn-block mt-3 mb-3"
+                       href="{{ route('keycloak.login') }}">{{__('Sign-on with GREEN account')}}</a>
 
-                        <div class="form-group">
-                            <label for="email"
-                                   class="col-form-label">{{ __('E-Mail Address') }}</label>
-
-                            <input id="email"
-                                   type="email"
-                                   class="form-control @error('email') is-invalid @enderror"
-                                   name="email"
-                                   value="{{ old('email') }}"
-                                   placeholder="user@example.com"
-                                   required
-                                   autocomplete="email"
-                                   autofocus>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="password"
-                                   class="col-form-label">{{ __('Password') }}</label>
-
-                            <input id="password"
-                                   type="password"
-                                   class="form-control @error('email') is-invalid @enderror"
-                                   name="password"
-                                   placeholder="Password"
-                                   required
-                                   autocomplete="current-password">
-
-                            <small id="passwordHelpBlock" class="form-text text-muted">
-                                {{ __('Forgot password?') }}
-                                <a href="{{ route('password.request') }}" tabindex="1">
-                                    {{ __('Reset it!')  }}
-                                </a>
-                            </small>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="remember"
-                                       id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                <label class="form-check-label" for="remember">
-                                    {{ __('Stay logged in') }}
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="form-group mb-0 mt-4">
-                            <button type="submit" class="btn btn-primary">
-                                {{ __('Login') }}
-                            </button>
-
-                            <a href="{{ route('register') }}" class="btn btn-link">{{ __('Create account') }}</a>
-                        </div>
-                    </form>
+                    <div class="text-muted small mt-4">
+                        <h3>{{ __('FAQ') }}</h3>
+                        <p>
+                            <strong>{{ __( 'What about my existing account?' ) }}</strong><br>
+                            {{ __( "If you already had an account for this tool, it will be automatically merged with the GREEN account." ) }}
+                        </p>
+                        <p>
+                            <strong>{{ __( "I don't have a GREEN account (chat login)" ) }}</strong><br>
+                            {{ __( "Then it's time you sign up for one." ) }}
+                            <a href="{{ url('register') }}">{{ __( "Click here to register." ) }}</a>
+                        </p>
+                        <p>
+                            <strong>{{ __( 'I need some help' ) }}</strong><br>
+                            &rarr; <a href="mailto:{{ config('app.admin_email') }}">{{ config('app.admin_email') }}</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

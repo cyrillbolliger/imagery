@@ -18,6 +18,7 @@
             <template #default>
                 <OUser
                     :user="dialogUser"
+                    :activation="activation"
                     @close="navigateToList"
                 ></OUser>
             </template>
@@ -43,9 +44,29 @@
         data() {
             return {
                 headers: [
-                    {label: this.$t('user.first_name'), key: 'first_name', sortable: true},
-                    {label: this.$t('user.last_name'), key: 'last_name', sortable: true},
-                    {label: this.$t('user.email'), key: 'email', sortable: true},
+                    {
+                        label: this.$t('user.first_name'),
+                        key: 'first_name',
+                        sortable: true
+                    },
+                    {
+                        label: this.$t('user.last_name'),
+                        key: 'last_name',
+                        sortable: true
+                    },
+                    {
+                        label: this.$t('user.email'),
+                        key: 'email',
+                        sortable: true
+                    },
+                    {
+                        label: '',
+                        key: 'enabled',
+                        sortable: false,
+                        searchable: false,
+                        transformation: (enabled) => enabled
+                            ? '' : `<span class="badge badge-primary">${this.$t('user.disabled_tag')}</span>`
+                    },
                 ],
                 dialogUser: null,
                 createUser: false,
@@ -60,10 +81,21 @@
                 loading: 'users/loading',
             }),
             dialogTitle() {
-                return this.dialogUser && !this.createUser ?
-                    `${this.dialogUser.first_name} ${this.dialogUser.last_name}` :
-                    this.$t('users.index.create');
-            }
+                if (this.createUser) {
+                    return this.$t('users.index.create');
+                }
+
+                if (this.activation && this.dialogUser) {
+                    const name = `${this.dialogUser.first_name} ${this.dialogUser.last_name}`;
+                    return this.$t('users.index.approve', {user: name});
+                }
+
+                if (this.dialogUser) {
+                    return `${this.dialogUser.first_name} ${this.dialogUser.last_name}`;
+                }
+
+                return this.$t('users.index.edit')
+            },
         },
 
 
@@ -73,7 +105,10 @@
             },
             create: {
                 default: false
-            }
+            },
+            activation: {
+                default: false
+            },
         },
 
 

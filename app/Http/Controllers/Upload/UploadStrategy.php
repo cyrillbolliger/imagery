@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Mimey\MimeTypes;
 
 abstract class UploadStrategy
 {
@@ -39,7 +40,7 @@ abstract class UploadStrategy
      * AbstactUploadHandler constructor.
      *
      * @param  array  $allowedFileExt
-     * @param  string  $filename  filename of the uploaded file
+     * @param  string|null  $filename  filename of the uploaded file
      * @param  float|null  $allowedFileSize  in MB
      */
     public function __construct(
@@ -48,7 +49,7 @@ abstract class UploadStrategy
         float $allowedFileSize = null
     ) {
         if (null === $allowedFileSize) {
-            $allowedFileSize = config('app.uploads_max_file_size');
+            $allowedFileSize = (float) config('app.uploads_max_file_size');
         }
 
         $this->allowedFileExt  = $allowedFileExt;
@@ -186,10 +187,10 @@ abstract class UploadStrategy
         }
 
         $mimeType  = Storage::mimeType($relTmpPath);
-        $converter = new \Mimey\MimeTypes;
+        $converter = new MimeTypes;
 
         $mimeExt = $converter->getExtension($mimeType);
-        if ( ! in_array($mimeExt, $this->allowedFileExt)) {
+        if ( !in_array($mimeExt, $this->allowedFileExt, true)) {
             $this->validationErrorAbort('file', 'The uploaded file has an invalid mime type.');
         }
     }

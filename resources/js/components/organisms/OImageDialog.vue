@@ -44,6 +44,7 @@
     import SnackbarMixin from "../../mixins/SnackbarMixin";
     import ODialog from "../organisms/ODialog";
     import MLegalForm from "../molecules/MLegalForm";
+    import UnauthorizedHandlerMixin from "../../mixins/UnauthorizedHandlerMixin";
 
     const metaUploadProgress = 5;
     const legalUploadProgress = 5;
@@ -51,7 +52,7 @@
     export default {
         name: "OImageDialog",
         components: {MLegalForm, ODialog},
-        mixins: [SnackbarMixin],
+        mixins: [SnackbarMixin, UnauthorizedHandlerMixin],
 
 
         data() {
@@ -229,6 +230,7 @@
                         }
                     })
                     .then(() => this.uploadMetaStatus++)
+                    .catch(error => this.handleUnauthorized(error))
                     .catch(error => {
                         this.snackErrorRetry(error, this.$t('images.create.uploadFailed'))
                             .then(() => this.uploadImageMeta(payload));

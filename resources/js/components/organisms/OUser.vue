@@ -18,6 +18,7 @@
         </ul>
         <MUserForm
             :user="user"
+            :activation="activation"
             class="mt-3"
             v-show="'edit' === currentTab"
             @saved="$emit('close', $event)"
@@ -59,6 +60,10 @@
             user: {
                 required: true,
                 type: Object
+            },
+            activation: {
+                type: String,
+                default: false
             }
         },
 

@@ -18,7 +18,7 @@
 
         <div class="d-flex">
             <ModelSelect
-                :isDisabled="loadingLogos"
+                :isDisabled="loadingLogos || ! userHasLogos"
                 :options="logoChoices"
                 :value="logoIdSelected"
                 @input="setLogo($event)"
@@ -33,6 +33,12 @@
                 v-if="logoIdSelected"
             >&times;
             </button>
+        </div>
+        <div
+            v-if="! loadingLogos && ! userHasLogos"
+            class="alert alert-warning"
+            role="alert"
+        >{{$t('images.create.userHasNoLogos')}}
         </div>
     </div>
 </template>
@@ -100,6 +106,10 @@
             logosReady() {
                 return !(this.loadingLogos || this.loadingLogoImage);
             },
+
+            userHasLogos() {
+                return this.logoChoices.length > 0;
+            }
         },
 
         created() {

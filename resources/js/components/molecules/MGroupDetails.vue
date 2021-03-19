@@ -21,9 +21,11 @@
 <script>
     import Api from "../../service/Api";
     import ALoader from "../atoms/ALoader";
+    import UnauthorizedHandlerMixin from "../../mixins/UnauthorizedHandlerMixin";
 
     export default {
         name: "MGroupDetails",
+        mixins: [UnauthorizedHandlerMixin],
         components: {ALoader},
         data() {
             return {
@@ -54,6 +56,7 @@
                     .then(response => response.data)
                     .then(logos => this.logos = logos)
                     .finally(() => this.logosLoading = false)
+                    .catch(error => this.handleUnauthorized(error))
                     .catch(reason => {
                         this.snackErrorRetry(reason, this.$t('group.logos_loading_failed'))
                             .then(() => this.logosLoad());
@@ -67,6 +70,7 @@
                     .then(response => response.data)
                     .then(users => this.users = users)
                     .finally(() => this.usersLoading = false)
+                    .catch(error => this.handleUnauthorized(error))
                     .catch(reason => {
                         this.snackErrorRetry(reason, this.$t('group.users_loading_failed'))
                             .then(() => this.usersLoad());

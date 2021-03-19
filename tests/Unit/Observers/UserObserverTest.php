@@ -46,7 +46,7 @@ class UserObserverTest extends TestCase
 
     public function testRestoring()
     {
-        $user  = factory(User::class)->create();
+        $user  = factory(User::class)->create(['enabled' => true]);
         $email = $user->email;
 
         $user->delete();

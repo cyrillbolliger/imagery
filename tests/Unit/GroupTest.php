@@ -3,6 +3,7 @@
 namespace App;
 
 
+use Database\Seeders\RootSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -14,7 +15,7 @@ class GroupTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed(\RootSeeder::class);
+        $this->seed(RootSeeder::class);
     }
 
     public function testUsersBelow()

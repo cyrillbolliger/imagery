@@ -25,7 +25,10 @@ class LogoFileTest extends TestCase
     {
         $group = factory(Group::class)->create();
 
-        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $manager->roles()->save(
             factory(Role::class)->make([
                 'admin'    => false,
@@ -46,7 +49,10 @@ class LogoFileTest extends TestCase
     {
         $group = factory(Group::class)->create();
 
-        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $manager->roles()->save(
             factory(Role::class)->make([
                 'admin'    => false,
@@ -67,7 +73,10 @@ class LogoFileTest extends TestCase
     {
         $group = factory(Group::class)->create();
 
-        $manager = factory(User::class)->create(['super_admin' => false]);
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $manager->roles()->save(
             factory(Role::class)->make([
                 'admin'    => false,

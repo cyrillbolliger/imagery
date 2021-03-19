@@ -23,7 +23,7 @@ class LegalTest extends TestCase
 
     public function testGet_200()
     {
-        $user  = factory(User::class)->create();
+        $user  = factory(User::class)->create(['enabled' => true]);
         $image = factory(Image::class)->create([
             'user_id' => $user->id,
             'type'    => Image::TYPE_RAW
@@ -55,7 +55,7 @@ class LegalTest extends TestCase
 
     public function testPut_200()
     {
-        $user  = factory(User::class)->create();
+        $user  = factory(User::class)->create(['enabled' => true]);
         $image = factory(Image::class)->create([
             'user_id' => $user->id,
             'type'    => Image::TYPE_RAW
@@ -88,7 +88,7 @@ class LegalTest extends TestCase
 
     public function testPost_201()
     {
-        $user  = factory(User::class)->create();
+        $user  = factory(User::class)->create(['enabled' => true]);
         $image = factory(Image::class)->create([
             'user_id' => $user->id,
             'type'    => Image::TYPE_RAW
@@ -112,7 +112,7 @@ class LegalTest extends TestCase
 
     public function testPost_saveMultiple_409()
     {
-        $user  = factory(User::class)->create();
+        $user  = factory(User::class)->create(['enabled' => true]);
         $image = factory(Image::class)->create([
             'user_id' => $user->id,
             'type'    => Image::TYPE_RAW

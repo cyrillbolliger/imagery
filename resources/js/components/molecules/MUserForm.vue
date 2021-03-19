@@ -17,26 +17,24 @@
         <AInput
             :label="$t('user.email')"
             :required="true"
+            :disabled="!amISuperAdmin && !newUser"
             type="email"
             :validation="validations.email"
             v-model.trim="currentUser.email"
-        />
-        <APasswordSet
-            v-if="!newUser"
-            v-model.trim="currentUser.password"
-            :required="false"
-        />
-        <AFormGroup v-else>
+            :helptext="newUser || amISuperAdmin ? null : $t('user.email_change')"
+        >
+        </AInput>
+        <AFormGroup v-if="amIadmin">
             <template #label>
-                {{ $t('user.password') }}
+                {{ $t('user.enabled') }}
             </template>
             <template #input>
-                <p class="alert alert-warning" role="alert">
-                    {{$t('user.password_notification')}}
-                </p>
+                <ACheckbox
+                    v-model="currentUser.enabled"
+                    :label="$t('user.enabled_desc')"
+                />
             </template>
         </AFormGroup>
-
 
         <h5 class="pt-3">{{$t('user.misc_fields')}}</h5>
         <ASelect
@@ -45,6 +43,7 @@
             :required="true"
             :validation="validations.language"
             v-model="currentUser.lang"
+            ref="lang"
         />
         <ASelect
             v-if="amIadmin"
@@ -54,6 +53,7 @@
             :required="true"
             :validation="validations.managed_by"
             v-model="currentUser.managed_by"
+            ref="managedBy"
         />
 
         <div v-if="amIadmin">
@@ -102,7 +102,7 @@
         </div>
 
         <AButtonWait
-            :button-text="$t('user.save')"
+            :button-text="isUserActivation ?  $t('user.approve') : $t('user.save')"
             :working="saving"
             :working-text="$t('user.saving')"
             @buttonClicked="save"
@@ -133,16 +133,17 @@
     import SnackbarMixin from "../../mixins/SnackbarMixin";
     import MGroupTree from "./MGroupTree";
     import PrepareSelectMixin from "../../mixins/PrepareSelectMixin";
-    import {required, email, maxLength} from 'vuelidate/lib/validators';
+    import {required, email, maxLength, integer} from 'vuelidate/lib/validators';
     import AButtonWait from "../atoms/AButtonWait";
     import isEqual from 'lodash/isEqual';
     import cloneDeep from 'lodash/cloneDeep';
     import ALoader from "../atoms/ALoader";
+    import UnauthorizedHandlerMixin from "../../mixins/UnauthorizedHandlerMixin";
 
     export default {
         name: "MUserForm",
         components: {ALoader, AButtonWait, MGroupTree, ASelect, AFormGroup, ACheckbox, AInput, APasswordSet},
-        mixins: [ResourceLoadMixin, SnackbarMixin, PrepareSelectMixin],
+        mixins: [ResourceLoadMixin, SnackbarMixin, PrepareSelectMixin, UnauthorizedHandlerMixin],
 
 
         data() {
@@ -200,6 +201,7 @@
                     managed_by: {
                         rules: {
                             required,
+                            integer
                         },
                         message: this.$t('validation.required')
                     },
@@ -212,7 +214,11 @@
             user: {
                 required: true,
                 type: Object,
-            }
+            },
+            activation: {
+                type: String,
+                default: false,
+            },
         },
 
 
@@ -240,6 +246,9 @@
             newUser() {
                 return !('id' in this.currentUser);
             },
+            isUserActivation() {
+                return this.activation && this.activation === this.currentUser.activation_token;
+            },
         },
 
 
@@ -250,6 +259,12 @@
             }
 
             this.notifyUser = this.newUser;
+
+            if (this.isUserActivation) {
+                this.currentUser.enabled = true;
+                this.currentUser.managed_by = null;
+                this.notifyUser = true;
+            }
         },
 
 
@@ -269,6 +284,7 @@
                         this.editedRoles = cloneDeep(roles);
                     })
                     .then(() => this.setRolesReady())
+                    .catch(error => this.handleUnauthorized(error))
                     .catch(reason => {
                         this.snackErrorRetry(reason, this.$t('user.roles_loading_failed'))
                             .then(() => this.rolesLoad());
@@ -332,6 +348,14 @@
                     && error.response.data.errors.email[0] === 'The email has already been taken.') {
                     const email = this.user.email;
                     this.$set(this.validations.email.rules, 'unique', (value) => value !== email);
+                }
+                if ('managed_by' in error.response.data.errors
+                    && error.response.data.errors.managed_by[0] === 'The managed by field is required.') {
+                    this.$refs.managedBy.validate();
+                }
+                if ('lang' in error.response.data.errors
+                    && error.response.data.errors.managed_by[0] === 'The lang field is required.') {
+                    this.$refs.lang.validate();
                 }
 
                 this.snackErrorDismiss(error, this.$t('validation.double_check_form'));

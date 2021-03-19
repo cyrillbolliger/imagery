@@ -30,6 +30,7 @@ use Imagick;
  * @property int $height
  * @property string $src
  * @property string $thumb_src
+ * @property string $file_type
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
@@ -84,6 +85,7 @@ class Image extends Model implements FileModel
      */
     protected $hidden = [
         'filename',
+        'deleted_at'
     ];
 
     /**
@@ -93,7 +95,8 @@ class Image extends Model implements FileModel
      */
     protected $appends = [
         'src',
-        'thumb_src'
+        'thumb_src',
+        'file_type'
     ];
 
     /**
@@ -118,6 +121,11 @@ class Image extends Model implements FileModel
         return $this->belongsTo(Logo::class);
     }
 
+    public function original()
+    {
+        return $this->belongsTo(__CLASS__, 'original_id');
+    }
+
     public function isFinal()
     {
         return $this->type === self::TYPE_FINAL;
@@ -135,10 +143,10 @@ class Image extends Model implements FileModel
         }
 
         if ($this->type === self::TYPE_FINAL) {
-            return $this->original && $this->original->legal;
-        } else {
-            return (bool) $this->legal;
+            return (bool) optional($this->original()->first())->legal()->exists();
         }
+
+        return (bool) $this->legal;
     }
 
     public static function getImageStorageDir()
@@ -177,7 +185,7 @@ class Image extends Model implements FileModel
         $imagePath = disk_path($this->getRelPath());
         $image     = new Imagick(realpath($imagePath));
 
-        if ( ! (
+        if (!(
             $image->thumbnailImage(self::THUMB_MAX_WIDTH, self::THUMB_MAX_HEIGHT, true)
             && $image->writeImage(disk_path($thumbPath))
             && $image->destroy()
@@ -256,6 +264,11 @@ class Image extends Model implements FileModel
     public function getThumbSrcAttribute()
     {
         return route('thumbnail', ['image' => $this->id]);
+    }
+
+    public function getFileTypeAttribute()
+    {
+        return substr($this->filename, strpos($this->filename, '.') + 1);
     }
 
     public function getRelPath($arg = null)

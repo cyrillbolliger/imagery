@@ -175,6 +175,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ViewServiceProvider::class,
+        App\Providers\UserFederationServiceProvider::class,
 
     ],
 
@@ -320,16 +321,5 @@ return [
     */
 
     'admin_email' => env('APP_ADMIN_EMAIL'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Onboarding expiration
-    |--------------------------------------------------------------------------
-    |
-    | Days until the password set link in the onboarding email expires.
-    |
-    */
-
-    'onboarding_expiration' => 30, // days
 
 ];

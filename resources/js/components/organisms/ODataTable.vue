@@ -41,8 +41,9 @@
             </tbody>
             <tbody v-if="!loading">
             <tr class="o-data-table__row" v-for="row in sortedRows">
-                <td v-for="({key}, index) in headers">
-                    {{ row[key] }}
+                <td v-for="({key, transformation}, index) in headers">
+                    <span v-if="transformation" v-html="transformation(row[key])"></span>
+                    <span v-else>{{ row[key] }}</span>
                     <button @click="$emit('details', row[actionKey])"
                             class="o-data-table__item-action btn btn-link p-0 ml-2"
                             v-if="0 === index"

@@ -48,7 +48,7 @@ class ImagePolicy
     public function view(User $user, Image $image)
     {
         // your own images
-        if ($image->user->is($user)) {
+        if (optional($image->user)->is($user)) {
             return true;
         }
 

@@ -30,7 +30,10 @@ class UserTest extends TestCase
 
     public function testIsAdmin__nonAdmin()
     {
-        $user = factory(User::class)->create(['super_admin' => false]);
+        $user = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $user->roles()
              ->save(factory(Role::class)->make(['admin' => false]));
 
@@ -39,7 +42,10 @@ class UserTest extends TestCase
 
     public function testIsAdmin__admin()
     {
-        $user = factory(User::class)->create(['super_admin' => false]);
+        $user = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $user->roles()
              ->save(factory(Role::class)->make(['admin' => true]));
 
@@ -48,7 +54,10 @@ class UserTest extends TestCase
 
     public function testCanManageGroup__superAdmin()
     {
-        $user  = factory(User::class)->create(['super_admin' => true]);
+        $user  = factory(User::class)->create([
+            'super_admin' => true,
+            'enabled'     => true,
+        ]);
         $group = factory(Group::class)->create();
 
         $this->assertTrue($user->canManageGroup($group));
@@ -56,7 +65,10 @@ class UserTest extends TestCase
 
     public function testCanManageGroup__admin()
     {
-        $user  = factory(User::class)->create(['super_admin' => false]);
+        $user  = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $group = factory(Group::class)->create();
         $user->roles()
              ->save(factory(Role::class)->make([
@@ -69,7 +81,10 @@ class UserTest extends TestCase
 
     public function testCanManageGroup__nonAdmin()
     {
-        $user  = factory(User::class)->create(['super_admin' => false]);
+        $user  = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $group = factory(Group::class)->create();
         $user->roles()
              ->save(factory(Role::class)->make([
@@ -82,7 +97,10 @@ class UserTest extends TestCase
 
     public function testCanManageChildGroup__admin()
     {
-        $user  = factory(User::class)->create(['super_admin' => false]);
+        $user  = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $group = factory(Group::class)->create();
         $user->roles()
              ->save(factory(Role::class)->make([
@@ -96,7 +114,10 @@ class UserTest extends TestCase
 
     public function testCanUseGroup__nonAdmin()
     {
-        $user  = factory(User::class)->create(['super_admin' => false]);
+        $user  = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $group = factory(Group::class)->create();
         $user->roles()
              ->save(factory(Role::class)->make([
@@ -109,7 +130,10 @@ class UserTest extends TestCase
 
     public function testCanUseChildGroup__nonAdmin()
     {
-        $user  = factory(User::class)->create(['super_admin' => false]);
+        $user  = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $group = factory(Group::class)->create();
         $user->roles()
              ->save(factory(Role::class)->make([
@@ -123,7 +147,10 @@ class UserTest extends TestCase
 
     public function testCanUseChildGroup__admin()
     {
-        $user  = factory(User::class)->create(['super_admin' => false]);
+        $user  = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $group = factory(Group::class)->create();
         $user->roles()
              ->save(factory(Role::class)->make([
@@ -137,7 +164,10 @@ class UserTest extends TestCase
 
     public function testCanUseLogo__admin()
     {
-        $user  = factory(User::class)->create(['super_admin' => false]);
+        $user  = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $group = factory(Group::class)->create();
         $user->roles()
              ->save(factory(Role::class)->make([
@@ -154,7 +184,10 @@ class UserTest extends TestCase
 
     public function testCanUseLogo__nonAdmin()
     {
-        $user  = factory(User::class)->create(['super_admin' => false]);
+        $user  = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $group = factory(Group::class)->create();
         $user->roles()
              ->save(factory(Role::class)->make([
@@ -177,7 +210,10 @@ class UserTest extends TestCase
 
     public function testCanManageLogo__admin()
     {
-        $user  = factory(User::class)->create(['super_admin' => false]);
+        $user  = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $group = factory(Group::class)->create();
         $user->roles()
              ->save(factory(Role::class)->make([
@@ -194,7 +230,10 @@ class UserTest extends TestCase
 
     public function testCanManageLogo__nonAdmin()
     {
-        $user  = factory(User::class)->create(['super_admin' => false]);
+        $user  = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $group = factory(Group::class)->create();
         $user->roles()
              ->save(factory(Role::class)->make([
@@ -254,7 +293,10 @@ class UserTest extends TestCase
             $child1_logo1->id,
         ]);
 
-        $user = factory(User::class)->create(['super_admin' => false]);
+        $user = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
         $user->roles()
              ->save(factory(Role::class)->make([
                  'admin'    => true,
