@@ -105,6 +105,6 @@ class Logo extends Model implements FileModel
 
     public function getRelThumbPath()
     {
-        // TODO: Implement thumbnails
+        return self::getStorageDir().DIRECTORY_SEPARATOR.$this->type.'-green.svg';
     }
 }
