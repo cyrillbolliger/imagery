@@ -41,7 +41,7 @@ class UploadStrategyTest extends TestCase
 
         new RegularUploadStrategy([]);
 
-        $this->assertFileNotExists($imgOld);
-        $this->assertFileExists($imgNew);
+        self::assertFileDoesNotExist($imgOld);
+        self::assertFileExists($imgNew);
     }
 }
