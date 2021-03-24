@@ -127,6 +127,8 @@ sync() {
         --include='/public/css/*' \
         --include='/public/js' \
         --include='/public/js/*' \
+        --include='/public/fonts/' \
+        --include='/public/fonts/*' \
         --include='/public/mix-manifest.json' \
         --include='/storage/app/fonts' \
         --include='/storage/app/fonts/*' \
