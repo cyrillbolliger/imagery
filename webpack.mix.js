@@ -28,3 +28,6 @@ mix.sass('resources/sass/app.scss', 'public/css').sourceMaps().version();
 // expose material icons
 mix.copy(['node_modules/bootstrap-material-design-icons/css'], 'public/css');
 mix.copy(['node_modules/bootstrap-material-design-icons/fonts/MaterialIcons-Regular*'], 'public/fonts');
+
+// expose select 2 css
+mix.copy(['node_modules/vue-search-select/dist/VueSearchSelect.css'], 'public/css');

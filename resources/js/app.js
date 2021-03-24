@@ -5,7 +5,6 @@
  */
 
 import 'vue2-animate/src/sass/vue2-animate.scss'
-import 'vue-search-select/dist/VueSearchSelect.css'
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
