@@ -3,9 +3,6 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-
-import 'vue2-animate/src/sass/vue2-animate.scss'
-
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import App from './components/App';

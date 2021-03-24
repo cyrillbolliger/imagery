@@ -31,3 +31,6 @@ mix.copy(['node_modules/bootstrap-material-design-icons/fonts/MaterialIcons-Regu
 
 // expose select 2 css
 mix.copy(['node_modules/vue-search-select/dist/VueSearchSelect.css'], 'public/css');
+
+// expose vue animate styles
+mix.copy(['node_modules/vue2-animate/dist'], 'public/css');
