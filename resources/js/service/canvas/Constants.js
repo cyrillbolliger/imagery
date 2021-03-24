@@ -39,9 +39,11 @@ export const BarTypes = {
 export const LogoTypes = {
     alternative: 'alternative',
     gruene: 'gruene',
+    'gruene-vert-e-s': 'gruene-vert-e-s',
     'gruene-verts': 'gruene-verts',
     verda: 'verda',
     verdi: 'verdi',
+    'vert-e-s': 'vert-e-s',
     verts: 'verts',
 };
 
@@ -56,10 +58,15 @@ export const LogoSublineRatios = {
         left: 0.33,
         fontSize: 0.14225
     },
+    [LogoTypes["gruene-vert-e-s"]]: {
+        topMargin: 0.02,
+        left: 0.26,
+        fontSize: 0.094
+    },
     [LogoTypes["gruene-verts"]]: {
-        topMargin: 0.0255,
-        left: 0.25375,
-        fontSize: 0.1
+        topMargin: 0.02175,
+        left: 0.296,
+        fontSize: 0.09375
     },
     [LogoTypes.verda]: {
         topMargin: 0.0255,
@@ -67,8 +74,13 @@ export const LogoSublineRatios = {
         fontSize: 0.1425
     },
     [LogoTypes.verdi]: {
-        topMargin: 0.028,
+        topMargin: 0.03,
         left: 0.32,
+        fontSize: 0.141
+    },
+    [LogoTypes['vert-e-s']]: {
+        topMargin: 0.0315,
+        left: 0.2215,
         fontSize: 0.1425
     },
     [LogoTypes.verts]: {
