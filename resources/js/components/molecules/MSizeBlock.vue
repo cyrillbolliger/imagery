@@ -67,11 +67,11 @@
 
         data() {
             return {
-                width: 5000,
-                height: 5000,
+                width: 1080,
+                height: 1080,
                 custom: false,
                 sizes: [
-                    {value: '5000x5000', text: this.$t('images.create.sizes.square')},
+                    {value: '1080x1080', text: this.$t('images.create.sizes.square')},
                     {value: '1200x630', text: this.$t('images.create.sizes.fbTimeline')},
                     {value: '1920x1080', text: this.$t('images.create.sizes.fbEvent')},
                     {value: '1200x628', text: this.$t('images.create.sizes.fbWebsite')},
