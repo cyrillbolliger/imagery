@@ -5,13 +5,13 @@ namespace App\Logo;
 
 
 use App\Exceptions\LogoException;
+use Imagick;
 
 abstract class AbstractLogo
 {
     public const LOGO_COLOR_DARK = 'dark';
     public const LOGO_COLOR_LIGHT = 'light';
-    public const LOGO_SUBLINE_MAX_LEN = 80;
-    public const FINAL_BASE_LOGO_WIDTH = 5000;
+    public const LOGO_SUBLINE_MAX_CHAR = 80;
 
     protected const ROTATION_ANGLE = -5; // degrees
 
@@ -25,11 +25,21 @@ abstract class AbstractLogo
         'bottom' => 0.25,
         'right'  => 0.25
     ];
+    /**
+     * The only purpose of this factor is to have nice numbers
+     * for the getSublineFontSize() method. If you change the
+     * factor, you must adapt all implementations of
+     * getSublineFontSize().
+     */
+    protected const SUBLINE_FONT_SIZE_FACTOR = 100;
 
     protected string $colorScheme;
     protected string $sublineText;
 
-    private \Imagick $logo;
+    /**
+     * @var Imagick[]
+     */
+    private array $logo;
 
     /**
      * AbstractLogo constructor.
@@ -46,40 +56,93 @@ abstract class AbstractLogo
             throw new LogoException("Invalid logo color scheme: $colorScheme");
         }
 
-        if (strlen($sublineText) > self::LOGO_SUBLINE_MAX_LEN) {
-            throw new LogoException("Logo subline exceeds limit of ".self::LOGO_SUBLINE_MAX_LEN." chars: $sublineText");
+        if (strlen($sublineText) > self::LOGO_SUBLINE_MAX_CHAR) {
+            throw new LogoException("Logo subline exceeds limit of ".self::LOGO_SUBLINE_MAX_CHAR." chars: $sublineText");
         }
 
         $this->colorScheme = $colorScheme;
         $this->sublineText = $sublineText;
     }
 
-    public function getTiff(): string
+    public function getTiff(int $width): string
     {
+        $path = $this->getFinalFilePath('tiff', $width);
 
+        if (file_exists($path)) {
+            return $path;
+        }
+
+        $im = $this->getLogo($width);
+        $im->setImageFormat('tiff');
+        $im->transformImageColorspace(Imagick::COLORSPACE_CMYK);
+        $im->setColorspace(Imagick::COLORSPACE_CMYK);
+
+        $im->writeImage($path);
+
+        return $path;
+    }
+
+    public function getPng(int $width): string
+    {
+        $path = $this->getFinalFilePath('png', $width);
+
+        if (file_exists($path)) {
+            return $path;
+        }
+
+        $im = $this->getLogo($width);
+        $im->setImageFormat('png');
+        $im->transformImageColorspace(Imagick::COLORSPACE_SRGB);
+        $im->setColorspace(Imagick::COLORSPACE_SRGB);
+
+        $im->writeImage($path);
+
+        return $path;
+    }
+
+    private function getLogo(int $width)
+    {
+        if (!$this->logo[$width]) {
+            $this->compose($width);
+        }
+
+        return clone $this->logo[$width];
     }
 
     abstract protected function getSublineOffsetX(): float;
 
     abstract protected function getSublineOffsetY(): float;
 
-    protected function compose(): void
+    protected function compose(int $width): void
     {
-        $baseLogoIm = $this->getBaseLogoIm();
-        $sublineIm  = $this->getSublineIm();
+        $baseLogoIm = $this->getBaseLogoIm($width);
+        $sublineIm  = $this->getSublineIm($width);
+
+        $baseLogoWidth = $baseLogoIm->getImageWidth();
+        $sublineWidth  = $this->getSublineOffsetY() + $sublineIm->getImageWidth();
+
+        // if the subline exceeds the base logo we must redraw the base logo
+        // and the subline with an adjusted width, so the final width matches
+        // the expected width.
+        if ($sublineWidth > $baseLogoWidth) {
+            $adjustedWidth = ($width / $sublineWidth) * $width;
+
+            $baseLogoIm = $this->getBaseLogoIm($adjustedWidth);
+            $sublineIm  = $this->getSublineIm($adjustedWidth);
+
+            $baseLogoWidth = $baseLogoIm->getImageWidth();
+            $sublineWidth  = $this->getSublineOffsetY() + $sublineIm->getImageWidth();
+        }
 
         $logoHeight = $this->getSublineOffsetY() + $sublineIm->getImageHeight();
-        $logoWidth  = max(
-            $baseLogoIm->getImageWidth(),
-            $this->getSublineOffsetY() + $sublineIm->getImageWidth()
-        );
+        $logoWidth  = max($baseLogoWidth, $sublineWidth);
 
         // get the smallest possible container so that the logo will always fit
         // regardless of any rotation: longest side of the logo * sqrt(2)
         $longestSide = max($logoHeight, $logoWidth);
         $canvasSide  = $longestSide * sqrt(2);
 
-        $canvas = new \Imagick();
+        $canvas = new Imagick();
         $canvas->newImage($canvasSide, $canvasSide, 'transparent');
 
         // choose base offsets so the logo is placed in the center
@@ -89,13 +152,13 @@ abstract class AbstractLogo
         // add base logo and subline
         $canvas->compositeImage(
             $baseLogoIm,
-            \Imagick::COMPOSITE_DEFAULT,
+            Imagick::COMPOSITE_DEFAULT,
             $baseX,
             $baseY
         );
         $canvas->compositeImage(
             $sublineIm,
-            \Imagick::COMPOSITE_DEFAULT,
+            Imagick::COMPOSITE_DEFAULT,
             $baseX + $this->getSublineOffsetX(),
             $baseY + $this->getSublineOffsetY()
         );
@@ -103,16 +166,17 @@ abstract class AbstractLogo
         $canvas->rotateImage('transparent', self::ROTATION_ANGLE);
         $canvas->trimImage(0);
 
-        $this->logo = $canvas;
+        $this->logo[$width] = $canvas;
     }
 
     /**
      * Get an image magic object with the base logo
      *
-     * @return \Imagick
+     * @param  int  $width
+     * @return Imagick
      * @throws LogoException
      */
-    protected function getBaseLogoIm(): \Imagick
+    protected function getBaseLogoIm(int $width): Imagick
     {
         $path = $this->getAbsBaseLogoPath();
 
@@ -120,16 +184,17 @@ abstract class AbstractLogo
             throw new LogoException('Base logo not found: '.$path);
         }
 
-        $im = new \Imagick();
+        $im = new Imagick();
         $im->setBackgroundColor('transparent');
 
         try {
             // read image to determine and set pixel density so the svg will be
             // rastered to the correct size (when loading it the second time).
             $im->readImage($path);
+            $im->trimImage(0);
             $initialResolution = $im->getImageResolution();
-            $resolutionRatio = $initialResolution['x'] / $im->getImageWidth();
-            $targetResolution = $resolutionRatio * self::FINAL_BASE_LOGO_WIDTH;
+            $resolutionRatio   = $initialResolution['x'] / $im->getImageWidth();
+            $targetResolution  = $resolutionRatio * $width;
             $im->removeImage();
             $im->setResolution($targetResolution, $targetResolution);
 
@@ -143,7 +208,7 @@ abstract class AbstractLogo
         $im->trimImage(0);
 
         try {
-            $im->scaleImage(self::FINAL_BASE_LOGO_WIDTH, 0);
+            $im->scaleImage($width, 0);
         } catch (\ImagickException $e) {
             throw new LogoException("Image magick can't scale base logo: $e");
         }
@@ -153,15 +218,15 @@ abstract class AbstractLogo
 
     abstract protected function getAbsBaseLogoPath(): string;
 
-    protected function getSublineIm(): \Imagick
+    protected function getSublineIm(int $baseLogoWidth): Imagick
     {
-        $fontSize = $this->getSublineFontSize();
+        $fontSize = $this->getSublineFontSize() * $baseLogoWidth / self::SUBLINE_FONT_SIZE_FACTOR;
         $text     = $this->getSublineText();
 
         $bgColor   = new \ImagickPixel(self::SUBLINE_BG_COLOR);
         $fontColor = new \ImagickPixel(self::SUBLINE_TEXT_COLOR);
 
-        $im = new \Imagick();
+        $im = new Imagick();
 
         // get text dimensions
         $draw = new \ImagickDraw();
