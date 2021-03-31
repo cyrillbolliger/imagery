@@ -5,7 +5,11 @@ namespace App\Logo;
 
 
 use App\Exceptions\LogoException;
+use Illuminate\Support\Str;
 use Imagick;
+use ImagickDraw;
+use ImagickException;
+use ImagickPixel;
 
 abstract class AbstractLogo
 {
@@ -17,7 +21,7 @@ abstract class AbstractLogo
 
     protected const SUBLINE_BG_COLOR = 'rgb(132,180,20)';
     protected const SUBLINE_TEXT_COLOR = '#ffffff';
-    protected const SUBLINE_FONT_PATH = ''; // todo
+    protected const SUBLINE_FONT_NAME = 'SanukOT-Bold.otf';
     protected const SUBLINE_KERNING = -2.5;
     protected const SUBLINE_PADDINGS = [
         'top'    => 0.25,
@@ -64,6 +68,14 @@ abstract class AbstractLogo
         $this->sublineText = $sublineText;
     }
 
+    /**
+     * Get logo as TIFF encoded in CMYK
+     *
+     * @param  int  $width  width of logo before rotation (thus, the width of
+     *                      the final logo is slightly bigger)
+     * @return string
+     * @throws LogoException
+     */
     public function getTiff(int $width): string
     {
         $path = $this->getFinalFilePath('tiff', $width);
@@ -82,6 +94,15 @@ abstract class AbstractLogo
         return $path;
     }
 
+
+    /**
+     * Get logo as PNG encoded in sRGB
+     *
+     * @param  int  $width  width of logo before rotation (thus, the width of
+     *                      the final logo is slightly bigger)
+     * @return string
+     * @throws LogoException
+     */
     public function getPng(int $width): string
     {
         $path = $this->getFinalFilePath('png', $width);
@@ -100,7 +121,15 @@ abstract class AbstractLogo
         return $path;
     }
 
-    private function getLogo(int $width)
+    /**
+     * Get logo from class cache or create it if not in cache.
+     *
+     * @param  int  $width   width of logo before rotation (thus, the width of
+     *                       the final logo is slightly bigger)
+     * @return Imagick
+     * @throws LogoException
+     */
+    private function getLogo(int $width): Imagick
     {
         if (!$this->logo[$width]) {
             $this->compose($width);
@@ -113,6 +142,13 @@ abstract class AbstractLogo
 
     abstract protected function getSublineOffsetY(): float;
 
+    /**
+     * Create the logo as composition of the base logo and the subline.
+     *
+     * @param  int  $width  width of logo before rotation (thus, the width of
+                            the final logo is slightly bigger)
+     * @throws LogoException
+     */
     protected function compose(int $width): void
     {
         $baseLogoIm = $this->getBaseLogoIm($width);
@@ -200,7 +236,7 @@ abstract class AbstractLogo
 
             // reload the image, now with the correct pixel density
             $im->readImage($path);
-        } catch (\ImagickException $e) {
+        } catch (ImagickException $e) {
             throw new LogoException("Image magick can't read base logo: $e");
         }
 
@@ -209,7 +245,7 @@ abstract class AbstractLogo
 
         try {
             $im->scaleImage($width, 0);
-        } catch (\ImagickException $e) {
+        } catch (ImagickException $e) {
             throw new LogoException("Image magick can't scale base logo: $e");
         }
 
@@ -223,15 +259,15 @@ abstract class AbstractLogo
         $fontSize = $this->getSublineFontSize() * $baseLogoWidth / self::SUBLINE_FONT_SIZE_FACTOR;
         $text     = $this->getSublineText();
 
-        $bgColor   = new \ImagickPixel(self::SUBLINE_BG_COLOR);
-        $fontColor = new \ImagickPixel(self::SUBLINE_TEXT_COLOR);
+        $bgColor   = new ImagickPixel(self::SUBLINE_BG_COLOR);
+        $fontColor = new ImagickPixel(self::SUBLINE_TEXT_COLOR);
 
         $im = new Imagick();
 
         // get text dimensions
-        $draw = new \ImagickDraw();
+        $draw = new ImagickDraw();
         $draw->setFontSize($fontSize);
-        $draw->setFont(self::SUBLINE_FONT_PATH);
+        $draw->setFont(self::getSublineFontPath());
         $draw->setTextKerning(self::SUBLINE_KERNING);
         $textDims = $im->queryFontMetrics($draw, $text);
 
@@ -265,4 +301,26 @@ abstract class AbstractLogo
     abstract protected function getSublineFontSize(): float;
 
     abstract protected function getSublineText(): string;
+
+    private static function getStorageDir(): string
+    {
+        return create_dir(config('app.logo_cache_dir'));
+    }
+
+    private function getFinalFilePath(string $ext, int $width): string
+    {
+        $fileBaseName = "{$this->getSublineText()}-{$this->colorScheme}-{$width}";
+        $hash         = substr(hash('sha256', $fileBaseName), 0, 32);
+        $slug         = Str::slug($fileBaseName);
+        $filename     = "$slug-$hash.$ext";
+
+        return self::getStorageDir().DIRECTORY_SEPARATOR.$filename;
+    }
+
+    protected static function getSublineFontPath(): string
+    {
+        return config('app.protected_fonts_dir')
+               .DIRECTORY_SEPARATOR
+               .self::SUBLINE_FONT_NAME;
+    }
 }

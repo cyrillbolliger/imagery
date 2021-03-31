@@ -2,6 +2,8 @@
   <dictionary name="cyrill">
     <words>
       <w>activatable</w>
+      <w>rastered</w>
+      <w>subline</w>
     </words>
   </dictionary>
 </component>
