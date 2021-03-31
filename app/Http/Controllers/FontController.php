@@ -19,7 +19,9 @@ class FontController extends Controller
 
             public function getRelPath($arg = null)
             {
-                return 'fonts'.DIRECTORY_SEPARATOR.$this->font;
+                return config('app.protected_fonts_dir')
+                       .DIRECTORY_SEPARATOR
+                       .$this->font;
             }
 
             public function getRelThumbPath()
