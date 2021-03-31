@@ -244,15 +244,41 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Logos Directory
+    | Base Logo Directory
     |--------------------------------------------------------------------------
     |
-    | The directory that will be used to store logos. For the default disk,
-    | it resides in {{project_root}}/storage/app/{{logos_dir}}.
+    | The directory that will be used to store the base logos. For the default
+    | disk, it resides in {{project_root}}/storage/app/{{base_logo_dir}}.
     |
     */
 
-    'logo_dir' => 'logos',
+    'base_logo_dir' => 'base_logos',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Logo Cache Directory
+    |--------------------------------------------------------------------------
+    |
+    | The directory that will be used to cache the generated logos. For the
+    | default disk, it resides in
+    | {{project_root}}/storage/app/{{logo_cache_dir}}.
+    |
+    */
+
+    'logo_cache_dir' => 'logo_cache',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Protected Font Directory
+    |--------------------------------------------------------------------------
+    |
+    | The directory that will be used to store fonts non accessible for the
+    | public. For the default disk, it resides in
+    | {{project_root}}/storage/app/{{protected_fonts_dir}}.
+    |
+    */
+
+    'protected_fonts_dir' => 'fonts',
 
     /*
     |--------------------------------------------------------------------------
