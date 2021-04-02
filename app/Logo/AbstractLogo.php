@@ -43,7 +43,7 @@ abstract class AbstractLogo
     /**
      * @var Imagick[]
      */
-    private array $logo;
+    private array $logo = [];
 
     /**
      * AbstractLogo constructor.
@@ -131,7 +131,7 @@ abstract class AbstractLogo
      */
     private function getLogo(int $width): Imagick
     {
-        if (!$this->logo[$width]) {
+        if (!array_key_exists($width, $this->logo)) {
             $this->compose($width);
         }
 
