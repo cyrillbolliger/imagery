@@ -124,7 +124,7 @@ abstract class AbstractLogo
     /**
      * Get logo from class cache or create it if not in cache.
      *
-     * @param  int  $width   width of logo before rotation (thus, the width of
+     * @param  int  $width  width of logo before rotation (thus, the width of
      *                       the final logo is slightly bigger)
      * @return Imagick
      * @throws LogoException
@@ -146,7 +146,7 @@ abstract class AbstractLogo
      * Create the logo as composition of the base logo and the subline.
      *
      * @param  int  $width  width of logo before rotation (thus, the width of
-                            the final logo is slightly bigger)
+     * the final logo is slightly bigger)
      * @throws LogoException
      */
     protected function compose(int $width): void
@@ -304,7 +304,7 @@ abstract class AbstractLogo
 
     private static function getStorageDir(): string
     {
-        return create_dir(config('app.logo_cache_dir'));
+        return create_dir(disk_path(config('app.logo_cache_dir')));
     }
 
     private function getFinalFilePath(string $ext, int $width): string
@@ -319,8 +319,15 @@ abstract class AbstractLogo
 
     protected static function getSublineFontPath(): string
     {
-        return config('app.protected_fonts_dir')
+        return disk_path(
+            config('app.protected_fonts_dir')
                .DIRECTORY_SEPARATOR
-               .self::SUBLINE_FONT_NAME;
+               .self::SUBLINE_FONT_NAME
+        );
+    }
+
+    final protected static function getBaseLogoDir(): string
+    {
+        return disk_path(config('app.base_logo_dir'));
     }
 }
