@@ -73,14 +73,15 @@ abstract class AbstractLogo
      *
      * @param  int  $width  width of logo before rotation (thus, the width of
      *                      the final logo is slightly bigger)
+     * @param bool  $forceRecreate  refresh cached file
      * @return string
      * @throws LogoException
      */
-    public function getTiff(int $width): string
+    public function getTiff(int $width, bool $forceRecreate = false): string
     {
         $path = $this->getFinalFilePath('tiff', $width);
 
-        if (file_exists($path)) {
+        if (!$forceRecreate && file_exists($path)) {
             return $path;
         }
 
@@ -100,14 +101,16 @@ abstract class AbstractLogo
      *
      * @param  int  $width  width of logo before rotation (thus, the width of
      *                      the final logo is slightly bigger)
+     * @param bool  $forceRecreate  refresh cached file
+     *
      * @return string
      * @throws LogoException
      */
-    public function getPng(int $width): string
+    public function getPng(int $width, bool $forceRecreate = false): string
     {
         $path = $this->getFinalFilePath('png', $width);
 
-        if (file_exists($path)) {
+        if (!$forceRecreate && file_exists($path)) {
             return $path;
         }
 
