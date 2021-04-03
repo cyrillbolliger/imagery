@@ -269,6 +269,31 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Reference Logo Directory
+    |--------------------------------------------------------------------------
+    |
+    | The directory that contains the reference logos that can be used to
+    | compare with the generated ones. For the default disk, it resides in
+    | {{project_root}}/storage/app/{{reference_logo_dir}}.
+    |
+    */
+
+    'reference_logo_dir' => 'reference_logos',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Add reference logo overlay (for visual debugging only)
+    |--------------------------------------------------------------------------
+    |
+    | The generated logo is masked with the reference logo specified in the logo
+    | implementation. Not all implementations do have a reference logo.
+    |
+    */
+
+    'logo_debug_overlay' => env('APP_LOGO_OVERLAY', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Protected Font Directory
     |--------------------------------------------------------------------------
     |

@@ -19,12 +19,13 @@ abstract class AbstractFlowerLogo implements LogoCompositor
     protected const SUBLINE_BG_COLOR = '#E10078';
     protected const SUBLINE_TEXT_COLOR = '#ffffff';
     protected const SUBLINE_FONT_NAME = 'SanukOT-Bold.otf';
-    protected const SUBLINE_KERNING = -5;
+    protected const SUBLINE_KERNING = -1.6;
+    protected const KERNING_FACTOR = 100;
     protected const SUBLINE_PADDINGS = [
-        'top'    => -0.1,
-        'left'   => 0.1,
-        'bottom' => -0.1,
-        'right'  => 0.1
+        'top'    => -0.07,
+        'left'   => 0.13,
+        'bottom' => -0.07,
+        'right'  => 0.13
     ];
     /**
      * The only purpose of this factor is to have nice numbers
@@ -59,10 +60,15 @@ abstract class AbstractFlowerLogo implements LogoCompositor
 
     public function compose(int $width): Imagick
     {
-        $malsizedIm = $this->composeInternal($width);
+        $malsizedIm    = $this->composeInternal($width);
         $adjustedWidth = ($width / $malsizedIm->getImageWidth()) * $width;
+        unset($malsizedIm);
 
-        return $this->composeInternal(floor($adjustedWidth));
+        $im = $this->composeInternal(floor($adjustedWidth));
+
+        $this->addTestOverlay($im, $width);
+
+        return $im;
     }
 
     /**
@@ -77,7 +83,8 @@ abstract class AbstractFlowerLogo implements LogoCompositor
      * @return Imagick
      * @throws LogoException
      */
-    private function composeInternal(int $unrotatedWidth): Imagick {
+    private function composeInternal(int $unrotatedWidth): Imagick
+    {
         $this->makeBaseLogoIm($unrotatedWidth);
         $this->makeSublineIm($unrotatedWidth);
 
@@ -137,6 +144,19 @@ abstract class AbstractFlowerLogo implements LogoCompositor
     {
         $path = $this->getAbsBaseLogoPath();
 
+        $this->baseLogoIm = $this->imFromVectorFile($path, $width);
+    }
+
+    /**
+     * Load the given vector file into an image magick object with $width.
+     *
+     * @param  string  $path
+     * @param  int  $width
+     * @return Imagick
+     * @throws LogoException
+     */
+    private function imFromVectorFile(string $path, int $width): Imagick
+    {
         if (!file_exists($path)) {
             throw new LogoException('Base logo not found: '.$path);
         }
@@ -167,7 +187,7 @@ abstract class AbstractFlowerLogo implements LogoCompositor
         // cut borders
         $im->trimImage(0);
 
-        $this->baseLogoIm = $im;
+        return $im;
     }
 
     private function makeSublineIm(int $baseLogoWidth): void
@@ -184,7 +204,7 @@ abstract class AbstractFlowerLogo implements LogoCompositor
         $draw = new ImagickDraw();
         $draw->setFontSize($fontSize);
         $draw->setFont(self::getSublineFontPath());
-        $draw->setTextKerning(self::SUBLINE_KERNING);
+        $draw->setTextKerning($fontSize * self::SUBLINE_KERNING / self::KERNING_FACTOR);
         $textDims = $im->queryFontMetrics($draw, $text);
 
         // the fonts padding
@@ -239,9 +259,10 @@ abstract class AbstractFlowerLogo implements LogoCompositor
         return ceil($this->getAbsSublineX()) + $this->sublineIm->getImageWidth();
     }
 
-    private function getAbsSublineX(): float {
+    private function getAbsSublineX(): float
+    {
         return ($this->getRelSublineOffsetX() / self::SUBLINE_OFFSET_FACTOR)
-                    * $this->getBaseLogoWidth();
+               * $this->getBaseLogoWidth();
     }
 
     private function getAbsSublineY(): float
@@ -250,17 +271,94 @@ abstract class AbstractFlowerLogo implements LogoCompositor
                * $this->getBaseLogoHeight();
     }
 
-    #[Pure] private function getSublineHeight(): int {
+    #[Pure] private function getSublineHeight(): int
+    {
         return $this->sublineIm->getImageHeight();
     }
 
+    /**
+     * Horizontal offset of the subline in percent of the base logo's width.
+     *
+     * 30 is a good starting point
+     *
+     * @return float
+     */
     abstract protected function getRelSublineOffsetX(): float;
 
+    /**
+     * Vertical offset of the subline in percent of the base logo's height.
+     *
+     * 100 is a good starting point.
+     *
+     * @return float
+     */
     abstract protected function getRelSublineOffsetY(): float;
 
+    /**
+     * Path to the base logo.
+     *
+     * The class properties $this->baseLogoDirPath and $this->colorScheme are
+     * your friends.
+     *
+     * @return string
+     */
     abstract protected function getAbsBaseLogoPath(): string;
 
+    /**
+     * The font size of the subline.
+     *
+     * 10 is a good starting point.
+     *
+     * @return float
+     */
     abstract protected function getSublineFontSize(): float;
 
-    abstract protected function getSublineText(): string;
+    /**
+     * Path to the reference logo.
+     *
+     * For testing purposes only.
+     *
+     * @return string|null
+     */
+    abstract protected function getTestOverlayPath(): ?string;
+
+    /**
+     * Mask the generated logo with the reference logo specified in
+     * self::getTestOverlayPath(), so we can easily see the differences.
+     * Use the APP_LOGO_OVERLAY environment variable to add the overlay.
+     *
+     * @param  Imagick  $canvas
+     * @param  int  $width
+     * @throws LogoException
+     */
+    private function addTestOverlay(Imagick $canvas, int $width): void
+    {
+        if (!config('app.logo_debug_overlay')) {
+            return;
+        }
+
+        if (null === $this->getTestOverlayPath()) {
+            return;
+        }
+
+        $overlay = $this->imFromVectorFile($this->getTestOverlayPath(), $width);
+        $overlay->blackThresholdImage("#FFFFFF");
+
+        $canvas->compositeImage(
+            $overlay,
+            Imagick::COMPOSITE_DIFFERENCE,
+            0,
+            0
+        );
+    }
+
+    protected function getReferenceLogoDir(): string
+    {
+        return disk_path(config('app.reference_logo_dir'));
+    }
+
+    protected function getSublineText(): string
+    {
+        return mb_strtoupper($this->sublineText);
+    }
 }
