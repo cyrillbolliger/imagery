@@ -19,15 +19,15 @@ abstract class AbstractLogo
 
     protected const ROTATION_ANGLE = -5; // degrees
 
-    protected const SUBLINE_BG_COLOR = 'rgb(132,180,20)';
+    protected const SUBLINE_BG_COLOR = '#E10078';
     protected const SUBLINE_TEXT_COLOR = '#ffffff';
     protected const SUBLINE_FONT_NAME = 'SanukOT-Bold.otf';
-    protected const SUBLINE_KERNING = -2.5;
+    protected const SUBLINE_KERNING = -5;
     protected const SUBLINE_PADDINGS = [
-        'top'    => 0.25,
-        'left'   => 0.25,
-        'bottom' => 0.25,
-        'right'  => 0.25
+        'top'    => -0.1,
+        'left'   => 0.1,
+        'bottom' => -0.1,
+        'right'  => 0.1
     ];
     /**
      * The only purpose of this factor is to have nice numbers
@@ -36,6 +36,9 @@ abstract class AbstractLogo
      * getSublineFontSize().
      */
     protected const SUBLINE_FONT_SIZE_FACTOR = 100;
+    protected const SUBLINE_OFFSET_FACTOR = 100;
+
+    protected const INITIAL_BASE_LOGO_RESOLUTION = 100;
 
     protected string $colorScheme;
     protected string $sublineText;
@@ -158,7 +161,13 @@ abstract class AbstractLogo
         $sublineIm  = $this->getSublineIm($width);
 
         $baseLogoWidth = $baseLogoIm->getImageWidth();
-        $sublineWidth  = $this->getSublineOffsetY() + $sublineIm->getImageWidth();
+        $baseLogoHeight = $baseLogoIm->getImageHeight();
+
+        // convert relative subline offsets into absolute offsets
+        $sublineY = ($this->getSublineOffsetY() / self::SUBLINE_OFFSET_FACTOR) * $baseLogoHeight;
+        $sublineX = ($this->getSublineOffsetX() / self::SUBLINE_OFFSET_FACTOR) * $baseLogoWidth;
+
+        $sublineWidth  = $sublineX + $sublineIm->getImageWidth();
 
         // if the subline exceeds the base logo we must redraw the base logo
         // and the subline with an adjusted width, so the final width matches
@@ -170,7 +179,13 @@ abstract class AbstractLogo
             $sublineIm  = $this->getSublineIm($adjustedWidth);
 
             $baseLogoWidth = $baseLogoIm->getImageWidth();
-            $sublineWidth  = $this->getSublineOffsetY() + $sublineIm->getImageWidth();
+            $baseLogoHeight = $baseLogoIm->getImageHeight();
+
+            // convert relative subline offsets into absolute offsets
+            $sublineY = ($this->getSublineOffsetY() / self::SUBLINE_OFFSET_FACTOR) * $baseLogoHeight;
+            $sublineX = ($this->getSublineOffsetX() / self::SUBLINE_OFFSET_FACTOR) * $baseLogoWidth;
+
+            $sublineWidth  = $sublineX + $sublineIm->getImageWidth();
         }
 
         $logoHeight = $this->getSublineOffsetY() + $sublineIm->getImageHeight();
@@ -198,14 +213,29 @@ abstract class AbstractLogo
         $canvas->compositeImage(
             $sublineIm,
             Imagick::COMPOSITE_DEFAULT,
-            $baseX + $this->getSublineOffsetX(),
-            $baseY + $this->getSublineOffsetY()
+            $baseX + $sublineX,
+            $baseY + $sublineY
         );
 
-        $canvas->rotateImage('transparent', self::ROTATION_ANGLE);
+        $canvas->rotateImage('transparent', $this->getRotationAngle());
         $canvas->trimImage(0);
 
         $this->logo[$width] = $canvas;
+    }
+
+    private function setupComposition(int $width)
+    {
+        $baseLogoIm = $this->getBaseLogoIm($width);
+        $sublineIm  = $this->getSublineIm($width);
+
+        $baseLogoWidth = $baseLogoIm->getImageWidth();
+        $baseLogoHeight = $baseLogoIm->getImageHeight();
+
+        // convert relative subline offsets into absolute offsets
+        $sublineY = ($this->getSublineOffsetY() / self::SUBLINE_OFFSET_FACTOR) * $baseLogoHeight;
+        $sublineX = ($this->getSublineOffsetX() / self::SUBLINE_OFFSET_FACTOR) * $baseLogoWidth;
+
+        $sublineWidth  = $sublineX + $sublineIm->getImageWidth();
     }
 
     /**
@@ -225,14 +255,17 @@ abstract class AbstractLogo
 
         $im = new Imagick();
         $im->setBackgroundColor('transparent');
+        $im->setResolution(
+            self::INITIAL_BASE_LOGO_RESOLUTION,
+            self::INITIAL_BASE_LOGO_RESOLUTION
+        );
 
         try {
             // read image to determine and set pixel density so the svg will be
             // rastered to the correct size (when loading it the second time).
             $im->readImage($path);
             $im->trimImage(0);
-            $initialResolution = $im->getImageResolution();
-            $resolutionRatio   = $initialResolution['x'] / $im->getImageWidth();
+            $resolutionRatio   = self::INITIAL_BASE_LOGO_RESOLUTION / $im->getImageWidth();
             $targetResolution  = $resolutionRatio * $width;
             $im->removeImage();
             $im->setResolution($targetResolution, $targetResolution);
@@ -245,12 +278,6 @@ abstract class AbstractLogo
 
         // cut borders
         $im->trimImage(0);
-
-        try {
-            $im->scaleImage($width, 0);
-        } catch (ImagickException $e) {
-            throw new LogoException("Image magick can't scale base logo: $e");
-        }
 
         return $im;
     }
@@ -282,14 +309,15 @@ abstract class AbstractLogo
             'left'   => $fontSize * self::SUBLINE_PADDINGS['left'],
         ];
 
-        $height = $textDims['textWidth'] + $padding['top'] + $padding['bottom'];
-        $width  = $textDims['textHeight'] + $padding['left'] + $padding['right'];
+        $height = $textDims['textHeight'] + $padding['top'] + $padding['bottom'];
+        $width  = $textDims['textWidth'] + $padding['left'] + $padding['right'];
 
         // draw background
         $im->newImage($width, $height, $bgColor);
 
         // add text
         $draw->setFillColor($fontColor);
+        $draw->setGravity( Imagick::GRAVITY_NORTHWEST );
         $im->annotateImage(
             $draw,
             $padding['left'],
@@ -304,6 +332,8 @@ abstract class AbstractLogo
     abstract protected function getSublineFontSize(): float;
 
     abstract protected function getSublineText(): string;
+
+    abstract protected function getRotationAngle(): float;
 
     private static function getStorageDir(): string
     {
