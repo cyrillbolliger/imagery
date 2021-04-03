@@ -7,12 +7,13 @@ namespace App\Logo;
 use App\Exceptions\LogoException;
 use Imagick;
 use ImagickDraw;
-use ImagickException;
 use ImagickPixel;
 use JetBrains\PhpStorm\Pure;
 
 abstract class AbstractFlowerLogo implements LogoCompositor
 {
+    use VectorImageLoaderTrait;
+
     public const SUBLINE_MAX_CHAR = 80;
     protected const ROTATION_ANGLE = -5; // degrees
 
@@ -35,8 +36,6 @@ abstract class AbstractFlowerLogo implements LogoCompositor
      */
     protected const SUBLINE_FONT_SIZE_FACTOR = 100;
     protected const SUBLINE_OFFSET_FACTOR = 100;
-
-    protected const INITIAL_BASE_LOGO_RESOLUTION = 100;
 
     protected string $sublineText;
 
@@ -145,49 +144,6 @@ abstract class AbstractFlowerLogo implements LogoCompositor
         $path = $this->getAbsBaseLogoPath();
 
         $this->baseLogoIm = $this->imFromVectorFile($path, $width);
-    }
-
-    /**
-     * Load the given vector file into an image magick object with $width.
-     *
-     * @param  string  $path
-     * @param  int  $width
-     * @return Imagick
-     * @throws LogoException
-     */
-    private function imFromVectorFile(string $path, int $width): Imagick
-    {
-        if (!file_exists($path)) {
-            throw new LogoException('Base logo not found: '.$path);
-        }
-
-        $im = new Imagick();
-        $im->setBackgroundColor('transparent');
-        $im->setResolution(
-            self::INITIAL_BASE_LOGO_RESOLUTION,
-            self::INITIAL_BASE_LOGO_RESOLUTION
-        );
-
-        try {
-            // read image to determine and set pixel density so the svg will be
-            // rastered to the correct size (when loading it the second time).
-            $im->readImage($path);
-            $im->trimImage(0);
-            $resolutionRatio  = self::INITIAL_BASE_LOGO_RESOLUTION / $im->getImageWidth();
-            $targetResolution = $resolutionRatio * $width;
-            $im->removeImage();
-            $im->setResolution($targetResolution, $targetResolution);
-
-            // reload the image, now with the correct pixel density
-            $im->readImage($path);
-        } catch (ImagickException $e) {
-            throw new LogoException("Image magick can't read base logo: $e");
-        }
-
-        // cut borders
-        $im->trimImage(0);
-
-        return $im;
     }
 
     private function makeSublineIm(int $baseLogoWidth): void
