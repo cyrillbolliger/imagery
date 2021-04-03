@@ -232,6 +232,19 @@ Route::get('/', 'HomeController@index')
     ->middleware('auth.federated')
     ->name('home');
 
+Route::get('/test', static function() {
+    $logo = new App\Logo\Logo(
+        new \App\Logo\Gruene('gruene.ch'),
+        \App\Logo\Logo::LOGO_COLOR_DARK
+    );
+    $path = $logo->getPng(2000, true);
+
+    $file = File::get($path);
+    $response = Response::make($file, 200);
+    $response->header('Content-Type', 'image/png');
+    return $response;
+});
+
 /**
  * "Catch all" route
  *

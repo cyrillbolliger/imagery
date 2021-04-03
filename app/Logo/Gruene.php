@@ -4,23 +4,23 @@
 namespace App\Logo;
 
 
-class Gruene extends AbstractLogo
+class Gruene extends AbstractFlowerLogo
 {
     private const BASE_LOGO_NAME = 'gruene-%s.svg';
 
-    protected function getSublineOffsetX(): float
+    protected function getRelSublineOffsetX(): float
     {
         return 33.19;
     }
 
-    protected function getSublineOffsetY(): float
+    protected function getRelSublineOffsetY(): float
     {
         return 102;
     }
 
     protected function getAbsBaseLogoPath(): string
     {
-        return self::getBaseLogoDir()
+        return $this->baseLogoDirPath
                .DIRECTORY_SEPARATOR
                .sprintf(self::BASE_LOGO_NAME, $this->colorScheme);
     }
@@ -35,8 +35,9 @@ class Gruene extends AbstractLogo
         return mb_strtoupper($this->sublineText);
     }
 
-    protected function getRotationAngle(): float
+    public function getLogoIdentifier(int $width): string
     {
-        return parent::ROTATION_ANGLE;
+        return sprintf(self::BASE_LOGO_NAME, $this->colorScheme)
+               ."-{$this->getSublineText()}-{$width}";
     }
 }
