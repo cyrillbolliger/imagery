@@ -59,46 +59,56 @@ abstract class AbstractFlowerLogo implements LogoCompositor
 
     public function compose(int $width): Imagick
     {
-        $this->makeBaseLogoIm($width);
-        $this->makeSublineIm($width);
+        $malsizedIm = $this->composeInternal($width);
+        $adjustedWidth = ($width / $malsizedIm->getImageWidth()) * $width;
+
+        return $this->composeInternal(floor($adjustedWidth));
+    }
+
+    /**
+     * Actually composes the logo from the base logo and the subline. As the
+     * final width depends on the base logo's shape and the subline's length due
+     * to the rotation, the final width cannot be specified directly but must be
+     * measured from the generated logo. If you need the logo in a certain width
+     * generate it, measure it's actual size then regenerate it with an adapted
+     * $unrotated width.
+     *
+     * @param  int  $unrotatedWidth
+     * @return Imagick
+     * @throws LogoException
+     */
+    private function composeInternal(int $unrotatedWidth): Imagick {
+        $this->makeBaseLogoIm($unrotatedWidth);
+        $this->makeSublineIm($unrotatedWidth);
 
         // if the subline exceeds the base logo we must redraw the base logo
         // and the subline with an adjusted width, so the final width matches
         // the expected width.
         if ($this->getSublineWidth() > $this->getBaseLogoWidth()) {
-            $adjustedWidth = ($width / $this->getSublineWidth()) * $width;
+            $adjustedWidth = ($unrotatedWidth / $this->getSublineWidth()) * $unrotatedWidth;
 
             $this->makeBaseLogoIm($adjustedWidth);
             $this->makeSublineIm($adjustedWidth);
         }
 
-        $logoHeight = $this->getRelSublineOffsetY() + $this->getSublineHeight();
+        $logoHeight = $this->getAbsSublineY() + $this->getSublineHeight();
         $logoWidth  = max($this->getBaseLogoWidth(), $this->getSublineWidth());
 
-        // get the smallest possible container so that the logo will always fit
-        // regardless of any rotation: longest side of the logo * sqrt(2)
-        $longestSide = max($logoHeight, $logoWidth);
-        $canvasSide  = $longestSide * sqrt(2);
-
         $canvas = new Imagick();
-        $canvas->newImage($canvasSide, $canvasSide, 'transparent');
-
-        // choose base offsets so the logo is placed in the center
-        $baseX = ($canvasSide - $logoWidth) / 2;
-        $baseY = ($canvasSide - $logoHeight) / 2;
+        $canvas->newImage($logoWidth, $logoHeight, 'transparent');
 
         // add base logo and subline
         $canvas->compositeImage(
             $this->baseLogoIm,
             Imagick::COMPOSITE_DEFAULT,
-            $baseX,
-            $baseY
+            0,
+            0
         );
         $canvas->compositeImage(
             $this->sublineIm,
             Imagick::COMPOSITE_DEFAULT,
-            $baseX + $this->getAbsSublineX(),
-            $baseY + $this->getAbsSublineY()
+            $this->getAbsSublineX(),
+            $this->getAbsSublineY()
         );
 
         $canvas->rotateImage('transparent', self::ROTATION_ANGLE);
