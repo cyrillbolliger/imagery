@@ -2,9 +2,11 @@
 
 namespace App;
 
+use App\Logo\LogoFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Logo
@@ -80,12 +82,12 @@ class Logo extends Model implements FileModel
 
     public function getSrcWhiteAttribute()
     {
-        return route('logo', ['logo' => $this->id, 'color' => 'white']);
+        return route('logo', ['logo' => $this->id, 'color' => 'light']);
     }
 
     public function getSrcGreenAttribute()
     {
-        return route('logo', ['logo' => $this->id, 'color' => 'green']);
+        return route('logo', ['logo' => $this->id, 'color' => 'dark']);
     }
 
     public function getGroupsAttribute()
@@ -93,18 +95,27 @@ class Logo extends Model implements FileModel
         return $this->groups()->select('groups.id')->get()->pluck('id');
     }
 
-    public function getRelPath($color = null)
+    /**
+     * @param  string  $color
+     * @return string
+     */
+    public function getRelPath($color = \App\Logo\Logo::LOGO_COLOR_DARK): string
     {
-        return self::getStorageDir().DIRECTORY_SEPARATOR.$this->type.'-'.$color.'.svg';
+        try {
+            $logo = LogoFactory::get($this->type, $color, [$this->name]);
+            return $logo->getPng(config('app.logo_width'));
+        } catch (Exceptions\LogoException $e) {
+            Log::warning($e);
+            return '';
+        }
     }
 
-    public static function getStorageDir()
+    /**
+     * @return string
+     * @throws Exceptions\LogoException
+     */
+    public function getRelThumbPath(): string
     {
-        return create_dir(config('app.base_logo_dir'));
-    }
-
-    public function getRelThumbPath()
-    {
-        return self::getStorageDir().DIRECTORY_SEPARATOR.$this->type.'-green.svg';
+        return $this->getRelPath(\App\Logo\Logo::LOGO_COLOR_DARK);
     }
 }
