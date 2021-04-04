@@ -31,18 +31,23 @@ class Logo
      */
     public function __construct(LogoCompositor $compositor, string $colorScheme)
     {
-        if (!in_array($colorScheme, [self::LOGO_COLOR_DARK, self::LOGO_COLOR_LIGHT])) {
-            throw new LogoException("Invalid logo color scheme: $colorScheme");
-        }
+        self::validateColorScheme($colorScheme);
 
         $compositor->setColorScheme($colorScheme);
         $compositor->setBaseLogoDirPath(self::getBaseLogoDir());
 
         $this->colorScheme = $colorScheme;
-        $this->compositor = $compositor;
+        $this->compositor  = $compositor;
     }
 
-    final protected static function getBaseLogoDir(): string
+    final public static function validateColorScheme(string $colorScheme)
+    {
+        if (!in_array($colorScheme, [self::LOGO_COLOR_DARK, self::LOGO_COLOR_LIGHT])) {
+            throw new LogoException("Invalid logo color scheme: $colorScheme");
+        }
+    }
+
+    final public static function getBaseLogoDir(): string
     {
         return config('app.base_logo_dir');
     }
