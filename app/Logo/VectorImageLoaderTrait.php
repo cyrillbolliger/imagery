@@ -5,6 +5,7 @@ namespace App\Logo;
 
 
 use App\Exceptions\LogoException;
+use Illuminate\Support\Facades\Storage;
 use Imagick;
 use ImagickException;
 
@@ -20,9 +21,10 @@ trait VectorImageLoaderTrait
      */
     private function imFromVectorFile(string $path, int $width): Imagick
     {
-        if (!file_exists($path)) {
+        if (!Storage::exists($path)) {
             throw new LogoException('Vector image not found: '.$path);
         }
+        $absPath = disk_path($path);
 
         $initialResolution = 100;
 
@@ -36,7 +38,7 @@ trait VectorImageLoaderTrait
         try {
             // read image to determine and set pixel density so the svg will be
             // rastered to the correct size (when loading it the second time).
-            $im->readImage($path);
+            $im->readImage($absPath);
             $im->trimImage(0);
             $resolutionRatio  = $initialResolution / $im->getImageWidth();
             $targetResolution = $resolutionRatio * $width;
@@ -44,7 +46,7 @@ trait VectorImageLoaderTrait
             $im->setResolution($targetResolution, $targetResolution);
 
             // reload the image, now with the correct pixel density
-            $im->readImage($path);
+            $im->readImage($absPath);
         } catch (ImagickException $e) {
             throw new LogoException("Image magick can't read base logo: $e");
         }
