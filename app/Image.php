@@ -271,12 +271,12 @@ class Image extends Model implements FileModel
         return substr($this->filename, strpos($this->filename, '.') + 1);
     }
 
-    public function getRelPath($arg = null)
+    public function getRelPath($arg = null): string
     {
         return self::getImageStorageDir().DIRECTORY_SEPARATOR.$this->filename;
     }
 
-    public function getRelThumbPath()
+    public function getRelThumbPath(): string
     {
         return self::getThumbnailStorageDir().DIRECTORY_SEPARATOR.$this->filename;
     }

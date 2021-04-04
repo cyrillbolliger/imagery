@@ -6,7 +6,7 @@ namespace App;
 
 interface FileModel
 {
-    public function getRelPath($arg = null);
+    public function getRelPath($arg = null): string;
 
-    public function getRelThumbPath();
+    public function getRelThumbPath(): string;
 }
