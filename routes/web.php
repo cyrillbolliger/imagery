@@ -126,7 +126,7 @@ Route::prefix('api/1')->middleware('auth.federated')->group(function () {
      */
     Route::get('/files/logos/{logo}/{color}', 'FileController@show')
         ->where('logo', '\d+')
-        ->where('color', '(white)|(green)')
+        ->where('color', '(light)|(dark)')
         ->middleware('can:view,logo')
         ->name('logo');
 
