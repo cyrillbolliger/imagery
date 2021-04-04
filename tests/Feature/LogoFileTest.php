@@ -6,19 +6,22 @@ use App\Group;
 use App\Logo;
 use App\Role;
 use App\User;
-use RootSeeder;
+use Database\Seeders\RootSeeder;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestStorage;
 
 class LogoFileTest extends TestCase
 {
     use RefreshDatabase;
+    use TestStorage;
 
     public function setUp(): void
     {
         parent::setUp();
 
         $this->seed(RootSeeder::class);
+        $this->setUpTestStorage();
     }
 
     public function testGet__user__200()
@@ -40,7 +43,7 @@ class LogoFileTest extends TestCase
         $group->logos()->attach($logo);
 
         $response = $this->actingAs($manager)
-                         ->get("/api/1/files/logos/{$logo->id}/green");
+                         ->get("/api/1/files/logos/{$logo->id}/dark");
 
         $response->assertStatus(200);
     }
@@ -64,7 +67,7 @@ class LogoFileTest extends TestCase
         $group->logos()->attach($logo);
 
         $response = $this->actingAs($manager)
-                         ->get("/api/1/files/logos/{$logo->id}/white");
+                         ->get("/api/1/files/logos/{$logo->id}/light");
 
         $response->assertStatus(404);
     }
@@ -87,7 +90,7 @@ class LogoFileTest extends TestCase
         $logo = factory(Logo::class)->create();
 
         $response = $this->actingAs($manager)
-                         ->get("/api/1/files/logos/{$logo->id}/white");
+                         ->get("/api/1/files/logos/{$logo->id}/light");
 
         $response->assertStatus(403);
     }
