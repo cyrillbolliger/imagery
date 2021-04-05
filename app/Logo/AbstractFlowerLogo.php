@@ -310,7 +310,7 @@ abstract class AbstractFlowerLogo implements LogoCompositor
 
     protected function getReferenceLogoDir(): string
     {
-        return disk_path(config('app.reference_logo_dir'));
+        return config('app.reference_logo_dir');
     }
 
     protected function getSublineText(): string
