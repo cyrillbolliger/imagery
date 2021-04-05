@@ -17,12 +17,12 @@ class Verdi extends AbstractFlowerLogo
 
     protected function getRelSublineOffsetX(): float
     {
-        return 32.1;
+        return 32;
     }
 
     protected function getRelSublineOffsetY(): float
     {
-        return 103.4;
+        return 103.5;
     }
 
     protected function getAbsBaseLogoPath(): string
@@ -34,11 +34,13 @@ class Verdi extends AbstractFlowerLogo
 
     protected function getSublineFontSize(): float
     {
-        return 7.1;
+        return 7.35;
     }
 
     protected function getTestOverlayPath(): ?string
     {
-        return null;
+        return $this->getReferenceLogoDir()
+               .DIRECTORY_SEPARATOR
+               .self::REFERENCE_LOGO_NAME;
     }
 }
