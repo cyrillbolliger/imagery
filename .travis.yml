@@ -3,7 +3,7 @@ services:
 
 install:
   - echo "$SSH_HOST_PUBKEY" >> $HOME/.ssh/known_hosts
-  - sudo bash install.sh
+  - bash install.sh
 
 script:
   - docker-compose run node yarn production
