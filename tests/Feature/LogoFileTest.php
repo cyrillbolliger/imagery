@@ -48,6 +48,30 @@ class LogoFileTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function testGet__user__oversize__422()
+    {
+        $group = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => false,
+                'group_id' => $group->id
+            ])
+        );
+
+        $logo = factory(Logo::class)->create();
+        $group->logos()->attach($logo);
+
+        $response = $this->actingAs($manager)
+                         ->get("/api/1/files/logos/{$logo->id}/dark/5001");
+
+        $response->assertStatus(422);
+    }
+
     public function testGet__user__404()
     {
         $group = factory(Group::class)->create();
@@ -67,7 +91,7 @@ class LogoFileTest extends TestCase
         $group->logos()->attach($logo);
 
         $response = $this->actingAs($manager)
-                         ->get("/api/1/files/logos/{$logo->id}/light");
+                         ->get("/api/1/files/logos/{$logo->id}/light/500");
 
         $response->assertStatus(404);
     }
@@ -90,7 +114,7 @@ class LogoFileTest extends TestCase
         $logo = factory(Logo::class)->create();
 
         $response = $this->actingAs($manager)
-                         ->get("/api/1/files/logos/{$logo->id}/light");
+                         ->get("/api/1/files/logos/{$logo->id}/light/500");
 
         $response->assertStatus(403);
     }

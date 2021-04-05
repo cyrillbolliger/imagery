@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Exceptions\LogoException;
 use App\Logo\LogoFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -96,15 +97,26 @@ class Logo extends Model implements FileModel
     }
 
     /**
-     * @param  string  $color
+     * @param  array  $args
      * @return string
      */
-    public function getRelPath($color = \App\Logo\Logo::LOGO_COLOR_DARK): string
+    public function getRelPath(array $args = []): string
     {
+        $defaults = [
+            \App\Logo\Logo::LOGO_COLOR_DARK,
+            config('app.logo_width'),
+        ];
+
+        [$color, $width] = array_merge($args, $defaults);
+
         try {
             $logo = LogoFactory::get($this->type, $color, [$this->name]);
-            return $logo->getPng(config('app.logo_width'));
+            return $logo->getPng($width);
         } catch (Exceptions\LogoException $e) {
+            if ($e->getCode() === LogoException::OVERSIZE) {
+                abort(422, $e->getMessage());
+            }
+
             Log::warning($e);
             return '';
         }

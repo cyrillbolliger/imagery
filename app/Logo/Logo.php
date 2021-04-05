@@ -14,6 +14,8 @@ class Logo
     public const LOGO_COLOR_DARK = 'dark';
     public const LOGO_COLOR_LIGHT = 'light';
 
+    protected const MAX_LOGO_WIDTH = 5000;
+
     protected string $colorScheme;
     protected LogoCompositor $compositor;
 
@@ -114,6 +116,17 @@ class Logo
      */
     private function getCachedLogoIm(int $width): Imagick
     {
+        if ($width > self::MAX_LOGO_WIDTH){
+            throw new LogoException(
+                sprintf(
+                    'Max logo width is %dpx. Requested width: %d',
+                    self::MAX_LOGO_WIDTH,
+                    $width
+                ),
+                LogoException::OVERSIZE
+            );
+        }
+
         if (!array_key_exists($width, $this->logo)) {
             $this->logo[$width] = $this->compositor->compose($width);
         }
