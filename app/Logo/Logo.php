@@ -90,13 +90,16 @@ class Logo
 
     private function getFinalFilePath(string $ext, int $width): string
     {
-        $slug = Str::slug($this->compositor->getLogoIdentifier($width));
+        $idString = $this->compositor->getLogoIdentifier($width);
+        $slug = Str::slug($idString);
+        $hash = substr(hash('sha256', $slug), 0,16);
 
         if (config('app.logo_debug_overlay')) {
             $slug = 'debug-'.$slug;
         }
 
-        $filename = "$slug.$ext";
+        // use slug and hash, because the slug could easily have a name conflict
+        $filename = "$slug-$hash.$ext";
 
         return self::getStorageDirPath().DIRECTORY_SEPARATOR.$filename;
     }
