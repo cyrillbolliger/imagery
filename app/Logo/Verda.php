@@ -17,7 +17,7 @@ class Verda extends AbstractFlowerLogo
 
     protected function getRelSublineOffsetX(): float
     {
-        return 33.9;
+        return 33.7;
     }
 
     protected function getRelSublineOffsetY(): float
@@ -34,7 +34,7 @@ class Verda extends AbstractFlowerLogo
 
     protected function getSublineFontSize(): float
     {
-        return 7.425;
+        return 7.475;
     }
 
     protected function getTestOverlayPath(): ?string
