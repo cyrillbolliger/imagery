@@ -17,7 +17,7 @@ class GrueneVerts extends AbstractFlowerLogo
 
     protected function getRelSublineOffsetX(): float
     {
-        return 29.6;
+        return 29.5;
     }
 
     protected function getRelSublineOffsetY(): float
@@ -34,7 +34,7 @@ class GrueneVerts extends AbstractFlowerLogo
 
     protected function getSublineFontSize(): float
     {
-        return 5.38;
+        return 5.405;
     }
 
     protected function getTestOverlayPath(): ?string
