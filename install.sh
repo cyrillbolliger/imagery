@@ -60,10 +60,6 @@ docker-compose exec app php artisan db:seed --class=DemoSeeder
 docker-compose down
 docker-compose up -d
 
-# copy logos into test folder
-mkdir -p storage/test
-cp -Rv storage/app/logos/ storage/test/logos/
-
 # just some user info
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
