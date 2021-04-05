@@ -43,7 +43,7 @@ class LogoFileTest extends TestCase
         $group->logos()->attach($logo);
 
         $response = $this->actingAs($manager)
-                         ->get("/api/1/files/logos/{$logo->id}/dark");
+                         ->get("/api/1/files/logos/{$logo->id}/dark/500");
 
         $response->assertStatus(200);
     }
