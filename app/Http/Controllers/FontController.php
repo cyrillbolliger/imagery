@@ -17,12 +17,14 @@ class FontController extends Controller
                 $this->font = $font;
             }
 
-            public function getRelPath($arg = null)
+            public function getRelPath($arg = null): string
             {
-                return 'fonts'.DIRECTORY_SEPARATOR.$this->font;
+                return config('app.protected_fonts_dir')
+                       .DIRECTORY_SEPARATOR
+                       .$this->font;
             }
 
-            public function getRelThumbPath()
+            public function getRelThumbPath(): string
             {
             }
         };

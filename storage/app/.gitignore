@@ -1,6 +1,8 @@
 *
 !public/
 !public/*
-!logos/
-!logos/*
+!base_logos/
+!base_logos/*
+!reference_logos
+!reference_logos/*
 !.gitignore

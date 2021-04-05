@@ -2,9 +2,12 @@
 
 namespace App;
 
+use App\Exceptions\LogoException;
+use App\Logo\LogoFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Logo
@@ -80,12 +83,12 @@ class Logo extends Model implements FileModel
 
     public function getSrcWhiteAttribute()
     {
-        return route('logo', ['logo' => $this->id, 'color' => 'white']);
+        return route('logo', ['logo' => $this->id, 'color' => 'light']);
     }
 
     public function getSrcGreenAttribute()
     {
-        return route('logo', ['logo' => $this->id, 'color' => 'green']);
+        return route('logo', ['logo' => $this->id, 'color' => 'dark']);
     }
 
     public function getGroupsAttribute()
@@ -93,18 +96,38 @@ class Logo extends Model implements FileModel
         return $this->groups()->select('groups.id')->get()->pluck('id');
     }
 
-    public function getRelPath($color = null)
+    /**
+     * @param  array  $args
+     * @return string
+     */
+    public function getRelPath(array $args = []): string
     {
-        return self::getStorageDir().DIRECTORY_SEPARATOR.$this->type.'-'.$color.'.svg';
+        $defaults = [
+            \App\Logo\Logo::LOGO_COLOR_DARK,
+            config('app.logo_width'),
+        ];
+
+        [$color, $width] = array_merge($args, $defaults);
+
+        try {
+            $logo = LogoFactory::get($this->type, $color, [$this->name]);
+            return $logo->getPng($width);
+        } catch (Exceptions\LogoException $e) {
+            if ($e->getCode() === LogoException::OVERSIZE) {
+                abort(422, $e->getMessage());
+            }
+
+            Log::warning($e);
+            return '';
+        }
     }
 
-    public static function getStorageDir()
+    /**
+     * @return string
+     * @throws Exceptions\LogoException
+     */
+    public function getRelThumbPath(): string
     {
-        return create_dir(config('app.logo_dir'));
-    }
-
-    public function getRelThumbPath()
-    {
-        return self::getStorageDir().DIRECTORY_SEPARATOR.$this->type.'-green.svg';
+        return $this->getRelPath(\App\Logo\Logo::LOGO_COLOR_DARK);
     }
 }
