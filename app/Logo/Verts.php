@@ -17,12 +17,12 @@ class Verts extends AbstractFlowerLogo
 
     protected function getRelSublineOffsetX(): float
     {
-        return 25.4;
+        return 25.35;
     }
 
     protected function getRelSublineOffsetY(): float
     {
-        return 103.3;
+        return 103.2;
     }
 
     protected function getAbsBaseLogoPath(): string
