@@ -50,9 +50,8 @@
     import ResourceLoadMixin from "../../mixins/ResourceLoadMixin";
     import {mapGetters} from "vuex";
     import PrepareSelectMixin from "../../mixins/PrepareSelectMixin";
-    import Bar from "../../service/canvas/elements/Bar";
     import {LogoBlock} from "../../service/canvas/blocks/LogoBlock";
-    import {Alignments, BarSchemes, BarTypes, LogoSublineRatios, LogoTypes} from "../../service/canvas/Constants";
+    import {ColorSchemes} from "../../service/canvas/Constants";
     import ADefaultLogo from "../atoms/ADefaultLogo";
 
     export default {
@@ -63,7 +62,6 @@
         data() {
             return {
                 logo: new Logo(),
-                subline: new Bar(),
                 block: new LogoBlock(),
                 logoIdSelected: null,
                 logoObjSelected: null,
@@ -100,7 +98,7 @@
             },
 
             color() {
-                return 'white' === this.colorSchema ? 'white' : 'green';
+                return ColorSchemes.white === this.colorSchema ? 'white' : 'green';
             },
 
             logosReady() {
@@ -126,11 +124,6 @@
                 }
 
                 this.block.logo = this.drawLogo();
-                this.block.type = this.logoObjSelected.type;
-
-                if (LogoTypes.alternative !== this.logoObjSelected.type) {
-                    this.block.subline = this.drawSubline();
-                }
 
                 const data = {
                     block: this.block.draw(),
@@ -149,25 +142,13 @@
                 return this.logo.draw()
             },
 
-            drawSubline() {
-                const fontSizeFactor = LogoSublineRatios[this.logoObjSelected.type].fontSize;
-                const fontSize = this.logo.height * fontSizeFactor;
-
-                this.subline.text = this.logoObjSelected.name;
-                this.subline.alignment = Alignments.center;
-                this.subline.schema = BarSchemes.magenta;
-                this.subline.type = BarTypes.subline;
-                this.subline.fontSize = fontSize;
-
-                return this.subline.draw();
-            },
-
             setLogo(logo) {
                 this.logoIdSelected = logo;
 
                 if (!logo) {
                     this.logoImage = null;
                     this.logoObjSelected = null;
+                    this.loadingLogoImage = false;
                     this.draw();
                     return;
                 }
