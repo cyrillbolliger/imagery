@@ -6,37 +6,23 @@ use App\Group;
 use App\Logo;
 use App\Role;
 use App\User;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use Database\Seeders\RootSeeder;
 use Illuminate\Support\Str;
-use RootSeeder;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestStorage;
 
 class LogoTest extends TestCase
 {
     use RefreshDatabase;
+    use TestStorage;
 
     public function setUp(): void
     {
         parent::setUp();
 
         $this->seed(RootSeeder::class);
-
-        $this->copyLogosToTestStorage();
-    }
-
-    private function copyLogosToTestStorage()
-    {
-        $dir   = Logo::getStorageDir();
-        $files = Storage::disk('local')->files($dir);
-
-        foreach ($files as $file) {
-            Storage::put(
-                $file,
-                Storage::disk('local')->get($file)
-            );
-        }
+        $this->setUpTestStorage();
     }
 
     public function testGetLogo__user__200()
@@ -62,8 +48,8 @@ class LogoTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJsonFragment(['id' => $logo->id]);
-        $response->assertJsonFragment(['src_white' => route('logo', ['logo' => $logo->id, 'color' => 'white'])]);
-        $response->assertJsonFragment(['src_green' => route('logo', ['logo' => $logo->id, 'color' => 'green'])]);
+        $response->assertJsonFragment(['src_white' => route('logo', ['logo' => $logo->id, 'color' => 'light'])]);
+        $response->assertJsonFragment(['src_green' => route('logo', ['logo' => $logo->id, 'color' => 'dark'])]);
         $response->assertJsonFragment(['groups' => [$group->id]]);
     }
 

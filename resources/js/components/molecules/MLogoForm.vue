@@ -55,6 +55,7 @@
     import {required, maxLength} from 'vuelidate/lib/validators';
     import AButtonWait from "../atoms/AButtonWait";
     import isEqual from 'lodash/isEqual';
+    import {LogoTypes} from "../../service/canvas/Constants";
 
     export default {
         name: "MLogoForm",
@@ -91,12 +92,14 @@
                     },
                 },
                 types: [
-                    {value: 'alternative', text: 'Alternative'},
-                    {value: 'gruene', text: 'GRÜNE'},
-                    {value: 'gruene-verts', text: 'GRÜNE - Les VERTS'},
-                    {value: 'verda', text: 'VERDA'},
-                    {value: 'verdi', text: 'VERDI'},
-                    {value: 'verts', text: 'VERTS'},
+                    {value: LogoTypes.alternative, text: 'Alternative'},
+                    {value: LogoTypes.gruene, text: 'GRÜNE'},
+                    {value: LogoTypes['gruene-vert-e-s'], text: 'GRÜNE - Les VERT.E.S'},
+                    {value: LogoTypes['gruene-verts'], text: 'GRÜNE - Les VERTS'},
+                    {value: LogoTypes.verda, text: 'VERDA'},
+                    {value: LogoTypes.verdi, text: 'VERDI'},
+                    {value: LogoTypes['vert-e-s'], text: 'VERT-E-S'},
+                    {value: LogoTypes.verts, text: 'VERTS'},
                 ],
             }
         },

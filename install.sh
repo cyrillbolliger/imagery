@@ -6,10 +6,6 @@ set -e
 SECRET=$(openssl rand 128 | openssl sha256 | sed 's/(stdin)= //')
 sed "s/APP_HASH_SECRET=.*/APP_HASH_SECRET=${SECRET}/" .env.example > .env
 
-# generate .env file
-SECRET=$(openssl rand 128 | openssl sha256 | sed 's/(stdin)= //')
-sed "s/APP_HASH_SECRET=.*/APP_HASH_SECRET=${SECRET}/" .env.example > .env
-
 # get containers ready
 docker-compose pull
 docker-compose build app
@@ -63,10 +59,6 @@ docker-compose exec app php artisan db:seed --class=DemoSeeder
 # fully restart all containers (else there is a problem with the application key)
 docker-compose down
 docker-compose up -d
-
-# copy logos into test folder
-mkdir -p storage/test
-cp -Rv storage/app/logos/ storage/test/logos/
 
 # just some user info
 GREEN='\033[0;32m'

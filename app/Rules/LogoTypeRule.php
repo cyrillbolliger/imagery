@@ -2,27 +2,12 @@
 
 namespace App\Rules;
 
-use App\Logo;
+use App\Logo\Logo;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
 
 class LogoTypeRule implements Rule
 {
-    /**
-     * @var Logo
-     */
-    private $model;
-
-    /**
-     * Create a new rule instance.
-     *
-     * @param  Logo  $logo
-     */
-    public function __construct(Logo $logo)
-    {
-        $this->model = $logo;
-    }
-
     /**
      * Determine if the validation rule passes.
      *
@@ -33,12 +18,12 @@ class LogoTypeRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        $dir = Logo::getStorageDir();
+        $dir = Logo::getBaseLogoDir();
 
-        $white = Storage::exists($dir.DIRECTORY_SEPARATOR.$value.'-white.svg');
-        $green = Storage::exists($dir.DIRECTORY_SEPARATOR.$value.'-green.svg');
+        $dark = Storage::exists($dir.DIRECTORY_SEPARATOR.$value.'-'.Logo::LOGO_COLOR_DARK.'.svg');
+        $light = Storage::exists($dir.DIRECTORY_SEPARATOR.$value.'-'.Logo::LOGO_COLOR_LIGHT.'.svg');
 
-        return $white && $green;
+        return $dark && $light;
     }
 
     /**
