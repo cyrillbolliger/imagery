@@ -134,9 +134,6 @@
             },
 
             drawLogo() {
-                this.logo.width = this.imageWidth;
-                this.logo.height = this.imageHeight;
-                this.logo.type = this.logoObjSelected.type;
                 this.logo.logo = this.logoImage;
 
                 return this.logo.draw()
@@ -146,15 +143,26 @@
                 this.logoIdSelected = logo;
 
                 if (!logo) {
-                    this.logoImage = null;
-                    this.logoObjSelected = null;
-                    this.loadingLogoImage = false;
-                    this.draw();
-                    return;
+                    return this.removeLogo();
                 }
 
-                this.logoObjSelected = this.getLogoById(logo);
+                this.loadLogo();
+            },
+
+            removeLogo() {
+                this.logoImage = null;
+                this.logoObjSelected = null;
+                this.loadingLogoImage = false;
+                this.draw();
+            },
+
+            loadLogo() {
                 this.loadingLogoImage = true;
+                this.logoObjSelected = this.getLogoById(this.logoIdSelected);
+
+                this.logo.type = this.logoObjSelected.type;
+                this.logo.imageWidth = this.imageWidth;
+                this.logo.imageHeight = this.imageHeight;
 
                 const img = new Image();
                 img.onload = () => {
@@ -163,7 +171,7 @@
                     this.loadingLogoImage = false;
                 };
 
-                img.src = this.logoObjSelected[`src_${this.color}`];
+                img.src = this.logoObjSelected[`src_${this.color}`]+`/${this.logo.logoWidth}`;
             },
 
             populateLogosSelect() {
@@ -177,10 +185,10 @@
 
         watch: {
             imageWidth() {
-                this.draw();
+                this.setLogo(this.logoIdSelected);
             },
             imageHeight() {
-                this.draw();
+                this.setLogo(this.logoIdSelected);
             },
             colorSchema() {
                 this.setLogo(this.logoIdSelected);

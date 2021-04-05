@@ -27,11 +27,11 @@ class Logo {
         this._logo = logo;
     }
 
-    set width(width) {
+    set imageWidth(width) {
         this._imageWidth = width;
     }
 
-    set height(height) {
+    set imageHeight(height) {
         this._imageHeight = height;
     }
 
@@ -41,6 +41,24 @@ class Logo {
 
     set type(type) {
         this._type = type;
+    }
+
+    get logoWidth() {
+        let imgEdgeLen;
+
+        // for portrait images the width is authoritative for landscape images
+        // the surface. this increases the logo on landscape images, but doesn't
+        // break the rules for portrait formats.
+        if (this._imageWidth < this._imageHeight) {
+            imgEdgeLen = this._imageWidth;
+        } else {
+            imgEdgeLen = Math.sqrt(this._imageHeight * this._imageWidth);
+        }
+
+        const logoWidthRatio = LogoTypeRatios[this._type];
+        const logoWidth = imgEdgeLen / logoWidthRatio;
+
+        return Math.round(logoWidth);
     }
 
     draw() {
@@ -60,22 +78,8 @@ class Logo {
     }
 
     _setSize() {
-        let side;
-
-        // for portrait images the width is authoritative for landscape images
-        // the surface. this increases the logo on landscape images, but doesn't
-        // break the rules for portrait formats.
-        if (this._imageWidth < this._imageHeight) {
-            side = this._imageWidth;
-        } else {
-            side = Math.sqrt(this._imageHeight * this._imageWidth);
-        }
-
-        const typeRatio = LogoTypeRatios[this._type];
-        const ratio = (side / typeRatio) / this._logo.width;
-
-        this._canvas.width = this._logo.width * ratio;
-        this._canvas.height = this._logo.height * ratio;
+        this._canvas.width = Math.round(this._logo.width);
+        this._canvas.height = Math.round(this._logo.height);
     }
 }
 
