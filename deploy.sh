@@ -130,8 +130,12 @@ sync() {
         --include='/public/fonts/' \
         --include='/public/fonts/*' \
         --include='/public/mix-manifest.json' \
+        --include='/storage/app/base_logos' \
+        --include='/storage/app/base_logos/*' \
         --include='/storage/app/fonts' \
         --include='/storage/app/fonts/*' \
+        --exclude='/storage/app/logo_cache' \
+        --exclude='/storage/temp' \
         --exclude='/tests' \
         --exclude='/.editorconfig' \
         --exclude='/.env*' \
