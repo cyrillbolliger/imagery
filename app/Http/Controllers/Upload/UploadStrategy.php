@@ -141,7 +141,7 @@ abstract class UploadStrategy
      *
      * @return void
      */
-    public abstract function storeTmp(Request $request): void;
+    abstract public function storeTmp(Request $request): void;
 
     /**
      * Save the uploaded temporary file in the given folder.
