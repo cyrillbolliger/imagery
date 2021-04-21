@@ -35,9 +35,9 @@
     "Welcome :firstName!": "Willkommen :firstName!",
     "Would you like to reset your password?": "Möchtest du dein Passwort zurücksetzen?",
     "Hello :firstName": "Hallo :firstName",
-    "You've been invited by :firstName :lastName to use :app. It's a super simple tool to create images in the corporate design of the GREENS.": "You've been invited by :firstName :lastName to use :app. It's a super simple tool to create images in the corporate design of the GREENS.",
-    "You can use it with the GREEN login (same as for the chat).": "You can use it with the GREEN login (same as for the chat).",
-    "Try the GREEN graphics designer": "Try the GREEN graphics designer",
-    "If you don't have a login yet, you may register yourself. Just click 'register' on the login screen and subscribe yourself with :email.": "If you don't have a login yet, you may register yourself. Just click 'register' on the login screen and subscribe yourself with :email.",
+    "You've been invited by :firstName :lastName to use :app. It's a super simple tool to create images in the corporate design of the GREENS.": "Du wurdest von :firstName :lastName eingeladen :app zu nutzen. Dies ist ein einfaches Werkzeug um Bilder im Corporate Design der GRÜNEN zu erstellen.",
+    "You can use it with the GREEN login (same as for the chat).": "Du kannst es mit dem GRÜNEN-Login nutzen (das gleiche Login wie für den Chat).",
+    "Try the GREEN graphics designer": "Probiere den GRÜNEN Grafik-Generator aus",
+    "If you don't have a login yet, you may register yourself. Just click 'register' on the login screen and subscribe yourself with :email.": "Wenn du noch kein Login hast, kannst du dich selbst registrieren. Klicke dazu einfach auf 'Registrieren' und trage dich mit :email ein.",
     "Hello Admin": "Hallo Admin"
 }
