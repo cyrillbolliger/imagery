@@ -6,6 +6,7 @@
         "users": "Benutzer",
         "groups": "Gruppen",
         "logos": "Logos",
+        "logos_download": "Logo herunterladen",
         "profile": "Profil",
         "logout": "Abmelden"
     },
@@ -39,8 +40,8 @@
         "reload": "Erneut Laden",
         "dismiss": "Verwerfen",
         "server_error": "Uuups, es gab einen Serverfehler.",
-        "unauthorized": "Your session has expired. Please log in again.",
-        "login": "Log in"
+        "unauthorized": "Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.",
+        "login": "Anmelden"
     },
     "validation": {
         "required": "Dieses Feld ist erforderlich.",
@@ -53,8 +54,8 @@
         "index": {
             "title": "Benutzer",
             "create": "Benutzer erstellen",
-            "approve": "Approve {user}",
-            "edit": "Edit User"
+            "approve": "{user} genehmigen",
+            "edit": "Benutzer bearbeiten"
         },
         "logout": {
             "loggingOut": "Abmelden...",
@@ -74,10 +75,10 @@
         "last_name": "Nachname",
         "email": "Email",
         "email_exists": "Es gibt schon ein Benutzerkonto mit dieser Emailadresse.",
-        "email_change": "Since this login is linked to other systems, you cannot change the email address. Please contact admin@gruene.ch to change it.",
-        "enabled": "Enabled",
-        "enabled_desc": "This user can sign in.",
-        "disabled_tag": "Disabled",
+        "email_change": "Da dieses Login mit anderen Systemen verknüpft ist, kannst du die E-Mail-Adresse nicht selbst ändern. Bitte kontaktiere admin@gruene.ch.",
+        "enabled": "Aktiviert",
+        "enabled_desc": "Dieser Benutzer kann sich anmelden.",
+        "disabled_tag": "Deaktiviert",
         "super_admin": "Super-Admin",
         "super_admin_desc": "Dieser Benutzer kann alles tun.",
         "language": "Sprache",
@@ -93,7 +94,7 @@
         "saving": "Speichern...",
         "saved": "Benutzer gespeichert.",
         "saving_failed": "Benutzer konnte nicht gespeichert werden. Bitte erneut versuchen.",
-        "approve": "Approve User",
+        "approve": "Benutzer genehmigen",
         "remove": "Benutzer löschen",
         "removing": "Lösche Benutzer",
         "removed": "Benutzer gelöscht.",
@@ -101,7 +102,7 @@
         "removing_failed": "Benutzer konnte nicht gelöscht werden. Versuche es erneut.",
         "notification": "Benachrichtigung",
         "welcome_mail": "Willkommens-E-Mail",
-        "send_notification": "Send this user an email to inform him about his account. The email contains instructions on how to log in.",
+        "send_notification": "Den*die Benutzer*in automatisch über das Konto benachrichtigen. Eine E-Mail mit Hinweisen für die Anmeldung wird gesendet.",
         "stats": "Statistiken",
         "last_login": "Letzte Anmeldung",
         "login_count": "Anzahl Anmeldungen",
@@ -148,11 +149,11 @@
         "create": {
             "title": "Bild erstellen",
             "logo": "Logo",
-            "logoDefault": "Zu meinem Standardlogo machen",
-            "logoDefaultSelected": "Standard",
+            "logoDefault": "Immer dieses Logo vorauswählen",
+            "logoDefaultSelected": "Vorausgewählt",
             "logoRemove": "Logo entfernen",
             "logoDefaultSaveFailed": "Logo konnte nicht gespeichert werden. Bitte erneut versuchen.",
-            "userHasNoLogos": "Oh là là, you haven't been given access to any logos. Ask your party's secretary to do so.",
+            "userHasNoLogos": "Oh là là, dir wurde noch kein Logo zugewiesen. Bitte das Sekretariat dies zu tun.",
             "fontSize": "Schriftgrösse",
             "tooMuchText": "Deine Balken enthalten zu viel Text. Kürze ihn!",
             "sublineAdd": "Subline hinzufügen",
@@ -252,7 +253,7 @@
         "gallery": {
             "title": "Galerie",
             "createdAtBy": "Erstellt {timeAgo} von {user}.",
-            "userUnknown": "#deleted user",
+            "userUnknown": "#gelöschter Benutzer",
             "loading": "Laden...",
             "download": "Herunterladen",
             "delete": "Löschen",
@@ -267,6 +268,16 @@
         "index": {
             "title": "Logos",
             "create": "Neues Logo"
+        },
+        "download": {
+            "title": "Logo herunterladen",
+            "intro": "Brauchst du dein Logo in einem Textdokument oder einem Druckprodukt? Lade es hier herunter.",
+            "missing_non_admin": "Kontaktiere dein lokales oder kantonales Sekretariat, wenn du eine Logovariante brauchst, die hier nicht aufgelistet ist.",
+            "add_logo": "Logo erstellen",
+            "missing_admin": "Fehlt das Logo deines Wunschs? Erstelle es und füge es deiner Gruppe hinzu. Es wird dann in der folgenden Liste zum Download angezeigt.",
+            "download": "Herunterladen",
+            "filename": "Logo {name}.{extension}",
+            "failedToCreatePackage": "Fehler bei der Vorbereitung des Downloads."
         }
     },
     "logo": {
