@@ -11,6 +11,7 @@
         "php": "^8.0",
         "ext-imagick": "*",
         "ext-intl": "*",
+        "ext-zip": "*",
         "fideloper/proxy": "^4.0",
         "kalnoy/nestedset": "^5.0",
         "laravel/framework": "^8.0",
