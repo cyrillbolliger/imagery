@@ -149,11 +149,11 @@
         "create": {
             "title": "crwdns189:0crwdne189:0",
             "logo": "crwdns191:0crwdne191:0",
-            "logoDefault": "crwdns624:0crwdne624:0",
+            "logoDefault": "crwdns652:0crwdne652:0",
             "logoDefaultSelected": "crwdns626:0crwdne626:0",
             "logoRemove": "crwdns461:0crwdne461:0",
             "logoDefaultSaveFailed": "crwdns463:0crwdne463:0",
-            "userHasNoLogos": "crwdns628:0crwdne628:0",
+            "userHasNoLogos": "crwdns654:0crwdne654:0",
             "fontSize": "crwdns193:0crwdne193:0",
             "tooMuchText": "crwdns195:0crwdne195:0",
             "sublineAdd": "crwdns197:0crwdne197:0",
