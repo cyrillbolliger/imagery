@@ -131,6 +131,11 @@ Route::prefix('api/1')->middleware('auth.federated')->group(function () {
         ->middleware('can:view,logo')
         ->name('logo');
 
+    Route::get( '/files/logos/{logo}/package', 'LogoController@package' )
+        ->where('logo', '\d+')
+        ->middleware('can:view,logo')
+        ->name('logoPackage');
+
     /**
      * Images
      */

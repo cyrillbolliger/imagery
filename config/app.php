@@ -330,6 +330,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Packages Directory
+    |--------------------------------------------------------------------------
+    |
+    | The directory that will be used to store the logo packages. For the
+    | default disk, it resides in {{project_root}}/storage/app/{{packages_dir}}.
+    |
+    */
+
+    'packages_dir' => 'logo_package_cache',
+
+    /*
+    |--------------------------------------------------------------------------
     | Uploads TTL
     |--------------------------------------------------------------------------
     |

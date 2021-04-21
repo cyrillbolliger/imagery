@@ -4,6 +4,7 @@ import GroupIndex from "./components/pages/GroupIndex";
 import LogoIndex from "./components/pages/LogoIndex";
 import ImageGallery from "./components/pages/ImageGallery";
 import UserLogout from "./components/pages/UserLogout";
+import LogoDownload from "./components/pages/LogoDownload";
 
 export const routes = [
     {
@@ -66,6 +67,11 @@ export const routes = [
         path: '/admin/logos',
         component: LogoIndex,
         name: 'logosAll'
+    },
+    {
+        path: '/logos/download',
+        component: LogoDownload,
+        name: 'logosDownload'
     },
     {
         path: '/logout',

@@ -55,7 +55,7 @@ class Logo
     }
 
     /**
-     * Get logo as TIFF encoded in CMYK
+     * Get logo as PSD encoded in CMYK
      *
      * @param  int  $width  width of logo before rotation (thus, the width of
      *                      the final logo is slightly bigger)
@@ -63,20 +63,21 @@ class Logo
      * @return string
      * @throws LogoException
      */
-    public function getTiff(int $width, bool $forceRecreate = false): string
+    public function getPsd(int $width, bool $forceRecreate = false): string
     {
-        $path = $this->getFinalFilePath('tiff', $width);
+        $path = $this->getFinalFilePath('psd', $width);
 
         if ($this->serveCached($forceRecreate, $path)) {
             return $path;
         }
 
         $im = $this->getCachedLogoIm($width);
-        $im->setImageFormat('tiff');
         $im->transformImageColorspace(Imagick::COLORSPACE_CMYK);
         $im->setColorspace(Imagick::COLORSPACE_CMYK);
+        $profile = file_get_contents(disk_path('PSOuncoated_v3_FOGRA52.icc'));
+        $im->profileImage( 'PSOuncoated_v3_FOGRA52.icc', $profile);
 
-        $im->writeImage($path);
+        $im->writeImage(disk_path($path));
 
         return $path;
     }
@@ -91,8 +92,8 @@ class Logo
     private function getFinalFilePath(string $ext, int $width): string
     {
         $idString = $this->compositor->getLogoIdentifier($width);
-        $slug = Str::slug($idString);
-        $hash = substr(hash('sha256', $slug), 0,16);
+        $slug     = Str::slug($idString);
+        $hash     = substr(hash('sha256', $slug), 0, 16);
 
         if (config('app.logo_debug_overlay')) {
             $slug = 'debug-'.$slug;
@@ -119,7 +120,7 @@ class Logo
      */
     private function getCachedLogoIm(int $width): Imagick
     {
-        if ($width > self::MAX_LOGO_WIDTH){
+        if ($width > self::MAX_LOGO_WIDTH) {
             throw new LogoException(
                 sprintf(
                     'Max logo width is %dpx. Requested width: %d',
@@ -144,7 +145,7 @@ class Logo
      *                      the final logo is slightly bigger)
      * @param  bool  $forceRecreate  refresh cached file
      *
-     * @return string
+     * @return string The relative path to the logo file.
      * @throws LogoException
      */
     public function getPng(int $width, bool $forceRecreate = false): string
