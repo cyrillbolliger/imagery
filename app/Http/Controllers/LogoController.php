@@ -7,9 +7,11 @@ use App\Logo;
 use App\Rules\CanManageGroupRule;
 use App\Rules\ImmutableRule;
 use App\Rules\LogoTypeRule;
+use App\Services\LogoPackageService;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class LogoController extends Controller
@@ -214,5 +216,23 @@ class LogoController extends Controller
         }
 
         return response(null, 204);
+    }
+
+    /**
+     * Respond with a zip containing the logo in all variants
+     *
+     * @param  Logo  $logo
+     * @param  LogoPackageService  $packageService
+     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function package(Logo $logo, LogoPackageService $packageService)
+    {
+        $relPath = $packageService->generatePackage($logo);
+
+        if ( ! Storage::exists($relPath)) {
+            return response('Package not found', 404);
+        }
+
+        return response()->file(disk_path($relPath));
     }
 }
