@@ -74,7 +74,7 @@
         "last_name": "Nachname",
         "email": "Email",
         "email_exists": "Es gibt schon ein Benutzerkonto mit dieser Emailadresse.",
-        "email_change": "Since this login is linked to other systems, you cannot change the email address. Please contact admin@gruene.ch to change it.",
+        "email_change": "Da dieses Login mit anderen Systemen verknüpft ist, kannst du die E-Mail-Adresse nicht selbst ändern. Bitte kontaktiere admin@gruene.ch.",
         "enabled": "Aktiviert",
         "enabled_desc": "Dieser Benutzer kann sich anmelden.",
         "disabled_tag": "Deaktiviert",
