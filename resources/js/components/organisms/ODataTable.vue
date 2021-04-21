@@ -3,9 +3,12 @@
         <div class="mb-3 row justify-content-between">
             <button @click="$emit('newEntry')"
                     class="btn btn-outline-primary ml-3"
-            >{{$t('table.add')}}
+                    v-if="newEntryLabel"
+            >{{newEntryLabel}}
             </button>
-            <div class="o-data-table__search col">
+            <div v-if="showSearch"
+                 class="o-data-table__search col"
+            >
                 <MSearch @search="filter($event)"></MSearch>
             </div>
         </div>
@@ -47,7 +50,7 @@
                     <button @click="$emit('details', row[actionKey])"
                             class="o-data-table__item-action btn btn-link p-0 ml-2"
                             v-if="0 === index"
-                    >{{$t('table.details')}}
+                    >{{detailsLabel}}
                     </button>
                 </td>
             </tr>
@@ -68,6 +71,8 @@
     import ALoaderBar from "../atoms/ALoaderBar";
     import AButtonSort from "../atoms/AButtonSort";
     import MSearch from "../molecules/MSearch";
+
+    const MIN_ITEMS_FOR_SEARCH = 6;
 
     export default {
         name: "ODataTable",
@@ -107,7 +112,19 @@
                 validator(value) {
                     return ['asc', 'desc'].includes(value);
                 }
-            }
+            },
+            detailsLabel: {
+                type: String,
+                default() {
+                    return this.$t('table.details');
+                }
+            },
+            newEntryLabel: {
+                type: String,
+                default() {
+                    return this.$t('table.add');
+                }
+            },
         },
         computed: {
             totalRows() {
@@ -120,6 +137,9 @@
                 }
 
                 return filtered + this.$t('table.total', {total, displayed});
+            },
+            showSearch() {
+                return this.filteredRows.length >= MIN_ITEMS_FOR_SEARCH;
             },
             searchableKeys() {
                 return this.headers
