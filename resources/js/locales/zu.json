@@ -6,6 +6,7 @@
         "users": "crwdns7:0crwdne7:0",
         "groups": "crwdns9:0crwdne9:0",
         "logos": "crwdns11:0crwdne11:0",
+        "logos_download": "crwdns618:0crwdne618:0",
         "profile": "crwdns13:0crwdne13:0",
         "logout": "crwdns15:0crwdne15:0"
     },
@@ -74,7 +75,7 @@
         "last_name": "crwdns83:0crwdne83:0",
         "email": "crwdns85:0crwdne85:0",
         "email_exists": "crwdns87:0crwdne87:0",
-        "email_change": "crwdns560:0crwdne560:0",
+        "email_change": "crwdns620:0crwdne620:0",
         "enabled": "crwdns562:0crwdne562:0",
         "enabled_desc": "crwdns564:0crwdne564:0",
         "disabled_tag": "crwdns566:0crwdne566:0",
@@ -101,7 +102,7 @@
         "removing_failed": "crwdns133:0crwdne133:0",
         "notification": "crwdns355:0crwdne355:0",
         "welcome_mail": "crwdns357:0crwdne357:0",
-        "send_notification": "crwdns570:0crwdne570:0",
+        "send_notification": "crwdns622:0crwdne622:0",
         "stats": "crwdns443:0crwdne443:0",
         "last_login": "crwdns445:0crwdne445:0",
         "login_count": "crwdns447:0crwdne447:0",
@@ -148,11 +149,11 @@
         "create": {
             "title": "crwdns189:0crwdne189:0",
             "logo": "crwdns191:0crwdne191:0",
-            "logoDefault": "crwdns465:0crwdne465:0",
-            "logoDefaultSelected": "crwdns459:0crwdne459:0",
+            "logoDefault": "crwdns652:0crwdne652:0",
+            "logoDefaultSelected": "crwdns626:0crwdne626:0",
             "logoRemove": "crwdns461:0crwdne461:0",
             "logoDefaultSaveFailed": "crwdns463:0crwdne463:0",
-            "userHasNoLogos": "crwdns572:0crwdne572:0",
+            "userHasNoLogos": "crwdns654:0crwdne654:0",
             "fontSize": "crwdns193:0crwdne193:0",
             "tooMuchText": "crwdns195:0crwdne195:0",
             "sublineAdd": "crwdns197:0crwdne197:0",
@@ -267,6 +268,16 @@
         "index": {
             "title": "crwdns313:0crwdne313:0",
             "create": "crwdns315:0crwdne315:0"
+        },
+        "download": {
+            "title": "crwdns630:0crwdne630:0",
+            "intro": "crwdns632:0crwdne632:0",
+            "missing_non_admin": "crwdns634:0crwdne634:0",
+            "add_logo": "crwdns636:0crwdne636:0",
+            "missing_admin": "crwdns638:0crwdne638:0",
+            "download": "crwdns640:0crwdne640:0",
+            "filename": "crwdns642:0{name}crwdnd642:0{extension}crwdne642:0",
+            "failedToCreatePackage": "crwdns644:0crwdne644:0"
         }
     },
     "logo": {
