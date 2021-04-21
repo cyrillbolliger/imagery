@@ -39,8 +39,8 @@
         "reload": "Erneut Laden",
         "dismiss": "Verwerfen",
         "server_error": "Uuups, es gab einen Serverfehler.",
-        "unauthorized": "Your session has expired. Please log in again.",
-        "login": "Log in"
+        "unauthorized": "Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.",
+        "login": "Anmelden"
     },
     "validation": {
         "required": "Dieses Feld ist erforderlich.",
@@ -53,8 +53,8 @@
         "index": {
             "title": "Benutzer",
             "create": "Benutzer erstellen",
-            "approve": "Approve {user}",
-            "edit": "Edit User"
+            "approve": "{user} genehmigen",
+            "edit": "Benutzer bearbeiten"
         },
         "logout": {
             "loggingOut": "Abmelden...",
@@ -75,9 +75,9 @@
         "email": "Email",
         "email_exists": "Es gibt schon ein Benutzerkonto mit dieser Emailadresse.",
         "email_change": "Since this login is linked to other systems, you cannot change the email address. Please contact admin@gruene.ch to change it.",
-        "enabled": "Enabled",
-        "enabled_desc": "This user can sign in.",
-        "disabled_tag": "Disabled",
+        "enabled": "Aktiviert",
+        "enabled_desc": "Dieser Benutzer kann sich anmelden.",
+        "disabled_tag": "Deaktiviert",
         "super_admin": "Super-Admin",
         "super_admin_desc": "Dieser Benutzer kann alles tun.",
         "language": "Sprache",
@@ -93,7 +93,7 @@
         "saving": "Speichern...",
         "saved": "Benutzer gespeichert.",
         "saving_failed": "Benutzer konnte nicht gespeichert werden. Bitte erneut versuchen.",
-        "approve": "Approve User",
+        "approve": "Benutzer genehmigen",
         "remove": "Benutzer löschen",
         "removing": "Lösche Benutzer",
         "removed": "Benutzer gelöscht.",
@@ -252,7 +252,7 @@
         "gallery": {
             "title": "Galerie",
             "createdAtBy": "Erstellt {timeAgo} von {user}.",
-            "userUnknown": "#deleted user",
+            "userUnknown": "#gelöschter Benutzer",
             "loading": "Laden...",
             "download": "Herunterladen",
             "delete": "Löschen",
