@@ -16,9 +16,10 @@ use Illuminate\Support\Facades\Log;
  * @property int $id
  * @property int $added_by
  * @property User|null $addedBy
- * @property-write string $type
+ * @property string $type
  * @property-read string $src_white
  * @property-read string $src_green
+ * @property-read string $download
  * @property string $name
  * @property Group[] $groups
  * @property Carbon|null $created_at
@@ -57,6 +58,7 @@ class Logo extends Model implements FileModel
         'src_white',
         'src_green',
         'groups',
+        'download',
     ];
 
     /**
@@ -94,6 +96,11 @@ class Logo extends Model implements FileModel
     public function getGroupsAttribute()
     {
         return $this->groups()->select('groups.id')->get()->pluck('id');
+    }
+
+    public function getDownloadAttribute()
+    {
+        return route('logoPackage', ['logo' => $this->id]);
     }
 
     /**
