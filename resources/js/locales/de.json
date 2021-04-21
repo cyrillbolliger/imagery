@@ -150,10 +150,10 @@
             "title": "Bild erstellen",
             "logo": "Logo",
             "logoDefault": "Immer dieses Logo vorauswählen",
-            "logoDefaultSelected": "Preselected",
+            "logoDefaultSelected": "Vorausgewählt",
             "logoRemove": "Logo entfernen",
             "logoDefaultSaveFailed": "Logo konnte nicht gespeichert werden. Bitte erneut versuchen.",
-            "userHasNoLogos": "Oh là là, you haven't been assigned to any logos. Ask your party's secretary to do so.",
+            "userHasNoLogos": "Oh là là, dir wurde noch kein Logo zugewiesen. Bitte das Sekretariat dies zu tun.",
             "fontSize": "Schriftgrösse",
             "tooMuchText": "Deine Balken enthalten zu viel Text. Kürze ihn!",
             "sublineAdd": "Subline hinzufügen",
@@ -270,14 +270,14 @@
             "create": "Neues Logo"
         },
         "download": {
-            "title": "Logo Download",
-            "intro": "You need your logo in a text document or a print product? Download it here.",
-            "missing_non_admin": "Contact your local or cantonal secretary, if you need a logo variant, that isn't listed here.",
-            "add_logo": "Create a logo",
-            "missing_admin": "Is the logo of your desire missing? Create it and add it to your group. It will then appear in the following list for download.",
-            "download": "Download",
+            "title": "Logo herunterladen",
+            "intro": "Brauchst du dein Logo in einem Textdokument oder einem Druckprodukt? Lade es hier herunter.",
+            "missing_non_admin": "Kontaktiere dein lokales oder kantonales Sekretariat, wenn du eine Logovariante brauchst, die hier nicht aufgelistet ist.",
+            "add_logo": "Logo erstellen",
+            "missing_admin": "Fehlt das Logo deines Wunschs? Erstelle es und füge es deiner Gruppe hinzu. Es wird dann in der folgenden Liste zum Download angezeigt.",
+            "download": "Herunterladen",
             "filename": "Logo {name}.{extension}",
-            "failedToCreatePackage": "Failed to prepare download."
+            "failedToCreatePackage": "Fehler bei der Vorbereitung des Downloads."
         }
     },
     "logo": {
