@@ -6,6 +6,7 @@
         "users": "Benutzer",
         "groups": "Gruppen",
         "logos": "Logos",
+        "logos_download": "Logo herunterladen",
         "profile": "Profil",
         "logout": "Abmelden"
     },
@@ -101,7 +102,7 @@
         "removing_failed": "Benutzer konnte nicht gelöscht werden. Versuche es erneut.",
         "notification": "Benachrichtigung",
         "welcome_mail": "Willkommens-E-Mail",
-        "send_notification": "Send this user an email to inform him about his account. The email contains instructions on how to log in.",
+        "send_notification": "Den*die Benutzer*in automatisch über das Konto benachrichtigen. Eine E-Mail mit Hinweisen für die Anmeldung wird gesendet.",
         "stats": "Statistiken",
         "last_login": "Letzte Anmeldung",
         "login_count": "Anzahl Anmeldungen",
@@ -148,11 +149,11 @@
         "create": {
             "title": "Bild erstellen",
             "logo": "Logo",
-            "logoDefault": "Zu meinem Standardlogo machen",
-            "logoDefaultSelected": "Standard",
+            "logoDefault": "Immer dieses Logo vorauswählen",
+            "logoDefaultSelected": "Preselected",
             "logoRemove": "Logo entfernen",
             "logoDefaultSaveFailed": "Logo konnte nicht gespeichert werden. Bitte erneut versuchen.",
-            "userHasNoLogos": "Oh là là, you haven't been given access to any logos. Ask your party's secretary to do so.",
+            "userHasNoLogos": "Oh là là, you haven't been assigned to any logos. Ask your party's secretary to do so.",
             "fontSize": "Schriftgrösse",
             "tooMuchText": "Deine Balken enthalten zu viel Text. Kürze ihn!",
             "sublineAdd": "Subline hinzufügen",
@@ -267,6 +268,16 @@
         "index": {
             "title": "Logos",
             "create": "Neues Logo"
+        },
+        "download": {
+            "title": "Logo Download",
+            "intro": "You need your logo in a text document or a print product? Download it here.",
+            "missing_non_admin": "Contact your local or cantonal secretary, if you need a logo variant, that isn't listed here.",
+            "add_logo": "Create a logo",
+            "missing_admin": "Is the logo of your desire missing? Create it and add it to your group. It will then appear in the following list for download.",
+            "download": "Download",
+            "filename": "Logo {name}.{extension}",
+            "failedToCreatePackage": "Failed to prepare download."
         }
     },
     "logo": {
