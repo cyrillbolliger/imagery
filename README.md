@@ -72,6 +72,9 @@ The PHP Composer runs directly on the `imagery` container.
 All mail you send out of the application will be caught by Mailhog. Access it
 on [localhost:8020](http://localhost:8020)
 
+#### Crowdin
+All translation is done with [crowdin](https://crowdin.com). To translate 
+in-context visit [localhost:8000/?translate=true&lang=zu](https://localhost:8000/?translate=true&lang=zu).
 
 ### Logins
 Logins created by the demo seeder:
