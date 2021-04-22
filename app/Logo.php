@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 /**
  * Class Logo
@@ -136,5 +137,13 @@ class Logo extends Model implements FileModel
     public function getRelThumbPath(): string
     {
         return $this->getRelPath(\App\Logo\Logo::LOGO_COLOR_DARK);
+    }
+
+    public function getSlug(): string
+    {
+        $name = mb_strtolower($this->name);
+        $name = str_replace(['ä', 'ö', 'ü'], ['ae', 'oe', 'ue'], $name);
+        $name = preg_replace('/\.ch$/', '', $name);
+        return Str::slug($name); // removes any bad chars
     }
 }

@@ -54,34 +54,6 @@ class Logo
         return config('app.base_logo_dir');
     }
 
-    /**
-     * Get logo as PSD encoded in CMYK
-     *
-     * @param  int  $width  width of logo before rotation (thus, the width of
-     *                      the final logo is slightly bigger)
-     * @param  bool  $forceRecreate  refresh cached file
-     * @return string
-     * @throws LogoException
-     */
-    public function getPsd(int $width, bool $forceRecreate = false): string
-    {
-        $path = $this->getFinalFilePath('psd', $width);
-
-        if ($this->serveCached($forceRecreate, $path)) {
-            return $path;
-        }
-
-        $im = $this->getCachedLogoIm($width);
-        $im->transformImageColorspace(Imagick::COLORSPACE_CMYK);
-        $im->setColorspace(Imagick::COLORSPACE_CMYK);
-        $profile = file_get_contents(disk_path('PSOuncoated_v3_FOGRA52.icc'));
-        $im->profileImage( 'PSOuncoated_v3_FOGRA52.icc', $profile);
-
-        $im->writeImage(disk_path($path));
-
-        return $path;
-    }
-
     private function serveCached(bool $forceRecreate, string $path)
     {
         return !$forceRecreate

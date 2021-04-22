@@ -342,6 +342,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Packages Directory
+    |--------------------------------------------------------------------------
+    |
+    | The directory that contains the logo templates. For the default disk, it
+    | this will be {{project_root}}/storage/app/{{logo_template_path}}.
+    |
+    */
+
+    'logo_template_path' => 'vector_logo_templates_indesign',
+
+    /*
+    |--------------------------------------------------------------------------
     | Uploads TTL
     |--------------------------------------------------------------------------
     |
