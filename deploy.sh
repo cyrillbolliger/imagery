@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 # path to the file with the configurations
 # the config must follow the following pattern
