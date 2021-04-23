@@ -17,7 +17,7 @@
     "Click here to register.": "Zum Registrieren hier klicken.",
     "I need some help": "Ich brauche Hilfe",
     "Pending Approval": "Genehmigung ausstehend",
-    ":firstName :lastName (:email) from :groups just applied for a login.": ":firstName :lastName (:email) von :city hat soeben ein Login beantragt.",
+    ":firstName :lastName (:email) from :groups just applied for a login.": ":firstName :lastName (:email) von :groups hat soeben ein Login beantragt.",
     "Verify, that this person is permitted to have an account, before approving the request for an account.": "Vergewissere dich, dass diese Person berechtigt ist, ein Konto zu haben, bevor du die Anfrage für das Konto genehmigst.",
     "If approving, don't forget to grant privileges to some groups.": "Denk daran, nach der Genehmigung, die Berechtigung zu Gruppen (Logos) zu erteilen.",
     "Grant access to :firstName :lastName": "Konto für :firstName :lastName genehmigen",
