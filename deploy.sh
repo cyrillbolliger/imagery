@@ -133,6 +133,7 @@ sync() {
         --exclude='/storage/app/logo_cache' \
         --exclude='/storage/app/logo_package_cache' \
         --exclude='/storage/temp' \
+        --exclude='/storage/images' \
         --exclude='/tests' \
         --exclude='/.editorconfig' \
         --exclude='/.env*' \
