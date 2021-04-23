@@ -190,6 +190,7 @@
             "layout": "Layout",
             "barsLeft": "Bars left",
             "barsRight": "Bars right",
+            "colorScheme": "Color scheme",
             "white": "White",
             "green": "Green",
             "greengreen": "Green - Green",
