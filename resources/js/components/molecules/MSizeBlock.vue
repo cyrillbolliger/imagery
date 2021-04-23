@@ -71,14 +71,14 @@
                 height: 1080,
                 custom: false,
                 sizes: [
-                    {value: '1080x1080', text: this.$t('images.create.sizes.square')},
-                    {value: '1200x630', text: this.$t('images.create.sizes.fbTimeline')},
-                    {value: '1920x1080', text: this.$t('images.create.sizes.fbEvent')},
-                    {value: '1200x628', text: this.$t('images.create.sizes.fbWebsite')},
-                    {value: '1920x1080', text: this.$t('images.create.sizes.video')},
-                    {value: '1024x512', text: this.$t('images.create.sizes.twFeed')},
-                    {value: '1080x1920', text: this.$t('images.create.sizes.instaStory')},
-                    {value: 'custom', text: this.$t('images.create.sizes.custom')},
+                    {value: '1-1080x1080', text: this.$t('images.create.sizes.square')},
+                    {value: '2-1200x630', text: this.$t('images.create.sizes.fbTimeline')},
+                    {value: '3-1920x1080', text: this.$t('images.create.sizes.fbEvent')},
+                    {value: '4-1200x628', text: this.$t('images.create.sizes.fbWebsite')},
+                    {value: '5-1920x1080', text: this.$t('images.create.sizes.video')},
+                    {value: '6-1024x512', text: this.$t('images.create.sizes.twFeed')},
+                    {value: '7-1080x1920', text: this.$t('images.create.sizes.instaStory')},
+                    {value: '8-custom', text: this.$t('images.create.sizes.custom')},
                 ],
                 sizeSelected: null,
             }
@@ -98,7 +98,7 @@
                     return;
                 }
 
-                const dims = value.split('x');
+                const dims = value.split('-')[1].split('x');
 
                 this.width = parseInt(dims[0]);
                 this.height = parseInt(dims[1]);
