@@ -1,77 +1,77 @@
 {
     "route": {
-        "gallery": "Gallery",
-        "create_image": "Create Image",
-        "settings": "Settings",
-        "users": "Users",
-        "groups": "Groups",
+        "gallery": "Galerie",
+        "create_image": "Créer une image",
+        "settings": "Paramètres",
+        "users": "Utilisateurs",
+        "groups": "Groupes",
         "logos": "Logos",
-        "logos_download": "Logo Download",
-        "profile": "Profile",
-        "logout": "Logout"
+        "logos_download": "Téléchargement du logo",
+        "profile": "Profil",
+        "logout": "Déconnexion"
     },
     "nav": {
         "title": "Menu",
-        "hide": "Hide",
+        "hide": "Cacher",
         "show": "Menu"
     },
     "pagination": {
-        "title": "Pagination",
-        "previous": "Previous",
-        "next": "Next"
+        "title": "Mise en page",
+        "previous": "Précédent",
+        "next": "Suivant"
     },
     "table": {
-        "loading": "Loading... Please wait",
-        "total": "Showing {displayed} out of {total} records.",
-        "filtered": "Filtered list.",
-        "add": "Add New",
-        "details": "Details"
+        "loading": "Chargement en cours... veuillez patienter",
+        "total": "Affichage de {displayed} enregistrements sur {total}.",
+        "filtered": "Liste des filtres.",
+        "add": "Ajouter un nouveau",
+        "details": "Détails"
     },
     "search": {
-        "search": "Search"
+        "search": "Rechercher"
     },
     "languages": {
-        "de": "German",
-        "fr": "French",
-        "en": "English"
+        "de": "Allemand",
+        "fr": "Français",
+        "en": "Anglais"
     },
     "snackbar": {
-        "retry": "Retry",
-        "reload": "Reload",
-        "dismiss": "Dismiss",
-        "server_error": "Uuups, there was a server error.",
-        "unauthorized": "Your session has expired. Please log in again.",
-        "login": "Log in"
+        "retry": "Essayez de nouveau",
+        "reload": "Recharger",
+        "dismiss": "Rejeter",
+        "server_error": "Il y a eu une erreur de serveur.",
+        "unauthorized": "Votre session a expiré. Veuillez vous reconnecter.",
+        "login": "Connexion"
     },
     "validation": {
-        "required": "This field is required.",
-        "email": "Please enter a valid email address.",
-        "max_length": "Input too long. The max length is {max} characters.",
-        "double_check_form": "There are some errors in your form data. Please double check your input.",
-        "url": "Please enter a valid url."
+        "required": "Ce champ est obligatoire.",
+        "email": "Veuillez saisir une adresse e-mail valide.",
+        "max_length": "Entrée trop longue. La longueur maximale est de {max} caractères.",
+        "double_check_form": "Il y a des erreurs dans vos données de formulaire. Veuillez vérifier vos données.",
+        "url": "Veuillez saisir une Url valide."
     },
     "users": {
         "index": {
-            "title": "Users",
-            "create": "Create User",
-            "approve": "Approve {user}",
-            "edit": "Edit User"
+            "title": "Utilisateurs",
+            "create": "Créer un utilisateur",
+            "approve": "Approuver {user}",
+            "edit": "Modifier l'utilisateur"
         },
         "logout": {
-            "loggingOut": "Logging out...",
-            "redirecting": "Redirecting...",
-            "logoutError": "Failed to log out. Try again."
+            "loggingOut": "Déconnexion...",
+            "redirecting": "Redirection...",
+            "logoutError": "Echec de la déconnexion. Réessayer."
         }
     },
     "user": {
-        "nav_edit": "Edit",
-        "nav_stats": "Stats",
-        "name": "Name",
-        "login": "Login Data",
-        "privileges": "Privileges",
-        "group_privileges": "Group Privileges",
-        "misc_fields": "Miscellaneous",
-        "first_name": "First name",
+        "nav_edit": "Modifier",
+        "nav_stats": "Statistiques",
+        "name": "Nom",
+        "login": "Données de connexion",
+        "privileges": "Privilèges",
+        "group_privileges": "Privilèges de Groupe",
+        "misc_fields": "Divers",
+        "first_name": "Prénom",
         "last_name": "Last name",
         "email": "Email",
         "email_exists": "There is already an account with this email address.",
@@ -130,8 +130,8 @@
         "logos_helptext": "Members of this group can use the logos listed below.",
         "users_helptext": "The following users are member of this group.",
         "not_found": "We were unable to retrieve this group. Try to reload.",
-        "save": "Save Group",
-        "saving": "Saving...",
+        "save": "Sauvegarder le groupe",
+        "saving": "Sauvegarde...",
         "saved": "Group saved.",
         "saving_failed": "Failed to save group. Try again.",
         "remove": "Delete Group",
