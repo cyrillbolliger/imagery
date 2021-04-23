@@ -139,7 +139,7 @@
                 return filtered + this.$t('table.total', {total, displayed});
             },
             showSearch() {
-                return this.filteredRows.length >= MIN_ITEMS_FOR_SEARCH;
+                return this.rows.length >= MIN_ITEMS_FOR_SEARCH;
             },
             searchableKeys() {
                 return this.headers
