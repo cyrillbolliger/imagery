@@ -66,7 +66,7 @@ deploysingle() {
     fi
 
     if [[ "0" == "$quiet" ]]; then
-        sync "$host" "$target" $quiet
+        sync "$name" "$host" "$target" $quiet
 
         read -p "The above files will be deployed for '$name'. Continue? [y/n] " -n 1
         echo
