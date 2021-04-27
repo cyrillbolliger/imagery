@@ -60,10 +60,14 @@ docker-compose exec -T app php artisan db:seed --class=DemoSeeder
 docker-compose down
 docker-compose up -d
 
+# set colors if script is executed by a tty
+if [ -t 1 ]; then
+    GREEN="$(tput setf 2)"
+    YELLOW="$(tput setf 3)"
+    NC="$(tput sgr0)"
+fi
+
 # just some user info
-GREEN="$(tput setf 2)"
-YELLOW="$(tput setf 3)"
-NC="$(tput sgr0)"
 echo -e "\n"
 echo -e "${GREEN}Yupii, installation successful!${NC}\n"
 echo -e "${YELLOW}NOTE:${NC} You'll need to add the proprietary fonts, to get this working properly."
