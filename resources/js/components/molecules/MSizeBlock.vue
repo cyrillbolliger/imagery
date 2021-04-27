@@ -61,6 +61,8 @@
 <script>
     import {ModelSelect} from 'vue-search-select'
 
+    const customSize = '999-custom';
+
     export default {
         name: "MSizeBlock",
         components: {ModelSelect},
@@ -78,7 +80,7 @@
                     {value: '5-1920x1080', text: this.$t('images.create.sizes.video')},
                     {value: '6-1024x512', text: this.$t('images.create.sizes.twFeed')},
                     {value: '7-1080x1920', text: this.$t('images.create.sizes.instaStory')},
-                    {value: '8-custom', text: this.$t('images.create.sizes.custom')},
+                    {value: customSize, text: this.$t('images.create.sizes.custom')},
                 ],
                 sizeSelected: null,
             }
@@ -92,7 +94,7 @@
             setSize(value) {
                 this.sizeSelected = value;
 
-                this.custom = 'custom' === value;
+                this.custom = customSize === value;
 
                 if (this.custom) {
                     return;
