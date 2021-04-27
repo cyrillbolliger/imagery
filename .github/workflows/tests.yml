@@ -8,7 +8,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install everything
-        run: bash install.sh
+        run: ansifilter install.sh | bash
 
       - name: Run PHPUnit
         run: docker exec imagery vendor/bin/phpunit
