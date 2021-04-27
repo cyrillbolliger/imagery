@@ -31,7 +31,7 @@ TEST_MYSQL_DATABASE=$(grep DB_DATABASE .env.testing | cut -d '=' -f2 | sed -e 's
 # wait until MySQL is really available
 maxcounter=60
 counter=0
-while ! docker exec -t imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" > /dev/null 2>&1; do
+while ! docker exec -t imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e quit > /dev/null 2>&1; do
     sleep 1
     counter=$(( counter + 1))
     if [ $counter -gt $maxcounter ]; then
@@ -43,7 +43,7 @@ done
 echo "Yay, MySQL is up and ready."
 
 # create test database
-if docker exec -t imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" imagery_test > /dev/null 2>&1; then
+if docker exec -t imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" imagery_test -e quit > /dev/null 2>&1; then
     echo "Test database exists."
 else
     echo "Creating test database."
