@@ -174,7 +174,7 @@
             "mimeInvalid": "Seules les images JPEG, PNG et SVG sont supportées. Convertissez l'image dans l'un de ces formats.",
             "border": "Bordure",
             "borderShow": "Afficher les bordures ",
-            "borderNone": "La bordure fait partie de la conception corporative. Vous pouvez omettre la bordure si vous utilisez l'image dans un contexte où une bordure semble vilaine, mais cela devrait être une exception.",
+            "borderNone": "La bordure fait partie de l'identité visuelle. Vous pouvez omettre la bordure si vous utilisez l'image dans un contexte où une bordure semble vilaine, mais cela devrait être une exception.",
             "imageZoom": "Zoom d'image",
             "uploadFailed": "Échec de l'enregistrement de l'image. Veuillez réessayer.",
             "generating": "Génération de l'image",
