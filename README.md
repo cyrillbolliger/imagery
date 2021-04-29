@@ -25,14 +25,28 @@ Read the [dedicated docs](docs/sso.md).
 1. Visit [localhost:8000/](http://localhost:8000/)
 1. Use `superadmin@user.login` and `password` to login.
 1. As the font used in the corporate design is proprietary, you'll need to get a 
-licenced copy of the Sanuk font (fat and bold). Store it as follows:
-```
-storage
-  |-- app
-      |-- fonts
-          |-- SanukOT-Bold.otf
-          |-- SanutOT-Fat.otf
-```
+   licenced copy of the Sanuk font (fat and bold). Store it as follows:
+   ```
+   storage
+     |-- app
+         |-- fonts
+             |-- SanukOT-Bold.otf
+             |-- SanutOT-Fat.otf
+   ```
+1. The indesign templates bundles for the logo suffer the limitations of the
+   proprietary Sanuk font as well. If you've got a licenced copy of the Sanuk 
+   font, we can provide you the bundles. Store them as follows:
+   ```
+   storage
+     |-- app
+         |-- vector_logo_templates_indesign
+             |-- gruene
+                 |-- ...
+             |-- gruene-les-vertes
+                 |-- ...
+             |-- les-vertes
+                 |-- ...
+   ```
 
 
 ### The Stack
@@ -82,3 +96,37 @@ Logins created by the demo seeder:
 * `countryadmin@user.login`:`password`
 * `cantonadmin@user.login`:`password`
 * `localuser@user.login`:`password`
+
+
+## Github Actions
+We use actions to test the application (and maybe in the future to automate the
+crowdin workflow).
+
+### `proprietary.tar.gz.enc`
+The tests rely on the proprietary fonts. Bundle them using the following 
+command (executed in the project root):
+```
+tar -zcv \
+    storage/app/fonts \ 
+    storage/app/vector_logo_templates_indesign \
+    | openssl enc \
+      -e -aes256 \
+      -md sha512 \
+      -pbkdf2 -iter 100000 \
+      -pass file:proprietary.key \
+      -out proprietary.tar.gz.enc
+```
+The files will be automatically decrypted by the  `Add proprietary files` step.
+The key is stored as an 
+[environment secret](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository). 
+
+To decrypt and unpack the bundle manually:
+```
+openssl enc \
+    -d -aes256 \
+    -md sha512 \
+    -pbkdf2 -iter 100000 \
+    -pass file:proprietary.key \
+    -in proprietary.tar.gz.enc \
+    | tar -xzv
+```

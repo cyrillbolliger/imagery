@@ -10,6 +10,11 @@ jobs:
       - name: Install everything
         run: bash install.sh
 
+      - name: Add proprietary files
+        env:
+          proprietary_key: ${{ secrets.PROPRIETARY_KEY }}
+        run: ./.github/scripts/decrypt_proprietary_files.sh
+
       - name: Run PHPUnit
         run: docker exec imagery vendor/bin/phpunit
 
