@@ -1,0 +1,38 @@
+name: Crowdin Localization
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+      - master
+
+jobs:
+  synchronize-with-crowdin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: crowdin action
+        uses: crowdin/github-action@1.0.4
+        with:
+          # upload options
+          upload_sources: true
+          upload_translations: true
+
+          # download options
+          download_translations: true
+          push_translations: true
+          localization_branch_name: l10n_crowdin
+          create_pull_request: false
+
+          # config file
+          config: crowdin.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}

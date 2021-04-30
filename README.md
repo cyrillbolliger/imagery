@@ -1,6 +1,8 @@
 # Imagery
 _Easily generate images in the corporate design of the swiss [GREENS](https://gruene.ch)._
 
+[![Crowdin](https://badges.crowdin.net/cdgruenech/localized.svg)](https://crowdin.com/project/cdgruenech)
+
 ## What?
 This tools aims to provide a simple way to generate images conforming the 
 corporate design rules. It's designed to be so simple to use, that no further 
@@ -90,6 +92,16 @@ on [localhost:8020](http://localhost:8020)
 All translation is done with [crowdin](https://crowdin.com). To translate 
 in-context visit [localhost:8000/?translate=true&lang=zu](https://localhost:8000/?translate=true&lang=zu).
 
+**Crowdin integration**
+
+See the Github Action [`.github/workflows/l10n.yml`](.github/workflows/l10n.yml).
+
+* **Github to Crowdin**: on every push to the `dev` branch all strings are added
+  to crowdin.
+* **Crowdin to Github**: Crowdin pushes new translations to the `l10n_crowdin`
+  branch on any push to `dev` and on every pull request on `dev` or `master`.
+  To get the new translations merge `l10n_crowdin` in your branch.
+
 ### Logins
 Logins created by the demo seeder:
 * `superadmin@user.login`:`password`
@@ -99,10 +111,13 @@ Logins created by the demo seeder:
 
 
 ## Github Actions
-We use actions to test the application (and maybe in the future to automate the
-crowdin workflow).
+We use actions to test the application and for the localization.
 
-### `proprietary.tar.gz.enc`
+### Testing
+
+See the Github Action [`.github/workflows/tests.yml`](.github/workflows/tests.yml).
+
+#### `proprietary.tar.gz.enc`
 The tests rely on the proprietary fonts. Bundle them using the following 
 command (executed in the project root):
 ```
@@ -130,3 +145,6 @@ openssl enc \
     -in proprietary.tar.gz.enc \
     | tar -xzv
 ```
+
+#### Localization
+See the [crowdin](#crowdin) section.
