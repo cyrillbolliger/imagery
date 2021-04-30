@@ -1,10 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-set -eu
-
-cd $GITHUB_WORKSPACE
-
-echo "DEBUG: ${PROPRIETARY_KEY:0:2}****${PROPRIETARY_KEY:31}--"
+set -euo pipefail
 
 openssl enc \
     -d -aes256 \

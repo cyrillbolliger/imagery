@@ -7,13 +7,13 @@ jobs:
       - run: echo "Tests triggered by a ${{ github.event_name }} event to the ${{ github.ref }} branch."
       - uses: actions/checkout@v2
 
-      - name: Install everything
-        run: bash install.sh
-
       - name: Add proprietary files
         env:
           PROPRIETARY_KEY: ${{ secrets.PROPRIETARY_KEY }}
         run: ./.github/scripts/decrypt_proprietary_files.sh
+
+      - name: Install everything
+        run: bash install.sh
 
       - name: Run PHPUnit
         run: docker exec imagery vendor/bin/phpunit
