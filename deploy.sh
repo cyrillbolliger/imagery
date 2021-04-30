@@ -143,6 +143,7 @@ sync() {
         --exclude='/migrate_*' \
         --exclude='/phpunit.xml' \
         --exclude='/productionSeeder.sql' \
+        --exclude='/proprietary.tar.gz.enc' \
         --exclude='/.htaccess' \
         --filter=':- .gitignore' \
         . "${host}:\"${target}\""
