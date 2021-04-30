@@ -12,7 +12,7 @@ jobs:
 
       - name: Add proprietary files
         env:
-          proprietary_key: ${{ secrets.PROPRIETARY_KEY }}
+          PROPRIETARY_KEY: ${{ secrets.PROPRIETARY_KEY }}
         run: ./.github/scripts/decrypt_proprietary_files.sh
 
       - name: Run PHPUnit
