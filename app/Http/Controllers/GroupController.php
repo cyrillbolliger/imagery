@@ -86,6 +86,8 @@ class GroupController extends Controller
             return response('Could not save group.', 500);
         }
 
+        unset($group->addedBy); // do not return associations
+
         return $group;
     }
 
