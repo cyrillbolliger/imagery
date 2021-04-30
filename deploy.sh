@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 # path to the file with the configurations
 # the config must follow the following pattern
@@ -66,7 +66,7 @@ deploysingle() {
     fi
 
     if [[ "0" == "$quiet" ]]; then
-        sync "$host" "$target" $quiet
+        sync "$name" "$host" "$target" $quiet
 
         read -p "The above files will be deployed for '$name'. Continue? [y/n] " -n 1
         echo
@@ -123,19 +123,17 @@ sync() {
         --exclude='.git' \
         --exclude='/.idea' \
         --exclude='/docs' \
-        --include='/public/css' \
-        --include='/public/css/*' \
-        --include='/public/js' \
-        --include='/public/js/*' \
-        --include='/public/fonts/' \
-        --include='/public/fonts/*' \
+        --include='/public/css/***' \
+        --include='/public/js/***' \
+        --include='/public/fonts/***' \
         --include='/public/mix-manifest.json' \
-        --include='/storage/app/base_logos' \
-        --include='/storage/app/base_logos/*' \
-        --include='/storage/app/fonts' \
-        --include='/storage/app/fonts/*' \
+        --include='/storage/app/base_logos/***' \
+        --include='/storage/app/fonts/***' \
+        --include='/storage/app/vector_logo_templates_indesign/***' \
         --exclude='/storage/app/logo_cache' \
+        --exclude='/storage/app/logo_package_cache' \
         --exclude='/storage/temp' \
+        --exclude='/storage/app/images' \
         --exclude='/tests' \
         --exclude='/.editorconfig' \
         --exclude='/.env*' \
@@ -145,6 +143,7 @@ sync() {
         --exclude='/migrate_*' \
         --exclude='/phpunit.xml' \
         --exclude='/productionSeeder.sql' \
+        --exclude='/proprietary.tar.gz.enc' \
         --exclude='/.htaccess' \
         --filter=':- .gitignore' \
         . "${host}:\"${target}\""

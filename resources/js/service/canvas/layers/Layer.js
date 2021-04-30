@@ -24,6 +24,7 @@ export default class Layer {
     _setContext() {
         if (!this._context) {
             this._context = this._canvas.getContext('2d');
+            this._context.imageSmoothingEnabled = true;
         }
     }
 }

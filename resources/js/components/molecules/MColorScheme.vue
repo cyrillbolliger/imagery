@@ -2,7 +2,7 @@
     <div class="form-group">
         <AButtonGroup
             :options="options"
-            :title="$t('images.create.layout')"
+            :title="$t('images.create.colorScheme')"
             @input="$emit('input', $event)"
             v-model="scheme"
         ></AButtonGroup>
