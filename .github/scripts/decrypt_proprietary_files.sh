@@ -4,6 +4,8 @@ set -euo pipefail
 
 cd $GITHUB_WORKSPACE
 
+echo "DEBUG: ${proprietary_key:0:2}****${proprietary_key:31}--"
+
 openssl enc \
     -d -aes256 \
     -md sha512 \
