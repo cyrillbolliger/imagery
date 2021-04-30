@@ -8,7 +8,7 @@
         />
 
         <ASelect
-            v-if="!isRootGroup && canEditGroup(currentGroup.parent_id)"
+            v-if="canManageParentGroup"
             :label="$t('group.parent')"
             :options="groupsSelect"
             :required="true"
@@ -90,6 +90,7 @@
             ...mapGetters({
                 groups: 'groups/getAll',
                 getGroupById: 'groups/getById',
+                currentUser: 'user/object',
             }),
             groupsSelect() {
                 // todo: remove self and child groups
@@ -104,6 +105,14 @@
             isRootGroup() {
                 return this.currentGroup.parent_id === null;
             },
+            canManageParentGroup() {
+                if (this.currentUser.super_admin) {
+                    return true;
+                }
+
+                return ! this.isRootGroup
+                       && this.canEditGroup(this.currentGroup.parent_id);
+            }
         },
 
 
