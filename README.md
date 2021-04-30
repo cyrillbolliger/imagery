@@ -1,3 +1,7 @@
+# ARCHIVED
+
+Developement is now continued by [gruene.ch](https://gruene.ch) on their own fork. See [grueneschweiz/imagery](https://github.com/grueneschweiz/imagery).
+
 # Imagery
 _Easily generate images in the corporate design of the swiss [GREENS](https://gruene.ch)._
 
