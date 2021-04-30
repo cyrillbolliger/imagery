@@ -6,7 +6,7 @@
             <div class="col-md-6 d-none d-md-block">
                 <img
                     src="/images/home-{{ substr($lang, 0, 2) }}.jpeg"
-                    alt="{{__('Design green images with ease.')}}"
+                    alt="{{__('Design GREEN images with ease.')}}"
                     class="img-fluid">
             </div>
             <div class="col-md-6 col-lg-4">

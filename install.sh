@@ -20,7 +20,7 @@ docker-compose run node yarn install --frozen-lockfile --production=false
 docker-compose up -d
 
 # set application key
-docker-compose exec app php artisan key:generate
+docker-compose exec -T app php artisan key:generate
 
 # get params to create test database
 TEST_MYSQL_ROOT_PASSWORD=$(grep MYSQL_ROOT_PASSWORD .env.docker | cut -d '=' -f2 | sed -e 's/[[:space:]]*$//')
@@ -31,7 +31,7 @@ TEST_MYSQL_DATABASE=$(grep DB_DATABASE .env.testing | cut -d '=' -f2 | sed -e 's
 # wait until MySQL is really available
 maxcounter=60
 counter=0
-while ! docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" > /dev/null 2>&1; do
+while ! docker exec -t imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e quit > /dev/null 2>&1; do
     sleep 1
     counter=$(( counter + 1))
     if [ $counter -gt $maxcounter ]; then
@@ -43,27 +43,34 @@ done
 echo "Yay, MySQL is up and ready."
 
 # create test database
-if docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" imagery_test > /dev/null 2>&1; then
+if docker exec -t imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" imagery_test -e quit > /dev/null 2>&1; then
     echo "Test database exists."
 else
     echo "Creating test database."
-    docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"CREATE DATABASE ${TEST_MYSQL_DATABASE};"
-    docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"CREATE USER '${TEST_MYSQL_USER}'@'%' IDENTIFIED BY '${TEST_MYSQL_PASSWORD}';"
-    docker exec imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"GRANT ALL PRIVILEGES ON ${TEST_MYSQL_DATABASE}.* TO '${TEST_MYSQL_USER}'@'%';"
+    docker exec -t imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"CREATE DATABASE ${TEST_MYSQL_DATABASE};"
+    docker exec -t imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"CREATE USER '${TEST_MYSQL_USER}'@'%' IDENTIFIED BY '${TEST_MYSQL_PASSWORD}';"
+    docker exec -t imagery_mysql mysql -uroot -p"${TEST_MYSQL_ROOT_PASSWORD}" -e"GRANT ALL PRIVILEGES ON ${TEST_MYSQL_DATABASE}.* TO '${TEST_MYSQL_USER}'@'%';"
 fi
 
 # setup database and seed with demo data
-docker-compose exec app php artisan migrate:fresh
-docker-compose exec app php artisan db:seed --class=DemoSeeder
+docker-compose exec -T app php artisan migrate:fresh
+docker-compose exec -T app php artisan db:seed --class=DemoSeeder
+
+# generate mix manifest
+docker-compose run node yarn production
 
 # fully restart all containers (else there is a problem with the application key)
 docker-compose down
 docker-compose up -d
 
+# set colors if script is executed by a tty
+if [ -t 1 ]; then
+    GREEN="$(tput setf 2)"
+    YELLOW="$(tput setf 3)"
+    NC="$(tput sgr0)"
+fi
+
 # just some user info
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
 echo -e "\n"
 echo -e "${GREEN}Yupii, installation successful!${NC}\n"
 echo -e "${YELLOW}NOTE:${NC} You'll need to add the proprietary fonts, to get this working properly."

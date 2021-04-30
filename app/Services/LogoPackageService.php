@@ -17,8 +17,7 @@ class LogoPackageService
 
     private int $width;
     private Logo $logo;
-    private array $screenPaths;
-    private array $printPaths;
+    private array $zipFiles;
 
     public function __construct()
     {
@@ -38,11 +37,12 @@ class LogoPackageService
         $this->logo = $logo;
         $path       = $this->getPackagePath();
 
-        if (! $forceRecreate && Storage::exists($path)) {
+        if (!$forceRecreate && Storage::exists($path)) {
             return $path;
         }
 
         $this->createPackageDir();
+        $this->addTemplateFiles();
 
         try {
             $this->generateLogos();
@@ -113,11 +113,9 @@ class LogoPackageService
                 [$this->logo->name]
             );
 
-            $pngName = $this->getNiceLogoFilename($colorScheme, 'png');
-            $psdName = $this->getNiceLogoFilename($colorScheme, 'psd');
+            $pngName = $this->getNiceLogoFilename($colorScheme, 'sRGB', 'png');
 
-            $this->screenPaths[$pngName] = $generator->getPng($this->width, config('app.debug'));
-            $this->printPaths[$psdName]  = $generator->getPsd($this->width, config('app.debug'));
+            $this->zipFiles[$pngName] = $generator->getPng($this->width, config('app.debug'));
         }
     }
 
@@ -126,20 +124,17 @@ class LogoPackageService
      *
      * @param  string  $colorScheme
      * @param  string  $ext  file extension
+     * @param  string  $colorSpace
      * @return string
      */
-    private function getNiceLogoFilename(string $colorScheme, string $ext): string
+    private function getNiceLogoFilename(string $colorScheme, string $colorSpace, string $ext): string
     {
-        $name = mb_strtolower($this->logo->name);
-        $name = str_replace(['ä', 'ö', 'ü'], ['ae', 'oe', 'ue'], $name);
-        $name = preg_replace('/\.ch$/', '', $name);
-        $name = Str::slug($name); // removes any bad chars
-
         return sprintf(
-            'logo-%s-%s-%s.%s',
-            (string) $this->logo->type,
-            $name,
+            'logo-%s-%s-%s-%s.%s',
+            $this->logo->type,
+            $this->logo->getSlug(),
             $colorScheme,
+            $colorSpace,
             $ext
         );
     }
@@ -151,7 +146,7 @@ class LogoPackageService
      */
     private function makeZip(): bool
     {
-        $zipFile = disk_path($this->getPackagePath());
+        $zipFile = $this->relToAbsPath($this->getPackagePath());
 
         $zip = new \ZipArchive();
 
@@ -160,15 +155,9 @@ class LogoPackageService
             return false;
         }
 
-        foreach ($this->printPaths as $filename => $path) {
-            $added = $zip->addFile(disk_path($path), "logo/print/$filename");
-            if (!$added) {
-                return false;
-            }
-        }
-
-        foreach ($this->screenPaths as $filename => $path) {
-            $added = $zip->addFile(disk_path($path), "logo/screen/$filename");
+        $baseDirName = 'logo-'.$this->logo->getSlug();
+        foreach ($this->zipFiles as $zipPath => $fsPath) {
+            $added = $zip->addFile($this->relToAbsPath($fsPath), "$baseDirName/$zipPath");
             if (!$added) {
                 return false;
             }
@@ -180,5 +169,35 @@ class LogoPackageService
         }
 
         return true;
+    }
+
+    private function addTemplateFiles(): void
+    {
+        $rootPath = $this->relToAbsPath(config('app.logo_template_path'));
+
+        /** @var \SplFileInfo[] $files */
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($rootPath),
+            \RecursiveIteratorIterator::LEAVES_ONLY
+        );
+
+        foreach ($files as $file) {
+            // Skip directories (they will be added automatically)
+            if (!$file->isDir()) {
+                $path                  = $this->absToRelPath($file);
+                $this->zipFiles[$path] = $path;
+            }
+        }
+    }
+
+    private function absToRelPath(string $absPath): string
+    {
+        $diskPath = rtrim(disk_path(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+        return str_replace($diskPath, '', $absPath);
+    }
+
+    private function relToAbsPath(string $relPath): string
+    {
+        return disk_path(ltrim($relPath, DIRECTORY_SEPARATOR));
     }
 }
