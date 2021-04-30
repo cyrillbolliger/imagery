@@ -56,6 +56,9 @@ fi
 docker-compose exec -T app php artisan migrate:fresh
 docker-compose exec -T app php artisan db:seed --class=DemoSeeder
 
+# generate mix manifest
+docker-compose run node yarn production
+
 # fully restart all containers (else there is a problem with the application key)
 docker-compose down
 docker-compose up -d
