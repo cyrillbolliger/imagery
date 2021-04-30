@@ -116,9 +116,9 @@ tar -zcv \
       -pass file:proprietary.key \
       -out proprietary.tar.gz.enc
 ```
-The files will be automatically decrypted by the  `Add proprietary files` step.
-The key is stored as an 
-[environment secret](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository). 
+The files will be automatically decrypted by the  `Add proprietary files` step (cf. `.github/workflows/tests.yml`).
+The key is stored as a 
+[repository secret](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository). 
 
 To decrypt and unpack the bundle manually:
 ```
