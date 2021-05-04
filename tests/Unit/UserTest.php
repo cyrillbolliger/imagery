@@ -1,7 +1,11 @@
 <?php
 
-namespace App;
+namespace Tests\Unit;
 
+use App\Group;
+use App\Logo;
+use App\Role;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

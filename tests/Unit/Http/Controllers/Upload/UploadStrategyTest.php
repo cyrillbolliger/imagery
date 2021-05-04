@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Tests\Unit\Http\Controllers\Upload;
 
 use App\Http\Controllers\Upload\RegularUploadStrategy;
 use Illuminate\Foundation\Testing\WithFaker;

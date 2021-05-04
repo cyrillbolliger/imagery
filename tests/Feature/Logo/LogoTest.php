@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Logo;
 
 use App\Logo\Logo;
 use App\Logo\LogoFactory;
