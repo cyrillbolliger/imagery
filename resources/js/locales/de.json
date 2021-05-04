@@ -9,7 +9,7 @@
         "logos_download": "Logo herunterladen",
         "profile": "Profil",
         "logout": "Abmelden",
-        "translate": "Translate",
+        "translate": "Übersetzen",
         "feedback": "Feedback"
     },
     "nav": {
@@ -302,23 +302,23 @@
         "not_found": "Logo konnte nicht geladen werden. Bitte erneut versuchen."
     },
     "translate": {
-        "title": "Help translating",
-        "intro": "Did you notice inappropriate or missing translations? Contribute your improvements!",
-        "login": "We use {link} as localization service. You can connect using the following credentials:",
+        "title": "Übersetzen helfen",
+        "intro": "Sind dir unpassende oder fehlende Übersetzungen aufgefallen? Trage zur Verbesserung bei!",
+        "login": "Wir verwenden {link} als Übersetzungsplatform. Du kannst dich mit folgenden Zugangsdaten anmelden:",
         "username": "Username: {username}",
-        "password": "Password: {password}",
-        "startButton": "Login & contribute translation",
-        "loadingCredentialsFailed": "Failed to load Crowdin credentials.",
-        "credentials": "Translation Login Credentials",
-        "signInTroubles": "Crowdin works best with the Chrome browser. If you have troubles signing in, try again with Chrome."
+        "password": "Passwort: {password}",
+        "startButton": "Anmelden und Übersetzen",
+        "loadingCredentialsFailed": "Crowdin-Anmeldedaten konnten nicht geladen werden.",
+        "credentials": "Zugangsdaten fürs Übersetzen",
+        "signInTroubles": "Crowdin funktioniert am besten mit dem Chrome-Browser. Wenn du Probleme bei der Anmeldung hast, versuche es erneut mit Chrome."
     },
     "feedback": {
-        "title": "We 💚 your feedback",
-        "intro": "Thank you very much for letting us know, what features you wish, what we can do better and what you like. Your feedback will be sent to {recipients} from the secretary of the GREENS of Switzerland.",
-        "defaultRecipients": "the IT",
-        "messageSubmitted": "We've received your feedback. Thank you so much!",
-        "submit": "Submit feedback",
-        "submitting": "Sending",
-        "sendingFailed": "Failed to send feedback. Please try again."
+        "title": "Wir 💚 dein Feedback",
+        "intro": "Vielen Dank, dass du uns wissen lässt, welche Funktionen du dir wünschst, was wir besser machen können und was dir gefällt. Dein Feedback wird an {recipients} vom Sekretariat der GRÜNEN Schweiz gesendet.",
+        "defaultRecipients": "die IT",
+        "messageSubmitted": "Wir haben dein Feedback erhalten. Vielen Dank!",
+        "submit": "Feedback senden",
+        "submitting": "Übermitteln",
+        "sendingFailed": "Feedback konnte nicht übermittelt werden. Bitte nochmal versuchen."
     }
 }
