@@ -16,7 +16,13 @@ trait TestStorage
             'vector_logo_templates_indesign'
         ];
 
+        $delete = [
+            'logo_cache',
+            'logo_package_cache'
+        ];
+
         $this->copyToTestStorage($copy);
+        $this->deleteOnTestStorage($delete);
     }
 
     private function copyToTestStorage(array $dirs): void
@@ -31,5 +37,10 @@ trait TestStorage
                 );
             }
         }
+    }
+
+    private function deleteOnTestStorage(array $dirs): void
+    {
+        Storage::disk('local')->delete($dirs);
     }
 }
