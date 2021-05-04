@@ -438,4 +438,60 @@ class LogoTest extends TestCase
             'logo_id'  => $logo->id
         ]);
     }
+
+    public function testGetPackage__user__200()
+    {
+        $group = factory(Group::class)->create();
+
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
+        $manager->roles()->save(
+            factory(Role::class)->make([
+                'admin'    => false,
+                'group_id' => $group->id
+            ])
+        );
+
+        $logo = factory(Logo::class)->create();
+        $group->logos()->attach($logo);
+
+        $response = $this->actingAs($manager)
+                         ->get("/api/1/files/logos/$logo->id/package");
+
+        $response->assertStatus(200)
+            ->assertHeader('Content-Type', 'application/zip');
+    }
+
+    public function testGetPackage__nonAttachedUser__403()
+    {
+        $manager = factory(User::class)->create([
+            'super_admin' => false,
+            'enabled'     => true,
+        ]);
+        $logo    = factory(Logo::class)->create();
+
+        $response = $this->actingAs($manager)
+                         ->getJson("/api/1/files/logos/$logo->id/package");
+
+        $response->assertStatus(403);
+    }
+
+    public function testGetPackage__nonExistingLogo__404()
+    {
+        $manager = factory(User::class)->create([
+            'super_admin' => true,
+            'enabled'     => true,
+        ]);
+
+        factory(Logo::class)->create();
+
+        $nonExistingLogoId = Logo::orderBy('id','desc')->first()->id + 1;
+
+        $response = $this->actingAs($manager)
+                         ->get("/api/1/files/logos/$nonExistingLogoId/package");
+
+        $response->assertStatus(404);
+    }
 }

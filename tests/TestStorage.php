@@ -13,6 +13,7 @@ trait TestStorage
         $copy = [
             'base_logos',
             'fonts',
+            'vector_logo_templates_indesign'
         ];
 
         $this->copyToTestStorage($copy);
@@ -21,7 +22,7 @@ trait TestStorage
     private function copyToTestStorage(array $dirs): void
     {
         foreach ($dirs as $dir) {
-            $files = Storage::disk('local')->files($dir);
+            $files = Storage::disk('local')->allFiles($dir);
 
             foreach ($files as $file) {
                 Storage::put(
