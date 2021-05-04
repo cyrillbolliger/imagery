@@ -24,10 +24,13 @@
 <script>
 import MHeader from "../molecules/MHeader";
 import Api from "../../service/Api";
+import SnackbarMixin from "../../mixins/SnackbarMixin";
+import UnauthorizedHandlerMixin from "../../mixins/UnauthorizedHandlerMixin";
 
 export default {
     name: "TranslateIndex.vue",
     components: {MHeader},
+    mixins: [SnackbarMixin, UnauthorizedHandlerMixin],
 
     data() {
         return {
