@@ -6,6 +6,7 @@ import ImageGallery from "./components/pages/ImageGallery";
 import UserLogout from "./components/pages/UserLogout";
 import LogoDownload from "./components/pages/LogoDownload";
 import TranslateIndex from "./components/pages/TranslateIndex";
+import FeedbackIndex from "./components/pages/FeedbackIndex";
 
 export const routes = [
     {
@@ -82,6 +83,11 @@ export const routes = [
         path: '/translate',
         component: TranslateIndex,
         name: 'translateIndex'
+    },
+    {
+        path: '/feedback',
+        component: FeedbackIndex,
+        name: 'feedbackIndex'
     },
     {
         path: '/home',

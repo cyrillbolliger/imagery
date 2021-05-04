@@ -430,4 +430,15 @@ return [
 
     'crowdin_pass' => env('CROWDIN_PASS', 'not defined'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Feedback recipients
+    |--------------------------------------------------------------------------
+    |
+    | The names of the guys receiving the feedback messages. Eg: Alice and Bob
+    |
+    */
+
+    'feedback_recipients' => env('APP_ADMIN_NAMES' ),
+
 ];

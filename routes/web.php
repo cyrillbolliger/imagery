@@ -210,6 +210,13 @@ Route::prefix('api/1')->middleware('auth.federated')->group(function () {
      * Crowdin
      */
     Route::get('/crowdin/credentials', 'CrowdinController@showCredentials');
+
+    /**
+     * Feedback
+     */
+    Route::get('/feedback/recipients', 'FeedbackController@showRecipients');
+
+    Route::post( '/feedback', 'FeedbackController@send' );
 });
 
 /**
