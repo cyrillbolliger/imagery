@@ -8,7 +8,8 @@
         "logos": "Logos",
         "logos_download": "Logo Download",
         "profile": "Profile",
-        "logout": "Logout"
+        "logout": "Logout",
+        "translate": "Translate"
     },
     "nav": {
         "title": "Menu",
@@ -298,5 +299,16 @@
         "groups": "Groups",
         "groupsHelptext": "The selected groups can use this logo",
         "not_found": "Failed to load logo. Try again."
+    },
+    "translate": {
+        "title": "Help translating",
+        "intro": "Did you notice inappropriate or missing translations? Contribute your improvements!",
+        "login": "We use {link} as localization service. You can connect using the following credentials:",
+        "username": "Username: {username}",
+        "password": "Password: {password}",
+        "startButton": "Login & contribute translation",
+        "loadingCredentialsFailed": "Failed to load Crowdin credentials.",
+        "credentials": "Translation Login Credentials",
+        "signInTroubles": "Crowdin works best with the Chrome browser. If you have troubles signing in, try again with Chrome."
     }
 }

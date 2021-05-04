@@ -24,6 +24,9 @@
             <MMenuItem :to="`/logos/download`" svgIcon="/images/logo-icon.svg">{{$t('route.logos_download')}}</MMenuItem>
             <MMenuItem materialIcon="power-settings-new" to="/logout">{{$t('route.logout')}}</MMenuItem>
         </ul>
+        <ul class="o-menu__item-list o-menu__item-list--small list-unstyled mt-3">
+            <MMenuItem :exact="false" to="/translate">{{$t('route.translate')}}</MMenuItem>
+        </ul>
     </nav>
 </template>
 
@@ -69,6 +72,12 @@
         &__close {
             position: absolute;
             right: 0;
+        }
+
+        &__item-list {
+            &--small {
+                font-size: $font-size-sm;
+            }
         }
     }
 

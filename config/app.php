@@ -408,4 +408,26 @@ return [
 
     'admin_email' => env('APP_ADMIN_EMAIL'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Crowdin username
+    |--------------------------------------------------------------------------
+    |
+    | Username for Crowdin.com
+    |
+    */
+
+    'crowdin_user' => env('CROWDIN_USER', 'not defined'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Crowdin password
+    |--------------------------------------------------------------------------
+    |
+    | Password for Crowdin.com
+    |
+    */
+
+    'crowdin_pass' => env('CROWDIN_PASS', 'not defined'),
+
 ];

@@ -5,6 +5,7 @@ import LogoIndex from "./components/pages/LogoIndex";
 import ImageGallery from "./components/pages/ImageGallery";
 import UserLogout from "./components/pages/UserLogout";
 import LogoDownload from "./components/pages/LogoDownload";
+import TranslateIndex from "./components/pages/TranslateIndex";
 
 export const routes = [
     {
@@ -76,6 +77,11 @@ export const routes = [
     {
         path: '/logout',
         component: UserLogout,
+    },
+    {
+        path: '/translate',
+        component: TranslateIndex,
+        name: 'translateIndex'
     },
     {
         path: '/home',

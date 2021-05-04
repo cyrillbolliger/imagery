@@ -205,6 +205,11 @@ Route::prefix('api/1')->middleware('auth.federated')->group(function () {
     Route::get('/files/fonts/{font}', 'FontController@show')
         ->where('font', '[\w\-\.]+')
         ->name('fonts');
+
+    /**
+     * Crowdin
+     */
+    Route::get('/crowdin/credentials', 'CrowdinController@showCredentials');
 });
 
 /**
