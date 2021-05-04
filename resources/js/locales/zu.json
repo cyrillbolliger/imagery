@@ -8,7 +8,9 @@
         "logos": "crwdns2930:0crwdne2930:0",
         "logos_download": "crwdns2932:0crwdne2932:0",
         "profile": "crwdns2934:0crwdne2934:0",
-        "logout": "crwdns2936:0crwdne2936:0"
+        "logout": "crwdns2936:0crwdne2936:0",
+        "translate": "crwdns3494:0crwdne3494:0",
+        "feedback": "crwdns3496:0crwdne3496:0"
     },
     "nav": {
         "title": "crwdns2938:0crwdne2938:0",
@@ -298,5 +300,25 @@
         "groups": "crwdns3406:0crwdne3406:0",
         "groupsHelptext": "crwdns3408:0crwdne3408:0",
         "not_found": "crwdns3410:0crwdne3410:0"
+    },
+    "translate": {
+        "title": "crwdns3498:0crwdne3498:0",
+        "intro": "crwdns3500:0crwdne3500:0",
+        "login": "crwdns3502:0{link}crwdne3502:0",
+        "username": "crwdns3504:0{username}crwdne3504:0",
+        "password": "crwdns3506:0{password}crwdne3506:0",
+        "startButton": "crwdns3508:0crwdne3508:0",
+        "loadingCredentialsFailed": "crwdns3510:0crwdne3510:0",
+        "credentials": "crwdns3512:0crwdne3512:0",
+        "signInTroubles": "crwdns3514:0crwdne3514:0"
+    },
+    "feedback": {
+        "title": "crwdns3516:0crwdne3516:0",
+        "intro": "crwdns3518:0{recipients}crwdne3518:0",
+        "defaultRecipients": "crwdns3520:0crwdne3520:0",
+        "messageSubmitted": "crwdns3522:0crwdne3522:0",
+        "submit": "crwdns3524:0crwdne3524:0",
+        "submitting": "crwdns3526:0crwdne3526:0",
+        "sendingFailed": "crwdns3528:0crwdne3528:0"
     }
 }

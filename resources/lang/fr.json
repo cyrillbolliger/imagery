@@ -13,7 +13,7 @@
     "What about my existing account?": "Qu'en est-il de mon compte existant ?",
     "If you already had an account for this tool, it will be automatically merged with the GREEN account.": "Si vous aviez déjà un compte pour une version antérieure de cet outil, il sera automatiquement fusionné avec le compte VERT.",
     "I don't have a GREEN account (chat login)": "Je n'ai pas de compte VERTE (connexion au chat)",
-    "Then it's time you sign up for one.": "Ensuite, il est temps que vous vous inscriviez à une inscription.",
+    "Then it's time you sign up for one.": "Alors, il est temps que vous vous inscriviez.",
     "Click here to register.": "Cliquez ici pour vous inscrire.",
     "I need some help": "J'ai besoin d'aide",
     "Pending Approval": "En attente d'approbation",
@@ -38,6 +38,6 @@
     "You've been invited by :firstName :lastName to use :app. It's a super simple tool to create images in the corporate design of the GREENS.": "Vous avez été invité par :firstName :lastName à utiliser :app. C'est un outil super simple pour créer des images dans le design de l'identité visuelle des VERT-E-S.",
     "You can use it with the GREEN login (same as for the chat).": "Vous pouvez l'utiliser avec la connexion VERTE (identique à celle du chat).",
     "Try the GREEN graphics designer": "Essayez le graphiste VERT",
-    "If you don't have a login yet, you may register yourself. Just click 'register' on the login screen and subscribe yourself with :email.": "Si vous n'avez pas encore de connexion, vous pouvez vous inscrire. Il suffit de cliquer sur 'S'inscrire' sur l'écran de connexion et de vous abonner à :email.",
+    "If you don't have a login yet, you may register yourself. Just click 'register' on the login screen and subscribe yourself with :email.": "Si vous n'avez pas encore de connexion, vous pouvez vous inscrire. Il suffit de cliquer sur 'S'inscrire' sur l'écran de connexion et de vous inscrire avec :email.",
     "Hello Admin": "Bonjour Admin"
 }
