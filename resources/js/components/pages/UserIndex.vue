@@ -107,7 +107,7 @@
                 default: false
             },
             activation: {
-                default: false
+                default: null
             },
         },
 
