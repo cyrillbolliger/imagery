@@ -15,8 +15,8 @@
             <li v-if="isAdmin">
                 <MMenuItem active="" materialIcon="settings" to="/admin/users">{{$t('route.settings')}}</MMenuItem>
                 <ul class="list-unstyled ml-4">
-                    <MMenuItem :exact="false" materialIcon="chevron-right" to="/admin/groups">{{$t('route.groups')}}</MMenuItem>
                     <MMenuItem :exact="false" materialIcon="chevron-right" to="/admin/logos">{{$t('route.logos')}}</MMenuItem>
+                    <MMenuItem :exact="false" materialIcon="chevron-right" to="/admin/groups">{{$t('route.groups')}}</MMenuItem>
                     <MMenuItem :exact="false" materialIcon="chevron-right" to="/admin/users">{{$t('route.users')}}</MMenuItem>
                 </ul>
             </li>
