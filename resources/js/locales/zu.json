@@ -313,12 +313,16 @@
         "signInTroubles": "crwdns3514:0crwdne3514:0"
     },
     "feedback": {
-        "title": "crwdns3516:0crwdne3516:0",
+        "title": "crwdns3534:0crwdne3534:0",
         "intro": "crwdns3518:0{recipients}crwdne3518:0",
         "defaultRecipients": "crwdns3520:0crwdne3520:0",
         "messageSubmitted": "crwdns3522:0crwdne3522:0",
         "submit": "crwdns3524:0crwdne3524:0",
         "submitting": "crwdns3526:0crwdne3526:0",
-        "sendingFailed": "crwdns3528:0crwdne3528:0"
+        "sendingFailed": "crwdns3528:0crwdne3528:0",
+        "hello": "crwdns3530:0crwdne3530:0",
+        "messageTemplate": "crwdns3532:0crwdne3532:0",
+        "yourMessage": "crwdns3536:0crwdne3536:0",
+        "additionalInfo": "crwdns3540:0crwdne3540:0"
     }
 }

@@ -187,7 +187,7 @@
             "height": "Hauteur (px)",
             "oversizeWarning": "Les grandes images peuvent ralentir la performance de votre navigateur.",
             "preview": "Aperçu",
-            "dragHelpBar": "Faites glisser les barres dans la position de votre désir.",
+            "dragHelpBar": "Faites glisser les barres dans la position souhaitée.",
             "dragHelp": "Faites glisser les barres et l'image dans la position de votre désir.",
             "layout": "Mettre en page",
             "barsLeft": "Barres à gauche",
@@ -319,6 +319,10 @@
         "messageSubmitted": "We've received your feedback. Thank you so much!",
         "submit": "Submit feedback",
         "submitting": "Sending",
-        "sendingFailed": "Failed to send feedback. Please try again."
+        "sendingFailed": "Failed to send feedback. Please try again.",
+        "hello": "Hello",
+        "messageTemplate": "I just used cd.gruene.ch and I'd like to say ...",
+        "yourMessage": "Your message",
+        "additionalInfo": "Additionally to your message, we will receive your name and email address as well as some basic information about your browser."
     }
 }
