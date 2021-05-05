@@ -323,6 +323,6 @@
         "hello": "Hello",
         "messageTemplate": "I just used cd.gruene.ch and I'd like to say ...",
         "yourMessage": "Your message",
-        "additionalInfo": "Additionally to your message, we will retrieve your name and email address as well as some basic information about your browser."
+        "additionalInfo": "Additionally to your message, we will receive your name and email address as well as some basic information about your browser."
     }
 }
