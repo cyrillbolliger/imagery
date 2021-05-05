@@ -313,7 +313,7 @@
         "signInTroubles": "Crowdin works best with the Chrome browser. If you have troubles signing in, try again with Chrome."
     },
     "feedback": {
-        "title": "We \uD83D\uDC9A your feedback",
+        "title": "We \uD83D\uDC9A feedback",
         "intro": "Thank you very much for letting us know, what features you wish, what we can do better and what you like. Your feedback will be sent to {recipients} from the secretary of the GREENS of Switzerland.",
         "defaultRecipients": "the IT",
         "messageSubmitted": "We've received your feedback. Thank you so much!",
@@ -321,6 +321,8 @@
         "submitting": "Sending",
         "sendingFailed": "Failed to send feedback. Please try again.",
         "hello": "Hello",
-        "messageTemplate": "I just used cd.gruene.ch and I'd like to say ..."
+        "messageTemplate": "I just used cd.gruene.ch and I'd like to say ...",
+        "yourMessage": "Your message",
+        "additionalInfo": "Additionally to your message, we will retrieve your name and email address as well as some basic information about your browser."
     }
 }
