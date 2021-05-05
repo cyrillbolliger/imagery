@@ -12,7 +12,11 @@
                     <li>{{ $t('translate.username', {username}) }}</li>
                     <li>{{ $t('translate.password', {password}) }}</li>
                 </ul>
-                <a class="btn btn-primary" href="?translate=true&lang=zu" role="button">{{ $t('translate.startButton') }}</a>
+                <a class="btn btn-primary"
+                   href="?translate=true&lang=zu"
+                   role="button"
+                   target="_blank"
+                >{{ $t('translate.startButton') }}</a>
             </div>
             <p class="text-sm">
                 {{ $t('translate.signInTroubles') }}

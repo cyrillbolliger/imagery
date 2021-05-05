@@ -319,6 +319,10 @@
         "messageSubmitted": "Wir haben dein Feedback erhalten. Vielen Dank!",
         "submit": "Feedback senden",
         "submitting": "Übermitteln",
-        "sendingFailed": "Feedback konnte nicht übermittelt werden. Bitte nochmal versuchen."
+        "sendingFailed": "Feedback konnte nicht übermittelt werden. Bitte nochmal versuchen.",
+        "hello": "Hallo",
+        "messageTemplate": "Ich habe gerade cd.gruene.ch benutzt und ich möchte mitteilen, dass ...",
+        "yourMessage": "Deine Nachricht",
+        "additionalInfo": "Zusätzlich zu deiner Nachricht werden wir deinen Namen und deine E-Mail-Adresse sowie einige grundlegende Informationen über deinen Browser erhalten."
     }
 }

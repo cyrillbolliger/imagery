@@ -9,12 +9,21 @@
                 v-if="!submitted"
                 @submit.prevent="submit"
             >
-                <textarea
-                    v-model="message"
-                    autocomplete="off"
-                    class="form-control"
-                    rows="5"
-                ></textarea>
+                <div class="form-group mt-4">
+                    <label class="font-weight-bold" for="page-feedback__message">
+                        {{$t('feedback.yourMessage')}}
+                    </label>
+                    <textarea
+                        id="page-feedback__message"
+                        v-model="message"
+                        autocomplete="off"
+                        class="form-control"
+                        rows="5"
+                    ></textarea>
+                    <small class="form-text text-muted">
+                        {{$t('feedback.additionalInfo')}}
+                    </small>
+                </div>
 
                 <AButtonWait
                     :button-text="$t('feedback.submit')"
@@ -58,10 +67,10 @@ export default {
 
     computed: {
         initialMessage() {
-            return this.$t('Hello')
+            return this.$t('feedback.hello')
                 + ' ' + this.recipients
-                + "\n\n" +
-                this.$t('I just used cd.gruene.ch and id like to say ...');
+                + "\n" +
+                this.$t('feedback.messageTemplate');
         },
 
         payload() {
