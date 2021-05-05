@@ -319,6 +319,8 @@
         "messageSubmitted": "We've received your feedback. Thank you so much!",
         "submit": "Submit feedback",
         "submitting": "Sending",
-        "sendingFailed": "Failed to send feedback. Please try again."
+        "sendingFailed": "Failed to send feedback. Please try again.",
+        "hello": "Hello",
+        "messageTemplate": "I just used cd.gruene.ch and I'd like to say ..."
     }
 }

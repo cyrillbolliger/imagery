@@ -58,10 +58,10 @@ export default {
 
     computed: {
         initialMessage() {
-            return this.$t('Hello')
+            return this.$t('feedback.hello')
                 + ' ' + this.recipients
                 + "\n\n" +
-                this.$t('I just used cd.gruene.ch and id like to say ...');
+                this.$t('feedback.messageTemplate');
         },
 
         payload() {
