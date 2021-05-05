@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Tests\Unit\Http\Controllers\Upload;
 
 use App\Http\Controllers\Upload\ChunkUploadStrategy;
 use App\Http\Controllers\Upload\UploadStrategy;

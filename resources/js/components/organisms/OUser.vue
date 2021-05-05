@@ -63,7 +63,7 @@
             },
             activation: {
                 type: String,
-                default: false
+                default: null
             }
         },
 

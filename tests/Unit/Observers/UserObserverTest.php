@@ -1,11 +1,12 @@
 <?php
 
-namespace App;
+namespace Tests\Unit\Observers;
 
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
-use RootSeeder;
+use Database\Seeders\RootSeeder;
 
 
 class UserObserverTest extends TestCase

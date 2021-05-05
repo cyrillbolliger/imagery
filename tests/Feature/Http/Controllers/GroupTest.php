@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http\Controllers;
 
 use App\Group;
 use App\Logo;
 use App\Role;
 use App\User;
-use RootSeeder;
+use Database\Seeders\RootSeeder;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

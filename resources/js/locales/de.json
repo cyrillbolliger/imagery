@@ -8,7 +8,9 @@
         "logos": "Logos",
         "logos_download": "Logo herunterladen",
         "profile": "Profil",
-        "logout": "Abmelden"
+        "logout": "Abmelden",
+        "translate": "Übersetzen",
+        "feedback": "Feedback"
     },
     "nav": {
         "title": "Menü",
@@ -298,5 +300,25 @@
         "groups": "Gruppen",
         "groupsHelptext": "Die ausgewählten Gruppen können dieses Logo verwenden",
         "not_found": "Logo konnte nicht geladen werden. Bitte erneut versuchen."
+    },
+    "translate": {
+        "title": "Übersetzen helfen",
+        "intro": "Sind dir unpassende oder fehlende Übersetzungen aufgefallen? Trage zur Verbesserung bei!",
+        "login": "Wir verwenden {link} als Übersetzungsplatform. Du kannst dich mit folgenden Zugangsdaten anmelden:",
+        "username": "Username: {username}",
+        "password": "Passwort: {password}",
+        "startButton": "Anmelden und Übersetzen",
+        "loadingCredentialsFailed": "Crowdin-Anmeldedaten konnten nicht geladen werden.",
+        "credentials": "Zugangsdaten fürs Übersetzen",
+        "signInTroubles": "Crowdin funktioniert am besten mit dem Chrome-Browser. Wenn du Probleme bei der Anmeldung hast, versuche es erneut mit Chrome."
+    },
+    "feedback": {
+        "title": "Wir 💚 dein Feedback",
+        "intro": "Vielen Dank, dass du uns wissen lässt, welche Funktionen du dir wünschst, was wir besser machen können und was dir gefällt. Dein Feedback wird an {recipients} vom Sekretariat der GRÜNEN Schweiz gesendet.",
+        "defaultRecipients": "die IT",
+        "messageSubmitted": "Wir haben dein Feedback erhalten. Vielen Dank!",
+        "submit": "Feedback senden",
+        "submitting": "Übermitteln",
+        "sendingFailed": "Feedback konnte nicht übermittelt werden. Bitte nochmal versuchen."
     }
 }

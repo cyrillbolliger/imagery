@@ -1,8 +1,10 @@
 <?php
 
-namespace App;
+namespace Tests\Unit;
 
 
+use App\Group;
+use App\User;
 use Database\Seeders\RootSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
