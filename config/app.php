@@ -441,4 +441,14 @@ return [
 
     'feedback_recipients' => env('APP_ADMIN_NAMES' ),
 
+    /*
+    |--------------------------------------------------------------------------
+    | The address for the imprint (HTML)
+    |--------------------------------------------------------------------------
+    |
+    | E.g. "The GREENS of the world<br>Road to Everywhere<br>Planet Earth"
+    |
+    */
+
+    'imprint_addr' => env('APP_IMPRINT_ADDR' ),
 ];
