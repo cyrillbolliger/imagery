@@ -8,7 +8,7 @@
         />
 
         <ASelect
-            v-if="canManageParentGroup"
+            v-if="newGroup || canManageParentGroup"
             :label="$t('group.parent')"
             :options="groupsSelect"
             :required="true"
