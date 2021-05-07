@@ -2,5 +2,5 @@
 
 return [
     'sorry' => 'Désolé.',
-    'contact' => 'Something is wrong with your user account. Please contact us.',
+    'contact' => 'Quelque chose s\'est mal passé lors de votre inscription. Veuillez nous contacter.',
 ];
