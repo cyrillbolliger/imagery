@@ -8,3 +8,5 @@ files:
     translation: /resources/js/locales/%two_letters_code%.json
   - source: /resources/lang/en/*.php
     translation: /resources/lang/%two_letters_code%/%original_file_name%
+    ignore:
+      /resources/lang/en/validation.php
