@@ -1,10 +1,10 @@
 @component('mail::message')
-# @lang('Pending Approval')
+# @lang('pending-approval.title')
 
-@lang('Hello Admin')
+@lang('pending-approval.hello')
 
 
-@lang(':firstName :lastName (:email) from :groups just applied for a login.', [
+@lang('pending-approval.who', [
 'firstName' => e($applicant->first_name),
 'lastName'  => e($applicant->last_name),
 'email'     => e($applicant->email),
@@ -12,20 +12,20 @@
 ])
 
 
-@lang('Verify, that this person is permitted to have an account, before approving the request for an account.')
+@lang('pending-approval.instruction1')
 
-@lang("If approving, don't forget to grant privileges to some groups.")
+@lang('pending-approval.instruction2')
 
 
 @component('mail::button', ['url' => url("/admin/users/{$applicant->id}?activation={$applicant->activation_token}")])
-@lang('Grant access to :firstName :lastName', [
+@lang('pending-approval.button', [
     'firstName' => e($applicant->first_name),
     'lastName'  => e($applicant->last_name)
 ])
 @endcomponent
 
 
-@lang('Have an excellent day,')
+@lang('pending-approval.bye')
 <br>
 {{ config('app.name') }}
 @endcomponent
