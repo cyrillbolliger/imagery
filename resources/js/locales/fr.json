@@ -318,11 +318,11 @@
         "defaultRecipients": "the IT",
         "messageSubmitted": "We've received your feedback. Thank you so much!",
         "submit": "Submit feedback",
-        "submitting": "Sending",
+        "submitting": "Envoi en cours",
         "sendingFailed": "Failed to send feedback. Please try again.",
-        "hello": "Hello",
-        "messageTemplate": "I just used cd.gruene.ch and I'd like to say ...",
-        "yourMessage": "Your message",
-        "additionalInfo": "Additionally to your message, we will receive your name and email address as well as some basic information about your browser."
+        "hello": "Bonjour",
+        "messageTemplate": "Je viens d'utiliser cd.gruene.ch et j'aimerais dire ...",
+        "yourMessage": "Votre message",
+        "additionalInfo": "En plus de votre message, nous recevrons votre nom et votre adresse e-mail ainsi que quelques informations de base sur votre navigateur."
     }
 }
