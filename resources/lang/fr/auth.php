@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'failed' => 'Invalid login credentials.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'Mot de passe ou identifiant invalide.',
+    'throttle' => 'Trop de tentatives de connexion. Veuillez essayer à nouveau dans :seconds secondes.',
 
 ];

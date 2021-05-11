@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'ogDesc' => 'Design GREEN images with ease.',
+    'ogDesc' => 'Créez des images vertes en toute simplicité.',
 ];
