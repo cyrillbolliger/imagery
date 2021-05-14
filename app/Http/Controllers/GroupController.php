@@ -42,7 +42,9 @@ class GroupController extends Controller
     {
         $users = collect();
         foreach ($group->roles as $role) {
-            $users->push($role->user);
+            if ($role->user) {
+                $users->push($role->user);
+            }
         }
 
         return $users->unique('id');
