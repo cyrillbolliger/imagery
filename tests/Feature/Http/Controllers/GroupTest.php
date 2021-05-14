@@ -520,6 +520,42 @@ class GroupTest extends TestCase
         $response->assertJsonMissing(['id' => $user3->id]);
     }
 
+    public function testGetGroupsUsers__admin__deleted_200()
+    {
+        $root1 = factory(Group::class)->create();
+        $root2 = factory(Group::class)->create();
+        $child = factory(Group::class)->create(['parent_id' => $root1->id]);
+
+        $user0 = factory(User::class)->create();
+        $user1 = factory(User::class)->create();
+        $user2 = factory(User::class)->create();
+        $user3 = factory(User::class)->create();
+
+        $manager = factory(User::class)->create([
+            'super_admin' => true,
+            'enabled'     => true
+        ]);
+
+        $user0->roles()->save(factory(Role::class)->make(['admin' => false, 'group_id' => $root1->id]));
+        $user1->roles()->save(factory(Role::class)->make(['admin' => false, 'group_id' => $root1->id]));
+        $user2->roles()->save(factory(Role::class)->make(['admin' => false, 'group_id' => $root2->id]));
+        $user3->roles()->save(factory(Role::class)->make(['admin' => false, 'group_id' => $child->id]));
+
+        $user1->delete();
+
+        $response = $this->actingAs($manager)
+                         ->getJson("/api/1/groups/{$root1->id}/users/");
+
+        $response->assertStatus(200);
+
+        $response->assertJsonFragment($user0->toArray());
+        $response->assertJsonMissing(['id' => $user1->id]);
+        $response->assertJsonMissing(['id' => $user2->id]);
+        $response->assertJsonMissing(['id' => $user3->id]);
+
+        $response->assertJsonCount(1);
+    }
+
     public function testGetGroupsLogos__200()
     {
         $group = factory(Group::class)->create();
