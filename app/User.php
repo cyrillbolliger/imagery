@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Mail;
  * @property int $id
  * @property string first_name
  * @property string last_name
+ * @property string sub
  * @property string email
  * @property Carbon $email_verified_at
  * @property string $password
@@ -69,6 +70,7 @@ use Illuminate\Support\Facades\Mail;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereManagedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereSub($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereSuperAdmin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereActivationToken($value)
@@ -96,6 +98,7 @@ class User extends Authenticatable
     protected $fillable = [
         'first_name',
         'last_name',
+        'sub',
         'email',
         'password',
         'managed_by',
@@ -114,6 +117,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'sub',
     ];
 
     /**

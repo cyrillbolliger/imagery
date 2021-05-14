@@ -13,7 +13,8 @@ class KeycloakUser extends \Vizir\KeycloakWebGuard\Models\KeycloakUser
         'family_name',
         'email',
         'locale',
-        'groups'
+        'groups',
+        'sub'
     ];
 
     public function toArray() {

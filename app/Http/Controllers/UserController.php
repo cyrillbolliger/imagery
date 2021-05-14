@@ -52,6 +52,7 @@ class UserController extends Controller
             'id' => ['sometimes', new ImmutableRule($managed)],
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
+            'sub' => ['sometimes', new ImmutableRule($managed)],
             'email' => ['required', 'max:170', 'email', 'unique:users'],
             'password' => ['sometimes', new PasswordRule()],
             'added_by' => ['sometimes', 'in:' . Auth::id()],
@@ -124,6 +125,7 @@ class UserController extends Controller
             'id' => ['sometimes', new ImmutableRule($managed)],
             'first_name' => ['sometimes', 'required', 'string', 'max:255'],
             'last_name' => ['sometimes', 'required', 'string', 'max:255'],
+            'sub' => ['sometimes', new ImmutableRule($managed)],
             'email' => ['sometimes', 'required', 'max:170', 'email', 'unique:users,email,' . $managed->id],
             'password' => ['sometimes', 'required', new PasswordRule()],
             'added_by' => ['sometimes', new ImmutableRule($managed)],
@@ -225,6 +227,7 @@ class UserController extends Controller
         $validator = \Validator::make($keycloakUser->toArray(), [
             'given_name' => ['required', 'string', 'max:255'],
             'family_name' => ['required', 'string', 'max:255'],
+            'sub' => ['required', 'string', 'max:170', 'unique:users'],
             'email' => ['required', 'max:170', 'email', 'unique:users'],
             'groups' => ['required', 'array'],
             'groups.*' => ['required', 'string', 'max:50'],
@@ -236,6 +239,11 @@ class UserController extends Controller
                 return redirect()->route('user-account-error');
             }
 
+            if (isset($validator->failed()['sub']['Unique'])){
+                \Log::info("Registration for {$keycloakUser->email} failed. The subject (sub) is already present in the database. -> Check, if there is a deleted user account with the same subject.");
+                return redirect()->route('user-account-error');
+            }
+
             \Log::info("Invalid data from OIDC ID token for user ({$keycloakUser->email}): " . print_r($validator->errors()->toArray(), true));
             return redirect()->route('registration-error');
         }
@@ -243,6 +251,7 @@ class UserController extends Controller
         $localUser = User::create([
             'first_name' => $keycloakUser->given_name,
             'last_name' => $keycloakUser->family_name,
+            'sub' => $keycloakUser->sub,
             'email' => $keycloakUser->email,
             'password' => Hash::make(Str::random(32)),
             'enabled' => false,

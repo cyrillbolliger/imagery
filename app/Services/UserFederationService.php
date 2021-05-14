@@ -23,7 +23,11 @@ class UserFederationService
             throw new AuthenticationException();
         }
 
-        $user = \App\User::whereEmail($authenticated->id)->first();
+        $user = \App\User::whereSub($authenticated->sub)->first();
+
+        if (! $user) {
+            $user = \App\User::whereEmail($authenticated->id)->first();
+        }
 
         if (!$user) {
             throw new UserFederationException('Local user not found.');
