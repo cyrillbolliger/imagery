@@ -22,10 +22,11 @@
     import Api from "../../service/Api";
     import ALoader from "../atoms/ALoader";
     import UnauthorizedHandlerMixin from "../../mixins/UnauthorizedHandlerMixin";
+    import SnackbarMixin from "../../mixins/SnackbarMixin";
 
     export default {
         name: "MGroupDetails",
-        mixins: [UnauthorizedHandlerMixin],
+        mixins: [UnauthorizedHandlerMixin, SnackbarMixin],
         components: {ALoader},
         data() {
             return {
@@ -54,7 +55,7 @@
 
                 return Api().get(`groups/${this.group.id}/logos`)
                     .then(response => response.data)
-                    .then(logos => this.logos = logos)
+                    .then(logos => this.logos = this.sortLogos(logos))
                     .finally(() => this.logosLoading = false)
                     .catch(error => this.handleUnauthorized(error))
                     .catch(reason => {
@@ -68,7 +69,7 @@
 
                 return Api().get(`groups/${this.group.id}/users`)
                     .then(response => response.data)
-                    .then(users => this.users = users)
+                    .then(users => this.users = this.sortUsers(users))
                     .finally(() => this.usersLoading = false)
                     .catch(error => this.handleUnauthorized(error))
                     .catch(reason => {
@@ -76,6 +77,21 @@
                             .then(() => this.usersLoad());
                     });
             },
+
+            sortUsers(users) {
+                return Object.values(users)?.sort((a, b) => {
+                    let name1 = `${a.first_name} ${a.last_name}`.toLowerCase();
+                    let name2 = `${b.first_name} ${b.last_name}`.toLowerCase();
+
+                    return name1.localeCompare(name2)
+                });
+            },
+
+            sortLogos(logos) {
+                return Object.values(logos)?.sort(
+                    (a,b) => a.name.localeCompare(b.name)
+                );
+            }
         }
     }
 </script>
