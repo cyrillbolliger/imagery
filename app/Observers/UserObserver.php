@@ -61,13 +61,17 @@ class UserObserver
      * Prefix the field with "del##########" (# replaced with sequence number)
      * to prevent collisions due to the database' unique constraint
      *
-     * @param  string  $value
+     * @param  string|null  $value
      * @param  string  $field
      *
-     * @return string
+     * @return string|null;
      */
-    private function deleteUniqueField(string $value, string $field): string
+    private function deleteUniqueField(?string $value, string $field): ?string
     {
+        if (! $value) {
+            return null;
+        }
+
         $value = $this->restoreUniqueField($value);
 
         $greatestTrashed = User::onlyTrashed()
@@ -88,12 +92,16 @@ class UserObserver
     /**
      * Remove the fields del########## prefix
      *
-     * @param  string  $value
+     * @param  string|null  $value
      *
-     * @return string
+     * @return string|null
      */
-    private function restoreUniqueField(string $value): string
+    private function restoreUniqueField(?string $value): ?string
     {
+        if (! $value) {
+            return null;
+        }
+
         return preg_replace('/^del\d{10} /', '', $value);
     }
 
