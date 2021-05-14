@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\UserFederationException;
+use App\Exceptions\UserSubjectMissmatchException;
 use App\Group;
 use App\Mail\PendingApproval;
 use App\Rules\ImmutableRule;
@@ -270,6 +271,7 @@ class UserController extends Controller
             $federationService->loadLocalUser();
         } catch (UserFederationException $e) {
         } catch (AuthenticationException $e) {
+        } catch (UserSubjectMissmatchException $e) {
         }
 
         return redirect()->route('pending-approval');

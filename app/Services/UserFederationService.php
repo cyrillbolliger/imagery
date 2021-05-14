@@ -5,13 +5,20 @@ namespace App\Services;
 
 
 use App\Exceptions\UserFederationException;
+use App\Exceptions\UserSubjectMissmatchException;
+use App\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 use Vizir\KeycloakWebGuard\Facades\KeycloakWeb;
 
 class UserFederationService
 {
-    public function loadLocalUser()
+    /**
+     * @throws UserSubjectMissmatchException
+     * @throws AuthenticationException
+     * @throws UserFederationException
+     */
+    public function loadLocalUser(): void
     {
         if ($this->isLocalUserLoaded()) {
             return;
@@ -23,15 +30,15 @@ class UserFederationService
             throw new AuthenticationException();
         }
 
-        $user = \App\User::whereSub($authenticated->sub)->first();
-
-        if (! $user) {
-            $user = \App\User::whereEmail($authenticated->id)->first();
-        }
+        $user = $this->retrieveLocalUser($authenticated);
 
         if (!$user) {
             throw new UserFederationException('Local user not found.');
         }
+
+        $user->complementSub($authenticated->sub);
+
+        $this->assertSub($user, $authenticated->sub);
 
         Auth::shouldUse('web-local');
         Auth::setUser($user);
@@ -39,13 +46,44 @@ class UserFederationService
         KeycloakWeb::forgetToken();
     }
 
-    public function isLocalUserLoaded()
+    public function isLocalUserLoaded(): bool
     {
-        return Auth::user() instanceof \App\User;
+        return Auth::user() instanceof User;
     }
 
-    public function isKeycloakUserLoaded()
+    private function retrieveLocalUser($authenticated): ?User
     {
-        return Auth::user() instanceof \App\User;
+        $user = User::whereSub($authenticated->sub)->first();
+
+        if (!$user) {
+            $user = User::whereEmail($authenticated->id)->first();
+        }
+
+        return $user;
+    }
+
+    /**
+     * Asserts that the jwt tokens sub field match the local sub field.
+     *
+     * @param  User  $user
+     * @param  string  $sub
+     *
+     * @throws UserSubjectMissmatchException
+     */
+    private function assertSub(User $user, string $sub): void
+    {
+        if ($user->sub !== $sub) {
+            $message = <<<EOL
+User identified by email $user->email but the local subject doesn't match the
+    jwt token's sub.
+    - Local sub: $user->sub
+    - OIDC sub: $sub
+    This may happen if a user's SSO account was deleted and recreated with the
+    same email address, or if the user changed his email address (in the SSO)
+    and tries to take over an existing local account. This may be legit, but
+    can also be hostile.
+EOL;
+            throw new UserSubjectMissmatchException($message);
+        }
     }
 }

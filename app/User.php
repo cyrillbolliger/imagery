@@ -443,4 +443,17 @@ class User extends Authenticatable
     {
         return Image::final()->where('user_id', $this->id)->count();
     }
+
+    /**
+     * Add the given subject if none is present.
+     *
+     * @throws UserSubjectMissmatchException
+     */
+    public function complementSub(string $sub): void
+    {
+        if (! $this->sub) {
+            $this->sub = $sub;
+            $this->save();
+        }
+    }
 }
