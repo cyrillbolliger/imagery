@@ -155,7 +155,7 @@
             "logoDefaultSelected": "Présélectionné",
             "logoRemove": "Supprimer le Logo",
             "logoDefaultSaveFailed": "Échec de sauvegarder le logo par défaut. Veuillez réessayer.",
-            "userHasNoLogos": "Oh là là, vous n'avez pas été assigné à aucun logo. Demandez au secrétaire de le faire.",
+            "userHasNoLogos": "Oh là là, vous n'avez pas été assigné à aucun logo. Demandez au secrétariat de le faire.",
             "fontSize": "Taille de la police",
             "tooMuchText": "Vos barres contiennent trop de texte. Raccourcissez-les !",
             "sublineAdd": "Ajouter une sous-ligne",

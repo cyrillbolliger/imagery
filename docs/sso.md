@@ -14,9 +14,10 @@ uses the [vizir/laravel-keycloak-web-guard](https://github.com/Vizir/laravel-key
 exchanges the authorization code for an ID token and generates a `KeycloakUser`
 object from the ID token.
 1. The `LoadLocalUser` middleware tries to find the corresponding user in 
-the user table of Laravel's local database (by email address). If a local user 
-is found, the local user is loaded. Else, the user agent is redirected to the 
-registration route (see [Registration](#registration)).
+the user table of Laravel's local database (by the OIDC `sub` field, or by email 
+address as fallback). If a local user is found, the local user is loaded. Else,
+the user agent is redirected to the registration route
+(see [Registration](#registration)).
 1. The `BlockNonEnabledUsers` checks, if the user was already approved 
 (enabled). If so, he has successfully authenticated. Else he is redirected to
 the pending approval route (see [Approval](#approval)).
@@ -58,6 +59,24 @@ everyone should be granted access.
    `activatable_by` field is cleared, so the admin does not retain access to the 
    user for ever. The admin may however always regain access if he uses the 
    activation link (see step 1).
+
+
+### `sub` vs. `email` Field
+The OIDC `sub` field stands for subject and is the intended user identifier.
+In our case it contains the Keycloak user ID.
+- The `sub` field takes precedence over the email address.
+- The identification over the email address is needed in case of
+  [ahead of time](#ahead-of-time) registration.
+- If the user is identified by the email address, and the `sub` field of the
+  local user is empty, the `sub` field is complemented with the value from the
+  OIDC token.
+- If the user is identified by the email address but the `sub` fields of the
+  local user table and the OIDC token do not match, the user is redirected to
+  the `user-account-error` page. Details are logged.
+
+  This case occures if the originally registered user is deleted in Keycloak but
+  not in the imagery and later a new account with the same email address is
+  created in Keycloak.
 
 ## Quirks
 We've made the following price-value tradeoffs, that must be known.
