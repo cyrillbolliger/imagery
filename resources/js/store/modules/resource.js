@@ -52,7 +52,7 @@ export default function getStore(resource) {
 
     const mutations = {
         setAll(state, data) {
-            state.data = data;
+            state.data = Array.isArray(data) ? data : Object.values(data);
         },
 
         add(state, obj) {
