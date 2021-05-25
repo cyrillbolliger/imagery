@@ -5,7 +5,7 @@
         <div class="row justify-content-center align-items-center min-vh-100">
             <div class="col-md-6 d-none d-md-block">
                 <img
-                    src="/images/home-{{ substr($lang, 0, 2) }}.jpeg"
+                    src="/images/home-{{App::getLocale()}}.jpeg?"
                     alt="{{__('login.imgAlt')}}"
                     class="img-fluid">
             </div>
