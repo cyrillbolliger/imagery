@@ -8,7 +8,7 @@
                 >{{$t('group.nav_edit')}}
                 </button>
             </li>
-            <li class="nav-item">
+            <li v-if="!isNew" class="nav-item">
                 <button
                     :class="tabStatsClasses"
                     @click="currentTab = 'details'"
@@ -24,6 +24,7 @@
             v-show="'edit' === currentTab"
         />
         <MGroupDetails
+            v-if="!isNew"
             :group="group"
             class="mt-3"
             v-show="'details' === currentTab"
@@ -52,6 +53,9 @@
             },
             tabStatsClasses() {
                 return this.tabClasses('details');
+            },
+            isNew() {
+                return ! this.group?.id > 0;
             }
         },
 
