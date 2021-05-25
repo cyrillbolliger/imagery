@@ -12,7 +12,7 @@ if (!mix.inProduction()) {
 mix.disableSuccessNotifications();
 
 // load browsersync with this domain
-mix.browserSync('imagery.test:8888');
+mix.browserSync('localhost:8000');
 
 // compile js
 mix.js('resources/js/app.js', 'public/js').vue({
