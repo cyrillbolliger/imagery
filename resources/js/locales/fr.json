@@ -8,7 +8,9 @@
         "logos": "Logos",
         "logos_download": "Téléchargement du logo",
         "profile": "Profil",
-        "logout": "Déconnexion"
+        "logout": "Déconnexion",
+        "translate": "Translate",
+        "feedback": "Feedback"
     },
     "nav": {
         "title": "Menu",
@@ -153,7 +155,7 @@
             "logoDefaultSelected": "Présélectionné",
             "logoRemove": "Supprimer le Logo",
             "logoDefaultSaveFailed": "Échec de sauvegarder le logo par défaut. Veuillez réessayer.",
-            "userHasNoLogos": "Oh là là, vous n'avez pas été assigné à aucun logo. Demandez au secrétaire de le faire.",
+            "userHasNoLogos": "Oh là là, vous n'avez pas été assigné à aucun logo. Demandez au secrétariat de le faire.",
             "fontSize": "Taille de la police",
             "tooMuchText": "Vos barres contiennent trop de texte. Raccourcissez-les !",
             "sublineAdd": "Ajouter une sous-ligne",
@@ -185,11 +187,12 @@
             "height": "Hauteur (px)",
             "oversizeWarning": "Les grandes images peuvent ralentir la performance de votre navigateur.",
             "preview": "Aperçu",
-            "dragHelpBar": "Faites glisser les barres dans la position de votre désir.",
+            "dragHelpBar": "Faites glisser les barres dans la position souhaitée.",
             "dragHelp": "Faites glisser les barres et l'image dans la position de votre désir.",
             "layout": "Mettre en page",
             "barsLeft": "Barres à gauche",
             "barsRight": "Barres à droite",
+            "colorScheme": "Thème",
             "white": "Blanc",
             "green": "Vert",
             "greengreen": "Vert - Vert",
@@ -297,5 +300,29 @@
         "groups": "Groupes",
         "groupsHelptext": "Les groupes sélectionnés peuvent utiliser ce logo",
         "not_found": "Échec de chargement du logo. Veuillez réessayer."
+    },
+    "translate": {
+        "title": "Help translating",
+        "intro": "Did you notice inappropriate or missing translations? Contribute your improvements!",
+        "login": "We use {link} as localization service. You can connect using the following credentials:",
+        "username": "Username: {username}",
+        "password": "Password: {password}",
+        "startButton": "Login & contribute translation",
+        "loadingCredentialsFailed": "Failed to load Crowdin credentials.",
+        "credentials": "Translation Login Credentials",
+        "signInTroubles": "Crowdin works best with the Chrome browser. If you have troubles signing in, try again with Chrome."
+    },
+    "feedback": {
+        "title": "We 💚 your feedback",
+        "intro": "Thank you very much for letting us know, what features you wish, what we can do better and what you like. Your feedback will be sent to {recipients} from the secretary of the GREENS of Switzerland.",
+        "defaultRecipients": "the IT",
+        "messageSubmitted": "We've received your feedback. Thank you so much!",
+        "submit": "Submit feedback",
+        "submitting": "Envoi en cours",
+        "sendingFailed": "Failed to send feedback. Please try again.",
+        "hello": "Bonjour",
+        "messageTemplate": "Je viens d'utiliser cd.gruene.ch et j'aimerais dire ...",
+        "yourMessage": "Votre message",
+        "additionalInfo": "En plus de votre message, nous recevrons votre nom et votre adresse e-mail ainsi que quelques informations de base sur votre navigateur."
     }
 }

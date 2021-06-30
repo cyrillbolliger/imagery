@@ -1,7 +1,11 @@
 <?php
 
-namespace App;
+namespace Tests\Unit;
 
+use App\Group;
+use App\Logo;
+use App\Role;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -312,5 +316,25 @@ class UserTest extends TestCase
         $this->assertNotEmpty($logos->where('id', $grandchild_logo2->id));
         $this->assertEmpty($logos->where('id', $root_logo1->id));
         $this->assertEmpty($logos->where('id', $child2_logo1->id));
+    }
+
+    public function testComplementSub_add()
+    {
+        /** @var User $user */
+        $user = factory(User::class)->create([
+            'sub' => null
+        ]);
+
+        $user->complementSub('subject');
+        self::assertEquals('subject', User::find($user->id)->sub);
+    }
+
+    public function testComplementSub_noOverwrite()
+    {
+        /** @var User $user */
+        $user = factory(User::class)->create();
+
+        $user->complementSub('subject');
+        self::assertNotEquals('subject', User::find($user->id)->sub);
     }
 }

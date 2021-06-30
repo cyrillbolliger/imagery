@@ -13,15 +13,22 @@ trait TestStorage
         $copy = [
             'base_logos',
             'fonts',
+            'vector_logo_templates_indesign'
+        ];
+
+        $delete = [
+            'logo_cache',
+            'logo_package_cache'
         ];
 
         $this->copyToTestStorage($copy);
+        $this->deleteOnTestStorage($delete);
     }
 
     private function copyToTestStorage(array $dirs): void
     {
         foreach ($dirs as $dir) {
-            $files = Storage::disk('local')->files($dir);
+            $files = Storage::disk('local')->allFiles($dir);
 
             foreach ($files as $file) {
                 Storage::put(
@@ -30,5 +37,10 @@ trait TestStorage
                 );
             }
         }
+    }
+
+    private function deleteOnTestStorage(array $dirs): void
+    {
+        Storage::disk('local')->delete($dirs);
     }
 }

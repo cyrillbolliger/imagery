@@ -42,7 +42,9 @@ class GroupController extends Controller
     {
         $users = collect();
         foreach ($group->roles as $role) {
-            $users->push($role->user);
+            if ($role->user) {
+                $users->push($role->user);
+            }
         }
 
         return $users->unique('id');
@@ -85,6 +87,8 @@ class GroupController extends Controller
         if ( ! $group->save()) {
             return response('Could not save group.', 500);
         }
+
+        unset($group->addedBy); // do not return associations
 
         return $group;
     }

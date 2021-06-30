@@ -23,7 +23,9 @@
                 v-for="(image, idx) in images"
                 :data="image"
                 :key="idx"
-                @removed="images.splice(idx, 1)"
+                :showDetails="open === idx"
+                @opened="open = idx"
+                @removed="removeImage(idx)"
             />
         </div>
 
@@ -55,6 +57,7 @@
                 data: null,
                 loadingInitial: true,
                 appending: false,
+                open: null,
             }
         },
 
@@ -163,6 +166,11 @@
                     this.loadMoreImages();
                 }
             },
+
+            removeImage(idx) {
+                this.images.splice(idx, 1);
+                this.open = null;
+            }
         },
 
         created() {

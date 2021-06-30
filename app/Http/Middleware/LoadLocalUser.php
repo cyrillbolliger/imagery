@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Exceptions\UserFederationException;
+use App\Exceptions\UserSubjectMissmatchException;
 use App\Services\UserFederationService;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
@@ -40,6 +41,9 @@ class LoadLocalUser
             return redirect()->route('register-sso-user');
         } catch (AuthenticationException $e) {
             return redirect()->route( 'login' );
+        } catch (UserSubjectMissmatchException $e) {
+            \Log::info($e->getMessage());
+            return redirect()->route( 'user-account-error' );
         }
 
         return $next($request);

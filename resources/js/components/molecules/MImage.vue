@@ -11,7 +11,7 @@
                     leave-active-class="fadeOutDown">
             <figcaption
                 class="m-image__caption"
-                v-if="detailsShow"
+                v-if="open"
             >
                 <p class="" v-if="loading">{{$t('images.gallery.loading')}}</p>
                 <p v-else v-html="created"/>
@@ -57,13 +57,14 @@
 
         data() {
             return {
-                detailsShow: false,
                 creator: null,
+                open: this.showDetails,
             }
         },
 
         props: {
-            data: {required: true, type: Object}
+            data: {required: true, type: Object},
+            showDetails: {required: true, type: Boolean}
         },
 
         computed: {
@@ -105,7 +106,11 @@
 
         methods: {
             toggleDetails() {
-                this.detailsShow = !this.detailsShow;
+                this.open = !this.open;
+
+                if (this.open) {
+                    this.$emit('opened');
+                }
 
                 if (null === this.creator){
                     // do not use users store as non admins can't use the index
@@ -126,6 +131,12 @@
                             .then(this.remove)
                     );
             },
+        },
+
+        watch: {
+            showDetails(value) {
+                this.open = value;
+            }
         }
     }
 </script>

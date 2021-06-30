@@ -1,5 +1,5 @@
 <meta property="og:title" content="{{ config('app.name') }}" />
-<meta property="og:description" content="{{__('Design GREEN images with ease.')}}" />
+<meta property="og:description" content="{{__('layout.ogDesc')}}" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="{{ route( 'home' )  }}" />
 <meta property="og:image" content="{{ asset('images/og-image.png') }}" />

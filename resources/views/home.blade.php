@@ -9,19 +9,19 @@
             <div class="d-flex justify-content-center align-items-center min-vh-100 min-vw-100">
                 <div class="d-flex flex-column align-items-center">
                     <div class="spinner-border text-primary" role="status">
-                        <span class="sr-only">{{__('Loading...')}}</span>
+                        <span class="sr-only">{{__('home.loading')}}</span>
                     </div>
-                    <p class="mt-2">{{__('Loading...')}}</p>
+                    <p class="mt-2">{{__('home.loading')}}</p>
                 </div>
             </div>
         </div>
 
         <noscript>
-            <h1>{{ __('Javascript is required') }}</h1>
+            <h1>{{ __('home.jsTitle') }}</h1>
             <p>
-                {{__('Javascript is absolutely essential for this app to run.')}}
+                {{__('home.jsDesc')}}
                 <a href="https://www.enable-javascript.com/{{ substr($lang, 0, 2) }}" target="_blank">
-                    {{__('Here is how you can enable it.')}}
+                    {{__('home.jsEnable')}}
                 </a>
             </p>
         </noscript>

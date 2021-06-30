@@ -13,7 +13,7 @@
         "ext-intl": "*",
         "ext-zip": "*",
         "fideloper/proxy": "^4.0",
-        "kalnoy/nestedset": "^5.0",
+        "kalnoy/nestedset": "^6.0",
         "laravel/framework": "^8.0",
         "laravel/legacy-factories": "^1.1",
         "laravel/tinker": "^2.4",

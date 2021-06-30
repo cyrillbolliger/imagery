@@ -8,7 +8,9 @@
         "logos": "Logos",
         "logos_download": "Logo herunterladen",
         "profile": "Profil",
-        "logout": "Abmelden"
+        "logout": "Abmelden",
+        "translate": "Übersetzen",
+        "feedback": "Feedback"
     },
     "nav": {
         "title": "Menü",
@@ -73,7 +75,7 @@
         "misc_fields": "Verschiedenes",
         "first_name": "Vorname",
         "last_name": "Nachname",
-        "email": "Email",
+        "email": "E-Mail",
         "email_exists": "Es gibt schon ein Benutzerkonto mit dieser Emailadresse.",
         "email_change": "Da dieses Login mit anderen Systemen verknüpft ist, kannst du die E-Mail-Adresse nicht selbst ändern. Bitte kontaktiere admin@gruene.ch.",
         "enabled": "Aktiviert",
@@ -190,6 +192,7 @@
             "layout": "Layout",
             "barsLeft": "Balken links",
             "barsRight": "Balken rechts",
+            "colorScheme": "Farbschema",
             "white": "Weiss",
             "green": "Grün",
             "greengreen": "Grün - Grün",
@@ -232,9 +235,9 @@
                     "agency": "Agentur / Fotograf*in",
                     "friend": "Freund*in / Parteimitglied",
                     "unknown": "Ich weiss es nicht / Ich bin mir nicht sicher",
-                    "source": "Where is the raw image from?",
+                    "source": "Woher stammt das Rohbild?",
                     "sourcePlaceholder": "URL zum Rohbild der Bilddatenbank.",
-                    "licence": "Select the raw images licence",
+                    "licence": "Wähle die Lizenz des Rohbildes aus",
                     "other": "Sonstige",
                     "ccby": "Creative Commons mit Namensnennung",
                     "cc0": "Creative Commons ohne Einschränkung",
@@ -297,5 +300,29 @@
         "groups": "Gruppen",
         "groupsHelptext": "Die ausgewählten Gruppen können dieses Logo verwenden",
         "not_found": "Logo konnte nicht geladen werden. Bitte erneut versuchen."
+    },
+    "translate": {
+        "title": "Übersetzen helfen",
+        "intro": "Sind dir unpassende oder fehlende Übersetzungen aufgefallen? Trage zur Verbesserung bei!",
+        "login": "Wir verwenden {link} als Übersetzungsplatform. Du kannst dich mit folgenden Zugangsdaten anmelden:",
+        "username": "Username: {username}",
+        "password": "Passwort: {password}",
+        "startButton": "Anmelden und Übersetzen",
+        "loadingCredentialsFailed": "Crowdin-Anmeldedaten konnten nicht geladen werden.",
+        "credentials": "Zugangsdaten fürs Übersetzen",
+        "signInTroubles": "Crowdin funktioniert am besten mit dem Chrome-Browser. Wenn du Probleme bei der Anmeldung hast, versuche es erneut mit Chrome."
+    },
+    "feedback": {
+        "title": "Wir 💚 dein Feedback",
+        "intro": "Vielen Dank, dass du uns wissen lässt, welche Funktionen du dir wünschst, was wir besser machen können und was dir gefällt. Dein Feedback wird an {recipients} vom Sekretariat der GRÜNEN Schweiz gesendet.",
+        "defaultRecipients": "die IT",
+        "messageSubmitted": "Wir haben dein Feedback erhalten. Vielen Dank!",
+        "submit": "Feedback senden",
+        "submitting": "Übermitteln",
+        "sendingFailed": "Feedback konnte nicht übermittelt werden. Bitte nochmal versuchen.",
+        "hello": "Hallo",
+        "messageTemplate": "Ich habe gerade cd.gruene.ch benutzt und ich möchte mitteilen, dass ...",
+        "yourMessage": "Deine Nachricht",
+        "additionalInfo": "Zusätzlich zu deiner Nachricht werden wir deinen Namen und deine E-Mail-Adresse sowie einige grundlegende Informationen über deinen Browser erhalten."
     }
 }

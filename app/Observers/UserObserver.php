@@ -49,50 +49,60 @@ class UserObserver
      *
      * @return bool
      */
-    public function deleting(User $user)
+    public function deleting(User $user): bool
     {
-        $user->email = $this->deleteEmail($user->email);
+        $user->email = $this->deleteUniqueField($user->email, 'email');
+        $user->sub = $this->deleteUniqueField($user->sub, 'sub');
 
         return $user->save();
     }
 
     /**
-     * Prefix email with "del##########" (# replaced with sequence number) to
-     * prevent collisions due to the database' unique constraint
+     * Prefix the field with "del##########" (# replaced with sequence number)
+     * to prevent collisions due to the database' unique constraint
      *
-     * @param  string  $email
+     * @param  string|null  $value
+     * @param  string  $field
      *
-     * @return string
+     * @return string|null;
      */
-    private function deleteEmail(string $email)
+    private function deleteUniqueField(?string $value, string $field): ?string
     {
-        $email = $this->restoreEmail($email);
+        if (! $value) {
+            return null;
+        }
+
+        $value = $this->restoreUniqueField($value);
 
         $greatestTrashed = User::onlyTrashed()
-                               ->select('email')
-                               ->where('email', 'LIKE', "del% {$email}")
-                               ->orderByDesc('email')
+                               ->select($field)
+                               ->where($field, 'LIKE', "del% {$value}")
+                               ->orderByDesc($field)
                                ->first();
 
         if ($greatestTrashed) {
-            $counter = (int) substr($greatestTrashed->email, 3, 13);
+            $counter = (int) substr($greatestTrashed->$field, 3, 13);
         } else {
             $counter = 0;
         }
 
-        return sprintf('del%010d %s', ++$counter, $email);
+        return sprintf('del%010d %s', ++$counter, $value);
     }
 
     /**
-     * Remove the emails del########## prefix
+     * Remove the fields del########## prefix
      *
-     * @param  string  $email
+     * @param  string|null  $value
      *
-     * @return string|string[]|null
+     * @return string|null
      */
-    private function restoreEmail(string $email)
+    private function restoreUniqueField(?string $value): ?string
     {
-        return preg_replace('/^del\d{10} /', '', $email);
+        if (! $value) {
+            return null;
+        }
+
+        return preg_replace('/^del\d{10} /', '', $value);
     }
 
     /**
@@ -102,9 +112,10 @@ class UserObserver
      *
      * @return void
      */
-    public function restoring(User $user)
+    public function restoring(User $user): void
     {
-        $user->email = $this->restoreEmail($user->email);
+        $user->email = $this->restoreUniqueField($user->email);
+        $user->sub = $this->restoreUniqueField($user->sub);
     }
 
     /**

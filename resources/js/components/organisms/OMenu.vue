@@ -15,14 +15,18 @@
             <li v-if="isAdmin">
                 <MMenuItem active="" materialIcon="settings" to="/admin/users">{{$t('route.settings')}}</MMenuItem>
                 <ul class="list-unstyled ml-4">
-                    <MMenuItem :exact="false" materialIcon="chevron-right" to="/admin/groups">{{$t('route.groups')}}</MMenuItem>
                     <MMenuItem :exact="false" materialIcon="chevron-right" to="/admin/logos">{{$t('route.logos')}}</MMenuItem>
+                    <MMenuItem :exact="false" materialIcon="chevron-right" to="/admin/groups">{{$t('route.groups')}}</MMenuItem>
                     <MMenuItem :exact="false" materialIcon="chevron-right" to="/admin/users">{{$t('route.users')}}</MMenuItem>
                 </ul>
             </li>
             <MMenuItem :to="`/admin/users/${id}`" materialIcon="account-box">{{$t('route.profile')}}</MMenuItem>
             <MMenuItem :to="`/logos/download`" svgIcon="/images/logo-icon.svg">{{$t('route.logos_download')}}</MMenuItem>
             <MMenuItem materialIcon="power-settings-new" to="/logout">{{$t('route.logout')}}</MMenuItem>
+        </ul>
+        <ul class="o-menu__item-list o-menu__item-list--small o-menu__item-list--horizontal list-unstyled mt-3">
+            <MMenuItem :exact="false" class="pr-4" to="/translate">{{$t('route.translate')}}</MMenuItem>
+            <MMenuItem :exact="false" class="pr-4" to="/feedback">{{$t('route.feedback')}}</MMenuItem>
         </ul>
     </nav>
 </template>
@@ -69,6 +73,16 @@
         &__close {
             position: absolute;
             right: 0;
+        }
+
+        &__item-list {
+            &--small {
+                font-size: $font-size-sm;
+            }
+
+            &--horizontal {
+                display: flex;
+            }
         }
     }
 
