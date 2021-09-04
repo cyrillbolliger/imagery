@@ -66,6 +66,9 @@ docker-compose down
 docker-compose up -d
 
 # set colors if script is executed by a tty
+GREEN=
+YELLOW=
+NC=
 if [ -t 1 ]; then
     GREEN="$(tput setf 2)"
     YELLOW="$(tput setf 3)"
