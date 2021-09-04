@@ -24,6 +24,9 @@ class LogoFactory
             case 'alternative':
                 $compositor = new Alternative();
                 break;
+            case 'alternative-risch':
+                $compositor = new AlternativeRisch();
+                break;
             case 'gruene':
                 $compositor = new Gruene(...$args);
                 break;

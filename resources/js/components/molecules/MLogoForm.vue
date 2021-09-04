@@ -92,7 +92,8 @@
                     },
                 },
                 types: [
-                    {value: LogoTypes.alternative, text: 'Alternative'},
+                    {value: LogoTypes.alternative, text: 'Alternative Zug'},
+                    {value: LogoTypes['alternative-risch'], text: 'Alternative Risch'},
                     {value: LogoTypes.gruene, text: 'GRÜNE'},
                     {value: LogoTypes['gruene-vert-e-s'], text: 'GRÜNE - Les VERT.E.S'},
                     {value: LogoTypes['gruene-verts'], text: 'GRÜNE - Les VERTS'},
@@ -122,7 +123,7 @@
             }),
 
             nameLabel() {
-                if (this.currentLogo.type === 'alternative') {
+                if (this.currentLogo.type === 'alternative' || this.currentLogo.type === 'alternative-risch') {
                     return this.$t('logo.name');
                 } else {
                     return this.$t('logo.subline');
